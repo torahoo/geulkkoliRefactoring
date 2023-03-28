@@ -7,7 +7,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 class UserTest {
     @Test
     void getUserName() {
-        User user = User.builder()
+        Users user = Users.builder()
                 .userId("kkk")
                 .userName("김")
                 .nickName("바나나")

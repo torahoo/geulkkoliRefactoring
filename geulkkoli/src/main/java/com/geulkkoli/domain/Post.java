@@ -1,6 +1,7 @@
 package com.geulkkoli.domain;
 
 import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -12,6 +13,7 @@ import javax.persistence.Id;
 @Getter
 @NoArgsConstructor
 @Entity
+@EqualsAndHashCode
 public class Post {
 
     @Id
