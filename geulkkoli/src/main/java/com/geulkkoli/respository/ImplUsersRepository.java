@@ -13,7 +13,6 @@ import java.util.Optional;
 @Transactional
 @RequiredArgsConstructor
 public class ImplUsersRepository implements UsersRepository {
-
     private final EntityManager entityManager;
     @Override
     public Users save(Users user) {
