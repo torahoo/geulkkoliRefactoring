@@ -16,6 +16,7 @@ import javax.persistence.Id;
 @EqualsAndHashCode
 public class Post {
 
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long postNo;
