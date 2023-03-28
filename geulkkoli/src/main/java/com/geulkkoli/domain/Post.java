@@ -18,7 +18,7 @@ public class Post {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long borderNo;
+    private Long postNo;
     private String title;
     private String postBody;
     private String nickName;
