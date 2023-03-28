@@ -7,6 +7,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
+import java.util.List;
 import java.util.Optional;
 @Slf4j
 @Repository
@@ -25,4 +26,14 @@ public class ImplUsersRepository implements UsersRepository {
         Users findUser = entityManager.find(Users.class, id);
         return Optional.of(findUser);
     }
+
+    public Optional<Users> findByUserId(String loginId) {
+
+        return entityManager.createQuery("select u from Users u where u.userId = :userId", Users.class)
+                .setParameter("userId", loginId)
+                .getResultList()
+                .stream().findAny();
+    }
+
+    
 }

@@ -1,8 +1,12 @@
 package com.geulkkoli.domain;
 
+import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
+
+
+
 
 class UserTest {
     @Test

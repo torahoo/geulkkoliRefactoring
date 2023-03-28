@@ -1,6 +1,5 @@
 package com.geulkkoli.domain;
 
-
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -13,8 +12,9 @@ import javax.persistence.*;
 public class Users {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long userDbId;
-    private String userWebId;
+    private Long userNo;
+
+    private String userId;
     private String userName;
 
     private String password;
@@ -22,7 +22,7 @@ public class Users {
 
     @Builder
     public Users(String userId, String userName, String password, String nickName) {
-        this.userWebId = userId;
+        this.userId = userId;
         this.userName = userName;
         this.password = password;
         this.nickName = nickName;
