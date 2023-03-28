@@ -1,6 +1,5 @@
 package com.geulkkoli.domain;
 
-
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -13,21 +12,19 @@ import javax.persistence.Id;
 @Getter
 @NoArgsConstructor
 @Entity
-public class User {
+public class Post {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long userNo;
-    private String userId;
-    private String userName;
-
-    private String password;
+    private Long borderNo;
+    private String title;
+    private String postBody;
     private String nickName;
 
     @Builder
-    public User(String userId, String userName, String password, String nickName) {
-        this.userId = userId;
-        this.userName = userName;
-        this.password = password;
+    public Post(String title, String postBody, String nickName) {
+        this.title = title;
+        this.postBody = postBody;
         this.nickName = nickName;
     }
 }
