@@ -12,7 +12,7 @@ import java.util.Optional;
 @Repository
 @Transactional
 @RequiredArgsConstructor
-public class ImplUserRepository  implements UserRepository{
+public class ImplUsersRepository implements UsersRepository {
 
     private final EntityManager entityManager;
     @Override

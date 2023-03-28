@@ -4,7 +4,7 @@ import com.geulkkoli.domain.Users;
 
 import java.util.Optional;
 
-public interface UserRepository  {
+public interface UsersRepository {
     Users save(Users user);
     Optional<Users> findById(Long id);
 }
