@@ -7,8 +7,13 @@ import static org.assertj.core.api.Assertions.assertThat;
 class UserTest {
     @Test
     void getUserName() {
-        User user = new User(1l,"j");
+        User user = User.builder()
+                .userId("kkk")
+                .userName("김")
+                .nickName("바나나")
+                .password("1234")
+                .build();
 
-        assertThat(user.getUserName()).isEqualTo("j");
+        assertThat(user.getUserName()).isEqualTo("김");
     }
 }
