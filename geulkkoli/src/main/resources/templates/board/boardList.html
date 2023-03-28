@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div>
+  <Button>글 쓰기</Button>
+</div>
+<table>
+    <th>
+        <td>번호</td>
+        <td>주제</td>
+        <td>닉네임</td>
+        <td>작성날짜</td>
+    </th>
+    <tr th:each="board : ${list}">
+        <td th:text="${board.no}"></td>
+        <td th:text="${board.subject}"></td>
+        <td th:text="${board.nickName}"></td>
+        <td th:text="${board.date}"></td>
+    </tr>
+</table>
+</body>
+</html>
