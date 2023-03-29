@@ -12,7 +12,7 @@ import java.util.Optional;
 @Repository
 @Transactional
 @RequiredArgsConstructor
-public class ImplUsersRepository implements UsersRepository {
+public class ImplUserRepository implements UserRepository {
     private final EntityManager entityManager;
     @Override
     public User save(User user) {
@@ -33,6 +33,4 @@ public class ImplUsersRepository implements UsersRepository {
                 .getResultList()
                 .stream().findAny();
     }
-
-    
 }

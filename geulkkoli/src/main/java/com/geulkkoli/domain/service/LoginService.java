@@ -1,8 +1,7 @@
-package com.geulkkoli.service;
-
+package com.geulkkoli.domain.service;
 
 import com.geulkkoli.domain.User;
-import com.geulkkoli.respository.UsersRepository;
+import com.geulkkoli.respository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -11,13 +10,13 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class LoginService {
 
-    private final UsersRepository usersRepository;
+    private final UserRepository userRepository;
     /**
      * @return null 로그인 실패
      */
     @Transactional(readOnly = true)
     public User login(String loginId, String password) {
-        return usersRepository.findByUserId(loginId)
+        return userRepository.findByUserId(loginId)
                 .filter(m -> m.matchPassword(password))
                 .orElseThrow(() ->new LoginFailureException("존재하지 않는 사용자 입니다."));
     }

@@ -1,10 +1,9 @@
 package com.geulkkoli.domain;
 
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import static org.assertj.core.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 class PostTest {
     @Test
@@ -14,10 +13,8 @@ class PostTest {
                 .postBody("나나")
                 .title("테스트").build();
 
-
         assertAll(() -> assertThat(post.getTitle()).isEqualTo("테스트"),
                 () -> assertThat(post.getPostBody()).isEqualTo("나나"),
                 () -> assertThat(post.getNickName()).isEqualTo("나"));
-
     }
 }

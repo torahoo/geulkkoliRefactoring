@@ -1,4 +1,4 @@
-package com.geulkkoli.service;
+package com.geulkkoli.domain.service;
 
 public class LoginFailureException extends RuntimeException{
 

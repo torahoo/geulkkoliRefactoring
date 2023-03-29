@@ -1,8 +1,8 @@
-package com.geulkkoli.domain;
+package com.geulkkoli.domain.service;
 
-import com.geulkkoli.respository.UsersRepository;
-import com.geulkkoli.service.LoginFailureException;
-import com.geulkkoli.service.LoginService;
+import com.geulkkoli.domain.User;
+import com.geulkkoli.respository.UserRepository;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -20,11 +20,11 @@ public class LoginTest {
     @Autowired
     LoginService loginService;
     @Autowired
-    UsersRepository usersRepository;
+    UserRepository userRepository;
 
     @PostConstruct
     void init(){
-        usersRepository.save(User.builder()
+        userRepository.save(User.builder()
                 .userId("kkk")
                 .userName("김")
                 .nickName("바나나")
@@ -33,7 +33,8 @@ public class LoginTest {
     }
 
     @Test
-    void 로그인테스트(){
+    @DisplayName("로그인테스트")
+    void loginTest(){
         //given
 
         //when
@@ -44,7 +45,8 @@ public class LoginTest {
     }
 
     @Test
-    void 로그인실패시_실패예외를_던진다(){
+    @DisplayName("로그인실패시_실패예외를_던진다")
+    void throwErrorWhenLoginFailedTest(){
         //given
 
         //when

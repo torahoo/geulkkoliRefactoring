@@ -3,7 +3,7 @@ package com.geulkkoli;
 import com.geulkkoli.domain.Post;
 import com.geulkkoli.domain.User;
 import com.geulkkoli.respository.PostRepository;
-import com.geulkkoli.respository.UsersRepository;
+import com.geulkkoli.respository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
@@ -14,7 +14,7 @@ import org.springframework.context.event.EventListener;
 public class TestDataInit {
 
     private final PostRepository postRepository;
-    private final UsersRepository userRepository;
+    private final UserRepository userRepository;
 
     /**
      * 확인용 초기 데이터 추가
@@ -23,9 +23,9 @@ public class TestDataInit {
     public void initData() {
         log.info("test data init");
         postRepository.save(Post.builder()
-                .nickName("나")
-                .postBody("나나")
-                .title("테스트").build()
+                .nickName("륜투더환")
+                .postBody("나는 멋지고 섹시한 개발자")//채&훈
+                .title("여러분 ㅋ").build()
         );
 
         userRepository.save(User.builder()
