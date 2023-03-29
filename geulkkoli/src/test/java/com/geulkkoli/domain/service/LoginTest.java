@@ -1,6 +1,8 @@
 package com.geulkkoli.domain.service;
 
-import com.geulkkoli.domain.User;
+import com.geulkkoli.domain.user.User;
+import com.geulkkoli.domain.user.service.LoginFailureException;
+import com.geulkkoli.domain.user.service.LoginService;
 import com.geulkkoli.infrastructure.UserRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

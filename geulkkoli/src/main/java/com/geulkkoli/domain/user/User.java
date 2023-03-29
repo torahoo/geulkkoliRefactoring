@@ -1,4 +1,4 @@
-package com.geulkkoli.domain;
+package com.geulkkoli.domain.user;
 
 import lombok.Builder;
 import lombok.NoArgsConstructor;

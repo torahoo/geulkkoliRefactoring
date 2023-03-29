@@ -1,7 +1,7 @@
 package com.geulkkoli;
 
-import com.geulkkoli.domain.Post;
-import com.geulkkoli.domain.User;
+import com.geulkkoli.domain.post.Post;
+import com.geulkkoli.domain.user.User;
 import com.geulkkoli.infrastructure.PostRepository;
 import com.geulkkoli.infrastructure.UserRepository;
 import lombok.RequiredArgsConstructor;

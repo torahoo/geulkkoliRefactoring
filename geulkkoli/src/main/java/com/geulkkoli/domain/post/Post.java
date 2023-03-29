@@ -1,4 +1,4 @@
-package com.geulkkoli.domain;
+package com.geulkkoli.domain.post;
 
 import lombok.Builder;
 import lombok.EqualsAndHashCode;

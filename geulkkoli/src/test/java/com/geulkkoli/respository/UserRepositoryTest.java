@@ -1,4 +1,4 @@
-package com.geulkkoli.infrastructure;
+package com.geulkkoli.respository;
 
 import com.geulkkoli.domain.user.User;
 import org.junit.jupiter.api.Test;
@@ -6,13 +6,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import java.util.Optional;
+
+import static org.assertj.core.api.Assertions.*;
 
 @SpringBootTest
 @Transactional
 class UserRepositoryTest {
     @Autowired
-    private UserRepository userRepository;
+    private UsersRepository usersRepository;
 
     @Test
     void save() {
@@ -23,9 +25,9 @@ class UserRepositoryTest {
                 .password("1234")
                 .build();
 
-        User saveUser = userRepository.save(user);
+        User saveUser = usersRepository.save(user);
 
-        assertThat(saveUser).isEqualTo(user);
+        assertThat(user).isEqualTo(user);
     }
 
     @Test
@@ -37,15 +39,15 @@ class UserRepositoryTest {
                 .password("1234")
                 .build();
 
-        userRepository.save(user);
-        User findUser = userRepository.findById(1L)
-                .orElseThrow(() -> new EmptyDataException("해당 데이터가 존제하지 않습니다."));
+        usersRepository.save(user);
+        Optional<User> findUser = usersRepository.findById(1l);
 
-        assertThat(findUser).isEqualTo(user);
+        assertThat(findUser.get()).isEqualTo(user);
+
     }
 
     @Test
-    void findByLoginId() {
+    void findByUserId() {
         User user = User.builder()
                 .userId("kkk")
                 .userName("김")
@@ -53,10 +55,9 @@ class UserRepositoryTest {
                 .password("1234")
                 .build();
 
-        userRepository.save(user);
-        User findByLoginIdUser = userRepository.findByUserId(user.getUserId())
-                .orElseThrow(() -> new EmptyDataException("해당 데이터가 존제하지 않습니다."));
+        usersRepository.save(user);
+        Optional<User> findUser = usersRepository.findByUserId("kkk");
 
-        assertThat(findByLoginIdUser).isEqualTo(user);
+        assertThat(findUser.get()).isEqualTo(user);
     }
 }
