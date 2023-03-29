@@ -1,11 +1,11 @@
 package com.geulkkoli.respository;
 
-import com.geulkkoli.domain.Users;
+import com.geulkkoli.domain.User;
 
 import java.util.Optional;
 
 public interface UsersRepository {
-    Users save(Users user);
-    Optional<Users> findById(Long id);
-    Optional<Users> findByUserId(String loginId);
+    User save(User user);
+    Optional<User> findById(Long id);
+    Optional<User> findByUserId(String loginId);
 }

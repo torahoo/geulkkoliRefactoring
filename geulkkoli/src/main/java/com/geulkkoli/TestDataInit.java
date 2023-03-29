@@ -1,7 +1,7 @@
 package com.geulkkoli;
 
 import com.geulkkoli.domain.Post;
-import com.geulkkoli.domain.Users;
+import com.geulkkoli.domain.User;
 import com.geulkkoli.respository.PostRepository;
 import com.geulkkoli.respository.UsersRepository;
 import lombok.RequiredArgsConstructor;
@@ -28,7 +28,7 @@ public class TestDataInit {
                 .title("테스트").build()
         );
 
-        userRepository.save(Users.builder()
+        userRepository.save(User.builder()
                 .userId("kkk")
                 .userName("김")
                 .nickName("바나나")

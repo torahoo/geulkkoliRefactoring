@@ -24,7 +24,7 @@ public class LoginTest {
 
     @PostConstruct
     void init(){
-        usersRepository.save(Users.builder()
+        usersRepository.save(User.builder()
                 .userId("kkk")
                 .userName("김")
                 .nickName("바나나")
@@ -37,7 +37,7 @@ public class LoginTest {
         //given
 
         //when
-        Users loginUser = loginService.login("kkk", "1234");
+        User loginUser = loginService.login("kkk", "1234");
 
         //then
         assertThat(loginUser.getUserId()).isEqualTo("kkk");

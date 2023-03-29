@@ -1,13 +1,12 @@
 package com.geulkkoli.respository;
 
-import com.geulkkoli.domain.Users;
+import com.geulkkoli.domain.User;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
-import java.util.List;
 import java.util.Optional;
 @Slf4j
 @Repository
@@ -16,20 +15,20 @@ import java.util.Optional;
 public class ImplUsersRepository implements UsersRepository {
     private final EntityManager entityManager;
     @Override
-    public Users save(Users user) {
+    public User save(User user) {
         entityManager.persist(user);
         return user;
     }
 
     @Override
-    public Optional<Users> findById(Long id) {
-        Users findUser = entityManager.find(Users.class, id);
+    public Optional<User> findById(Long id) {
+        User findUser = entityManager.find(User.class, id);
         return Optional.of(findUser);
     }
 
-    public Optional<Users> findByUserId(String loginId) {
+    public Optional<User> findByUserId(String loginId) {
 
-        return entityManager.createQuery("select u from Users u where u.userId = :userId", Users.class)
+        return entityManager.createQuery("select u from User u where u.userId = :userId", User.class)
                 .setParameter("userId", loginId)
                 .getResultList()
                 .stream().findAny();
