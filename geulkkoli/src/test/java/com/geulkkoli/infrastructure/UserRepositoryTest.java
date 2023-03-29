@@ -1,7 +1,6 @@
 package com.geulkkoli.infrastructure;
 
 import com.geulkkoli.domain.user.User;
-import com.geulkkoli.domain.user.UserRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -40,7 +39,7 @@ class UserRepositoryTest {
 
         userRepository.save(user);
         User findUser = userRepository.findById(1L)
-                .orElse(null);
+                .orElseThrow(() -> new EmptyDataException("해당 데이터가 존제하지 않습니다."));
 
         assertThat(findUser).isEqualTo(user);
     }
@@ -56,7 +55,7 @@ class UserRepositoryTest {
 
         userRepository.save(user);
         User findByLoginIdUser = userRepository.findByUserId(user.getUserId())
-                .orElse(null);
+                .orElseThrow(() -> new EmptyDataException("해당 데이터가 존제하지 않습니다."));
 
         assertThat(findByLoginIdUser).isEqualTo(user);
     }

@@ -1,5 +1,6 @@
-package com.geulkkoli.domain.post;
+package com.geulkkoli.infrastructure;
 
+import com.geulkkoli.domain.post.Post;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;

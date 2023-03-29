@@ -1,19 +1,20 @@
 package com.geulkkoli.respository;
 
 import com.geulkkoli.domain.user.User;
-import com.geulkkoli.domain.user.UserRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import java.util.Optional;
+
+import static org.assertj.core.api.Assertions.*;
 
 @SpringBootTest
 @Transactional
 class UserRepositoryTest {
     @Autowired
-    private UserRepository userRepository;
+    private UsersRepository usersRepository;
 
     @Test
     void save() {
@@ -24,9 +25,9 @@ class UserRepositoryTest {
                 .password("1234")
                 .build();
 
-        User saveUser = userRepository.save(user);
+        User saveUser = usersRepository.save(user);
 
-        assertThat(saveUser).isEqualTo(user);
+        assertThat(user).isEqualTo(user);
     }
 
     @Test
@@ -38,11 +39,10 @@ class UserRepositoryTest {
                 .password("1234")
                 .build();
 
-        userRepository.save(user);
-        User findUser = userRepository.findById(1L)
-                .orElse(null);
+        usersRepository.save(user);
+        Optional<User> findUser = usersRepository.findById(1l);
 
-        assertThat(findUser).isEqualTo(user);
+        assertThat(findUser.get()).isEqualTo(user);
 
     }
 
@@ -55,10 +55,9 @@ class UserRepositoryTest {
                 .password("1234")
                 .build();
 
-        userRepository.save(user);
-        User findUser = userRepository.findByUserId("kkk")
-                .orElse(null);
+        usersRepository.save(user);
+        Optional<User> findUser = usersRepository.findByUserId("kkk");
 
-        assertThat(findUser).isEqualTo(user);
+        assertThat(findUser.get()).isEqualTo(user);
     }
 }

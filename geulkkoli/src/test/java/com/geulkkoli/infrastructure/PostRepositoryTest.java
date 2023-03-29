@@ -1,7 +1,6 @@
 package com.geulkkoli.infrastructure;
 
 import com.geulkkoli.domain.post.Post;
-import com.geulkkoli.domain.post.PostRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -38,7 +37,7 @@ class PostRepositoryTest {
         postRepository.save(post);
 
         Post findPost = postRepository.findById(1L)
-                .orElse(null);
+                .orElseThrow(() -> new EmptyDataException("해당 데이터가 존제하지 않습니다."));
 
         assertThat(findPost).isEqualTo(post);
     }
