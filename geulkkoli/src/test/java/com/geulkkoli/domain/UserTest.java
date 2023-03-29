@@ -14,7 +14,7 @@ class UserTest {
                 .userId("kkk")
                 .userName("김")
                 .nickName("바나나")
-                .password("1234")
+                .password("12345")
                 .build();
 
         assertThat(user.getUserName()).isEqualTo("김");
