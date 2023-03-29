@@ -14,7 +14,9 @@ import java.util.Optional;
 @Transactional
 @RequiredArgsConstructor
 public class ImplPostRepository implements PostRepository {
+
     private final EntityManager entityManager;
+
     @Override
     public Post save(Post post) {
         entityManager.persist(post);
@@ -31,6 +33,12 @@ public class ImplPostRepository implements PostRepository {
         return entityManager
                 .createQuery("select p from Post p", Post.class)
                 .getResultList();
+    }
+
+    public void update (Long postId, Post updateParam) {
+        Post findPost = entityManager.find(Post.class, postId);
+        findPost.setTitle(updateParam.getTitle());
+        findPost.setPostBody(updateParam.getPostBody());
     }
 
 }

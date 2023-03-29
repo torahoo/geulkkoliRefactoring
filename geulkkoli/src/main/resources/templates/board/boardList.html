@@ -2,21 +2,23 @@
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>게시물 리스트</title>
 </head>
 <body>
 <div>
   <Button th:onclick="|location.href='@{/board/add}'|" th:text="'글 쓰기'">글쓰기</Button>
 </div>
 <table border="1">
-    <th>
-        <td>번호</td>
-        <td>주제</td>
-        <td>닉네임</td>
-    </th>
+    <tr>
+        <th>번호</th>
+        <th>주제</th>
+        <th>내용</th>
+        <th>닉네임</th>
+    </tr>
     <tr th:each="post : ${list}">
-        <td th:text="*{post.postNo}"></td>
+        <td th:text="${post.postNo}"></td>
         <td th:text="${post.title}"></td>
+        <td th:text="${post.postBody}"></td>
         <td th:text="${post.nickName}"></td>
     </tr>
 </table>

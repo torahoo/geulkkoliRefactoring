@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>수정 폼</title>
+</head>
+<body>
+<h1 th:text="주제"></h1>
+<div>
+  <form id="add" th:action="@{/board/update/{postId}(postId=*{postNo})}" th:object="${post}" method="post">
+    <div>
+      <label th:text="제목">제목</label>
+      <input type="text" id="title" th:field="*{title}">
+    </div>
+    <div>
+      <textarea th:field="*{postBody}" form="add"></textarea>
+    </div>
+    <div>
+      <button type="submit"  th:value="등록">등록</button>
+      <button type="button" th:onclick="|location.href='@{/board/list}'|" th:value="취소">취소</button>
+    </div>
+  </form>
+</div>
+</body>
+</html>

@@ -7,14 +7,16 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
+@Setter
 @Getter
 @NoArgsConstructor
 @Entity
 @EqualsAndHashCode
+@ToString
 public class Post {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long postNo;
     private String title;
     private String postBody;
@@ -26,4 +28,7 @@ public class Post {
         this.postBody = postBody;
         this.nickName = nickName;
     }
+
+
+
 }
