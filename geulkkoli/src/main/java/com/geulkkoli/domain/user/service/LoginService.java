@@ -1,7 +1,7 @@
 package com.geulkkoli.domain.user.service;
 
 import com.geulkkoli.domain.user.User;
-import com.geulkkoli.infrastructure.UserRepository;
+import com.geulkkoli.domain.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

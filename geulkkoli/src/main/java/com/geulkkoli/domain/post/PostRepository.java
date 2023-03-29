@@ -1,6 +1,4 @@
-package com.geulkkoli.infrastructure;
-
-import com.geulkkoli.domain.post.Post;
+package com.geulkkoli.domain.post;
 
 import java.util.Optional;
 

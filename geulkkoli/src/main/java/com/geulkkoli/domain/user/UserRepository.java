@@ -1,6 +1,4 @@
-package com.geulkkoli.infrastructure;
-
-import com.geulkkoli.domain.user.User;
+package com.geulkkoli.domain.user;
 
 import java.util.Optional;
 
