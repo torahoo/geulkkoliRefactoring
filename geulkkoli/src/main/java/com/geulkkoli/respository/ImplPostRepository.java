@@ -1,13 +1,13 @@
 package com.geulkkoli.respository;
 
 import com.geulkkoli.domain.Post;
-import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
+import java.util.List;
 import java.util.Optional;
 
 @Slf4j
@@ -27,4 +27,11 @@ public class ImplPostRepository implements PostRepository {
         Post post = entityManager.find(Post.class, postId);
         return Optional.of(post);
     }
+
+    public List<Post> findAll() {
+        return entityManager
+                .createQuery("select p from Post p", Post.class)
+                .getResultList();
+    }
+
 }

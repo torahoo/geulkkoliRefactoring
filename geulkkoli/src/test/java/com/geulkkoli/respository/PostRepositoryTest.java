@@ -1,7 +1,6 @@
 package com.geulkkoli.respository;
 
 import com.geulkkoli.domain.Post;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -42,5 +41,10 @@ class PostRepositoryTest {
         Optional<Post> findPost = postRepository.findById(1L);
 
         assertThat(findPost.get()).isEqualTo(post);
+    }
+
+    @Test
+    void findAll() {
+
     }
 }

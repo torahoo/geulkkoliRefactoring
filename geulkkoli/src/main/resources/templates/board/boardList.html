@@ -6,20 +6,18 @@
 </head>
 <body>
 <div>
-  <Button>글 쓰기</Button>
+  <Button th:onclick="|location.href='@{/board/add}'|" th:text="'글 쓰기'">글쓰기</Button>
 </div>
-<table>
+<table border="1">
     <th>
         <td>번호</td>
         <td>주제</td>
         <td>닉네임</td>
-        <td>작성날짜</td>
     </th>
-    <tr th:each="board : ${list}">
-        <td th:text="${board.no}"></td>
-        <td th:text="${board.subject}"></td>
-        <td th:text="${board.nickName}"></td>
-        <td th:text="${board.date}"></td>
+    <tr th:each="post : ${list}">
+        <td th:text="*{post.postNo}"></td>
+        <td th:text="${post.title}"></td>
+        <td th:text="${post.nickName}"></td>
     </tr>
 </table>
 </body>
