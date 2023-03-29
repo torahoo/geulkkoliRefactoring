@@ -1,5 +1,6 @@
 package com.geulkkoli.domain;
 
+import com.geulkkoli.domain.user.Users;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;

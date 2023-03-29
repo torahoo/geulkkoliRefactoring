@@ -1,7 +1,7 @@
-package com.geulkkoli.seungin.service;
+package com.geulkkoli.domain.post;
 
-import com.geulkkoli.domain.Post;
-import com.geulkkoli.respository.ImplPostRepository;
+import com.geulkkoli.domain.post.Post;
+import com.geulkkoli.domain.post.ImplPostRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

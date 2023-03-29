@@ -1,6 +1,6 @@
 package com.geulkkoli.domain;
 
-import org.assertj.core.api.Assertions;
+import com.geulkkoli.domain.post.Post;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.*;
