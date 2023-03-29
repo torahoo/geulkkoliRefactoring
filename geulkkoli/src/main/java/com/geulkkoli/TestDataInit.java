@@ -2,8 +2,8 @@ package com.geulkkoli;
 
 import com.geulkkoli.domain.Post;
 import com.geulkkoli.domain.User;
-import com.geulkkoli.respository.PostRepository;
-import com.geulkkoli.respository.UserRepository;
+import com.geulkkoli.infrastructure.PostRepository;
+import com.geulkkoli.infrastructure.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.context.event.ApplicationReadyEvent;

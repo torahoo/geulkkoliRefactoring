@@ -1,7 +1,7 @@
 package com.geulkkoli.domain.service;
 
 import com.geulkkoli.domain.User;
-import com.geulkkoli.respository.UserRepository;
+import com.geulkkoli.infrastructure.UserRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,4 +1,4 @@
-package com.geulkkoli.respository;
+package com.geulkkoli.infrastructure;
 
 import com.geulkkoli.domain.User;
 import org.junit.jupiter.api.Test;
