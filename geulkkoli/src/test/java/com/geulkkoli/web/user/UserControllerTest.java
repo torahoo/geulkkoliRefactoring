@@ -36,7 +36,7 @@ class UserControllerTest {
 
 
     @Test
-    void userLogin() throws Exception{
+    void userLogin() throws Exception {
         //given
         MultiValueMap<String, String> query_param = new LinkedMultiValueMap<>();
         query_param.add("userId", "kkk");
@@ -56,8 +56,9 @@ class UserControllerTest {
     @DisplayName("세션이 상태유지를 하는 지 테스트 한다.")
     void isSessionStateful() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.post("/login")
-                .session(mockHttpSession))
+                        .param("userId", "kkk")
+                        .param("password", "1234"))
                 .andExpect(MockMvcResultMatchers.status().isOk())
-                .andDo(MockMvcResultHandlers.log());
+                .andDo(MockMvcResultHandlers.print());
     }
 }
