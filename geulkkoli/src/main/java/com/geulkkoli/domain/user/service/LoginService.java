@@ -6,6 +6,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
+
 @Service
 @RequiredArgsConstructor
 public class LoginService {
@@ -15,9 +17,8 @@ public class LoginService {
      * @return null 로그인 실패
      */
     @Transactional(readOnly = true)
-    public User login(String loginId, String password) {
+    public Optional<User> login(String loginId, String password) {
         return userRepository.findByUserId(loginId)
-                .filter(m -> m.matchPassword(password))
-                .orElseThrow(() ->new LoginFailureException("존재하지 않는 사용자 입니다."));
+                .filter(m -> m.matchPassword(password));
     }
 }

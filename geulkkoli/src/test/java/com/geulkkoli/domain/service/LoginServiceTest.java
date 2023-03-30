@@ -1,7 +1,6 @@
 package com.geulkkoli.domain.service;
 
 import com.geulkkoli.domain.user.User;
-import com.geulkkoli.domain.user.service.LoginFailureException;
 import com.geulkkoli.domain.user.service.LoginService;
 import com.geulkkoli.domain.user.UserRepository;
 import org.junit.jupiter.api.DisplayName;
@@ -12,12 +11,14 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.PostConstruct;
 
+import java.util.Optional;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @SpringBootTest
 @Transactional
-public class LoginTest {
+public class LoginServiceTest {
 
     @Autowired
     LoginService loginService;
@@ -25,7 +26,7 @@ public class LoginTest {
     UserRepository userRepository;
 
     @PostConstruct
-    void init(){
+    void init() {
         userRepository.save(User.builder()
                 .userId("kkk")
                 .userName("김")
@@ -36,25 +37,30 @@ public class LoginTest {
 
     @Test
     @DisplayName("로그인테스트")
-    void loginTest(){
+    void loginTest() {
         //given
-
+        User exitsUser = User.builder()
+                .userId("kkk")
+                .password("1234")
+                .build();
         //when
-        User loginUser = loginService.login("kkk", "1234");
+        Optional<User> loginUser = loginService.login("kkk", "1234");
 
         //then
-        assertThat(loginUser.getUserId()).isEqualTo("kkk");
+        assertThat(loginUser)
+                .isNotEmpty()
+                .hasValue(exitsUser);
     }
 
     @Test
-    @DisplayName("로그인실패시_실패예외를_던진다")
-    void throwErrorWhenLoginFailedTest(){
+    @DisplayName("로그인실패시_널을 반환한다.")
+    void throwErrorWhenLoginFailedTest() {
         //given
-
+        Optional<User> noneExistentUser = loginService.login("kkk", "1243");
         //when
 
         //then
-        assertThatThrownBy(() ->loginService.login("kkk1", "1234")).isInstanceOf(LoginFailureException.class);
+        assertThat(noneExistentUser).isEmpty();
     }
 
 }
