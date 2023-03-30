@@ -178,3 +178,7 @@ gradle-app.setting
 build/
 
 # End of https://www.toptal.com/developers/gitignore/api/macos,windows,gradle,intellij+all
+/.gradle/
+/geulkkoli.iml
+
+/.gradle/
