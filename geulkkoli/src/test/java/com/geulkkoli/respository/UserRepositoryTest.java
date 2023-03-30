@@ -1,6 +1,7 @@
 package com.geulkkoli.respository;
 
 import com.geulkkoli.domain.user.User;
+import com.geulkkoli.domain.user.UserRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -14,7 +15,7 @@ import static org.assertj.core.api.Assertions.*;
 @Transactional
 class UserRepositoryTest {
     @Autowired
-    private UsersRepository usersRepository;
+    private UserRepository userRepository;
 
     @Test
     void save() {
@@ -25,7 +26,7 @@ class UserRepositoryTest {
                 .password("1234")
                 .build();
 
-        User saveUser = usersRepository.save(user);
+        User saveUser = userRepository.save(user);
 
         assertThat(user).isEqualTo(user);
     }
@@ -39,8 +40,8 @@ class UserRepositoryTest {
                 .password("1234")
                 .build();
 
-        usersRepository.save(user);
-        Optional<User> findUser = usersRepository.findById(1l);
+        userRepository.save(user);
+        Optional<User> findUser = userRepository.findById(1l);
 
         assertThat(findUser.get()).isEqualTo(user);
 
@@ -55,8 +56,8 @@ class UserRepositoryTest {
                 .password("1234")
                 .build();
 
-        usersRepository.save(user);
-        Optional<User> findUser = usersRepository.findByUserId("kkk");
+        userRepository.save(user);
+        Optional<User> findUser = userRepository.findByUserId("kkk");
 
         assertThat(findUser.get()).isEqualTo(user);
     }

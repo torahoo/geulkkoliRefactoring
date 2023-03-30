@@ -1,4 +1,4 @@
-package com.geulkkoli.infrastructure;
+package com.geulkkoli.domain.post;
 
 import com.geulkkoli.domain.post.Post;
 

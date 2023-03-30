@@ -1,6 +1,8 @@
 package com.geulkkoli.infrastructure;
 
 import com.geulkkoli.domain.user.User;
+import com.geulkkoli.domain.user.UserRepository;
+import com.geulkkoli.exception.EmptyDataException;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;

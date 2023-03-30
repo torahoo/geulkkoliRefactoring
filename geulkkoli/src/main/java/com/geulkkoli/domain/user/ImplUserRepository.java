@@ -1,6 +1,7 @@
-package com.geulkkoli.infrastructure;
+package com.geulkkoli.domain.user;
 
 import com.geulkkoli.domain.user.User;
+import com.geulkkoli.domain.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;

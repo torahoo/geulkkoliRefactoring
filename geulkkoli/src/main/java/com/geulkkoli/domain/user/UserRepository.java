@@ -1,4 +1,4 @@
-package com.geulkkoli.infrastructure;
+package com.geulkkoli.domain.user;
 
 import com.geulkkoli.domain.user.User;
 
