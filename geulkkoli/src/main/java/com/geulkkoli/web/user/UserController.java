@@ -46,8 +46,9 @@ public class UserController {
             return LOGIN_FORM;
         }
 
+
         HttpSession session = request.getSession();
-        session.setAttribute(SessionConst.LOGIN_USER, loginUser);
+        session.setAttribute(SessionConst.LOGIN_USER, loginUser.get());
         return LOGIN_FORM;
     }
 }
