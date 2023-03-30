@@ -29,7 +29,7 @@ public class UserController {
 
     @GetMapping("/login")
     public String loginForm(@ModelAttribute("loginForm") LoginForm form) {
-        return "user/loginForm";
+        return LOGIN_FORM;
     }
 
     @PostMapping("/login")
