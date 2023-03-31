@@ -36,9 +36,7 @@
     <br>
     <div id="nickNameTwoBox">
       <input type="text" name="nickName" id="nickName" placeholder="5~10자리 / 영문, 숫자 사용 가능"
-             class="form-control form-control-lg nickNameInline"> <input type="submit" value="중복 확인"
-                                                                         class="btn btn-primary mb-3 IdInline"
-                                                                         onclick="javascript: form.action='/manage/nickNameCheck';">
+             class="form-control form-control-lg nickNameInline">
     </div>
   </div>
 
@@ -50,8 +48,7 @@
     <br>
     <div id="idTwoBox">
       <input type="text" name="userId" id="userId" placeholder="5~20자리 / 영문, 숫자 사용 가능"
-             class="form-control form-control-lg idInline"> <input type="submit" value="중복 확인"
-                                                                   class="btn btn-primary mb-3 IdInline" onclick="javascript: form.action='';">
+             class="form-control form-control-lg idInline">
       <p th:if="${status}" th:text="'이미 있는 아이디입니다'"></p>
     </div>
   </div>
