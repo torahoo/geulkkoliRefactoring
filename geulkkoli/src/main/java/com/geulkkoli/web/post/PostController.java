@@ -39,7 +39,7 @@ public class PostController {
     }
 
     @GetMapping("/update/{postId}")
-    public String boardUpdateForm (Model model, @PathVariable Long postId) {
+    public String boardUpdateForm(Model model, @PathVariable Long postId) {
         log.info("updateParam={}, postId={}", model.getAttribute("post"), postId);
         Post findPost = postService.findById(postId);
         log.info("findPost={}", findPost.getPostBody());
@@ -48,17 +48,24 @@ public class PostController {
     }
 
     @PostMapping("/update/{postId}")
-    public String boardUpdate (@ModelAttribute Post updateParam, @PathVariable Long postId) {
+    public String boardUpdate(@ModelAttribute Post updateParam, @PathVariable Long postId) {
         log.info("updateParam={}, postId={}", updateParam.getPostBody(), postId);
         postService.updatePost(postId, updateParam);
         return "redirect:/board/list";
     }
 
     @PostConstruct
-    public void init () {
+    public void init() {
         postService.savePost(new Post("testTitle01", "test postbody 01", "test nickname01"));
         postService.savePost(new Post("testTitle02", "test postbody 02", "test nickname02"));
         postService.savePost(new Post("testTitle03", "test postbody 03", "test nickname03"));
 
+    }
+
+    @PostMapping("/test")
+    public String testBlanc(@ModelAttribute Post post) {
+        log.info("testBlanc={}", post.getTitle());
+//        postService.savePost(post);
+        return "redirect:/board/list";
     }
 }
