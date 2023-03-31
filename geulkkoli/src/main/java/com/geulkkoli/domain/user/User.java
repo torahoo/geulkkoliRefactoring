@@ -1,6 +1,8 @@
 package com.geulkkoli.domain.user;
 
+import lombok.AccessLevel;
 import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
@@ -8,6 +10,7 @@ import java.util.Objects;
 
 @NoArgsConstructor
 @Entity
+@Getter
 @Table(name = "users")
 public class User {
     @Id
@@ -17,35 +20,27 @@ public class User {
     private String userId;
     private String userName;
 
+    @Getter(AccessLevel.NONE)
     private String password;
     private String nickName;
 
+    private String email;
+    private Integer phoneNo;
+    private String sex;
+
     @Builder
-    public User(String userId, String userName, String password, String nickName) {
+    public User(String userId, String userName, String password, String nickName, String email, Integer phoneNo, String sex) {
         this.userId = userId;
         this.userName = userName;
         this.password = password;
         this.nickName = nickName;
+        this.email = email;
+        this.phoneNo = phoneNo;
+        this.sex = sex;
     }
 
     public boolean matchPassword(String password) {
         return password.matches(this.password);
-    }
-
-    public String getUserId() {
-        return userId;
-    }
-
-    public String getUserName() {
-        return userName;
-    }
-
-    public Long getUserNo() {
-        return userNo;
-    }
-
-    public String getNickName() {
-        return nickName;
     }
 
     @Override
