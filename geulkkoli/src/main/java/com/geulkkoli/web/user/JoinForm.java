@@ -12,9 +12,6 @@ import javax.validation.constraints.NotEmpty;
 @Setter
 @ToString
 public class JoinForm {
-
-    @NotEmpty
-    private String userId;
     @NotEmpty
     private String userName;
 
@@ -31,7 +28,6 @@ public class JoinForm {
 
     public User toEntity(){
         return User.builder()
-                .userId(userId)
                 .userName(userName)
                 .password(password)
                 .nickName(nickName)

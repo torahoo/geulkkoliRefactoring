@@ -35,12 +35,12 @@ public class UserController {
 
     @PostMapping("/login")
     public String userLogin(@Valid @ModelAttribute LoginForm form, BindingResult bindingResult, HttpServletRequest request) {
-        log.info("userId {} , password {}", form.getUserId(), form.getPassword());
+        log.info("email {} , password {}", form.getEmail(), form.getPassword());
         if (bindingResult.hasErrors()) {
             return LOGIN_FORM;
         }
 
-        Optional<User> loginUser = loginService.login(form.getUserId(), form.getPassword());
+        Optional<User> loginUser = loginService.login(form.getEmail(), form.getPassword());
 
         if (loginUser.isEmpty()) {
             bindingResult.reject("loginFail", "아이디 또는 비밀번호가 맞지 않습니다.");

@@ -11,7 +11,7 @@ class UserTest {
     @Test
     void getUserName() {
         User user = User.builder()
-                .userId("kkk")
+                .email("tako@naver.com")
                 .userName("김")
                 .nickName("바나나")
                 .password("12345")
@@ -24,7 +24,7 @@ class UserTest {
     @DisplayName("비밀번호가 일치하는 지 확인한다.")
     void matchPassword() {
         User user = User.builder()
-                .userId("kkk")
+                .email("tako@naver.com")
                 .userName("김")
                 .nickName("바나나")
                 .password("1234")

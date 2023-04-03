@@ -26,7 +26,7 @@ public class LoginServiceTest {
     @BeforeEach
     void init() {
         userRepository.save(User.builder()
-                .userId("kkk")
+                .email("tako@naver.com")
                 .userName("김")
                 .nickName("바나나")
                 .password("1234")
@@ -38,11 +38,11 @@ public class LoginServiceTest {
     void loginTest() {
         //given
         User exitsUser = User.builder()
-                .userId("kkk")
+                .email("tako@naver.com")
                 .password("1234")
                 .build();
         //when
-        Optional<User> loginUser = loginService.login("kkk", "1234");
+        Optional<User> loginUser = loginService.login("tako@naver.com", "1234");
 
         //then
         assertThat(loginUser)
@@ -54,7 +54,7 @@ public class LoginServiceTest {
     @DisplayName("로그인실패시_널을 반환한다.")
     void throwErrorWhenLoginFailedTest() {
         //given
-        Optional<User> noneExistentUser = loginService.login("kkk", "1243");
+        Optional<User> noneExistentUser = loginService.login("tako@naver.com", "1243");
         //when
 
         //then

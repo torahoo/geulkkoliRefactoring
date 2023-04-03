@@ -25,14 +25,6 @@ public class ImplUserRepository implements UserRepository {
         return Optional.of(findUser);
     }
 
-    public Optional<User> findByUserId(String loginId) {
-
-        return entityManager.createQuery("select u from User u where u.userId = :userId", User.class)
-                .setParameter("userId", loginId)
-                .getResultList()
-                .stream().findAny();
-    }
-
     @Override
     public Optional<User> findByEmail(String email) {
         return entityManager.createQuery("select u from User u where u.email = :email", User.class)

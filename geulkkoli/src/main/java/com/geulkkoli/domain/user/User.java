@@ -17,7 +17,6 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long userNo;
 
-    private String userId;
     private String userName;
 
     @Getter(AccessLevel.NONE)
@@ -29,8 +28,7 @@ public class User {
     private String sex;
 
     @Builder
-    public User(String userId, String userName, String password, String nickName, String email, Integer phoneNo, String sex) {
-        this.userId = userId;
+    public User(String userName, String password, String nickName, String email, Integer phoneNo, String sex) {
         this.userName = userName;
         this.password = password;
         this.nickName = nickName;
@@ -48,11 +46,11 @@ public class User {
         if (this == o) return true;
         if (!(o instanceof User)) return false;
         User user = (User) o;
-        return Objects.equals(userId, user.userId);
+        return Objects.equals(userNo, user.userNo);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(userId);
+        return Objects.hash(userNo);
     }
 }

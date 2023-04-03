@@ -29,7 +29,7 @@ class UserControllerTest {
     void userLogin() throws Exception {
         //given
         MultiValueMap<String, String> query_param = new LinkedMultiValueMap<>();
-        query_param.add("userId", "kkk");
+        query_param.add("email", "tako@naver.com");
         query_param.add("password", "1234");
 
         //when
@@ -42,7 +42,7 @@ class UserControllerTest {
     @DisplayName("세션이 상태유지를 하는 지 테스트 한다.")
     void isSessionStateful() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.post("/login")
-                        .param("userId", "kkk")
+                        .param("email", "tako@naver.com")
                         .param("password", "1234"))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andDo(MockMvcResultHandlers.print());
@@ -53,7 +53,6 @@ class UserControllerTest {
     void joinUserTest() throws Exception {
         //given
         MultiValueMap<String, String> query_param = new LinkedMultiValueMap<>();
-        query_param.add("userId", "clever");
         query_param.add("userName", "fish");
         query_param.add("password", "1234");
         query_param.add("nickName", "takos");
@@ -65,7 +64,7 @@ class UserControllerTest {
         mockMvc.perform(MockMvcRequestBuilders.post("/join")
                         .params(query_param))
                 .andExpect(MockMvcResultMatchers.status().isOk());
-        User findByLoginIdUser = userRepository.findByUserId("clever").
+        User findByLoginIdUser = userRepository.findByEmail("clever").
                 orElse(null);
 
         //then
@@ -79,7 +78,6 @@ class UserControllerTest {
     void joinUserDupleTest() throws Exception {
         //given
         MultiValueMap<String, String> query_param = new LinkedMultiValueMap<>();
-        query_param.add("userId", "kkk");
         query_param.add("userName", "fish");
         query_param.add("password", "1234");
         query_param.add("nickName", "바나나");
@@ -94,12 +92,12 @@ class UserControllerTest {
                 .andExpect(MockMvcResultMatchers.model().attributeExists("idDuple"))
                 .andExpect(MockMvcResultMatchers.model().attributeExists("emailDuple"))
                 .andExpect(MockMvcResultMatchers.model().attributeExists("nickNameDuple"));
-        User findByUserIdUser = userRepository.findByUserId("kkk").
+        User findByEmailIdUser = userRepository.findByEmail("tako@naver.com").
                 orElse(null);
 
         //then
-        if (findByUserIdUser != null) {
-            assertThat(findByUserIdUser.getUserName()).isEqualTo("김");
+        if (findByEmailIdUser != null) {
+            assertThat(findByEmailIdUser.getUserName()).isEqualTo("김");
         }
     }
 
@@ -108,7 +106,6 @@ class UserControllerTest {
     void joinUserDupleRejectTest() throws Exception {
         //given
         MultiValueMap<String, String> query_param = new LinkedMultiValueMap<>();
-        query_param.add("userId", "kkk");
         query_param.add("userName", "fish");
         query_param.add("password", "1234");
         query_param.add("nickName", "takodachi");

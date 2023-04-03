@@ -43,15 +43,12 @@
 
     <br>
     <div class="mb-3">
-        <label for="userId">
-            <h4>아이디</h4>
+        <label for="email">
+            <h4>E-mail</h4>
         </label>
-        <br>
-        <div id="idTwoBox">
-            <input type="text" name="userId" id="userId" placeholder="5~20자리 / 영문, 숫자 사용 가능"
-                   class="form-control form-control-lg idInline">
-            <p th:if="${idDuple}" th:text="'이미 있는 아이디입니다'"></p>
-        </div>
+        <input type="email" name="email" id="email" placeholder="geulkkoli@welcome.com"
+               class="form-control form-control-lg">
+        <p th:if="${emailDuple}" th:text="'이미 있는 이메일입니다'"></p>
     </div>
 
     <div class="mb-3">
@@ -72,14 +69,7 @@
 
     <br>
 
-    <div class="mb-3">
-        <label for="email">
-            <h4>E-mail</h4>
-        </label>
-        <input type="email" name="email" id="email" placeholder="geulkkoli@welcome.com"
-               class="form-control form-control-lg">
-        <p th:if="${emailDuple}" th:text="'이미 있는 이메일입니다'"></p>
-    </div>
+
 
     <div class="mb-3">
         <label for="phoneNo">

@@ -17,8 +17,8 @@ public class LoginService {
      * @return null 로그인 실패
      */
     @Transactional(readOnly = true)
-    public Optional<User> login(String loginId, String password) {
-        return userRepository.findByUserId(loginId)
+    public Optional<User> login(String email, String password) {
+        return userRepository.findByEmail(email)
                 .filter(m -> m.matchPassword(password));
     }
 }

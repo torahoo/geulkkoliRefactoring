@@ -15,10 +15,6 @@ public class JoinService {
 
     public boolean checkDuplicate(JoinForm form, Model model){
         boolean check = false;
-        if (userRepository.findByUserId(form.getUserId()).isPresent()){
-            model.addAttribute("idDuple", true);
-            check = true;
-        }
         if(userRepository.findByEmail(form.getEmail()).isPresent()){
             model.addAttribute("emailDuple", true);
             check = true;
@@ -30,8 +26,8 @@ public class JoinService {
         return check;
     }
 
-    public boolean idCheck(String userId) {
-        return userRepository.findByUserId(userId).isPresent();
+    public boolean idCheck(String email) {
+        return userRepository.findByEmail(email).isPresent();
     }
 
     public boolean emailCheck(String email) {

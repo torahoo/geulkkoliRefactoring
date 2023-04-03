@@ -31,11 +31,10 @@ public class TestDataInit {
         );
 
         userRepository.save(User.builder()
-                .userId("kkk")
+                .email("tako@naver.com")
                 .userName("김")
                 .nickName("바나나")
                 .password("1234")
-                .email("tako@naver.com")
                 .build());
     }
 
