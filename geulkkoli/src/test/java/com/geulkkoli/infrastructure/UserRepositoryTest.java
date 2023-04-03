@@ -3,6 +3,7 @@ package com.geulkkoli.infrastructure;
 import com.geulkkoli.domain.user.User;
 import com.geulkkoli.domain.user.UserRepository;
 import com.geulkkoli.exception.EmptyDataException;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -61,4 +62,23 @@ class UserRepositoryTest {
 
         assertThat(findByLoginIdUser).isEqualTo(user);
     }
+
+    @Test
+    @DisplayName("이메일로 회원 조회")
+    void findByEmail() {
+        User findByEmailUser = userRepository.findByEmail("tako@naver.com")
+                .orElseThrow(() -> new EmptyDataException("해당 데이터가 존재하지 않습니다."));
+
+        assertThat(findByEmailUser.getUserId()).isEqualTo("kkk");
+    }
+
+    @Test
+    @DisplayName("닉네임으로 회원 조회")
+    void findByNickName() {
+        User findByNickNameUser = userRepository.findByNickName("바나나")
+                .orElseThrow(() -> new EmptyDataException("해당 데이터가 존재하지 않습니다."));
+
+        assertThat(findByNickNameUser.getUserId()).isEqualTo("kkk");
+    }
+
 }

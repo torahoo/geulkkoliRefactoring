@@ -60,12 +60,17 @@ public class UserController {
 
     @PostMapping("/join")
     public String userJoin(@ModelAttribute JoinForm form, Model model) {
-        if (!joinService.idCheck(form.getUserId())) {
-            Model idDuplication = model.addAttribute("status", true);
-            log.info("idDuplication = {}", idDuplication);
+        log.info("join Method={}", this);
+
+        if(joinService.checkDuplicate(form,model)){
             return JOIN_FORM;
         }
-//        log.info("form {}", form.toString());
+
+        log.info("model = {}", model);
+        log.info("form {}", form);
+
+        joinService.joinUser(form);
+
         return JOIN_FORM;
     }
 

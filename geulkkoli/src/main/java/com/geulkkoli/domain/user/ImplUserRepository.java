@@ -1,7 +1,5 @@
 package com.geulkkoli.domain.user;
 
-import com.geulkkoli.domain.user.User;
-import com.geulkkoli.domain.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
@@ -31,6 +29,22 @@ public class ImplUserRepository implements UserRepository {
 
         return entityManager.createQuery("select u from User u where u.userId = :userId", User.class)
                 .setParameter("userId", loginId)
+                .getResultList()
+                .stream().findAny();
+    }
+
+    @Override
+    public Optional<User> findByEmail(String email) {
+        return entityManager.createQuery("select u from User u where u.email = :email", User.class)
+                .setParameter("email", email)
+                .getResultList()
+                .stream().findAny();
+    }
+
+    @Override
+    public Optional<User> findByNickName(String nickName) {
+        return entityManager.createQuery("select u from User u where u.nickName = :nickName", User.class)
+                .setParameter("nickName", nickName)
                 .getResultList()
                 .stream().findAny();
     }
