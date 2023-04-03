@@ -41,4 +41,8 @@ public class ImplPostRepository implements PostRepository {
         findPost.setPostBody(updateParam.getPostBody());
     }
 
+    public void delete (Long postNo) {
+        Post deletePost = entityManager.find(Post.class, postNo);
+        entityManager.remove(deletePost);
+    }
 }
