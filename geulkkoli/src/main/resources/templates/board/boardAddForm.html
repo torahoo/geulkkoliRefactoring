@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<h1 th:text="주제"></h1>
+<div>
+  <form id="add" th:action th:object="${post}" method="post">
+      <div>
+          <label th:text="제목">제목</label>
+          <input type="text" id="title" th:field="*{title}">
+      </div>
+      <div>
+          <textarea th:field="*{postBody}" form="add">내용</textarea>
+      </div>
+      <div>
+          <button type="submit" id="submit" th:value="등록">등록</button>
+          <button type="button" th:onclick="|location.href='@{/board/list}'|" th:value="취소">취소</button>
+      </div>
+  </form>
+</div>
+
+<script type="text/javascript">
+
+    const writer = document.querySelector('#postBody');
+
+    writer.addEventListener('keyup', function() {
+        console.log(writer.value);
+        window.localStorage.setItem('nickName', writer.value);
+    })
+
+    const submit = document.querySelector('#submit');
+
+    submit.addEventListener('click', makeRequest);
+
+    var httpRequest = null;
+    function makeRequest() {
+        httpRequest = new XMLHttpRequest();
+
+        if(!httpRequest) {
+            alert('XMLHTTP 인스턴스를 만들 수가 없어요 ㅠㅠ');
+            return false;
+        }
+        httpRequest.onreadystatechange = alertContents;
+        httpRequest.open('POST', '/board/test', false);
+        httpRequest.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+        httpRequest.send();
+    }
+
+    function alertContents() {
+        if (httpRequest.readyState === XMLHttpRequest.DONE) {
+            if (httpRequest.status === 200) {
+                window.localStorage.removeItem('nickName');
+                console.log('localStrorage-' + window.localStorage.getItem('nickName'));
+                window.location = "/board/list";
+            } else {
+                window.location = "/board/list";
+            }
+        }
+    }
+</script>
+
+</body>
+</html>

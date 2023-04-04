@@ -2,13 +2,14 @@ package com.geulkkoli.infrastructure;
 
 import com.geulkkoli.domain.post.Post;
 import com.geulkkoli.domain.post.PostRepository;
-import com.geulkkoli.exception.EmptyDataException;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import java.util.Optional;
+
+import static org.assertj.core.api.Assertions.*;
 
 @SpringBootTest
 @Transactional
@@ -38,9 +39,13 @@ class PostRepositoryTest {
 
         postRepository.save(post);
 
-        Post findPost = postRepository.findById(1L)
-                .orElseThrow(() -> new EmptyDataException("해당 데이터가 존제하지 않습니다."));
+        Optional<Post> findPost = postRepository.findById(1L);
 
-        assertThat(findPost).isEqualTo(post);
+        assertThat(findPost.get()).isEqualTo(post);
+    }
+
+    @Test
+    void findAll() {
+
     }
 }

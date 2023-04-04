@@ -1,13 +1,12 @@
 package com.geulkkoli.domain.post;
 
-import com.geulkkoli.domain.post.Post;
-import com.geulkkoli.domain.post.PostRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
+import java.util.List;
 import java.util.Optional;
 
 @Slf4j
@@ -15,7 +14,9 @@ import java.util.Optional;
 @Transactional
 @RequiredArgsConstructor
 public class ImplPostRepository implements PostRepository {
+
     private final EntityManager entityManager;
+
     @Override
     public Post save(Post post) {
         entityManager.persist(post);
@@ -23,8 +24,21 @@ public class ImplPostRepository implements PostRepository {
     }
 
     @Override
-    public Optional<Post> findById(Long postId) {
-        Post post = entityManager.find(Post.class, postId);
+    public Optional<Post> findById(Long postNo) {
+        Post post = entityManager.find(Post.class, postNo);
         return Optional.of(post);
     }
+
+    public List<Post> findAll() {
+        return entityManager
+                .createQuery("select p from Post p", Post.class)
+                .getResultList();
+    }
+
+    public void update (Long postNo, Post updateParam) {
+        Post findPost = entityManager.find(Post.class, postNo);
+        findPost.setTitle(updateParam.getTitle());
+        findPost.setPostBody(updateParam.getPostBody());
+    }
+
 }

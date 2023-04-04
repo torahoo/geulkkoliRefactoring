@@ -1,19 +1,18 @@
 package com.geulkkoli.domain.post;
 
-import lombok.Builder;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
+@Setter
 @Getter
 @NoArgsConstructor
 @Entity
 @EqualsAndHashCode
+@ToString
 public class Post {
 
     @Id
@@ -29,4 +28,8 @@ public class Post {
         this.postBody = postBody;
         this.nickName = nickName;
     }
+
+
+
 }
+
