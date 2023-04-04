@@ -34,5 +34,8 @@ class UserTest {
 
         assertTrue(user.matchPassword("1234"));
     }
+<<<<<<< Updated upstream
 
+=======
+>>>>>>> Stashed changes
 }
