@@ -17,9 +17,9 @@ public class PostService {
 
     private final ImplPostRepository postRepository;
 
-    public Post findById (Long postId) {
-        return postRepository.findById(postId)
-                .orElseThrow(()-> new NoSuchElementException("No post found id matches:"+postId));
+    public Post findById (Long postNo) {
+        return postRepository.findById(postNo)
+                .orElseThrow(()-> new NoSuchElementException("No post found id matches:"+postNo));
     }
 
     public List<Post> findAll() {
@@ -30,7 +30,7 @@ public class PostService {
         postRepository.save(post);
     }
 
-    public void updatePost (Long postId, Post updateParam) {
-        postRepository.update(postId, updateParam);
+    public void updatePost (Long postNo, Post updateParam) {
+        postRepository.update(postNo, updateParam);
     }
 }

@@ -7,13 +7,13 @@
 <body>
 <h1 th:text="주제"></h1>
 <div>
-  <form id="add" th:action="@{/board/update/{postId}(postId=*{postNo})}" th:object="${post}" method="post">
+  <form id="add" th:action="@{/board/update/{postNo}(postNo=*{postNo})}" th:object="${post}" method="post">
     <div>
       <label th:text="제목">제목</label>
       <input type="text" id="title" th:field="*{title}">
     </div>
     <div>
-      <textarea th:field="*{postBody}" form="add"></textarea>
+      <textarea th:field="*{postBody}" form="add">내용</textarea>
     </div>
     <div>
       <button type="submit"  th:value="등록">등록</button>

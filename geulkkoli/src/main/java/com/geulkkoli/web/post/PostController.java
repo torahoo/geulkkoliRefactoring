@@ -7,6 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.annotation.PostConstruct;
 import java.util.Optional;
@@ -32,26 +33,38 @@ public class PostController {
     }
 
     @PostMapping("/add")
-    public String boardAdd(@ModelAttribute Post post) {
+    public String boardAdd(@ModelAttribute Post post, RedirectAttributes redirectAttributes) {
         log.info("title={}", post.getTitle());
         postService.savePost(post);
-        return "redirect:/board/list";
+        redirectAttributes.addAttribute("addStatus", true);
+        redirectAttributes.addAttribute("postNo", post.getPostNo());
+        return "redirect:/board/read/{postNo}";
     }
 
-    @GetMapping("/update/{postId}")
-    public String boardUpdateForm(Model model, @PathVariable Long postId) {
-        log.info("updateParam={}, postId={}", model.getAttribute("post"), postId);
-        Post findPost = postService.findById(postId);
+    @GetMapping("/read/{postNo}")
+    public String boardRead(Model model, @PathVariable Long postNo) {
+        log.info("postNo={}", postNo);
+        Post findPost = postService.findById(postNo);
+        model.addAttribute("post", findPost);
+        return "/board/boardRead";
+    }
+
+    @GetMapping("/update/{postNo}")
+    public String boardUpdateForm(Model model, @PathVariable Long postNo) {
+        log.info("updateParam={}, postNo={}", model.getAttribute("post"), postNo);
+        Post findPost = postService.findById(postNo);
         log.info("findPost={}", findPost.getPostBody());
         model.addAttribute("post", findPost);
         return "/board/boardUpdateForm";
     }
 
-    @PostMapping("/update/{postId}")
-    public String boardUpdate(@ModelAttribute Post updateParam, @PathVariable Long postId) {
-        log.info("updateParam={}, postId={}", updateParam.getPostBody(), postId);
-        postService.updatePost(postId, updateParam);
-        return "redirect:/board/list";
+    @PostMapping("/update/{postNo}")
+    public String boardUpdate(@ModelAttribute Post updateParam, @PathVariable Long postNo, RedirectAttributes redirectAttributes) {
+        log.info("updateParam={}, postId={}", updateParam.getPostBody(), postNo);
+        postService.updatePost(postNo, updateParam);
+        redirectAttributes.addAttribute("updateStatus", true);
+
+        return "redirect:/board/read/{postNo}";
     }
 
     @PostConstruct
