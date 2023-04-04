@@ -27,8 +27,8 @@ public class TestDataInit {
         log.info("test data init");
         postRepository.save(Post.builder()
                 .nickName("륜투더환")
-                .postBody("나는 멋지고 섹시한 개발자")//채&훈
-                .title("여러분 ㅋ").build()
+                .postBody("나는 멋지고 섹시한 개발자")
+                .title("여러분").build()
         );
 
         userRepository.save(User.builder()
@@ -36,6 +36,7 @@ public class TestDataInit {
                 .userName("김")
                 .nickName("바나나")
                 .password("1234")
+                .phoneNo("01012345678")
                 .build());
     }
 

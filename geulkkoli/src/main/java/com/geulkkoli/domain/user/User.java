@@ -6,16 +6,18 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.util.Objects;
 
 @NoArgsConstructor
 @Entity
 @Getter
+@NotNull
 @Table(name = "users")
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long userNo;
+    private Long userId;
 
     private String userName;
 
@@ -24,17 +26,17 @@ public class User {
     private String nickName;
 
     private String email;
-    private Integer phoneNo;
-    private String sex;
+    private String phoneNo;
+    private String gender;
 
     @Builder
-    public User(String userName, String password, String nickName, String email, Integer phoneNo, String sex) {
+    public User(String userName, String password, String nickName, String email, String phoneNo, String gender) {
         this.userName = userName;
         this.password = password;
         this.nickName = nickName;
         this.email = email;
         this.phoneNo = phoneNo;
-        this.sex = sex;
+        this.gender = gender;
     }
 
     public boolean matchPassword(String password) {
@@ -46,11 +48,11 @@ public class User {
         if (this == o) return true;
         if (!(o instanceof User)) return false;
         User user = (User) o;
-        return Objects.equals(userNo, user.userNo);
+        return Objects.equals(userId, user.userId);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(userNo);
+        return Objects.hash(userId);
     }
 }

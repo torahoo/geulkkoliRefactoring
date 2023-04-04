@@ -22,6 +22,10 @@ public class JoinService {
             bindingResult.rejectValue("nickName", "Duple.joinForm.nickName");
         }
 
+        if (userRepository.findByPhoneNo(form.getPhoneNo()).isPresent()) {
+            bindingResult.rejectValue("phoneNo", "Duple.joinForm.phoneNo");
+        }
+
         if(!form.getPassword().equals(form.getVerifyPassword())){
             bindingResult.rejectValue("verifyPassword", "Duple.joinForm.verifyPassword");
         }

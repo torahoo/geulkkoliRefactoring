@@ -24,6 +24,7 @@ class UserRepositoryTest {
                 .userName("김")
                 .nickName("바나나")
                 .password("1234")
+                .phoneNo("01012345678")
                 .build();
 
         User saveUser = userRepository.save(user);
@@ -38,6 +39,7 @@ class UserRepositoryTest {
                 .userName("김")
                 .nickName("바나나")
                 .password("1234")
+                .phoneNo("01012345678")
                 .build();
 
         userRepository.save(user);
@@ -54,6 +56,7 @@ class UserRepositoryTest {
                 .userName("김")
                 .nickName("바나나")
                 .password("1234")
+                .phoneNo("01012345678")
                 .build();
 
         userRepository.save(user);

@@ -7,12 +7,14 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import java.util.Optional;
+
 @Slf4j
 @Repository
 @Transactional
 @RequiredArgsConstructor
 public class ImplUserRepository implements UserRepository {
     private final EntityManager entityManager;
+
     @Override
     public User save(User user) {
         entityManager.persist(user);
@@ -40,4 +42,13 @@ public class ImplUserRepository implements UserRepository {
                 .getResultList()
                 .stream().findAny();
     }
+
+    @Override
+    public Optional<User> findByPhoneNo(String phoneNo) {
+        return entityManager.createQuery("select u from User u where u.phoneNo= :phoneNo", User.class)
+                .setParameter("phoneNo", phoneNo)
+                .getResultList()
+                .stream().findAny();
+    }
+
 }

@@ -17,6 +17,7 @@ class UserTest {
                 .userName("김")
                 .nickName("바나나")
                 .password("12345")
+                .phoneNo("01012345678")
                 .build();
 
         assertThat(user.getUserName()).isEqualTo("김");
@@ -30,6 +31,7 @@ class UserTest {
                 .userName("김")
                 .nickName("바나나")
                 .password("1234")
+                .phoneNo("01012345678")
                 .build();
 
         assertTrue(user.matchPassword("1234"));

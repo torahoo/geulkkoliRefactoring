@@ -57,8 +57,8 @@ class UserControllerTest {
         query_param.add("password", "1234");
         query_param.add("nickName", "takos");
         query_param.add("email", "tako@naver.com");
-        query_param.add("phoneNo", "01071397733");
-        query_param.add("sex", "male");
+        query_param.add("phoneNo", "01012345678");
+        query_param.add("gender", "male");
 
         //when
         mockMvc.perform(MockMvcRequestBuilders.post("/join")
@@ -69,7 +69,7 @@ class UserControllerTest {
 
         //then
         if (findByLoginIdUser != null) {
-            assertThat(findByLoginIdUser.getSex()).isEqualTo("male");
+            assertThat(findByLoginIdUser.getGender()).isEqualTo("male");
         }
     }
 
@@ -82,15 +82,16 @@ class UserControllerTest {
         query_param.add("password", "1234");
         query_param.add("nickName", "바나나");
         query_param.add("email", "tako@naver.com");
-        query_param.add("phoneNo", "01071397733");
-        query_param.add("sex", "male");
+        query_param.add("phoneNo", "01012345678");
+        query_param.add("gender", "male");
 
         //when
         mockMvc.perform(MockMvcRequestBuilders.post("/join")
                         .params(query_param))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.model().attributeExists("emailDuple"))
-                .andExpect(MockMvcResultMatchers.model().attributeExists("nickNameDuple"));
+                .andExpect(MockMvcResultMatchers.model().attributeExists("nickNameDuple"))
+                .andExpect(MockMvcResultMatchers.model().attributeExists("phoneNoDuple"));
         User findByEmailIdUser = userRepository.findByEmail("tako@naver.com").
                 orElse(null);
 
@@ -109,8 +110,8 @@ class UserControllerTest {
         query_param.add("password", "1234");
         query_param.add("nickName", "takodachi");
         query_param.add("email", "tako@naver.com");
-        query_param.add("phoneNo", "01071397733");
-        query_param.add("sex", "male");
+        query_param.add("phoneNo", "01012345678");
+        query_param.add("gender", "male");
 
         //when
         mockMvc.perform(MockMvcRequestBuilders.post("/join")
