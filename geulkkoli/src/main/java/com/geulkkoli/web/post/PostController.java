@@ -27,7 +27,7 @@ public class PostController {
     }
 
     @GetMapping("/add")
-    public String boardAddForm(Model model) {
+    public String postAddForm(Model model) {
         model.addAttribute("post", new Post());
         return "/post/postAddForm";
     }
@@ -50,26 +50,26 @@ public class PostController {
     }
 
     @GetMapping("/update/{postNo}")
-    public String boardUpdateForm(Model model, @PathVariable Long postNo) {
+    public String postUpdateForm(Model model, @PathVariable Long postNo) {
         log.info("updateParam={}, postNo={}", model.getAttribute("post"), postNo);
         Post findPost = postService.findById(postNo);
         log.info("findPost={}", findPost.getPostBody());
         model.addAttribute("post", findPost);
-        return "/board/boardUpdateForm";
+        return "/post/postUpdateForm";
     }
 
     @PostMapping("/update/{postNo}")
-    public String boardUpdate(@ModelAttribute Post updateParam, @PathVariable Long postNo, RedirectAttributes redirectAttributes) {
+    public String postUpdate(@ModelAttribute Post updateParam, @PathVariable Long postNo, RedirectAttributes redirectAttributes) {
         log.info("updateParam={}, postId={}", updateParam.getPostBody(), postNo);
         postService.updatePost(postNo, updateParam);
         redirectAttributes.addAttribute("updateStatus", true);
 
-        return "redirect:/board/read/{postNo}";
+        return "redirect:/post/read/{postNo}";
     }
 
     @PostMapping("/test")
     public String testBlanc(@ModelAttribute Post post) {
         log.info("testBlanc={}", post.getTitle());
-        return "redirect:/board/list";
+        return "redirect:/post/list";
     }
 }
