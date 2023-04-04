@@ -36,7 +36,6 @@ h4 {
 #email,
 #nickName {
     display: inline;
-    width: 81%;
 }
 
 .flex-align {
@@ -45,6 +44,9 @@ h4 {
 
 .sub-div {
     text-align: center;
+}
+
+.field-error{
 }
 
 #idTwoBox,

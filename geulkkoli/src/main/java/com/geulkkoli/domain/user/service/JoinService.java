@@ -5,7 +5,7 @@ import com.geulkkoli.domain.user.UserRepository;
 import com.geulkkoli.web.user.JoinForm;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 
 @Service
 @RequiredArgsConstructor
@@ -13,39 +13,29 @@ public class JoinService {
 
     private final UserRepository userRepository;
 
-    public boolean checkDuplicate(JoinForm form, Model model){
-        boolean check = false;
-        if(userRepository.findByEmail(form.getEmail()).isPresent()){
-            model.addAttribute("emailDuple", true);
-            check = true;
+    public boolean joinUser(JoinForm form, BindingResult bindingResult) {
+        if (userRepository.findByEmail(form.getEmail()).isPresent()) {
+            bindingResult.rejectValue("email", "Duple.joinForm.email");
         }
-        if(userRepository.findByNickName(form.getNickName()).isPresent()){
-            model.addAttribute("nickNameDuple", true);
-            check = true;
+
+        if (userRepository.findByNickName(form.getNickName()).isPresent()) {
+            bindingResult.rejectValue("nickName", "Duple.joinForm.nickName");
         }
-        return check;
+
+        if(!form.getPassword().equals(form.getVerifyPassword())){
+            bindingResult.rejectValue("verifyPassword", "Duple.joinForm.verifyPassword");
+        }
+
+        if(!bindingResult.hasErrors()){
+            save(form.toEntity());
+        }
+
+        return bindingResult.hasErrors();
     }
 
-    public boolean idCheck(String email) {
-        return userRepository.findByEmail(email).isPresent();
-    }
-
-    public boolean emailCheck(String email) {
-        return userRepository.findByEmail(email).isPresent();
-    }
-
-    public boolean nickNameCheck(String nickName) {
-        return userRepository.findByNickName(nickName).isPresent();
-    }
-
-    public void joinUser(JoinForm user){
-        save(user.toEntity());
-    }
-
-    public void save(User user){
+    public void save(User user) {
         userRepository.save(user);
     }
-
 
 
 }
