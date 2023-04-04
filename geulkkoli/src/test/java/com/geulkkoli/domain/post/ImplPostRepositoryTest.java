@@ -7,10 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.Optional;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 @Slf4j
 @SpringBootTest
@@ -18,6 +15,8 @@ class ImplPostRepositoryTest {
 
     @Autowired
     private ImplPostRepository implPostRepository;
+//    @AfterEach
+//    public void
 
     @Test
     void save() {
@@ -47,5 +46,13 @@ class ImplPostRepositoryTest {
         implPostRepository.update(1L, update);
         Optional<Post> one = implPostRepository.findById(1L);
         Assertions.assertThat(one.get().getTitle()).isEqualTo(update.getTitle());
+    }
+
+    @Test
+    void delete() {
+        implPostRepository.delete(1L);
+        List<Post> all = implPostRepository.findAll();
+
+        Assertions.assertThat(all.size()).isEqualTo(3);
     }
 }
