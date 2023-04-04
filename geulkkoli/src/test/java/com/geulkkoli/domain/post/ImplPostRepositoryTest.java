@@ -2,16 +2,12 @@ package com.geulkkoli.domain.post;
 
 import lombok.extern.slf4j.Slf4j;
 import org.assertj.core.api.Assertions;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.Optional;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 @Slf4j
 @SpringBootTest
@@ -54,9 +50,13 @@ class ImplPostRepositoryTest {
 
     @Test
     void delete() {
-        implPostRepository.delete(1L);
+
+        Post post1 = implPostRepository.save(new Post("title01", "body01", "nick01"));
+        Post post2 = implPostRepository.save(new Post("title02", "body02", "nick02"));
+
+        implPostRepository.delete(post1.getPostNo());
         List<Post> all = implPostRepository.findAll();
 
-        Assertions.assertThat(all.size()).isEqualTo(3);
+        Assertions.assertThat(all.size()).isEqualTo(1);
     }
 }

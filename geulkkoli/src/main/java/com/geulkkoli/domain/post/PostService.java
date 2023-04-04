@@ -1,14 +1,11 @@
 package com.geulkkoli.domain.post;
 
-import com.geulkkoli.domain.post.Post;
-import com.geulkkoli.domain.post.ImplPostRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.Optional;
 
 @Slf4j
 @Service

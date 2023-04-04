@@ -75,7 +75,6 @@ public class PostController {
     @PostMapping("/test")
     public String testBlanc(@ModelAttribute Post post) {
         log.info("testBlanc={}", post.getTitle());
-//        postService.savePost(post);
         return "redirect:/post/list";
     }
 }

@@ -19,5 +19,5 @@ class PostTest {
                 () -> assertThat(post.getPostBody()).isEqualTo("나나"),
                 () -> assertThat(post.getNickName()).isEqualTo("나"));
 
-    }
-}
+
+    }}
