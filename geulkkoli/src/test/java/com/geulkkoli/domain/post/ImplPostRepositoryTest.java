@@ -2,6 +2,7 @@ package com.geulkkoli.domain.post;
 
 import lombok.extern.slf4j.Slf4j;
 import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -18,6 +19,8 @@ class ImplPostRepositoryTest {
 
     @Autowired
     private ImplPostRepository implPostRepository;
+//    @AfterEach
+//    public void
 
     @Test
     void save() {
@@ -54,12 +57,9 @@ class ImplPostRepositoryTest {
         Post post1 = implPostRepository.save(new Post("title01", "body01", "nick01"));
         Post post2 = implPostRepository.save(new Post("title02", "body02", "nick02"));
 
-        log.info("post1={}, post2={}",post1,post2);
-
         implPostRepository.delete(post1.getPostNo());
         List<Post> all = implPostRepository.findAll();
 
-        Assertions.assertThat(all.size()).isEqualTo(4);
-        log.info("all={}",all);
+        Assertions.assertThat(all.size()).isEqualTo(2);
     }
 }
