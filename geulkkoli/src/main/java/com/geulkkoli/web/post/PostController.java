@@ -9,9 +9,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import javax.annotation.PostConstruct;
-import java.util.Optional;
-
 @Slf4j
 @Controller
 @RequestMapping("/board")
@@ -46,7 +43,7 @@ public class PostController {
         log.info("postNo={}", postNo);
         Post findPost = postService.findById(postNo);
         model.addAttribute("post", findPost);
-        return "/board/boardRead";
+        return "/board/boardPage";
     }
 
     @GetMapping("/update/{postNo}")
@@ -55,7 +52,7 @@ public class PostController {
         Post findPost = postService.findById(postNo);
         log.info("findPost={}", findPost.getPostBody());
         model.addAttribute("post", findPost);
-        return "/board/boardUpdateForm";
+        return "/board/boardEditForm";
     }
 
     @PostMapping("/update/{postNo}")
