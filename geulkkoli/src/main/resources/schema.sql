@@ -1,18 +1,22 @@
+drop table if exists comments;
+drop table if exists post;
+drop table if exists users;
 
 CREATE table if not exists users
 (
-    user_id   BIGINT PRIMARY KEY,
+    user_id   BIGINT PRIMARY KEY AUTO_INCREMENT,
     email     varchar(255) not null,
     password  varchar(255) not null,
     name      varchar(20)  not null,
     nick_name varchar(20)  not null,
+    phone_no  varchar(20)  not null,
     gender    varchar(10)  not null,
-    CONSTRAINT unique_email_nick_name UNIQUE (email, nick_name)
+    CONSTRAINT unique_email_nick_name_phone_no UNIQUE (email, nick_name, phone_no)
 );
 
 create table if not exists post
 (
-    post_id           BIGINT PRIMARY KEY,
+    post_id           BIGINT PRIMARY KEY AUTO_INCREMENT,
     author_id         BIGINT         not null,
     title             varchar(255)   not null,
     body              varchar(11000) not null,
@@ -26,7 +30,7 @@ drop table if exists comments;
 
 create table if not exists comments
 (
-    comment_id BIGINT PRIMARY KEY,
+    comment_id BIGINT PRIMARY KEY AUTO_INCREMENT,
     author_id  BIGINT       NOT NULL,
     post_id    BIGINT       NOT NULL,
     body       VARCHAR(255) NOT NULL,

@@ -2,42 +2,31 @@ package com.geulkkoli.domain.user.service;
 
 import com.geulkkoli.domain.user.User;
 import com.geulkkoli.domain.user.UserRepository;
-import com.geulkkoli.web.user.JoinForm;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import org.springframework.validation.BindingResult;
+
+import javax.transaction.Transactional;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
+@Transactional
 public class JoinService {
 
     private final UserRepository userRepository;
 
-    public boolean joinUser(JoinForm form, BindingResult bindingResult) {
-        if (userRepository.findByEmail(form.getEmail()).isPresent()) {
-            bindingResult.rejectValue("email", "Duple.joinForm.email");
-        }
-
-        if (userRepository.findByNickName(form.getNickName()).isPresent()) {
-            bindingResult.rejectValue("nickName", "Duple.joinForm.nickName");
-        }
-
-        if (userRepository.findByPhoneNo(form.getPhoneNo()).isPresent()) {
-            bindingResult.rejectValue("phoneNo", "Duple.joinForm.phoneNo");
-        }
-
-        if(!form.getPassword().equals(form.getVerifyPassword())){
-            bindingResult.rejectValue("verifyPassword", "Duple.joinForm.verifyPassword");
-        }
-
-        if(!bindingResult.hasErrors()){
-            save(form.toEntity());
-        }
-
-        return bindingResult.hasErrors();
+    public boolean isEmailDuplicate(String email) {
+        return userRepository.findByEmail(email).isPresent();
+    }
+    public boolean isNickNameDuplicate(String nickName) {
+        return userRepository.findByNickName(nickName).isPresent();
+    }
+    public boolean isPhoneNoDuplicate(String phoneNo) {
+        return userRepository.findByPhoneNo(phoneNo).isPresent();
     }
 
-    public void save(User user) {
+    public void join(User user) {
         userRepository.save(user);
     }
 

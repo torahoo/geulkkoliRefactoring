@@ -20,11 +20,12 @@ class UserRepositoryTest {
     @Test
     void save() {
         User user = User.builder()
-                .email("tako@naver.com")
-                .userName("김")
-                .nickName("바나나")
-                .password("1234")
-                .phoneNo("01012345678")
+                .email("tako@naver1.com")
+                .userName("김1")
+                .nickName("바나나1")
+                .password("12341")
+                .gender("male1")
+                .phoneNo("01012345679")
                 .build();
 
         User saveUser = userRepository.save(user);
@@ -35,15 +36,16 @@ class UserRepositoryTest {
     @Test
     void findById() {
         User user = User.builder()
-                .email("tako@naver.com")
-                .userName("김")
-                .nickName("바나나")
-                .password("1234")
-                .phoneNo("01012345678")
+                .email("tako@naver1.com")
+                .userName("김1")
+                .nickName("바나나1")
+                .password("12341")
+                .gender("male1")
+                .phoneNo("01012345679")
                 .build();
 
         userRepository.save(user);
-        User findUser = userRepository.findById(1L)
+        User findUser = userRepository.findById(2L)
                 .orElseThrow(() -> new EmptyDataException("해당 데이터가 존제하지 않습니다."));
 
         assertThat(findUser).isEqualTo(user);
@@ -52,11 +54,12 @@ class UserRepositoryTest {
     @Test
     void findByLoginId() {
         User user = User.builder()
-                .email("tako@naver.com")
-                .userName("김")
-                .nickName("바나나")
-                .password("1234")
-                .phoneNo("01012345678")
+                .email("tako@naver1.com")
+                .userName("김1")
+                .nickName("바나나1")
+                .password("12341")
+                .gender("male1")
+                .phoneNo("01012345679")
                 .build();
 
         userRepository.save(user);

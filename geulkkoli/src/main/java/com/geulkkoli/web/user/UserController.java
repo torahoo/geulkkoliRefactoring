@@ -35,7 +35,7 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public String userLogin(@Valid @ModelAttribute LoginForm form, BindingResult bindingResult, HttpServletRequest request) {
+    public String login(@Valid @ModelAttribute LoginForm form, BindingResult bindingResult, HttpServletRequest request) {
         log.info("email {} , password {}", form.getEmail(), form.getPassword());
         if (bindingResult.hasErrors()) {
             return LOGIN_FORM;
@@ -63,14 +63,37 @@ public class UserController {
     public String userJoin(@Validated @ModelAttribute("joinForm") JoinForm form, BindingResult bindingResult, Model model) {
         log.info("join Method={}", this);
 
-        if(joinService.joinUser(form, bindingResult)){
+        if (joinService.isEmailDuplicate(form.getEmail())) {
+            bindingResult.rejectValue("email", "Duple.joinForm.email");
             return JOIN_FORM;
+        }
+
+        if (joinService.isNickNameDuplicate(form.getNickName())) {
+            bindingResult.rejectValue("nickName", "Duple.joinForm.nickName");
+            return JOIN_FORM;
+
+        }
+
+        if (joinService.isPhoneNoDuplicate(form.getPhoneNo())) {
+            bindingResult.rejectValue("phoneNo", "Duple.joinForm.phoneNo");
+            return JOIN_FORM;
+
+        }
+
+        if (!form.getPassword().equals(form.getVerifyPassword())) {
+            bindingResult.rejectValue("verifyPassword", "Duple.joinForm.verifyPassword");
+            return JOIN_FORM;
+
+        }
+
+        if (!bindingResult.hasErrors()) {
+            joinService.join(form.toEntity());
         }
 
         log.info("model = {}", model);
         log.info("form {}", form);
 
-        return JOIN_FORM;
+        return "/index";
     }
 
 }

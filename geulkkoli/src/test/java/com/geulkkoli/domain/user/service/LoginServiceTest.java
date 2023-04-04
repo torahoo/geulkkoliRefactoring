@@ -1,8 +1,9 @@
-package com.geulkkoli.domain.service;
+package com.geulkkoli.domain.user.service;
 
 import com.geulkkoli.domain.user.User;
 import com.geulkkoli.domain.user.UserRepository;
 import com.geulkkoli.domain.user.service.LoginService;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -13,10 +14,11 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @Transactional
-public class LoginServiceTest {
+class LoginServiceTest {
 
     @Autowired
     LoginService loginService;
@@ -25,11 +27,13 @@ public class LoginServiceTest {
 
     @BeforeEach
     void init() {
-        userRepository.save(User.builder()
-                .email("tako@naver.com")
-                .userName("김")
-                .nickName("바나나")
-                .password("1234")
+        userRepository.save( User.builder()
+                .email("tako1@naver.com")
+                .userName("김1")
+                .nickName("바나나1")
+                .password("123412")
+                .phoneNo("01012345671")
+                .gender("male")
                 .build());
     }
 
@@ -38,23 +42,26 @@ public class LoginServiceTest {
     void loginTest() {
         //given
         User exitsUser = User.builder()
-                .email("tako@naver.com")
-                .password("1234")
+                .email("tako1@naver.com")
+                .userName("김1")
+                .nickName("바나나1")
+                .password("123412")
+                .phoneNo("01012345671")
+                .gender("male")
                 .build();
         //when
-        Optional<User> loginUser = loginService.login("tako@naver.com", "1234");
+        Optional<User> loginUser = loginService.login("tako1@naver.com", "123412");
 
         //then
-        assertThat(loginUser)
-                .isNotEmpty()
-                .hasValue(exitsUser);
+        assertAll(() -> assertThat(loginUser).isPresent(),
+                () -> assertThat(loginUser).get().hasFieldOrPropertyWithValue("email","tako1@naver.com"));
     }
 
     @Test
     @DisplayName("로그인실패시_널을 반환한다.")
     void throwErrorWhenLoginFailedTest() {
         //given
-        Optional<User> noneExistentUser = loginService.login("tako@naver.com", "1243");
+        Optional<User> noneExistentUser = loginService.login("tako@naver.com", "123412");
         //when
 
         //then

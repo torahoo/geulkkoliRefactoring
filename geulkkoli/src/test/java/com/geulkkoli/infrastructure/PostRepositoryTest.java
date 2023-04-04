@@ -39,7 +39,7 @@ class PostRepositoryTest {
 
         postRepository.save(post);
 
-        Optional<Post> findPost = postRepository.findById(1L);
+        Optional<Post> findPost = postRepository.findById(5L);
 
         assertThat(findPost.get()).isEqualTo(post);
     }

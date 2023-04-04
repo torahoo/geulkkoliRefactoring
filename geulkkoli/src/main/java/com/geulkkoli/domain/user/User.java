@@ -6,7 +6,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
 import java.util.Objects;
 
 @NoArgsConstructor
@@ -18,23 +17,22 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long userId;
 
-    @NotNull
+    @Column(name = "name", nullable = false, unique = true)
     private String userName;
 
-    @NotNull
     @Getter(AccessLevel.NONE)
+    @Column(name = "password", nullable = false,unique = true)
     private String password;
 
-    @NotNull
+    @Column(name = "nick_name", nullable = false ,unique = true)
     private String nickName;
 
-    @NotNull
+    @Column(name = "email", nullable = false,unique = true)
     private String email;
 
-    @NotNull
+    @Column(name = "phone_No", nullable = false,unique = true)
     private String phoneNo;
 
-    @NotNull
     private String gender;
 
     @Builder
@@ -51,16 +49,5 @@ public class User {
         return password.matches(this.password);
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof User)) return false;
-        User user = (User) o;
-        return Objects.equals(userId, user.userId);
-    }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(userId);
-    }
 }
