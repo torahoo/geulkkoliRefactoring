@@ -53,12 +53,13 @@ class UserControllerTest {
     void joinUserTest() throws Exception {
         //given
         MultiValueMap<String, String> query_param = new LinkedMultiValueMap<>();
-        query_param.add("userName", "fish");
-        query_param.add("password", "1234!@#");
+        query_param.add("userName", "fishs");
+        query_param.add("password", "1234WnRnal@");
+        query_param.add("verifyPassword", "1234WnRnal@");
         query_param.add("nickName", "takos");
         query_param.add("email", "takodachi@naver.com");
         query_param.add("phoneNo", "01071397733");
-        query_param.add("sex", "male");
+        query_param.add("gender", "male");
 
         //when
         mockMvc.perform(MockMvcRequestBuilders.post("/join")
@@ -81,21 +82,22 @@ class UserControllerTest {
         query_param.add("userName", "fish");
         query_param.add("password", "1234WnRnal@");
         query_param.add("verifyPassword", "1234WnRnal@");
-        query_param.add("nickName", "타코메일");
+        query_param.add("nickName", "타코맨");
         query_param.add("email", "tako@naver.com");
-        query_param.add("phoneNo", "01012345678");
+        query_param.add("phoneNo", "01071397733");
         query_param.add("gender", "male");
 
         //when
         mockMvc.perform(MockMvcRequestBuilders.post("/join")
                         .params(query_param))
-                .andExpect(MockMvcResultMatchers.status().isOk());
-        User findByLoginIdUser = userRepository.findByEmail("clever").
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.model().attributeHasErrors("joinForm"));
+        User findByEmailIdUser = userRepository.findByEmail("tako@naver.com").
                 orElse(null);
 
         //then
-        if (findByLoginIdUser != null) {
-            assertThat(findByLoginIdUser.getGender()).isEqualTo("male");
+        if (findByEmailIdUser != null) {
+            assertThat(findByEmailIdUser.getUserName()).isEqualTo("김");
         }
     }
 
@@ -108,22 +110,20 @@ class UserControllerTest {
         query_param.add("password", "WnRnal");
         query_param.add("verifyPassword", "1234WnRnal@");
         query_param.add("nickName", "바나나");
-        query_param.add("email", "takoNickTester@naver.com");
+        query_param.add("email", "takodachsi@naver.com");
         query_param.add("phoneNo", "01071397733");
-        query_param.add("sex", "male");
+        query_param.add("gender", "male");
 
         //when
         mockMvc.perform(MockMvcRequestBuilders.post("/join")
                         .params(query_param))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.model().attributeHasErrors("joinForm"));
-        User findByEmailIdUser = userRepository.findByEmail("takoNickTester@naver.com").
+        User findByEmailIdUser = userRepository.findByEmail("takodachsi@naver.com").
                 orElse(null);
 
         //then
-        if (findByEmailIdUser != null) {
-            assertThat(findByEmailIdUser.getUserName()).isEqualTo("김");
-        }
+            assertThat(findByEmailIdUser).isNull();
     }
 
     @Test
@@ -132,17 +132,18 @@ class UserControllerTest {
         //given
         MultiValueMap<String, String> query_param = new LinkedMultiValueMap<>();
         query_param.add("userName", "fish");
-        query_param.add("password", "1234");
+        query_param.add("password", "1234WnRnal@");
+        query_param.add("verifyPassword", "1234WnRnal@");
         query_param.add("nickName", "takodachi");
-        query_param.add("email", "tako@naver.com");
-        query_param.add("phoneNo", "01012345678");
+        query_param.add("email", "takos@naver.com");
+        query_param.add("phoneNo", "01071397733");
         query_param.add("gender", "male");
 
         //when
         mockMvc.perform(MockMvcRequestBuilders.post("/join")
                         .params(query_param))
                 .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.model().attributeExists("emailDuple"));
+                .andExpect(MockMvcResultMatchers.model().attributeHasErrors("joinForm"));
         User rejectUser = userRepository.findByNickName("takodachi").
                 orElse(null);
 
