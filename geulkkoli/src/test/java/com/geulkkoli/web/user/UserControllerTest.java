@@ -54,8 +54,34 @@ class UserControllerTest {
         //given
         MultiValueMap<String, String> query_param = new LinkedMultiValueMap<>();
         query_param.add("userName", "fish");
-        query_param.add("password", "1234");
+        query_param.add("password", "1234!@#");
         query_param.add("nickName", "takos");
+        query_param.add("email", "takodachi@naver.com");
+        query_param.add("phoneNo", "01071397733");
+        query_param.add("sex", "male");
+
+        //when
+        mockMvc.perform(MockMvcRequestBuilders.post("/join")
+                        .params(query_param))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andDo(MockMvcResultHandlers.print());
+        User findByLoginIdUser = userRepository.findByEmail("takodachi@naver.com").
+                orElse(null);
+
+
+        assert findByLoginIdUser != null;
+        assertThat(findByLoginIdUser.getGender()).isEqualTo("male");
+    }
+
+    @Test
+    @DisplayName("회원가입 이메일 중복체크 되는지 테스트")
+    void joinEmailDupleTest() throws Exception {
+        //given
+        MultiValueMap<String, String> query_param = new LinkedMultiValueMap<>();
+        query_param.add("userName", "fish");
+        query_param.add("password", "1234WnRnal@");
+        query_param.add("verifyPassword", "1234WnRnal@");
+        query_param.add("nickName", "타코메일");
         query_param.add("email", "tako@naver.com");
         query_param.add("phoneNo", "01012345678");
         query_param.add("gender", "male");
@@ -74,25 +100,24 @@ class UserControllerTest {
     }
 
     @Test
-    @DisplayName("회원가입 중복 체크 되는지 테스트")
-    void joinUserDupleTest() throws Exception {
+    @DisplayName("회원가입 닉네임 중복 체크 되는지 테스트")
+    void joinNickNameDupleTest() throws Exception {
         //given
         MultiValueMap<String, String> query_param = new LinkedMultiValueMap<>();
         query_param.add("userName", "fish");
-        query_param.add("password", "1234");
+        query_param.add("password", "WnRnal");
+        query_param.add("verifyPassword", "1234WnRnal@");
         query_param.add("nickName", "바나나");
-        query_param.add("email", "tako@naver.com");
-        query_param.add("phoneNo", "01012345678");
-        query_param.add("gender", "male");
+        query_param.add("email", "takoNickTester@naver.com");
+        query_param.add("phoneNo", "01071397733");
+        query_param.add("sex", "male");
 
         //when
         mockMvc.perform(MockMvcRequestBuilders.post("/join")
                         .params(query_param))
                 .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.model().attributeExists("emailDuple"))
-                .andExpect(MockMvcResultMatchers.model().attributeExists("nickNameDuple"))
-                .andExpect(MockMvcResultMatchers.model().attributeExists("phoneNoDuple"));
-        User findByEmailIdUser = userRepository.findByEmail("tako@naver.com").
+                .andExpect(MockMvcResultMatchers.model().attributeHasErrors("joinForm"));
+        User findByEmailIdUser = userRepository.findByEmail("takoNickTester@naver.com").
                 orElse(null);
 
         //then

@@ -62,9 +62,11 @@ public class UserController {
     @PostMapping("/join")
     public String userJoin(@Validated @ModelAttribute("joinForm") JoinForm form, BindingResult bindingResult, Model model) {
         log.info("join Method={}", this);
+
         if(joinService.joinUser(form, bindingResult)){
             return JOIN_FORM;
         }
+
         log.info("model = {}", model);
         log.info("form {}", form);
 
