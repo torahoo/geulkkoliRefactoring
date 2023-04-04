@@ -82,7 +82,7 @@ class UserControllerTest {
         query_param.add("userName", "fish");
         query_param.add("password", "1234WnRnal@");
         query_param.add("verifyPassword", "1234WnRnal@");
-        query_param.add("nickName", "타코맨");
+        query_param.add("nickName", "타코메일");
         query_param.add("email", "tako@naver.com");
         query_param.add("phoneNo", "01071397733");
         query_param.add("gender", "male");
@@ -96,9 +96,8 @@ class UserControllerTest {
                 orElse(null);
 
         //then
-        if (findByEmailIdUser != null) {
-            assertThat(findByEmailIdUser.getUserName()).isEqualTo("김");
-        }
+        assert findByEmailIdUser != null;
+        assertThat(findByEmailIdUser.getUserName()).isEqualTo("김");
     }
 
     @Test
@@ -110,7 +109,7 @@ class UserControllerTest {
         query_param.add("password", "WnRnal");
         query_param.add("verifyPassword", "1234WnRnal@");
         query_param.add("nickName", "바나나");
-        query_param.add("email", "takodachsi@naver.com");
+        query_param.add("email", "takoNickTest@naver.com");
         query_param.add("phoneNo", "01071397733");
         query_param.add("gender", "male");
 
@@ -119,7 +118,7 @@ class UserControllerTest {
                         .params(query_param))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.model().attributeHasErrors("joinForm"));
-        User findByEmailIdUser = userRepository.findByEmail("takodachsi@naver.com").
+        User findByEmailIdUser = userRepository.findByEmail("takoNickTest@naver.com").
                 orElse(null);
 
         //then
@@ -148,7 +147,7 @@ class UserControllerTest {
                 orElse(null);
 
         //then
-        assertThat(rejectUser).isEqualTo(null);
+        assertThat(rejectUser).isNull();
 
     }
 }
