@@ -67,18 +67,9 @@ public class PostController {
         return "redirect:/board/read/{postNo}";
     }
 
-    @PostConstruct
-    public void init() {
-        postService.savePost(new Post("testTitle01", "test postbody 01", "test nickname01"));
-        postService.savePost(new Post("testTitle02", "test postbody 02", "test nickname02"));
-        postService.savePost(new Post("testTitle03", "test postbody 03", "test nickname03"));
-
-    }
-
     @PostMapping("/test")
     public String testBlanc(@ModelAttribute Post post) {
         log.info("testBlanc={}", post.getTitle());
-//        postService.savePost(post);
         return "redirect:/board/list";
     }
 }
