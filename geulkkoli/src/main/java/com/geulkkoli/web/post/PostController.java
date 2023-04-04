@@ -9,6 +9,9 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import javax.annotation.PostConstruct;
+import java.util.Optional;
+
 @Slf4j
 @Controller
 @RequestMapping("/post")
@@ -24,7 +27,7 @@ public class PostController {
     }
 
     @GetMapping("/add")
-    public String postAddForm(Model model) {
+    public String boardAddForm(Model model) {
         model.addAttribute("post", new Post());
         return "/post/postAddForm";
     }
@@ -47,34 +50,35 @@ public class PostController {
     }
 
     @GetMapping("/update/{postNo}")
-    public String postUpdateForm(Model model, @PathVariable Long postNo) {
+    public String boardUpdateForm(Model model, @PathVariable Long postNo) {
         log.info("updateParam={}, postNo={}", model.getAttribute("post"), postNo);
         Post findPost = postService.findById(postNo);
         log.info("findPost={}", findPost.getPostBody());
         model.addAttribute("post", findPost);
-        return "/post/postEditForm";
+        return "/board/boardUpdateForm";
     }
 
     @PostMapping("/update/{postNo}")
-    public String postUpdate(@ModelAttribute Post updateParam, @PathVariable Long postNo, RedirectAttributes redirectAttributes) {
+    public String boardUpdate(@ModelAttribute Post updateParam, @PathVariable Long postNo, RedirectAttributes redirectAttributes) {
         log.info("updateParam={}, postId={}", updateParam.getPostBody(), postNo);
         postService.updatePost(postNo, updateParam);
         redirectAttributes.addAttribute("updateStatus", true);
 
-        return "redirect:/post/read/{postNo}";
+        return "redirect:/board/read/{postNo}";
     }
 
-    @DeleteMapping("/delete/{postNo}")
-    public String postDelete(@PathVariable Long postNo) {
-        log.info("deletePostNo={}", postNo);
-        postService.deletePost(postNo);
+    @PostConstruct
+    public void init() {
+        postService.savePost(new Post("testTitle01", "test postbody 01", "test nickname01"));
+        postService.savePost(new Post("testTitle02", "test postbody 02", "test nickname02"));
+        postService.savePost(new Post("testTitle03", "test postbody 03", "test nickname03"));
 
-        return "redirect:/post/list";
     }
 
     @PostMapping("/test")
     public String testBlanc(@ModelAttribute Post post) {
         log.info("testBlanc={}", post.getTitle());
-        return "redirect:/post/list";
+//        postService.savePost(post);
+        return "redirect:/board/list";
     }
 }
