@@ -28,7 +28,23 @@ public class TestDataInit {
         postRepository.save(Post.builder()
                 .nickName("륜투더환")
                 .postBody("나는 멋지고 섹시한 개발자")//채&훈
-                .title("여러분 ㅋ").build()
+                .title("여러분").build()
+        );
+
+        postRepository.save(Post.builder()
+                .nickName("testTitle01")
+                .postBody("test postbody 01")//채&훈
+                .title("test nickname01").build()
+        );
+        postRepository.save(Post.builder()
+                .nickName("testTitle02")
+                .postBody("test postbody 02")//채&훈
+                .title("test nickname02").build()
+        )
+        ;postRepository.save(Post.builder()
+                .nickName("testTitle03")
+                .postBody("test postbody 03")//채&훈
+                .title("test nickname03").build()
         );
 
         userRepository.save(User.builder()
