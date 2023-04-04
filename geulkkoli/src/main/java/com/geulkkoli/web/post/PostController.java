@@ -58,13 +58,21 @@ public class PostController {
         return "/board/boardUpdateForm";
     }
 
-    @PostMapping("/update/{postNo}")
+    @PutMapping("/update/{postNo}")
     public String boardUpdate(@ModelAttribute Post updateParam, @PathVariable Long postNo, RedirectAttributes redirectAttributes) {
         log.info("updateParam={}, postId={}", updateParam.getPostBody(), postNo);
         postService.updatePost(postNo, updateParam);
         redirectAttributes.addAttribute("updateStatus", true);
 
         return "redirect:/board/read/{postNo}";
+    }
+
+    @DeleteMapping("/delete/{postNo}")
+    public String boardDelete(@PathVariable Long postNo) {
+        log.info("deletePostNo={}", postNo);
+        postService.deletePost(postNo);
+
+        return "redirect:/board/list";
     }
 
     @PostConstruct

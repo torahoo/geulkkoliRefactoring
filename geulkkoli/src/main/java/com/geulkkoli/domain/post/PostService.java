@@ -33,4 +33,8 @@ public class PostService {
     public void updatePost (Long postNo, Post updateParam) {
         postRepository.update(postNo, updateParam);
     }
+
+    public void deletePost (Long postNo) {
+        postRepository.delete(postNo);
+    }
 }
