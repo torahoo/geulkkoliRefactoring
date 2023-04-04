@@ -55,7 +55,7 @@ public class PostController {
         Post findPost = postService.findById(postNo);
         log.info("findPost={}", findPost.getPostBody());
         model.addAttribute("post", findPost);
-        return "/post/postUpdateForm";
+        return "/post/postEditForm";
     }
 
     @PostMapping("/update/{postNo}")
@@ -65,6 +65,12 @@ public class PostController {
         redirectAttributes.addAttribute("updateStatus", true);
 
         return "redirect:/post/read/{postNo}";
+    }
+
+    @DeleteMapping("/delete/{postNo}")
+    public String postDelete(@PathVariable Long postNo) {
+        postService.deletePost(postNo);
+        return "redirect:/post/list";
     }
 
     @PostMapping("/test")
