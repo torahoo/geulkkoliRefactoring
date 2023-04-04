@@ -47,8 +47,8 @@
   <div class="row">
     <div class="col">
       <button class="w-100 btn btn-primary btn-lg"
-              onclick="location.href='boardUpdateForm.html'"
-              th:onclick="|location.href='@{/board/update/{postNo}(postNo=${post.postNo})}'|"
+              onclick="location.href='postUpdateForm.html'"
+              th:onclick="|location.href='@{/post/update/{postNo}(postNo=${post.postNo})}'|"
               type="button">게시글 수정</button>
     </div>
 
@@ -85,8 +85,8 @@
 
     <div class="col">
       <button class="w-100 btn btn-secondary btn-lg"
-              onclick="location.href='boardList.html'"
-              th:onclick="|location.href='@{/board/list}'|"
+              onclick="location.href='postList.html'"
+              th:onclick="|location.href='@{/post/list}'|"
               type="button">목록으로</button>
     </div>
   </div>
@@ -103,7 +103,7 @@
     console.log("postNo=" + postNo);
 
     if (document.getElementById("post-Compare").value == deleteTitle) {
-      fetch('/board/delete/'+postNo, {method: 'DELETE'})
+      fetch('/post/delete/'+postNo, {method: 'DELETE'})
               .then(response => {
                 window.location = response.url
               });
