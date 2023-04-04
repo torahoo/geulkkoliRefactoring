@@ -1,6 +1,6 @@
 <!--타임리프 적용 전-->
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
 
 <head>
     <meta charset="UTF-8">
@@ -37,7 +37,7 @@
         <div id="nickNameTwoBox">
             <input type="text" name="nickName" id="nickName" placeholder="5~10자리 / 영문, 숫자 사용 가능"
                    class="form-control form-control-lg nickNameInline">
-            <p th:if="${nickameDuple}" th:text="'이미 있는 닉네임입니다'"></p>
+            <p th:if="${nickNameDuple}" th:text="'이미 있는 닉네임입니다'"></p>
         </div>
     </div>
 

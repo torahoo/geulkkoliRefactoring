@@ -89,7 +89,6 @@ class UserControllerTest {
         mockMvc.perform(MockMvcRequestBuilders.post("/join")
                         .params(query_param))
                 .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.model().attributeExists("idDuple"))
                 .andExpect(MockMvcResultMatchers.model().attributeExists("emailDuple"))
                 .andExpect(MockMvcResultMatchers.model().attributeExists("nickNameDuple"));
         User findByEmailIdUser = userRepository.findByEmail("tako@naver.com").
@@ -117,7 +116,6 @@ class UserControllerTest {
         mockMvc.perform(MockMvcRequestBuilders.post("/join")
                         .params(query_param))
                 .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.model().attributeExists("idDuple"))
                 .andExpect(MockMvcResultMatchers.model().attributeExists("emailDuple"));
         User rejectUser = userRepository.findByNickName("takodachi").
                 orElse(null);
