@@ -48,4 +48,15 @@ class ImplPostRepositoryTest {
         Optional<Post> one = implPostRepository.findById(1L);
         Assertions.assertThat(one.get().getTitle()).isEqualTo(update.getTitle());
     }
+
+    @Test
+    void delete() {
+        Post post1 = implPostRepository.save(new Post("title01", "body01", "nick01"));
+        Post post2 = implPostRepository.save(new Post("title02", "body02", "nick02"));
+
+        implPostRepository.delete(post1.getPostNo());
+        List<Post> all = implPostRepository.findAll();
+
+        Assertions.assertThat(all.size()).isEqualTo(1);
+    }
 }
