@@ -54,12 +54,9 @@ class ImplPostRepositoryTest {
 
     @Test
     void delete() {
-        Post post1 = implPostRepository.save(new Post("title01", "body01", "nick01"));
-        Post post2 = implPostRepository.save(new Post("title02", "body02", "nick02"));
-
-        implPostRepository.delete(post1.getPostNo());
+        implPostRepository.delete(1L);
         List<Post> all = implPostRepository.findAll();
 
-        Assertions.assertThat(all.size()).isEqualTo(2);
+        Assertions.assertThat(all.size()).isEqualTo(3);
     }
 }

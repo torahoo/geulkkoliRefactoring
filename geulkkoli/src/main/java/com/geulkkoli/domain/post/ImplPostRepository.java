@@ -29,18 +29,21 @@ public class ImplPostRepository implements PostRepository {
         return Optional.of(post);
     }
 
+    @Override
     public List<Post> findAll() {
         return entityManager
                 .createQuery("select p from Post p", Post.class)
                 .getResultList();
     }
 
+    @Override
     public void update (Long postNo, Post updateParam) {
         Post findPost = entityManager.find(Post.class, postNo);
         findPost.setTitle(updateParam.getTitle());
         findPost.setPostBody(updateParam.getPostBody());
     }
 
+    @Override
     public void delete (Long postNo) {
         Post deletePost = entityManager.find(Post.class, postNo);
         entityManager.remove(deletePost);

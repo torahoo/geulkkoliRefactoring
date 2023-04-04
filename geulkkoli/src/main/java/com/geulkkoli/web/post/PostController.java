@@ -58,7 +58,7 @@ public class PostController {
         return "/board/boardUpdateForm";
     }
 
-    @PutMapping("/update/{postNo}")
+    @PostMapping("/update/{postNo}")
     public String boardUpdate(@ModelAttribute Post updateParam, @PathVariable Long postNo, RedirectAttributes redirectAttributes) {
         log.info("updateParam={}, postId={}", updateParam.getPostBody(), postNo);
         postService.updatePost(postNo, updateParam);
@@ -74,14 +74,6 @@ public class PostController {
 
         return "redirect:/board/list";
     }
-
-//    @PostConstruct
-//    public void init() {
-//        postService.savePost(new Post("testTitle01", "test postbody 01", "test nickname01"));
-//        postService.savePost(new Post("testTitle02", "test postbody 02", "test nickname02"));
-//        postService.savePost(new Post("testTitle03", "test postbody 03", "test nickname03"));
-//
-//    }
 
     @PostMapping("/test")
     public String testBlanc(@ModelAttribute Post post) {

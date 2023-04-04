@@ -15,7 +15,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class PostService {
 
-    private final ImplPostRepository postRepository;
+    private final PostRepository postRepository;
 
     public Post findById (Long postNo) {
         return postRepository.findById(postNo)
