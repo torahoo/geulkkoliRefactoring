@@ -103,13 +103,13 @@
     console.log("postNo=" + postNo);
 
     if (document.getElementById("post-Compare").value == deleteTitle) {
-      console.log("삭제 성공")
       fetch('/board/delete/'+postNo, {method: 'DELETE'})
               .then(response => {
                 window.location = response.url
               });
+      window.alert("삭제 성공")
     } else {
-      console.log("삭제 실패")
+      window.alert("삭제 실패")
     }
   }
 
