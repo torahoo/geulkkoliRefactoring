@@ -12,21 +12,29 @@ import java.util.Objects;
 @NoArgsConstructor
 @Entity
 @Getter
-@NotNull
 @Table(name = "users")
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long userId;
 
+    @NotNull
     private String userName;
 
+    @NotNull
     @Getter(AccessLevel.NONE)
     private String password;
+
+    @NotNull
     private String nickName;
 
+    @NotNull
     private String email;
+
+    @NotNull
     private String phoneNo;
+
+    @NotNull
     private String gender;
 
     @Builder

@@ -34,11 +34,11 @@
     <label for="nickName">
       <h4>닉네임</h4>
     </label>
-      <input type="text" name="nickName" id="nickName" placeholder="2~8자리 / 한글, 영문, 숫자 사용 가능"
-             th:field="*{nickName}"
-             th:errorclass="field-error"
-             class="form-control form-control-lg nickNameInline">
-      <p class="field-error" th:errors="*{nickName}"></p>
+    <input type="text" name="nickName" id="nickName" placeholder="2~8자리 / 한글, 영문, 숫자 사용 가능"
+           th:field="*{nickName}"
+           th:errorclass="field-error"
+           class="form-control form-control-lg nickNameInline">
+    <p class="field-error" th:errors="*{nickName}"></p>
 
     <br>
 
@@ -85,7 +85,6 @@
 
   <br>
 
-  <div class="mb-3 check-parent">
     <h4>성별</h4>
     <div class="form-check form-check-inline">
       <input type="radio" name="gender" id="male" value="male" checked>
