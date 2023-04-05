@@ -11,7 +11,7 @@
           crossorigin="anonymous"></script>
   <style>
     .container {
-      max-width: 560px;
+      max-width: 1000px;
     }
   </style>
 </head>
@@ -21,10 +21,9 @@
     <h2>게시글</h2>
   </div>
 
-  <!-- 추가 -->
+  <!-- 게시글 저장 완료 -->
   <h2 th:if="${param.addStatus}" th:text="'저장 완료'"></h2>
-
-  <!-- 추가 -->
+  <!-- 게시글 수정 완료 -->
   <h2 th:if="${param.updateStatus}" th:text="'수정 완료'"></h2>
 
   <div>
@@ -94,6 +93,7 @@
 
 <script type="text/javascript">
 
+  <!-- 게시글 삭제 -->
   const deleteTitle = '[[${post.title}]]'
   const postNo = [[${post.postNo}]]
 
@@ -112,6 +112,7 @@
       window.alert("삭제 실패")
     }
   }
+  <!-- end 게시글 삭제 -->
 
 </script>
 
