@@ -34,7 +34,7 @@ public class PostController {
         log.info("title={}", post.getTitle());
         postService.savePost(post);
         redirectAttributes.addAttribute("addStatus", true);
-        redirectAttributes.addAttribute("postNo", post.getPostNo());
+        redirectAttributes.addAttribute("postNo", post.getPostId());
         return "redirect:/post/read/{postNo}";
     }
 

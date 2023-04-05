@@ -3,24 +3,27 @@ package com.geulkkoli.domain.post;
 import lombok.*;
 import org.hibernate.Hibernate;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 import java.util.Objects;
 
-@Setter
-@Getter
+/*Db에서 관리해야하는 postId를 Setter로 값 주입할 수 있는 코드라서 @Setter 지움*/
+
 @NoArgsConstructor
+@Getter
 @Entity
-@ToString
 public class Post {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long postNo;
+    private Long postId;
+
+    //칼럼에 널 값이 들어오는 걸 허용하지 않음
+    @Column(nullable = false)
     private String title;
+    @Column(name = "body", nullable = false)
     private String postBody;
+    @Column(nullable = false)
     private String nickName;
 
     @Builder
@@ -30,13 +33,27 @@ public class Post {
         this.nickName = nickName;
     }
 
+    //제목을 바꾼다.
+    public void changeTitle(String title) {
+        this.title = title;
+    }
+
+    //본문을 바꾼다.
+    public void changePostBody(String updateBody) {
+        this.postBody = updateBody;
+    }
+
+    //별명을 바꾼다.
+    public void changeNickName(String nickName) {
+        this.nickName = nickName;
+    }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
         Post post = (Post) o;
-        return getPostNo() != null && Objects.equals(getPostNo(), post.getPostNo());
+        return getPostId() != null && Objects.equals(getPostId(), post.getPostId());
     }
 
     @Override
