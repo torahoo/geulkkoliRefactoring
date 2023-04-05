@@ -6,17 +6,17 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
 
 @Slf4j
 @SpringBootTest
+@Transactional
 class ImplPostRepositoryTest {
 
     @Autowired
     private ImplPostRepository implPostRepository;
-//    @AfterEach
-//    public void
 
     @Test
     void save() {
@@ -36,12 +36,12 @@ class ImplPostRepositoryTest {
     @Test
     void findAll() {
         List<Post> all = implPostRepository.findAll();
-        Assertions.assertThat(3).isEqualTo(all.size());
+        Assertions.assertThat(4).isEqualTo(all.size());
     }
 
     @Test
     void update() {
-//        Post save = implPostRepository.save(new Post("title01", "body01", "nick01"));
+
         Post update = new Post("title02", "body02", "nick02");
         implPostRepository.update(1L, update);
         Optional<Post> one = implPostRepository.findById(1L);
