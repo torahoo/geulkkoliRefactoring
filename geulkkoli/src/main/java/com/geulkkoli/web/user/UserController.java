@@ -28,7 +28,6 @@ public class UserController {
     private final LoginService loginService;
     private final JoinService joinService;
 
-
     @GetMapping("/login")
     public String loginForm(@ModelAttribute("loginForm") LoginForm form) {
         return LOGIN_FORM;
