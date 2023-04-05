@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link href="../css/bootstrap.min.css"
+    <link href="/css/bootstrap.min.css"
           th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
     <style>
 
@@ -45,8 +45,8 @@
             </thead>
             <tbody>
                 <tr th:each="post : ${list}">
-                    <th scope="row"> <a th:href="@{|/post/read/${post.getPostId}|}" th:text="${post.getPostId}"></a></th>
-                    <td> <a th:href="@{|/post/read/${post.getPostId}|}" th:text="${post.title}"></a></td>
+                    <th scope="row"> <a th:href="@{|/post/read/${post.postId}|}" th:text="${post.postId}"></a></th>
+                    <td> <a th:href="@{|/post/read/${post.postId}|}" th:text="${post.title}"></a></td>
                     <td th:text="${post.nickName}"></td>
                 </tr>
             </tbody>
