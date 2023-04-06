@@ -47,7 +47,7 @@
     <div class="col">
       <button class="w-100 btn btn-primary btn-lg"
               onclick="location.href='postUpdateForm.html'"
-              th:onclick="|location.href='@{/post/update/{postNo}(postNo=${post.postNo})}'|"
+              th:onclick="|location.href='@{/post/update/{postId}(postId=${post.postId})}'|"
               type="button">게시글 수정</button>
     </div>
 
@@ -95,15 +95,15 @@
 
   <!-- 게시글 삭제 -->
   const deleteTitle = '[[${post.title}]]'
-  const postNo = [[${post.postNo}]]
+  const postId = [[${post.postId}]]
 
   function deletePost () {
     console.log("deleteTitle=" + deleteTitle);
     console.log("CompareTitle=" + document.getElementById("post-Compare").value);
-    console.log("postNo=" + postNo);
+    console.log("postId=" + postId);
 
     if (document.getElementById("post-Compare").value == deleteTitle) {
-      fetch('/post/delete/'+postNo, {method: 'DELETE'})
+      fetch('/post/delete/'+postId, {method: 'DELETE'})
               .then(response => {
                 window.location = response.url
               });
