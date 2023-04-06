@@ -32,19 +32,19 @@ public class TestDataInit {
         );
 
         postRepository.save(Post.builder()
-                .nickName("testTitle01")
+                .title("testTitle01")
                 .postBody("test postbody 01")//채&훈
-                .title("test nickname01").build()
+                .nickName("test nickname01").build()
         );
         postRepository.save(Post.builder()
-                .nickName("testTitle02")
+                .title("testTitle02")
                 .postBody("test postbody 02")//채&훈
-                .title("test nickname02").build()
+                .nickName("test nickname02").build()
         )
         ;postRepository.save(Post.builder()
-                .nickName("testTitle03")
+                .title("testTitle03")
                 .postBody("test postbody 03")//채&훈
-                .title("test nickname03").build()
+                .nickName("test nickname03").build()
         );
 
         userRepository.save(User.builder()
