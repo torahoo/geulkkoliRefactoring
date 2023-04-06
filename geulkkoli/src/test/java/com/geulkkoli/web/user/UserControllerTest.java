@@ -1,5 +1,6 @@
 package com.geulkkoli.web.user;
 
+import com.geulkkoli.application.security.config.SecurityConfig;
 import com.geulkkoli.domain.user.User;
 import com.geulkkoli.domain.user.UserRepository;
 import org.junit.jupiter.api.DisplayName;
@@ -7,6 +8,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.Import;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
@@ -18,6 +20,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
 @AutoConfigureMockMvc
+@Import(SecurityConfig.class)
 class UserControllerTest {
     @Autowired
     MockMvc mockMvc;
@@ -35,7 +38,7 @@ class UserControllerTest {
         //when
         mockMvc.perform(MockMvcRequestBuilders.post("/login")
                         .params(query_param))
-                .andExpect(MockMvcResultMatchers.status().isOk());
+                .andExpect(MockMvcResultMatchers.status().is3xxRedirection());
     }
 
     @Test
@@ -44,7 +47,7 @@ class UserControllerTest {
         mockMvc.perform(MockMvcRequestBuilders.post("/login")
                         .param("email", "tako@naver.com")
                         .param("password", "1234"))
-                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.status().is3xxRedirection())
                 .andDo(MockMvcResultHandlers.print());
     }
 

@@ -29,7 +29,7 @@ class ImplPostRepositoryTest {
     void findById() {
         Post post = new Post("title", "body", "nick");
         Post save = implPostRepository.save(post);
-        Optional<Post> find = implPostRepository.findById(save.getPostId());
+        Optional<Post> find = implPostRepository.findById(save.getPostNo());
         Assertions.assertThat(save).isEqualTo(find.get());
     }
 

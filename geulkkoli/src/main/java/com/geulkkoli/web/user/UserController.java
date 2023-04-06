@@ -62,6 +62,9 @@ public class UserController {
     @PostMapping("/join")
     public String userJoin(@Validated @ModelAttribute("joinForm") JoinForm form, BindingResult bindingResult, Model model) {
         log.info("join Method={}", this);
+        if (bindingResult.hasErrors()){
+            return JOIN_FORM;
+        }
 
         if (joinService.isEmailDuplicate(form.getEmail())) {
             bindingResult.rejectValue("email", "Duple.joinForm.email");

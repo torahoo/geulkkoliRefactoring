@@ -1,10 +1,11 @@
 package com.geulkkoli.domain.post;
 
-import lombok.*;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.hibernate.Hibernate;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotBlank;
 import java.util.Objects;
 
 /*Db에서 관리해야하는 postId를 Setter로 값 주입할 수 있는 코드라서 @Setter 지움*/
@@ -16,7 +17,8 @@ public class Post {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long postId;
+    @Column(name = "post_id")
+    private Long postNo;
 
     //칼럼에 널 값이 들어오는 걸 허용하지 않음
     @Column(nullable = false)
@@ -53,7 +55,7 @@ public class Post {
         if (this == o) return true;
         if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
         Post post = (Post) o;
-        return getPostId() != null && Objects.equals(getPostId(), post.getPostId());
+        return getPostNo() != null && Objects.equals(getPostNo(), post.getPostNo());
     }
 
     @Override
