@@ -45,7 +45,7 @@
             </thead>
             <tbody>
                 <tr th:each="post : ${list}">
-                    <th scope="row"> <a th:href="@{|/post/read/${post.postNo}|}" th:text="${post.postId}"></a></th>
+                    <th scope="row"> <a th:href="@{|/post/read/${post.postId}|}" th:text="${post.postId}"></a></th>
                     <td> <a th:href="@{|/post/read/${post.postId}|}" th:text="${post.title}"></a></td>
                     <td th:text="${post.nickName}"></td>
                 </tr>

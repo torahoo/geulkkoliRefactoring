@@ -11,7 +11,7 @@
           crossorigin="anonymous"></script>
   <style>
     .container {
-      max-width: 560px;
+      max-width: 1000px;
     }
   </style>
 </head>
@@ -21,26 +21,27 @@
     <h2>게시글</h2>
   </div>
 
-  <!-- 추가 -->
+  <!-- 게시글 저장 완료 -->
   <h2 th:if="${param.addStatus}" th:text="'저장 완료'"></h2>
-
-  <!-- 추가 -->
+  <!-- 게시글 수정 완료 -->
   <h2 th:if="${param.updateStatus}" th:text="'수정 완료'"></h2>
 
-  <div>
+  <div class="mb-3">
     <label for="title">제목</label>
     <input type="text" id="title" name="title" class="form-control"
            value="제목1" th:value="${post.title}" readonly>
   </div>
-  <div>
-    <label for="postBody">내용</label>
-    <input type="text" id="postBody" name="postBody" class="form-control"
-           value="내용1" th:value="${post.postBody}" readonly>
+  <div class="d-flex align-items-center text-50 p-3 my-3 rounded box-shadow">
+    <img class="mr-3" src="" alt="" width="48" height="48">
+    <div class="lh-100">
+      <h6 class="mb-0 lh-100" th:text="${post.nickName}"></h6>
+      <small th:text="example"></small>
+    </div>
   </div>
-  <div>
-    <label for="nickName">닉네임</label>
-    <input type="text" id="nickName" name="nickName" class="form-control"
-           value="사용자1" th:value="${post.nickName}" readonly>
+  <div class="mb-3">
+    <label for="postBody">내용</label>
+    <textarea id="postBody" name="postBody" class="form-control"
+              th:text="${post.postBody}" rows="8" readonly></textarea>
   </div>
 
   <hr class="my-4">
@@ -48,7 +49,7 @@
     <div class="col">
       <button class="w-100 btn btn-primary btn-lg"
               onclick="location.href='postUpdateForm.html'"
-              th:onclick="|location.href='@{/post/update/{postNo}(postNo=${post.postNo})}'|"
+              th:onclick="|location.href='@{/post/update/{postId}(postId=${post.postId})}'|"
               type="button">게시글 수정</button>
     </div>
 
@@ -94,16 +95,17 @@
 
 <script type="text/javascript">
 
+  <!-- 게시글 삭제 -->
   const deleteTitle = '[[${post.title}]]'
-  const postNo = [[${post.postNo}]]
+  const postId = [[${post.postId}]]
 
   function deletePost () {
     console.log("deleteTitle=" + deleteTitle);
     console.log("CompareTitle=" + document.getElementById("post-Compare").value);
-    console.log("postNo=" + postNo);
+    console.log("postId=" + postId);
 
     if (document.getElementById("post-Compare").value == deleteTitle) {
-      fetch('/post/delete/'+postNo, {method: 'DELETE'})
+      fetch('/post/delete/'+postId, {method: 'DELETE'})
               .then(response => {
                 window.location = response.url
               });
@@ -112,6 +114,7 @@
       window.alert("삭제 실패")
     }
   }
+  <!-- end 게시글 삭제 -->
 
 </script>
 

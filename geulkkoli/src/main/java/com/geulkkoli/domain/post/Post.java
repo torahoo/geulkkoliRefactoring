@@ -17,9 +17,7 @@ public class Post {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "post_id")
-    private Long postNo;
-
+    private Long postId;
     //칼럼에 널 값이 들어오는 걸 허용하지 않음
     @Column(nullable = false)
     private String title;
@@ -55,7 +53,7 @@ public class Post {
         if (this == o) return true;
         if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
         Post post = (Post) o;
-        return getPostNo() != null && Objects.equals(getPostNo(), post.getPostNo());
+        return getPostId() != null && Objects.equals(getPostId(), post.getPostId());
     }
 
     @Override
