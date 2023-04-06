@@ -34,39 +34,39 @@ public class PostController {
         log.info("title={}", post.getTitle());
         postService.savePost(post);
         redirectAttributes.addAttribute("addStatus", true);
-        redirectAttributes.addAttribute("postNo", post.getPostNo());
-        return "redirect:/post/read/{postNo}";
+        redirectAttributes.addAttribute("postId", post.getPostId());
+        return "redirect:/post/read/{postId}";
     }
 
-    @GetMapping("/read/{postNo}")
-    public String postRead(Model model, @PathVariable Long postNo) {
-        log.info("postNo={}", postNo);
-        Post findPost = postService.findById(postNo);
+    @GetMapping("/read/{postId}")
+    public String postRead(Model model, @PathVariable Long postId) {
+        log.info("postId={}", postId);
+        Post findPost = postService.findById(postId);
         model.addAttribute("post", findPost);
         return "/post/postPage";
     }
 
-    @GetMapping("/update/{postNo}")
-    public String postUpdateForm(Model model, @PathVariable Long postNo) {
-        log.info("updateParam={}, postNo={}", model.getAttribute("post"), postNo);
-        Post findPost = postService.findById(postNo);
+    @GetMapping("/update/{postId}")
+    public String postUpdateForm(Model model, @PathVariable Long postId) {
+        log.info("updateParam={}, postId={}", model.getAttribute("post"), postId);
+        Post findPost = postService.findById(postId);
         log.info("findPost={}", findPost.getPostBody());
         model.addAttribute("post", findPost);
         return "/post/postEditForm";
     }
 
-    @PostMapping("/update/{postNo}")
-    public String postUpdate(@ModelAttribute Post updateParam, @PathVariable Long postNo, RedirectAttributes redirectAttributes) {
-        log.info("updateParam={}, postId={}", updateParam.getPostBody(), postNo);
-        postService.updatePost(postNo, updateParam);
+    @PostMapping("/update/{postId}")
+    public String postUpdate(@ModelAttribute Post updateParam, @PathVariable Long postId, RedirectAttributes redirectAttributes) {
+        log.info("updateParam={}, postId={}", updateParam.getPostBody(), postId);
+        postService.updatePost(postId, updateParam);
         redirectAttributes.addAttribute("updateStatus", true);
 
-        return "redirect:/post/read/{postNo}";
+        return "redirect:/post/read/{postId}";
     }
 
-    @DeleteMapping("/delete/{postNo}")
-    public String postDelete(@PathVariable Long postNo) {
-        postService.deletePost(postNo);
+    @DeleteMapping("/delete/{postId}")
+    public String postDelete(@PathVariable Long postId) {
+        postService.deletePost(postId);
         return "redirect:/post/list";
     }
 

@@ -24,8 +24,8 @@ public class ImplPostRepository implements PostRepository {
     }
 
     @Override
-    public Optional<Post> findById(Long postNo) {
-        Post post = entityManager.find(Post.class, postNo);
+    public Optional<Post> findById(Long postId) {
+        Post post = entityManager.find(Post.class, postId);
         return Optional.of(post);
     }
 
@@ -37,15 +37,15 @@ public class ImplPostRepository implements PostRepository {
     }
 
     @Override
-    public void update (Long postNo, Post updateParam) {
-        Post findPost = entityManager.find(Post.class, postNo);
+    public void update (Long postId, Post updateParam) {
+        Post findPost = entityManager.find(Post.class, postId);
         findPost.setTitle(updateParam.getTitle());
         findPost.setPostBody(updateParam.getPostBody());
     }
 
     @Override
-    public void delete (Long postNo) {
-        Post deletePost = entityManager.find(Post.class, postNo);
+    public void delete (Long postId) {
+        Post deletePost = entityManager.find(Post.class, postId);
         entityManager.remove(deletePost);
     }
 }

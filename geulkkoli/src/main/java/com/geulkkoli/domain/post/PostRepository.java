@@ -5,8 +5,8 @@ import java.util.Optional;
 
 public interface PostRepository {
     Post save(Post post);
-    Optional<Post> findById(Long id);
+    Optional<Post> findById(Long postId);
     List<Post> findAll();
-    void update (Long postNo, Post updateParam);
-    void delete (Long postNo);
+    void update (Long postId, Post updateParam);
+    void delete (Long postId);
 }

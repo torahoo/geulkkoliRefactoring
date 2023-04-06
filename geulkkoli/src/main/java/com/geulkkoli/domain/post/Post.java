@@ -18,7 +18,7 @@ public class Post {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long postNo;
+    private Long postId;
     private String title;
     private String postBody;
     private String nickName;
@@ -30,13 +30,12 @@ public class Post {
         this.nickName = nickName;
     }
 
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
         Post post = (Post) o;
-        return getPostNo() != null && Objects.equals(getPostNo(), post.getPostNo());
+        return getPostId() != null && Objects.equals(getPostId(), post.getPostId());
     }
 
     @Override
