@@ -3,11 +3,6 @@
     padding: 0px;
 }
 
-body {
-    margin-top: 5%;
-    margin-bottom: 5%;
-}
-
 div {
     margin: auto;
     width: 50%;
@@ -65,14 +60,7 @@ h4 {
     margin: auto;
 }
 
-input[type=submit] {
+input[type=submit], input[type=button] {
     font-size: 20px;
     padding-inline: 20px;
-}
-
-input[value="중복 확인"] {
-    margin-top: 1%;
-    margin-left: 2%;
-    margin-bottom: 0%;
-    padding: 1% 3% 1% 3%;
 }
