@@ -28,7 +28,6 @@ public class UserController {
     private final LoginService loginService;
     private final JoinService joinService;
 
-
     @GetMapping("/login")
     public String loginForm(@ModelAttribute("loginForm") LoginForm form) {
         return LOGIN_FORM;
@@ -50,7 +49,7 @@ public class UserController {
 
         HttpSession session = request.getSession();
         session.setAttribute(SessionConst.LOGIN_USER, loginUser.get());
-        return LOGIN_FORM;
+        return "/index";
     }
 
     //join
@@ -96,4 +95,13 @@ public class UserController {
         return "/index";
     }
 
+    @GetMapping("/logout")
+    public String logout(HttpServletRequest request) {
+
+        HttpSession session = request.getSession(false);
+        if (session != null) {
+            session.invalidate();
+        }
+        return "redirect:/";
+    }
 }
