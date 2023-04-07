@@ -25,6 +25,7 @@ public class UserController {
 
     public static final String LOGIN_FORM = "user/loginForm";
     public static final String JOIN_FORM = "user/joinForm";
+    public static final String EDIT_FORM = "user/editForm";
     public static final String REDIRECT_INDEX = "redirect:/";
     private final LoginService loginService;
     private final JoinService joinService;
@@ -91,11 +92,22 @@ public class UserController {
         }
 
         log.info("model = {}", model);
-        log.info("form {}", form);
+        log.info("form = {}", form);
 
         return REDIRECT_INDEX;
     }
 
+    //edit
+    @GetMapping("/edit")
+    public String editForm(@ModelAttribute EditForm form) {
+        return EDIT_FORM;
+    }
+    @PostMapping("/edit")
+    public String edit(@ModelAttribute EditForm form, HttpSession httpSession) {
+
+        log.info("{}에서 정보 수정 중", httpSession.getAttribute(SessionConst.LOGIN_USER));
+        return REDIRECT_INDEX;
+    }
     @GetMapping("/logout")
     public String logout(HttpServletRequest request) {
 

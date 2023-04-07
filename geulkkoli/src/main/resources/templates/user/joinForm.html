@@ -2,15 +2,13 @@
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
 
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>회원가입</title>
-    <link rel="stylesheet" href="/css/bootstrap.min.css">
-    <link rel="stylesheet" href="/css/joinForm.css">
-    <script defer src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
-            integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4"
-            crossorigin="anonymous"></script>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>회원가입</title>
+  <link rel="stylesheet" href="/css/bootstrap.min.css">
+  <link rel="stylesheet" href="/css/userForm.css">
+
 </head>
 
 <body>
@@ -21,93 +19,94 @@
 <br>
 
 <form action="" th:action th:object="${joinForm}" method="post">
-    <div class="mb-3">
-        <label for="userName">
-            <h4>이름</h4>
-        </label>
-        <input type="text" name="userName" id="userName"
-               th:field="*{userName}"
-               th:errorclass="field-error"
-               placeholder="홍길동" class="form-control form-control-lg">
-        <p class="field-error" th:errors="*{userName}"></p>
-
-        <br>
-
-        <label for="nickName">
-            <h4>닉네임</h4>
-        </label>
-        <input type="text" name="nickName" id="nickName" placeholder="2~8자리 / 한글, 영문, 숫자 사용 가능"
-               th:field="*{nickName}"
-               th:errorclass="field-error"
-               class="form-control form-control-lg nickNameInline">
-        <p class="field-error" th:errors="*{nickName}"></p>
-
-        <br>
-
-        <label for="email">
-            <h4>E-mail</h4>
-        </label>
-        <input type="email" name="email" id="email" placeholder="geulkkoli@welcome.com"
-               th:field="*{email}"
-               th:errorclass="field-error"
-               class="form-control form-control-lg">
-        <p class="field-error" th:errors="*{email}">
-        </p>
-
-        <br>
-
-        <label for="password">
-            <h4>비밀번호</h4>
-        </label>
-        <input type="password" name="password" id="password" placeholder="8~20자리 / 영문 소문자, 숫자, 특수문자 조합"
-               th:errorclass="field-error"
-               class="form-control form-control-lg">
-        <p class="field-error" th:errors="*{password}">
-        </p>
-
-        <label for="verify-password">
-            <h4>비밀번호 확인</h4>
-        </label>
-        <input type="password" name="verifyPassword" id="verify-password" placeholder="위 비밀번호와 동일하게 기입"
-               class="form-control form-control-lg">
-        <p class="field-error" th:errors="*{verifyPassword}"></p>
-
-        <br>
-
-        <label for="phoneNo">
-            <h4>전화번호</h4>
-        </label>
-        <input type="tel" name="phoneNo" id="phoneNo"
-               th:field="*{phoneNo}"
-               th:errorclass="field-error"
-               placeholder="숫자만 입력 (01012345678)"
-               class="form-control form-control-lg">
-        <p class="field-error" th:errors="*{phoneNo}"></p>
-    </div>
+  <div class="mb-3">
+    <label for="userName">
+      <h4>이름</h4>
+    </label>
+    <input type="text" name="userName" id="userName"
+           th:field="*{userName}"
+           th:errorclass="field-error"
+           placeholder="홍길동" class="form-control form-control-lg">
+    <p class="field-error" th:errors="*{userName}"></p>
 
     <br>
 
+    <label for="nickName">
+      <h4>닉네임</h4>
+    </label>
+    <input type="text" name="nickName" id="nickName" placeholder="2~8자리 / 한글, 영문, 숫자 사용 가능"
+           th:field="*{nickName}"
+           th:errorclass="field-error"
+           class="form-control form-control-lg nickNameInline">
+    <p class="field-error" th:errors="*{nickName}"></p>
+
+    <br>
+
+    <label for="email">
+      <h4>E-mail</h4>
+    </label>
+    <input type="email" name="email" id="email" placeholder="geulkkoli@welcome.com"
+           th:field="*{email}"
+           th:errorclass="field-error"
+           class="form-control form-control-lg">
+    <p class="field-error" th:errors="*{email}">
+    </p>
+
+    <br>
+
+    <label for="password">
+      <h4>비밀번호</h4>
+    </label>
+    <input type="password" name="password" id="password" placeholder="8~20자리 / 영문 소문자, 숫자, 특수문자 조합"
+           th:errorclass="field-error"
+           class="form-control form-control-lg">
+    <p class="field-error" th:errors="*{password}">
+    </p>
+
+    <label for="verify-password">
+      <h4>비밀번호 확인</h4>
+    </label>
+    <input type="password" name="verifyPassword" id="verify-password" placeholder="위 비밀번호와 동일하게 기입"
+           class="form-control form-control-lg">
+    <p class="field-error" th:errors="*{verifyPassword}"></p>
+
+    <br>
+
+    <label for="phoneNo">
+      <h4>전화번호</h4>
+    </label>
+    <input type="tel" name="phoneNo" id="phoneNo"
+           th:field="*{phoneNo}"
+           th:errorclass="field-error"
+           placeholder="숫자만 입력 (01012345678)"
+           class="form-control form-control-lg">
+    <p class="field-error" th:errors="*{phoneNo}"></p>
+  </div>
+
+  <br>
+
+  <div class="centerDiv">
     <h4>성별</h4>
     <div class="form-check form-check-inline">
-        <input type="radio" name="gender" id="male" value="male" checked>
-        <label for="male">남자</label>
+      <input type="radio" name="gender" id="male" value="male" checked>
+      <label for="male">남자</label>
     </div>
     <div class="form-check form-check-inline">
-        <input type="radio" name="gender" id="female" value="female">
-        <label for="female">여자</label>
+      <input type="radio" name="gender" id="female" value="female">
+      <label for="female">여자</label>
     </div>
     <div class="form-check form-check-inline">
-        <input type="radio" name="gender" id="non" value="non">
-        <label for="non">밝히고 싶지 않음</label>
+      <input type="radio" name="gender" id="non" value="non">
+      <label for="non">밝히고 싶지 않음</label>
     </div>
-    </div>
+  </div>
 
-    <br>
-    <br>
+  <br>
+  <br>
 
-    <div class="mb-3 sub-div">
-        <input type="submit" value="가입하기" class="btn btn-primary form-control-lg">
-    </div>
+  <div class="mb-3 sub-div">
+    <input type="submit" value="가입하기" class="btn btn-primary form-control-lg">
+  </div>
 
 </form>
 
