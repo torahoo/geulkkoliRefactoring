@@ -49,7 +49,7 @@ public class UserController {
 
         HttpSession session = request.getSession();
         session.setAttribute(SessionConst.LOGIN_USER, loginUser.get());
-        return LOGIN_FORM;
+        return "/index";
     }
 
     //join
@@ -95,4 +95,13 @@ public class UserController {
         return "/index";
     }
 
+    @GetMapping("/logout")
+    public String logout(HttpServletRequest request) {
+
+        HttpSession session = request.getSession(false);
+        if (session != null) {
+            session.invalidate();
+        }
+        return "redirect:/";
+    }
 }

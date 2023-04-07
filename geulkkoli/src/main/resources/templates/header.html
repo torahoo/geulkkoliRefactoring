@@ -1,8 +1,9 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
-<head>
+<head th:fragment="header">
     <meta charset="UTF-8">
     <title>Root Page</title>
+
 </head>
 <body>
 <header class="p-3 bg-dark text-white">
@@ -13,8 +14,27 @@
             </ul>
 
             <div class="text-end">
-                <button type="button" class="btn btn-outline-light me-2">Login</button>
-                <button type="button" class="btn btn-warning">Sign-up</button>
+                <button type="button"
+                        onclick="location.href='/login'"
+                        th:if="${session.loginUser == null}"
+                        class="btn btn-outline-light me-2">Login
+                </button>
+
+                <button type="button"
+                        onclick="location.href='/join'"
+                        th:if="${session.loginUser == null}"
+                        class="btn btn-warning">Sign-up</button>
+
+                <button type="button"
+                        onclick="location.href='/modify'"
+                        th:if="${session.loginUser != null}"
+                        class="btn btn-warning">modify</button>
+
+                <button type="button"
+                        onclick="location.href='/logout'"
+                        th:if="${session.loginUser != null}"
+                        class="btn btn-warning">logout</button>
+
             </div>
         </div>
     </div>
