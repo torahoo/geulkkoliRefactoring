@@ -25,6 +25,7 @@ public class UserController {
 
     public static final String LOGIN_FORM = "user/loginForm";
     public static final String JOIN_FORM = "user/joinForm";
+    public static final String REDIRECT_INDEX = "redirect:/";
     private final LoginService loginService;
     private final JoinService joinService;
 
@@ -49,7 +50,7 @@ public class UserController {
 
         HttpSession session = request.getSession();
         session.setAttribute(SessionConst.LOGIN_USER, loginUser.get());
-        return "/index";
+        return REDIRECT_INDEX;
     }
 
     //join
@@ -92,7 +93,7 @@ public class UserController {
         log.info("model = {}", model);
         log.info("form {}", form);
 
-        return "/index";
+        return REDIRECT_INDEX;
     }
 
     @GetMapping("/logout")
