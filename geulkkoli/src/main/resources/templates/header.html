@@ -15,6 +15,11 @@
 
             <div class="text-end">
                 <button type="button"
+                        onclick="location.href='/post/list'"
+                        class="btn btn-primary">PostList
+                </button>
+
+                <button type="button"
                         onclick="location.href='/login'"
                         th:if="${session.loginUser == null}"
                         class="btn btn-primary">Login
