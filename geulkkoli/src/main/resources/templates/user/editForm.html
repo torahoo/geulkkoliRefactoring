@@ -24,31 +24,38 @@
     </label>
     <input type="text" name="userName" id="userName"
            placeholder="홍길동" class="form-control form-control-lg">
+  </div>
+  <br>
 
-    <br>
-
+  <div class="mb-3">
     <label for="nickName">
       <h4>닉네임</h4>
     </label>
     <input type="text" name="nickName" id="nickName" placeholder="2~8자리 / 한글, 영문, 숫자 사용 가능"
            class="form-control form-control-lg nickNameInline">
+  </div>
+  <br>
 
-    <br>
-
+  <div class="mb-3">
     <label for="email">
       <h4>E-mail</h4>
     </label>
     <input type="email" name="email" id="email"
            class="form-control form-control-lg" readonly>
+  </div>
+  <br>
 
+  <div class="mb-3">
+    <label for="password">
+      <h4>비밀번호</h4>
+    </label>
     <br>
+    <input type="button" name="password" id="password" value="비밀번호 재설정"
+           class="btn btn-primary form-control-lg" onclick="location.href='/editPassword'">
+  </div>
+  <br>
 
-    <div class="mb-3 sub-div">
-      <input type="button" value="비밀번호 재설정" class="btn btn-primary form-control-lg">
-    </div>
-
-    <br>
-
+  <div class="mb-3">
     <label for="phoneNo">
       <h4>전화번호</h4>
     </label>
