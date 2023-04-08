@@ -108,13 +108,22 @@ public class UserController {
     }
 
     @PostMapping("/edit")
-    public String editUpdateForm(@ModelAttribute EditUpdateForm editUpdateForm, HttpServletRequest httpServletRequest) {
+    public String editUpdateForm(@ModelAttribute EditUpdateForm form, BindingResult bindingResult, HttpServletRequest httpServletRequest) {
         HttpSession session = httpServletRequest.getSession(false);
         User user = (User) session.getAttribute(SessionConst.LOGIN_USER);
-        editService.update(user, editUpdateForm);
+        editService.update(user, form);
 
-        //return "redirect:/edit";
-        return REDIRECT_INDEX;
+        if (editService.isNickNameDuplicate(form.getNickName())) {
+            bindingResult.rejectValue("nickName", "Duple.joinForm.nickName");
+            return EDIT_FORM;
+        }
+
+        if (editService.isPhoneNoDuplicate(form.getPhoneNo())) {
+            bindingResult.rejectValue("phoneNo", "Duple.joinForm.phoneNo");
+            return EDIT_FORM;
+        }
+
+        return "redirect:/edit";
     }
 
     @GetMapping("/logout")

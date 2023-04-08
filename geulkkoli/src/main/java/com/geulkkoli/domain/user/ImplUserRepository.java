@@ -52,18 +52,16 @@ public class ImplUserRepository implements UserRepository {
                 .stream().findAny();
     }
 
+    // User 정보 업데이트 (이메일은 변경 불가 / 비밀번호는 따로 변경 처리)
     @Override
-    public void update(User user, EditUpdateForm editUpdateForm) {
+    public void update(User user, EditUpdateForm form) {
 
-//        entityManager.merge(User.builder()
-////                .userId(user.getUserId);
-//                .email(user.getEmail())
-//                .userName(editUpdateForm.getUserName())
-//                .nickName(editUpdateForm.getNickName())
-//                .password(editUpdateForm.getPassword())
-//                .phoneNo(editUpdateForm.getPhoneNo())
-//                .gender(editUpdateForm.getGender())
-//                .build());
+        user.builder()
+                .userName(form.getUserName() != null ? form.getUserName() : user.getUserName())
+                .nickName(form.getNickName() != null ? form.getNickName() : user.getNickName())
+                .phoneNo(form.getPhoneNo() != null ? form.getPhoneNo() : user.getPhoneNo())
+                .gender(form.getGender() != null ? form.getGender() : user.getGender())
+                .build();
 
     }
 
