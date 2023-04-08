@@ -1,5 +1,6 @@
 package com.geulkkoli.domain.user;
 
+import com.geulkkoli.web.user.edit.EditUpdateForm;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
@@ -52,7 +53,18 @@ public class ImplUserRepository implements UserRepository {
     }
 
     @Override
-    public void update() {
+    public void update(User user, EditUpdateForm editUpdateForm) {
+
+//        entityManager.merge(User.builder()
+////                .userId(user.getUserId);
+//                .email(user.getEmail())
+//                .userName(editUpdateForm.getUserName())
+//                .nickName(editUpdateForm.getNickName())
+//                .password(editUpdateForm.getPassword())
+//                .phoneNo(editUpdateForm.getPhoneNo())
+//                .gender(editUpdateForm.getGender())
+//                .build());
 
     }
+
 }

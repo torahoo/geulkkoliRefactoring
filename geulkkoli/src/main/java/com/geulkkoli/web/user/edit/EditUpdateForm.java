@@ -1,19 +1,17 @@
-package com.geulkkoli.web.user;
+package com.geulkkoli.web.user.edit;
 
-import com.geulkkoli.domain.user.User;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import org.hibernate.validator.constraints.Length;
 
-import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Pattern;
 
 @Getter
 @Setter
 @ToString
-public class EditForm {
+public class EditUpdateForm {
 
 
     @NotEmpty
@@ -33,10 +31,6 @@ public class EditForm {
          private String nickName;
 
     @NotEmpty
-    @Email
-    private String email;
-
-    @NotEmpty
     @Length(min = 10, max = 11)
     @Pattern(regexp = "^[*\\d]*$")
     private String phoneNo;
@@ -44,16 +38,15 @@ public class EditForm {
     @NotEmpty
     private String gender;
 
-    public User toEntity() {
-        return User.builder()
-                .userName(userName)
-                .password(password)
-                .nickName(nickName)
-                .email(email)
-                .phoneNo(phoneNo)
-                .gender(gender)
-                .build();
-
-    }
+//    public User toEntity() {
+//        return User.builder()
+//                .userName(userName)
+//                .password(password)
+//                .nickName(nickName)
+//                .phoneNo(phoneNo)
+//                .gender(gender)
+//                .build();
+//
+//    }
 
 }

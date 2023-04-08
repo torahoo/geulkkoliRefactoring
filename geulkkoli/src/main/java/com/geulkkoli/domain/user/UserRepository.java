@@ -1,5 +1,7 @@
 package com.geulkkoli.domain.user;
 
+import com.geulkkoli.web.user.edit.EditUpdateForm;
+
 import java.util.Optional;
 
 public interface UserRepository {
@@ -14,8 +16,6 @@ public interface UserRepository {
 
     Optional<User> findByPhoneNo(String phoneNo);
 
-    void  update();
-
-
+    void update(User user, EditUpdateForm editUpdateForm);
 
 }

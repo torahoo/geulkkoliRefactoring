@@ -1,8 +1,11 @@
 package com.geulkkoli.web.user;
 
 import com.geulkkoli.domain.user.User;
+import com.geulkkoli.domain.user.service.EditService;
 import com.geulkkoli.domain.user.service.JoinService;
 import com.geulkkoli.domain.user.service.LoginService;
+import com.geulkkoli.web.user.edit.EditUpdateForm;
+import com.geulkkoli.web.user.edit.EditViewForm;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
@@ -29,6 +32,7 @@ public class UserController {
     public static final String REDIRECT_INDEX = "redirect:/";
     private final LoginService loginService;
     private final JoinService joinService;
+    private final EditService editService;
 
     @GetMapping("/login")
     public String loginForm(@ModelAttribute("loginForm") LoginForm form) {
@@ -56,7 +60,7 @@ public class UserController {
 
     //join
     @GetMapping("/join")
-    public String joinForm(@ModelAttribute JoinForm form) {
+    public String joinForm(@ModelAttribute("joinForm") JoinForm form) {
         return JOIN_FORM;
     }
 
@@ -99,15 +103,20 @@ public class UserController {
 
     //edit
     @GetMapping("/edit")
-    public String editForm(@ModelAttribute EditForm form) {
+    public String editViewForm(@ModelAttribute EditViewForm form) {
         return EDIT_FORM;
     }
-    @PostMapping("/edit")
-    public String edit(@ModelAttribute EditForm form, HttpSession httpSession) {
 
-        log.info("{}에서 정보 수정 중", httpSession.getAttribute(SessionConst.LOGIN_USER));
+    @PostMapping("/edit")
+    public String editUpdateForm(@ModelAttribute EditUpdateForm editUpdateForm, HttpServletRequest httpServletRequest) {
+        HttpSession session = httpServletRequest.getSession(false);
+        User user = (User) session.getAttribute(SessionConst.LOGIN_USER);
+        editService.update(user, editUpdateForm);
+
+        //return "redirect:/edit";
         return REDIRECT_INDEX;
     }
+
     @GetMapping("/logout")
     public String logout(HttpServletRequest request) {
 
@@ -115,6 +124,6 @@ public class UserController {
         if (session != null) {
             session.invalidate();
         }
-        return "redirect:/";
+        return REDIRECT_INDEX;
     }
 }
