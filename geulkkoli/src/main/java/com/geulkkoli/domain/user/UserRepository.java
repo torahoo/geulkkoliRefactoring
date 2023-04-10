@@ -1,7 +1,5 @@
 package com.geulkkoli.domain.user;
 
-import com.geulkkoli.web.user.JoinForm;
-
 import java.util.Optional;
 
 public interface UserRepository {
@@ -16,6 +14,6 @@ public interface UserRepository {
 
     Optional<User> findByPhoneNo(String phoneNo);
 
-
+    void delete (Long postId);
 
 }
