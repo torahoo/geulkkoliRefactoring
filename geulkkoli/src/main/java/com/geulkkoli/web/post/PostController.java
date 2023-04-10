@@ -1,8 +1,11 @@
 package com.geulkkoli.web.post;
 
 import com.geulkkoli.domain.post.Post;
-import com.geulkkoli.domain.post.PostService;
+import com.geulkkoli.domain.post.service.PostService;
 import com.geulkkoli.domain.user.User;
+import com.geulkkoli.web.post.dto.AddDTO;
+import com.geulkkoli.web.post.dto.EditDTO;
+import com.geulkkoli.web.post.dto.PageDTO;
 import com.geulkkoli.web.user.SessionConst;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -13,7 +16,6 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import java.net.http.HttpRequest;
 
 @Slf4j
 @Controller
@@ -33,7 +35,7 @@ public class PostController {
     //게시글 addForm html 로 이동
     @GetMapping("/add")
     public String postAddForm(Model model, HttpServletRequest request) {
-        model.addAttribute("post", new Post());
+        model.addAttribute("post", new AddDTO());
 
         HttpSession session = request.getSession(false);
         if (session == null) {
@@ -48,11 +50,11 @@ public class PostController {
 
     //새 게시글 등록
     @PostMapping("/add")
-    public String postAdd(@ModelAttribute Post post, RedirectAttributes redirectAttributes) {
+    public String postAdd(@ModelAttribute AddDTO post, RedirectAttributes redirectAttributes) {
         log.info("title={}", post.getTitle());
-        postService.savePost(post);
+        Long postId = postService.savePost(post.toEntity());
         redirectAttributes.addAttribute("addStatus", true);
-        redirectAttributes.addAttribute("postId", post.getPostId());
+        redirectAttributes.addAttribute("postId", postId);
         return "redirect:/post/read/{postId}";
     }
 
@@ -60,8 +62,8 @@ public class PostController {
     @GetMapping("/read/{postId}")
     public String postRead(Model model, @PathVariable Long postId) {
         log.info("postId={}", postId);
-        Post findPost = postService.findById(postId);
-        model.addAttribute("post", findPost);
+        PageDTO postPage = PageDTO.toDTO(postService.findById(postId));
+        model.addAttribute("post", postPage);
         return "/post/postPage";
     }
 
@@ -69,17 +71,17 @@ public class PostController {
     @GetMapping("/update/{postId}")
     public String postUpdateForm(Model model, @PathVariable Long postId) {
         log.info("updateParam={}, postId={}", model.getAttribute("post"), postId);
-        Post findPost = postService.findById(postId);
-        log.info("findPost={}", findPost.getPostBody());
-        model.addAttribute("post", findPost);
+        PageDTO postPage = PageDTO.toDTO(postService.findById(postId));
+        log.info("findPost={}", postPage.getPostBody());
+        model.addAttribute("post", postPage);
         return "/post/postEditForm";
     }
 
     //게시글 수정
     @PostMapping("/update/{postId}")
-    public String postUpdate(@ModelAttribute Post updateParam, @PathVariable Long postId, RedirectAttributes redirectAttributes) {
+    public String postUpdate(@ModelAttribute EditDTO updateParam, @PathVariable Long postId, RedirectAttributes redirectAttributes) {
         log.info("updateParam={}, postId={}", updateParam.getPostBody(), postId);
-        postService.updatePost(postId, updateParam);
+        postService.updatePost(postId, updateParam.toEntity());
         redirectAttributes.addAttribute("updateStatus", true);
 
         return "redirect:/post/read/{postId}";

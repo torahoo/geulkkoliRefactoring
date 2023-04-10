@@ -28,6 +28,9 @@
     <hr class="my-4">
     <div class="header">
         <div class="col">
+            <Button class="btn btn-primary btn-lg"
+                    th:onclick="|location.href='@{/}'|"
+                    th:text="'홈으로'" type="button">홈으로</Button>
             <Button class="btn btn-primary btn-lg" style="float: right"
                     th:onclick="|location.href='@{/post/add}'|"
                     th:text="'글 쓰기'" type="button">글쓰기</Button>
