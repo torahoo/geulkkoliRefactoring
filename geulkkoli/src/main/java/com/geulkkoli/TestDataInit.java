@@ -49,6 +49,10 @@ public class TestDataInit {
                 .nickName("test nickname03").build()
         );
 
+        /*
+        * 시큐리티가 제공하는 비밀번호 암호화를 userService에서 쓰기 때문에
+        * userService로 테스트 데이터를 저정한다.
+        * */
         JoinForm joinForm = new JoinForm();
         joinForm.setEmail("tako99@naver.com");
         joinForm.setUserName("김");

@@ -24,7 +24,7 @@ public class SecurityConfig {
      * 루트 페이지는 인증 없이 접속 가능
      * 로그인 정보를 URL
      * 실패시 URL 정보
-     * 아이디 키 이름을 email로 바꿔준다.
+     * userName 키 이름을 email로 바꿔준다.
      * 비빌먼호 키 이름을 password로 바꿔준다.
      */
     @Bean
