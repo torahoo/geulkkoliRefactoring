@@ -1,11 +1,14 @@
 package com.geulkkoli.domain.user;
 
+import com.geulkkoli.application.user.Role;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.persistence.*;
+
 @NoArgsConstructor
 @Entity
 @Getter
@@ -18,7 +21,7 @@ public class User {
     @Column(name = "name", nullable = false, unique = true)
     private String userName;
 
-    @Getter(AccessLevel.NONE)
+    @Getter()
     @Column(name = "password", nullable = false,unique = true)
     private String password;
 
@@ -33,6 +36,7 @@ public class User {
 
     private String gender;
 
+
     @Builder
     public User(String userName, String password, String nickName, String email, String phoneNo, String gender) {
         this.userName = userName;
@@ -43,9 +47,10 @@ public class User {
         this.gender = gender;
     }
 
-    public boolean matchPassword(String password) {
-        return password.matches(this.password);
+    public boolean matchPassword(String rawPassword, PasswordEncoder passwordEncoder) {
+
+        return passwordEncoder.matches(rawPassword,this.password);
     }
 
 
-}
+   }

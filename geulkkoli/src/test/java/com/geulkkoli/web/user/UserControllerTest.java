@@ -10,6 +10,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
@@ -44,11 +45,13 @@ class UserControllerTest {
     @Test
     @DisplayName("세션이 상태유지를 하는 지 테스트 한다.")
     void isSessionStateful() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.post("/login")
+        MvcResult mvcResult = this.mockMvc.perform(MockMvcRequestBuilders.post("/login")
                         .param("email", "tako@naver.com")
                         .param("password", "1234"))
                 .andExpect(MockMvcResultMatchers.status().is3xxRedirection())
-                .andDo(MockMvcResultHandlers.print());
+                .andReturn();
+
+        assertThat(mvcResult.getResponse().getRedirectedUrl()).endsWith("/");
     }
 
     @Test

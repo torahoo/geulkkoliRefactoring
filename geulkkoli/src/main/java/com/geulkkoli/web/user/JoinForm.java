@@ -1,10 +1,9 @@
 package com.geulkkoli.web.user;
 
 import com.geulkkoli.domain.user.User;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 import org.hibernate.validator.constraints.Length;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
@@ -14,7 +13,10 @@ import javax.validation.constraints.Pattern;
 @Getter
 @Setter
 @ToString
+@RequiredArgsConstructor
 public class JoinForm {
+    //spring security가 제공하는 PasswordEncoder 이용해 비밀번호 암호화
+    private final PasswordEncoder passwordEncoder;
 
     @NotEmpty
     @NotNull
@@ -54,7 +56,7 @@ public class JoinForm {
     public User toEntity() {
         return User.builder()
                 .userName(userName)
-                .password(password)
+                .password(passwordEncoder.encode(password))
                 .nickName(nickName)
                 .email(email)
                 .phoneNo(phoneNo)
