@@ -47,10 +47,4 @@ public class User {
         this.gender = gender;
     }
 
-    public boolean matchPassword(String rawPassword, PasswordEncoder passwordEncoder) {
-
-        return passwordEncoder.matches(rawPassword,this.password);
-    }
-
-
    }

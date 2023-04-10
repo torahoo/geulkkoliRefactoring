@@ -6,27 +6,21 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 
-public class AuthenticatedUser implements UserDetails {
-    private final String email;
-    private final String password;
+public class CustomUserDetails implements UserDetails {
+    private User user;
     private boolean isEnabled;
     private boolean isAccountNonExpired;
     private boolean isAccountNonLocked;
     private boolean isCredentialsNonExpired;
-    private final Collection<? extends GrantedAuthority> authorities;
+    private Collection<? extends GrantedAuthority> authorities;
 
-    private AuthenticatedUser(User user, Collection<? extends GrantedAuthority> authorities) {
-        this.email = user.getEmail();
-        this.password = user.getPassword();
+    public CustomUserDetails() {
+    }
+
+    public CustomUserDetails(User user, Collection<? extends GrantedAuthority> authorities) {
+        this.user = user;
         this.authorities = authorities;
     }
-
-
-    public static AuthenticatedUser of(User user, Collection<? extends GrantedAuthority> authorities) {
-        return new AuthenticatedUser(user, authorities);
-    }
-
-
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -35,12 +29,12 @@ public class AuthenticatedUser implements UserDetails {
 
     @Override
     public String getPassword() {
-        return password;
+        return user.getPassword();
     }
 
     @Override
     public String getUsername() {
-        return email;
+        return user.getUserName();
     }
 
     public void setEnabled(boolean enabled) {

@@ -1,9 +1,12 @@
 package com.geulkkoli.web.user;
 
+import com.geulkkoli.application.user.AuthUserAdaptor;
+import com.geulkkoli.application.user.CustomUserDetailsService;
 import com.geulkkoli.domain.user.User;
 import com.geulkkoli.domain.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -26,29 +29,22 @@ public class UserController {
     public static final String JOIN_FORM = "user/joinForm";
     public static final String REDIRECT_INDEX = "redirect:/";
     private final UserService userService;
+    private final CustomUserDetailsService customUserDetailsService;
 
-    @GetMapping("/login")
+    @GetMapping("/loginPage")
     public String loginForm(@ModelAttribute("loginForm") LoginForm form) {
         return LOGIN_FORM;
     }
 
-    @PostMapping("/login")
-    public String login(@Valid @ModelAttribute LoginForm form, BindingResult bindingResult, HttpServletRequest request) {
+    @GetMapping("/login/error")
+    public String login(@Valid @ModelAttribute LoginForm form, BindingResult bindingResult) {
         log.info("email {} , password {}", form.getEmail(), form.getPassword());
         if (bindingResult.hasErrors()) {
             return LOGIN_FORM;
         }
+        bindingResult.reject("loginFail", "아이디 또는 비밀번호가 맞지 않습니다.");
+        return LOGIN_FORM;
 
-        Optional<User> loginUser = userService.login(form.getEmail(), form.getPassword());
-
-        if (loginUser.isEmpty()) {
-            bindingResult.reject("loginFail", "아이디 또는 비밀번호가 맞지 않습니다.");
-            return LOGIN_FORM;
-        }
-
-        HttpSession session = request.getSession();
-        session.setAttribute(SessionConst.LOGIN_USER, loginUser.get());
-        return REDIRECT_INDEX;
     }
 
     //join
@@ -60,7 +56,7 @@ public class UserController {
     @PostMapping("/join")
     public String userJoin(@Validated @ModelAttribute("joinForm") JoinForm form, BindingResult bindingResult, Model model) {
         log.info("join Method={}", this);
-        if (bindingResult.hasErrors()){
+        if (bindingResult.hasErrors()) {
             return JOIN_FORM;
         }
 
@@ -88,7 +84,7 @@ public class UserController {
         }
 
         if (!bindingResult.hasErrors()) {
-            userService.join(form.toEntity());
+            userService.join(form);
         }
 
         log.info("model = {}", model);
@@ -112,7 +108,7 @@ public class UserController {
 
         HttpSession session = request.getSession(false);
         if (session != null) {
-            userService.delete((User)session.getAttribute(SessionConst.LOGIN_USER));
+            userService.delete((User) session.getAttribute(SessionConst.LOGIN_USER));
             session.invalidate();
         }
         return "redirect:/";

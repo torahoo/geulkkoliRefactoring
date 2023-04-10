@@ -1,21 +1,27 @@
 package com.geulkkoli.domain.user.service;
 
+import com.geulkkoli.application.security.config.SecurityConfig;
 import com.geulkkoli.web.user.JoinForm;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.Import;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.transaction.Transactional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 @SpringBootTest
 @Transactional
+@Import(SecurityConfig.class)
 class JoinServiceTest {
 
-    @Autowired JoinService joinService;
+    @Autowired UserService userService;
+
 
     @Test
     void isEmailDuplicate() {
+
         JoinForm joinForm = new JoinForm();
         joinForm.setGender("male");
         joinForm.setPassword("123412");
@@ -24,9 +30,9 @@ class JoinServiceTest {
         joinForm.setNickName("바나나1");
         joinForm.setUserName("김1");
 
-        joinService.join(joinForm.toEntity());
+        userService.join(joinForm);
 
-        assertThat(joinService.isEmailDuplicate("tako@naver1.com")).isTrue();
+        assertThat(userService.isEmailDuplicate("tako@naver1.com")).isTrue();
     }
 
     @Test
@@ -40,9 +46,9 @@ class JoinServiceTest {
         joinForm.setNickName("바나나1");
         joinForm.setUserName("김1");
 
-        joinService.join(joinForm.toEntity());
+        userService.join(joinForm);
 
-        assertThat(joinService.isNickNameDuplicate("바나나1")).isTrue();
+        assertThat(userService.isNickNameDuplicate("바나나1")).isTrue();
     }
 
     @Test
@@ -55,9 +61,9 @@ class JoinServiceTest {
         joinForm.setNickName("바나나1");
         joinForm.setUserName("김1");
 
-        joinService.join(joinForm.toEntity());
+        userService.join(joinForm);
 
-        assertThat(joinService.isPhoneNoDuplicate("01012345679")).isTrue();
+        assertThat(userService.isPhoneNoDuplicate("01012345679")).isTrue();
     }
 
 }

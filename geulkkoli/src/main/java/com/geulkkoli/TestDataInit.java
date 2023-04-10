@@ -5,6 +5,8 @@ import com.geulkkoli.domain.post.Post;
 import com.geulkkoli.domain.post.PostRepository;
 import com.geulkkoli.domain.user.User;
 import com.geulkkoli.domain.user.UserRepository;
+import com.geulkkoli.domain.user.service.UserService;
+import com.geulkkoli.web.user.JoinForm;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
@@ -18,7 +20,7 @@ public class TestDataInit {
 
     private final PostRepository postRepository;
     private final UserRepository userRepository;
-
+    private final UserService userService;
     /**
      * 확인용 초기 데이터 추가
      */
@@ -47,14 +49,14 @@ public class TestDataInit {
                 .nickName("test nickname03").build()
         );
 
-        userRepository.save(User.builder()
-                .email("tako@naver.com")
-                .userName("김")
-                .nickName("바나나")
-                .password("1234")
-                .phoneNo("01012345678")
-                .gender("male")
-                .build());
+        JoinForm joinForm = new JoinForm();
+        joinForm.setEmail("tako99@naver.com");
+        joinForm.setUserName("김");
+        joinForm.setNickName("바나나11");
+        joinForm.setPhoneNo("9190232333");
+        joinForm.setGender("male");
+        joinForm.setPassword("12345678");
+        userService.join(joinForm);
     }
 
 }

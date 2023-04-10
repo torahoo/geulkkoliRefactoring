@@ -34,9 +34,10 @@ public class SecurityConfig {
         });
         http.csrf().disable();
         http.formLogin()
-                .loginPage("/login")
+                .loginPage("/loginPage")
                 .loginProcessingUrl("/login")
-                .failureUrl("/login")
+                .defaultSuccessUrl("/index")
+                .failureUrl("/login/error")
                 .usernameParameter("email")
                 .passwordParameter("password");
 
@@ -52,15 +53,7 @@ public class SecurityConfig {
     }
 
     //메모리에 저장하는 spring security 유저 방식
-    @Bean
-    public InMemoryUserDetailsManager userDetailsService() {
-        UserDetails user = User.builder().username("tako@naver.com")
-                .password(passwordEncoder().encode("1234"))
-                .roles("USER")
-                .build();
 
-        return new InMemoryUserDetailsManager(user);
-    }
 
     @Bean
     AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {

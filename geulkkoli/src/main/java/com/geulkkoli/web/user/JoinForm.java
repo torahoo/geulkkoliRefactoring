@@ -15,8 +15,6 @@ import javax.validation.constraints.Pattern;
 @ToString
 @RequiredArgsConstructor
 public class JoinForm {
-    //spring security가 제공하는 PasswordEncoder 이용해 비밀번호 암호화
-    private final PasswordEncoder passwordEncoder;
 
     @NotEmpty
     @NotNull
@@ -53,7 +51,7 @@ public class JoinForm {
     @NotNull
     private String gender;
 
-    public User toEntity() {
+    public User toEntity(PasswordEncoder passwordEncoder) {
         return User.builder()
                 .userName(userName)
                 .password(passwordEncoder.encode(password))

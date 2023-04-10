@@ -2,6 +2,7 @@ package com.geulkkoli.domain.user.service;
 
 import com.geulkkoli.domain.user.User;
 import com.geulkkoli.domain.user.UserRepository;
+import com.geulkkoli.web.user.LoginForm;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -59,7 +60,7 @@ class LoginServiceTest {
     @DisplayName("로그인실패시_널을 반환한다.")
     void throwErrorWhenLoginFailedTest() {
         //given
-        Optional<User> noneExistentUser = userService.login("tako@naver.com", "123412");
+        Optional<User> noneExistentUser = userService.login("tako1@naver.com", "123412");
         //when
 
         //then

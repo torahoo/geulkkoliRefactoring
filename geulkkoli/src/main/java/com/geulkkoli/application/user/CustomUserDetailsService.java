@@ -1,7 +1,7 @@
 package com.geulkkoli.application.user;
 
 import com.geulkkoli.domain.user.User;
-import com.geulkkoli.domain.user.service.LoginService;
+import com.geulkkoli.domain.user.UserRepository;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -14,19 +14,19 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-@Service
+@Service("userDetailService")
 @Transactional
-public class UserSecurityService implements UserDetailsService {
+public class CustomUserDetailsService implements UserDetailsService {
 
-    private final LoginService loginService;
+    private final UserRepository userRepository;
 
-    public UserSecurityService(LoginService loginService) {
-        this.loginService = loginService;
+    public CustomUserDetailsService(UserRepository userRepository) {
+        this.userRepository = userRepository;
     }
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        Optional<User> findByEmailUser = loginService.login(email,"1234");
+        Optional<User> findByEmailUser = userRepository.findByEmail(email);
         if (findByEmailUser.isEmpty()) {
             throw new UsernameNotFoundException("사용자를 찾을 수 없습니다.");
         }
@@ -38,11 +38,12 @@ public class UserSecurityService implements UserDetailsService {
         } else {
             authorities.add(new SimpleGrantedAuthority(Role.USER.getRoleName()));
         }
-        AuthenticatedUser authenticatedUser = AuthenticatedUser.of(user, authorities);
+        AuthUserAdaptor authenticatedUser = new AuthUserAdaptor(user, authorities);
         authenticatedUser.setEnabled(true);
         authenticatedUser.setAccountNonExpired(true);
         authenticatedUser.setAccountNonLocked(true);
         authenticatedUser.setCredentialsNonExpired(true);
         return authenticatedUser;
     }
+
 }

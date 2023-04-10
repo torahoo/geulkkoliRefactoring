@@ -23,18 +23,5 @@ class UserTest {
         assertThat(user.getUserName()).isEqualTo("김");
     }
 
-    @Test
-    @DisplayName("비밀번호가 일치하는 지 확인한다.")
-    void matchPassword() {
-        User user = User.builder()
-                .email("tako@naver.com")
-                .userName("김")
-                .nickName("바나나")
-                .password("1234")
-                .phoneNo("01012345678")
-                .build();
-
-        assertTrue(user.matchPassword("1234"));
-    }
 
 }
