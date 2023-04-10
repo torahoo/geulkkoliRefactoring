@@ -27,7 +27,6 @@
     <div class="container">
         <div>
             <form id="add" th:action th:object="${post}" method="post">
-                <input type="hidden" id="nickName" name="nickName" th:value="${loginUser.getNickName()}">
                 <div class="mb-3">
                     <label th:text="제목">제목</label>
                     <input class="form-control"

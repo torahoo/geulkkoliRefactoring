@@ -16,6 +16,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.util.Objects;
 
 @Slf4j
 @Controller
@@ -35,13 +36,14 @@ public class PostController {
     //게시글 addForm html 로 이동
     @GetMapping("/add")
     public String postAddForm(Model model, HttpServletRequest request) {
-        model.addAttribute("post", new AddDTO());
+        model.addAttribute("post", new AddDTO());// 빈 객체?
 
         HttpSession session = request.getSession(false);
-        if (session == null) {
+        if (Objects.isNull(session)|| Objects.isNull(session.getAttribute(SessionConst.LOGIN_USER))) {
             return "redirect:/post/list";
         }
         User loginUser = (User) session.getAttribute(SessionConst.LOGIN_USER);
+
         model.addAttribute("loginUser", loginUser);
         log.info("loginUser={}", loginUser.getNickName());
 
@@ -50,8 +52,16 @@ public class PostController {
 
     //새 게시글 등록
     @PostMapping("/add")
-    public String postAdd(@ModelAttribute AddDTO post, RedirectAttributes redirectAttributes) {
+    public String postAdd(@ModelAttribute AddDTO post, RedirectAttributes redirectAttributes, HttpServletRequest request) {
         log.info("title={}", post.getTitle());
+
+        HttpSession session = request.getSession(false);
+        if (Objects.isNull(session)|| Objects.isNull(session.getAttribute(SessionConst.LOGIN_USER))) {
+            return "redirect:/post/list";
+        }
+        User loginUser = (User) session.getAttribute(SessionConst.LOGIN_USER);
+        post.setNickName(loginUser.getNickName());
+
         Long postId = postService.savePost(post.toEntity());
         redirectAttributes.addAttribute("addStatus", true);
         redirectAttributes.addAttribute("postId", postId);
