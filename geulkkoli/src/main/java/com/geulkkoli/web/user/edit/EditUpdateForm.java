@@ -1,11 +1,9 @@
 package com.geulkkoli.web.user.edit;
 
-import com.geulkkoli.domain.user.User;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import org.hibernate.validator.constraints.Length;
-
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Pattern;
 

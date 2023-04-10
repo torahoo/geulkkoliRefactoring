@@ -1,12 +1,10 @@
 package com.geulkkoli.web.user;
 
 import com.geulkkoli.domain.user.User;
-import com.geulkkoli.domain.user.UserRepository;
 import com.geulkkoli.domain.user.service.EditService;
 import com.geulkkoli.domain.user.service.JoinService;
 import com.geulkkoli.domain.user.service.LoginService;
 import com.geulkkoli.web.user.edit.EditUpdateForm;
-import com.geulkkoli.web.user.edit.EditViewForm;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
@@ -16,9 +14,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
-
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.util.Optional;
