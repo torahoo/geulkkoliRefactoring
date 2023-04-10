@@ -1,6 +1,7 @@
 package com.geulkkoli.web.user;
 
 import com.geulkkoli.domain.user.User;
+import com.geulkkoli.domain.user.UserRepository;
 import com.geulkkoli.domain.user.service.EditService;
 import com.geulkkoli.domain.user.service.JoinService;
 import com.geulkkoli.domain.user.service.LoginService;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.util.Optional;
@@ -28,7 +30,7 @@ public class UserController {
 
     public static final String LOGIN_FORM = "user/loginForm";
     public static final String JOIN_FORM = "user/joinForm";
-    public static final String EDIT_FORM = "user/editForm";
+    public static final String EDIT_FORM = "user/edit/editForm";
     public static final String REDIRECT_INDEX = "redirect:/";
     private final LoginService loginService;
     private final JoinService joinService;
@@ -38,6 +40,7 @@ public class UserController {
     public String loginForm(@ModelAttribute("loginForm") LoginForm form) {
         return LOGIN_FORM;
     }
+
 
     @PostMapping("/login")
     public String login(@Valid @ModelAttribute LoginForm form, BindingResult bindingResult, HttpServletRequest request) {
@@ -101,9 +104,27 @@ public class UserController {
         return REDIRECT_INDEX;
     }
 
+
     //edit
+//    @GetMapping("/edit")
+//    public String editViewForm(@ModelAttribute EditViewForm form) {
+//        return EDIT_FORM;
+//    }
+//    @GetMapping("/edit")
+//    public String editViewForm(HttpServletRequest request, Model model) {
+//        HttpSession session = request.getSession(false);
+//        User user = (User) session.getAttribute(SessionConst.LOGIN_USER);
+//
+//        model.addAttribute("User", user);
+//        return EDIT_FORM;
+//    }
+
     @GetMapping("/edit")
-    public String editViewForm(@ModelAttribute EditViewForm form) {
+    public String editViewForm(HttpSession session, Model model) {
+
+        User user = (User) session.getAttribute(SessionConst.LOGIN_USER);
+        model.addAttribute("User", user);
+
         return EDIT_FORM;
     }
 
@@ -125,6 +146,11 @@ public class UserController {
 
         return "redirect:/edit";
     }
+
+
+
+
+
 
     @GetMapping("/logout")
     public String logout(HttpServletRequest request) {

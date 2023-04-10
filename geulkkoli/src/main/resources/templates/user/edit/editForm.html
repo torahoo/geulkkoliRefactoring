@@ -17,12 +17,13 @@
 <br>
 <br>
 
-<form action="/edit" method="post">
+<form action="" th:action th:object="${User}" method="post">
   <div class="mb-3">
     <label for="userName">
       <h4>이름</h4>
     </label>
     <input type="text" name="userName" id="userName"
+           th:value="*{userName}"
            placeholder="홍길동" class="form-control form-control-lg">
   </div>
   <br>
@@ -31,7 +32,7 @@
     <label for="nickName">
       <h4>닉네임</h4>
     </label>
-    <input type="text" name="nickName" id="nickName" placeholder="2~8자리 / 한글, 영문, 숫자 사용 가능"
+    <input type="text" name="nickName" id="nickName" th:value="*{nickName}" placeholder="2~8자리 / 한글, 영문, 숫자 사용 가능"
            class="form-control form-control-lg nickNameInline">
   </div>
   <br>
@@ -41,6 +42,7 @@
       <h4>E-mail</h4>
     </label>
     <input type="email" name="email" id="email"
+           th:value="*{email}"
            class="form-control form-control-lg" readonly>
   </div>
   <br>
@@ -60,6 +62,7 @@
       <h4>전화번호</h4>
     </label>
     <input type="tel" name="phoneNo" id="phoneNo"
+           th:value="*{phoneNo}"
            placeholder="숫자만 입력 (01012345678)"
            class="form-control form-control-lg">
   </div>
