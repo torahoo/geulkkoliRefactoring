@@ -1,4 +1,3 @@
-drop table if exists user_followings;
 drop table if exists comments;
 drop table if exists favorites;
 drop table if exists post;
@@ -7,13 +6,12 @@ drop table if exists topic_tags;
 CREATE table if not exists users
 (
     user_id   BIGINT PRIMARY KEY AUTO_INCREMENT,
-    email     varchar(255) not null, /* admin_user@gmail.com */
+    email     varchar(255) not null,
     password  varchar(255) not null,
     name      varchar(20)  not null,
     nick_name varchar(20)  not null,
     phone_no  varchar(20)  not null,
     gender    varchar(10)  not null,
-    role      varchar(10)  not null, /* SuperAdmin, admin, user*/
     CONSTRAINT unique_email_nick_name_phone_no UNIQUE (email, nick_name, phone_no)
 );
 create table if not exists topic_tags
@@ -33,8 +31,8 @@ create table if not exists post
     post_topic        Bigint         not null,
     created_at        TIMESTAMP      NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at        TIMESTAMP      NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    CONSTRAINT fk_users foreign key (author_id) REFERENCES users (user_id) ON DELETE no action,
-    CONSTRAINT fk_post_topic foreign key (post_topic) references topic_tags (topic_id) on DELETE no action
+    CONSTRAINT fk_users foreign key (author_id) REFERENCES users (user_id) ON DELETE no action ,
+    CONSTRAINT fk_post_topic foreign key (post_topic) references topic_tags(topic_id) on DELETE no action
 );
 drop table if exists comments;
 

@@ -7,12 +7,13 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 @Slf4j
 @Transactional
-public class JoinService {
+public class UserService {
 
     private final UserRepository userRepository;
 
@@ -30,5 +31,13 @@ public class JoinService {
         userRepository.save(user);
     }
 
+    public void delete(User user) {
+        userRepository.delete(user.getUserId());
+    }
 
+    @org.springframework.transaction.annotation.Transactional(readOnly = true)
+    public Optional<User> login(String email, String password) {
+        return userRepository.findByEmail(email)
+                .filter(m -> m.matchPassword(password));
+    }
 }

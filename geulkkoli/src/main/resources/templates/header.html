@@ -1,11 +1,12 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
-<head>
+<head th:fragment="header">
     <meta charset="UTF-8">
     <title>Root Page</title>
+
 </head>
 <body>
-<header class="p-3 bg-dark text-white">
+<header class="p-3 bg-white text-white">
     <div class="container">
         <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
             <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
@@ -13,8 +14,27 @@
             </ul>
 
             <div class="text-end">
-                <button type="button" class="btn btn-outline-light me-2">Login</button>
-                <button type="button" class="btn btn-warning">Sign-up</button>
+                <button type="button"
+                        onclick="location.href='/login'"
+                        th:if="${session.loginUser == null}"
+                        class="btn btn-primary">Login
+                </button>
+
+                <button type="button"
+                        onclick="location.href='/join'"
+                        th:if="${session.loginUser == null}"
+                        class="btn btn-outline-primary">Sign-up</button>
+
+                <button type="button"
+                        onclick="location.href='/modify'"
+                        th:if="${session.loginUser != null}"
+                        class="btn btn-primary">modify</button>
+
+                <button type="button"
+                        onclick="location.href='/logout'"
+                        th:if="${session.loginUser != null}"
+                        class="btn btn-outline-primary">logout</button>
+
             </div>
         </div>
     </div>

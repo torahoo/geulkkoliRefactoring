@@ -1,8 +1,7 @@
 package com.geulkkoli.web.user;
 
 import com.geulkkoli.domain.user.User;
-import com.geulkkoli.domain.user.service.JoinService;
-import com.geulkkoli.domain.user.service.LoginService;
+import com.geulkkoli.domain.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
@@ -25,9 +24,8 @@ public class UserController {
 
     public static final String LOGIN_FORM = "user/loginForm";
     public static final String JOIN_FORM = "user/joinForm";
-    private final LoginService loginService;
-    private final JoinService joinService;
-
+    public static final String REDIRECT_INDEX = "redirect:/";
+    private final UserService userService;
 
     @GetMapping("/login")
     public String loginForm(@ModelAttribute("loginForm") LoginForm form) {
@@ -41,7 +39,7 @@ public class UserController {
             return LOGIN_FORM;
         }
 
-        Optional<User> loginUser = loginService.login(form.getEmail(), form.getPassword());
+        Optional<User> loginUser = userService.login(form.getEmail(), form.getPassword());
 
         if (loginUser.isEmpty()) {
             bindingResult.reject("loginFail", "아이디 또는 비밀번호가 맞지 않습니다.");
@@ -50,7 +48,7 @@ public class UserController {
 
         HttpSession session = request.getSession();
         session.setAttribute(SessionConst.LOGIN_USER, loginUser.get());
-        return LOGIN_FORM;
+        return REDIRECT_INDEX;
     }
 
     //join
@@ -66,18 +64,18 @@ public class UserController {
             return JOIN_FORM;
         }
 
-        if (joinService.isEmailDuplicate(form.getEmail())) {
+        if (userService.isEmailDuplicate(form.getEmail())) {
             bindingResult.rejectValue("email", "Duple.joinForm.email");
             return JOIN_FORM;
         }
 
-        if (joinService.isNickNameDuplicate(form.getNickName())) {
+        if (userService.isNickNameDuplicate(form.getNickName())) {
             bindingResult.rejectValue("nickName", "Duple.joinForm.nickName");
             return JOIN_FORM;
 
         }
 
-        if (joinService.isPhoneNoDuplicate(form.getPhoneNo())) {
+        if (userService.isPhoneNoDuplicate(form.getPhoneNo())) {
             bindingResult.rejectValue("phoneNo", "Duple.joinForm.phoneNo");
             return JOIN_FORM;
 
@@ -90,13 +88,33 @@ public class UserController {
         }
 
         if (!bindingResult.hasErrors()) {
-            joinService.join(form.toEntity());
+            userService.join(form.toEntity());
         }
 
         log.info("model = {}", model);
         log.info("form {}", form);
 
-        return "/index";
+        return REDIRECT_INDEX;
     }
 
+    @GetMapping("/logout")
+    public String logout(HttpServletRequest request) {
+
+        HttpSession session = request.getSession(false);
+        if (session != null) {
+            session.invalidate();
+        }
+        return "redirect:/";
+    }
+
+    @PostMapping("/memberDelete")
+    public String memberDelete(HttpServletRequest request) {
+
+        HttpSession session = request.getSession(false);
+        if (session != null) {
+            userService.delete((User)session.getAttribute(SessionConst.LOGIN_USER));
+            session.invalidate();
+        }
+        return "redirect:/";
+    }
 }
