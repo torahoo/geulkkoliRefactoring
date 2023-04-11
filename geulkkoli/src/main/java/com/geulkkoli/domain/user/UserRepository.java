@@ -1,5 +1,6 @@
 package com.geulkkoli.domain.user;
 
+import com.geulkkoli.web.user.edit.EditPasswordForm;
 import com.geulkkoli.web.user.edit.EditUpdateForm;
 
 import java.util.Optional;
@@ -18,4 +19,5 @@ public interface UserRepository {
 
     void update(User user, EditUpdateForm editUpdateForm);
 
+    void updatePassword(User user, EditPasswordForm form);
 }

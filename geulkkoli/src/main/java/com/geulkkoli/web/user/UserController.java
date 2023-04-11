@@ -4,6 +4,7 @@ import com.geulkkoli.domain.user.User;
 import com.geulkkoli.domain.user.service.EditService;
 import com.geulkkoli.domain.user.service.JoinService;
 import com.geulkkoli.domain.user.service.LoginService;
+import com.geulkkoli.web.user.edit.EditPasswordForm;
 import com.geulkkoli.web.user.edit.EditUpdateForm;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -14,6 +15,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
@@ -27,6 +29,7 @@ public class UserController {
     public static final String LOGIN_FORM = "user/loginForm";
     public static final String JOIN_FORM = "user/joinForm";
     public static final String EDIT_FORM = "user/edit/editForm";
+    public static final String EDIT_PASSWORD_FORM = "user/edit/editPassword";
     public static final String REDIRECT_INDEX = "redirect:/";
     private final LoginService loginService;
     private final JoinService joinService;
@@ -101,20 +104,6 @@ public class UserController {
     }
 
 
-    //edit
-//    @GetMapping("/edit")
-//    public String editViewForm(@ModelAttribute EditViewForm form) {
-//        return EDIT_FORM;
-//    }
-//    @GetMapping("/edit")
-//    public String editViewForm(HttpServletRequest request, Model model) {
-//        HttpSession session = request.getSession(false);
-//        User user = (User) session.getAttribute(SessionConst.LOGIN_USER);
-//
-//        model.addAttribute("User", user);
-//        return EDIT_FORM;
-//    }
-
     @GetMapping("/edit")
     public String editViewForm(HttpSession session, Model model) {
 
@@ -128,7 +117,6 @@ public class UserController {
     public String editUpdateForm(@ModelAttribute EditUpdateForm form, BindingResult bindingResult, HttpServletRequest httpServletRequest) {
         HttpSession session = httpServletRequest.getSession(false);
         User user = (User) session.getAttribute(SessionConst.LOGIN_USER);
-        editService.update(user, form);
 
         if (editService.isNickNameDuplicate(form.getNickName())) {
             bindingResult.rejectValue("nickName", "Duple.joinForm.nickName");
@@ -140,13 +128,41 @@ public class UserController {
             return EDIT_FORM;
         }
 
+        if (!bindingResult.hasErrors()) {
+            editService.update(user, form);
+        }
+
+        log.info("form = {}", form);
+
         return "redirect:/edit";
     }
 
+    @GetMapping("/editPassword")
+    public String editPasswordForm(@ModelAttribute("editPasswordForm") EditPasswordForm form) {
+        return EDIT_PASSWORD_FORM;
+    }
 
+    @PostMapping("/editPassword")
+    public String editPassword(@Valid @ModelAttribute("editPasswordForm") EditPasswordForm form, BindingResult bindingResult, HttpServletRequest httpServletRequest) {
+        HttpSession session = httpServletRequest.getSession(false);
+        User user = (User) session.getAttribute(SessionConst.LOGIN_USER);
 
+        if (!editService.isPasswordVerification(user, form)) {
+            bindingResult.rejectValue("password", "Duple.joinForm.password");
+            return EDIT_PASSWORD_FORM;
+        }
 
+        if (!form.getPassword().equals(form.getVerifyNewPassword())) {
+            bindingResult.rejectValue("verifyNewPassword", "Duple.joinForm.verifyPassword");
+            return EDIT_PASSWORD_FORM;
+        }
 
+        if (!bindingResult.hasErrors()) {
+            editService.updatePassword(user, form);
+        }
+
+        return "redirect:/" + EDIT_FORM;
+    }
 
     @GetMapping("/logout")
     public String logout(HttpServletRequest request) {

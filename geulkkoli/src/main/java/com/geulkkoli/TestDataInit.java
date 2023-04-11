@@ -28,24 +28,21 @@ public class TestDataInit {
         postRepository.save(Post.builder()
                 .nickName("륜투더환")
                 .postBody("나는 멋지고 섹시한 개발자")//채&훈
-                .title("여러분").build()
-        );
+                .title("여러분").build());
 
         postRepository.save(Post.builder()
                 .nickName("testTitle01")
-                .postBody("test postbody 01")//채&훈
-                .title("test nickname01").build()
-        );
+                .postBody("test postbody 01")
+                .title("test nickname01").build());
+
         postRepository.save(Post.builder()
                 .nickName("testTitle02")
-                .postBody("test postbody 02")//채&훈
-                .title("test nickname02").build()
-        )
-        ;postRepository.save(Post.builder()
+                .postBody("test postbody 02")
+                .title("test nickname02").build());
+        postRepository.save(Post.builder()
                 .nickName("testTitle03")
-                .postBody("test postbody 03")//채&훈
-                .title("test nickname03").build()
-        );
+                .postBody("test postbody 03")
+                .title("test nickname03").build());
 
         userRepository.save(User.builder()
                 .email("tako@naver.com")
@@ -55,6 +52,16 @@ public class TestDataInit {
                 .phoneNo("01012345678")
                 .gender("male")
                 .build());
+
+        userRepository.save(User.builder()
+                .email("tako2@naver.com")
+                .userName("이")
+                .nickName("사과")
+                .password("12345")
+                .phoneNo("01098765432")
+                .gender("female")
+                .build());
     }
+
 
 }

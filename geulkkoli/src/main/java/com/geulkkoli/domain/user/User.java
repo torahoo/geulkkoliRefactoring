@@ -22,16 +22,16 @@ public class User {
     private String userName;
 
     @Getter(AccessLevel.NONE)
-    @Column(name = "password", nullable = false,unique = true)
+    @Column(name = "password", nullable = false, unique = true)
     private String password;
 
-    @Column(name = "nick_name", nullable = false ,unique = true)
+    @Column(name = "nick_name", nullable = false, unique = true)
     private String nickName;
 
-    @Column(name = "email", nullable = false,unique = true)
+    @Column(name = "email", nullable = false, unique = true)
     private String email;
 
-    @Column(name = "phone_No", nullable = false,unique = true)
+    @Column(name = "phone_No", nullable = false, unique = true)
     private String phoneNo;
 
     private String gender;
@@ -50,5 +50,7 @@ public class User {
         return password.matches(this.password);
     }
 
-
+    public void setNewPassword(String password) {
+        this.password = password;
+    }
 }

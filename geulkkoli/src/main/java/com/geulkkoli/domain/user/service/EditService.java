@@ -2,6 +2,7 @@ package com.geulkkoli.domain.user.service;
 
 import com.geulkkoli.domain.user.User;
 import com.geulkkoli.domain.user.UserRepository;
+import com.geulkkoli.web.user.edit.EditPasswordForm;
 import com.geulkkoli.web.user.edit.EditUpdateForm;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -27,6 +28,14 @@ public class EditService {
 
     public void update(User user, EditUpdateForm editUpdateForm) {
         userRepository.update(user, editUpdateForm);
+    }
+
+    public boolean isPasswordVerification(User user, EditPasswordForm editPasswordForm) {
+        return user.matchPassword(editPasswordForm.getPassword());
+    }
+
+    public void updatePassword(User user, EditPasswordForm editPasswordForm) {
+        userRepository.updatePassword(user, editPasswordForm);
     }
 
 }

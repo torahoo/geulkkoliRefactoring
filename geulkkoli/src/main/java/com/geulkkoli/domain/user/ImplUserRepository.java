@@ -1,5 +1,6 @@
 package com.geulkkoli.domain.user;
 
+import com.geulkkoli.web.user.edit.EditPasswordForm;
 import com.geulkkoli.web.user.edit.EditUpdateForm;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -62,7 +63,11 @@ public class ImplUserRepository implements UserRepository {
                 .phoneNo(form.getPhoneNo() != null ? form.getPhoneNo() : user.getPhoneNo())
                 .gender(form.getGender() != null ? form.getGender() : user.getGender())
                 .build();
+    }
 
+    @Override
+    public void updatePassword(User user, EditPasswordForm form) {
+        user.setNewPassword(form.getNewPassword());
     }
 
 }
