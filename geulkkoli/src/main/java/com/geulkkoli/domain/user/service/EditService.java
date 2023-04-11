@@ -3,7 +3,7 @@ package com.geulkkoli.domain.user.service;
 import com.geulkkoli.domain.user.User;
 import com.geulkkoli.domain.user.UserRepository;
 import com.geulkkoli.web.user.edit.EditPasswordForm;
-import com.geulkkoli.web.user.edit.EditUpdateForm;
+import com.geulkkoli.web.user.edit.EditForm;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -26,8 +26,8 @@ public class EditService {
         return userRepository.findByPhoneNo(phoneNo).isPresent();
     }
 
-    public void update(User user, EditUpdateForm editUpdateForm) {
-        userRepository.update(user, editUpdateForm);
+    public void update(User user, EditForm editForm) {
+        userRepository.update(user, editForm);
     }
 
     public boolean isPasswordVerification(User user, EditPasswordForm editPasswordForm) {

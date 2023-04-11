@@ -10,7 +10,7 @@ import javax.validation.constraints.Pattern;
 @Getter
 @Setter
 @ToString
-public class EditUpdateForm {
+public class EditForm {
 
 
     @NotEmpty

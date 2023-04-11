@@ -1,7 +1,7 @@
 package com.geulkkoli.domain.user;
 
 import com.geulkkoli.web.user.edit.EditPasswordForm;
-import com.geulkkoli.web.user.edit.EditUpdateForm;
+import com.geulkkoli.web.user.edit.EditForm;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
@@ -55,13 +55,13 @@ public class ImplUserRepository implements UserRepository {
 
     // User 정보 업데이트 (이메일은 변경 불가 / 비밀번호는 따로 변경 처리)
     @Override
-    public void update(User user, EditUpdateForm form) {
+    public void update(User user, EditForm form) {
 
         user.builder()
                 .userName(form.getUserName() != null ? form.getUserName() : user.getUserName())
-                .nickName(form.getNickName() != null ? form.getNickName() : user.getNickName())
-                .phoneNo(form.getPhoneNo() != null ? form.getPhoneNo() : user.getPhoneNo())
-                .gender(form.getGender() != null ? form.getGender() : user.getGender())
+                .nickName(form.getNickName() != null  ? form.getNickName() : user.getNickName())
+                .phoneNo(form.getPhoneNo() != null  ? form.getPhoneNo() : user.getPhoneNo())
+                .gender(form.getGender() != null  ? form.getGender() : user.getGender())
                 .build();
     }
 

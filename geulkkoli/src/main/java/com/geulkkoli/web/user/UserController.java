@@ -5,7 +5,7 @@ import com.geulkkoli.domain.user.service.EditService;
 import com.geulkkoli.domain.user.service.JoinService;
 import com.geulkkoli.domain.user.service.LoginService;
 import com.geulkkoli.web.user.edit.EditPasswordForm;
-import com.geulkkoli.web.user.edit.EditUpdateForm;
+import com.geulkkoli.web.user.edit.EditForm;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
@@ -105,34 +105,34 @@ public class UserController {
 
 
     @GetMapping("/edit")
-    public String editViewForm(HttpSession session, Model model) {
-
+    public String editForm(HttpServletRequest httpServletRequest, Model model) {
+        HttpSession session = httpServletRequest.getSession();
         User user = (User) session.getAttribute(SessionConst.LOGIN_USER);
-        model.addAttribute("User", user);
+        model.addAttribute("user", user);
 
         return EDIT_FORM;
     }
 
     @PostMapping("/edit")
-    public String editUpdateForm(@ModelAttribute EditUpdateForm form, BindingResult bindingResult, HttpServletRequest httpServletRequest) {
-        HttpSession session = httpServletRequest.getSession(false);
+    public String editForm(@Validated @ModelAttribute("editForm") EditForm editForm, BindingResult bindingResult, HttpServletRequest httpServletRequest) {
+        HttpSession session = httpServletRequest.getSession();
         User user = (User) session.getAttribute(SessionConst.LOGIN_USER);
 
-        if (editService.isNickNameDuplicate(form.getNickName())) {
+        if (editService.isNickNameDuplicate(editForm.getNickName())) {
             bindingResult.rejectValue("nickName", "Duple.joinForm.nickName");
             return EDIT_FORM;
         }
 
-        if (editService.isPhoneNoDuplicate(form.getPhoneNo())) {
+        if (editService.isPhoneNoDuplicate(editForm.getPhoneNo())) {
             bindingResult.rejectValue("phoneNo", "Duple.joinForm.phoneNo");
             return EDIT_FORM;
         }
 
         if (!bindingResult.hasErrors()) {
-            editService.update(user, form);
+            editService.update(user, editForm);
         }
 
-        log.info("form = {}", form);
+        log.info("form = {}", editForm);
 
         return "redirect:/edit";
     }
