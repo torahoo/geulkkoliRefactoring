@@ -30,7 +30,7 @@ public class JoinForm {
     @NotEmpty
     @Length(min = 2, max = 8)
     @Pattern(regexp = "^[a-zA-Z0-9가-힣]*$")
-         private String nickName;
+    private String nickName;
 
     @NotEmpty
     @Email

@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import org.hibernate.validator.constraints.Length;
+
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Pattern;
 
@@ -30,5 +31,11 @@ public class EditForm {
     @NotEmpty
     private String gender;
 
-
+    public EditForm editForm(String userName, String nickName, String phoneNo, String gender) {
+        this.userName = userName;
+        this.nickName = nickName;
+        this.phoneNo = phoneNo;
+        this.gender = gender;
+        return this;
+    }
 }

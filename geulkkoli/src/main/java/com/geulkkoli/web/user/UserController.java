@@ -76,13 +76,13 @@ public class UserController {
         }
 
         if (joinService.isNickNameDuplicate(form.getNickName())) {
-            bindingResult.rejectValue("nickName", "Duple.joinForm.nickName");
+            bindingResult.rejectValue("nickName", "Duple.nickName");
             return JOIN_FORM;
 
         }
 
         if (joinService.isPhoneNoDuplicate(form.getPhoneNo())) {
-            bindingResult.rejectValue("phoneNo", "Duple.joinForm.phoneNo");
+            bindingResult.rejectValue("phoneNo", "Duple.phoneNo");
             return JOIN_FORM;
 
         }
@@ -105,11 +105,11 @@ public class UserController {
 
 
     @GetMapping("/edit")
-    public String editForm(HttpServletRequest httpServletRequest, Model model) {
-        HttpSession session = httpServletRequest.getSession();
-        User user = (User) session.getAttribute(SessionConst.LOGIN_USER);
-        model.addAttribute("user", user);
-
+    public String editForm(@ModelAttribute("editForm") EditForm editForm, HttpServletRequest httpServletRequest, Model model) {
+       HttpSession session = httpServletRequest.getSession(false);
+        User user= (User) session.getAttribute(SessionConst.LOGIN_USER);
+        editForm.editForm(user.getUserName(), user.getNickName(), user.getPhoneNo(), user.getGender());
+        model.addAttribute("editForm", editForm);
         return EDIT_FORM;
     }
 
@@ -118,13 +118,13 @@ public class UserController {
         HttpSession session = httpServletRequest.getSession();
         User user = (User) session.getAttribute(SessionConst.LOGIN_USER);
 
-        if (editService.isNickNameDuplicate(editForm.getNickName())) {
-            bindingResult.rejectValue("nickName", "Duple.joinForm.nickName");
+        if (editService.isNickNameDuplicate(editForm.getNickName()) && !editForm.getNickName().equals(user.getNickName())) {
+            bindingResult.rejectValue("nickName", "Duple.nickName");
             return EDIT_FORM;
         }
 
-        if (editService.isPhoneNoDuplicate(editForm.getPhoneNo())) {
-            bindingResult.rejectValue("phoneNo", "Duple.joinForm.phoneNo");
+        if (editService.isPhoneNoDuplicate(editForm.getPhoneNo()) && !editForm.getPhoneNo().equals(user.getPhoneNo())) {
+            bindingResult.rejectValue("phoneNo", "Duple.phoneNo");
             return EDIT_FORM;
         }
 
