@@ -70,7 +70,7 @@ class UserControllerTest {
         //when
         mockMvc.perform(MockMvcRequestBuilders.post("/join")
                         .params(query_param))
-                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.status().is3xxRedirection())
                 .andDo(MockMvcResultHandlers.print());
         User findByLoginIdUser = userRepository.findByEmail("takodachi@naver.com").
                 orElse(null);

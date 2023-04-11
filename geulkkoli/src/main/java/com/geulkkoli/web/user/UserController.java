@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
+import java.util.Objects;
 
 @Controller
 @RequiredArgsConstructor
@@ -26,23 +27,18 @@ public class UserController {
     public static final String JOIN_FORM = "user/joinForm";
     public static final String REDIRECT_INDEX = "redirect:/";
     private final UserService userService;
-    private final UserSecurityService customUserDetailsService;
 
     @GetMapping("/loginPage")
     public String loginForm(@ModelAttribute("loginForm") LoginForm form) {
         return LOGIN_FORM;
     }
 
-    @GetMapping("/login/error")
-    public String login(@Valid @ModelAttribute LoginForm form, BindingResult bindingResult) {
-        log.info("email {} , password {}", form.getEmail(), form.getPassword());
-        if (bindingResult.hasErrors()) {
-            return LOGIN_FORM;
-        }
-        bindingResult.reject("loginFail", "아이디 또는 비밀번호가 맞지 않습니다.");
+    @PostMapping("/loginPage")
+    public String loginError(@ModelAttribute("loginForm") LoginForm form) {
         return LOGIN_FORM;
-
     }
+
+    //join
 
     //join
     @GetMapping("/join")
@@ -88,16 +84,6 @@ public class UserController {
         log.info("form {}", form);
 
         return REDIRECT_INDEX;
-    }
-
-    @GetMapping("/logout")
-    public String logout(HttpServletRequest request) {
-
-        HttpSession session = request.getSession(false);
-        if (session != null) {
-            session.invalidate();
-        }
-        return "redirect:/";
     }
 
     @PostMapping("/memberDelete")

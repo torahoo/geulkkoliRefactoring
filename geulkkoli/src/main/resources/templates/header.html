@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head th:fragment="header">
     <meta charset="UTF-8">
     <title>Root Page</title>
@@ -12,27 +13,27 @@
             <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
                 <li><a id="home" href="#" class="nav-link px-2 text-secondary">Home</a></li>
             </ul>
-
+            <div></div>
             <div class="text-end">
                 <button type="button"
                         onclick="location.href='/loginPage'"
-                        th:if="${session.loginUser == null}"
+                        sec:authorize="!isAuthenticated()"
                         class="btn btn-primary">Login
                 </button>
 
                 <button type="button"
                         onclick="location.href='/join'"
-                        th:if="${session.loginUser == null}"
+                        sec:authorize="!isAuthenticated()"
                         class="btn btn-outline-primary">Sign-up</button>
 
                 <button type="button"
                         onclick="location.href='/modify'"
-                        th:if="${session.loginUser != null}"
+                        sec:authorize="hasRole('USER')"
                         class="btn btn-primary">modify</button>
 
-                <button type="button"
+                <button  type="button"
                         onclick="location.href='/logout'"
-                        th:if="${session.loginUser != null}"
+                        sec:authorize="hasRole('USER')"
                         class="btn btn-outline-primary">logout</button>
 
             </div>

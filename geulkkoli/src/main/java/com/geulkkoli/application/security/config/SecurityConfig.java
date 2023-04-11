@@ -1,23 +1,30 @@
 package com.geulkkoli.application.security.config;
 
+import com.geulkkoli.application.security.handler.LoginFailureHandler;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.util.matcher.AndRequestMatcher;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 /**
  * 시큐리티 설정파일
- *
  */
 @Configuration
+@EnableWebSecurity
 public class SecurityConfig {
+
+    private final LoginFailureHandler loginFailureHandler;
+
+    public SecurityConfig(LoginFailureHandler loginFailureHandler) {
+        this.loginFailureHandler = loginFailureHandler;
+    }
 
     /**
      * 시큐리티 설정파일
@@ -30,32 +37,32 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.authorizeRequests((auth) -> {
-            auth.antMatchers("/loginPage","/","/css/**","/js/**")
-                    .permitAll();
-        });
-        http.csrf().disable();
-        http.formLogin()
+                    auth.antMatchers( "/", "/loginPage", "/css/**", "/js/**")
+                            .permitAll();
+                }).csrf().disable()
+                .formLogin()
                 .loginPage("/loginPage")
-                .loginProcessingUrl("/login")
+                .loginProcessingUrl("/login-process")
                 .defaultSuccessUrl("/index")
-                .failureUrl("/login/error")
                 .usernameParameter("email")
                 .passwordParameter("password")
-                .failureHandler();
+                .failureHandler(loginFailureHandler)
+                .and()
+                .logout()
+                .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
+                .logoutSuccessUrl("/")
+                .invalidateHttpSession(true);
 
         return http.build();
     }
 
     /*
-    * password를 복호화 해줄 때 사용한다.
-    * */
+     * password를 복호화 해줄 때 사용한다.
+     * */
     @Bean
     PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
-
-    //메모리에 저장하는 spring security 유저 방식
-
 
     @Bean
     AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
