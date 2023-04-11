@@ -2,7 +2,7 @@ package com.geulkkoli.domain.user.service;
 
 import com.geulkkoli.domain.user.User;
 import com.geulkkoli.domain.user.UserRepository;
-import com.geulkkoli.web.user.LoginForm;
+import com.geulkkoli.web.user.JoinForm;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -26,34 +26,27 @@ class LoginServiceTest {
 
     @BeforeEach
     void init() {
-        userRepository.save( User.builder()
-                .email("tako1@naver.com")
-                .userName("김1")
-                .nickName("바나나1")
-                .password("123412")
-                .phoneNo("01012345671")
-                .gender("male")
-                .build());
+        JoinForm joinForm = new JoinForm();
+        joinForm.setGender("male");
+        joinForm.setPassword("123412");
+        joinForm.setPhoneNo("01012345679");
+        joinForm.setEmail("tako11@naver.com");
+        joinForm.setNickName("바나나111");
+        joinForm.setUserName("김11");
+
+        userService.join(joinForm);
     }
 
     @Test
     @DisplayName("로그인테스트")
     void loginTest() {
         //given
-        User exitsUser = User.builder()
-                .email("tako1@naver.com")
-                .userName("김1")
-                .nickName("바나나1")
-                .password("123412")
-                .phoneNo("01012345671")
-                .gender("male")
-                .build();
         //when
-        Optional<User> loginUser = userService.login("tako1@naver.com", "123412");
+        Optional<User> loginUser = userService.login("tako11@naver.com", "123412");
 
         //then
         assertAll(() -> assertThat(loginUser).isPresent(),
-                () -> assertThat(loginUser).get().hasFieldOrPropertyWithValue("email","tako1@naver.com"));
+                () -> assertThat(loginUser).get().hasFieldOrPropertyWithValue("email","tako11@naver.com"));
     }
 
     @Test
@@ -66,5 +59,25 @@ class LoginServiceTest {
         //then
         assertThat(noneExistentUser).isEmpty();
     }
+
+    @Test
+    void isEmailDuplicate() {
+
+        assertThat(userService.isEmailDuplicate("tako11@naver.com")).isTrue();
+    }
+
+    @Test
+    void isNickNameDuplicate() {
+
+        assertThat(userService.isNickNameDuplicate("바나나111")).isTrue();
+    }
+
+    @Test
+    void isPhoneNoDuplicate() {
+
+
+        assertThat(userService.isPhoneNoDuplicate("01012345679")).isTrue();
+    }
+
 
 }

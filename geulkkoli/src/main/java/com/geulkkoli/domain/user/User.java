@@ -1,11 +1,8 @@
 package com.geulkkoli.domain.user;
 
-import com.geulkkoli.application.user.Role;
-import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.persistence.*;
 

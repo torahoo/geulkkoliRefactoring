@@ -16,11 +16,11 @@ import java.util.Optional;
 
 @Service("userDetailService")
 @Transactional
-public class CustomUserDetailsService implements UserDetailsService {
+public class UserSecurityService implements UserDetailsService {
 
     private final UserRepository userRepository;
 
-    public CustomUserDetailsService(UserRepository userRepository) {
+    public UserSecurityService(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
 
@@ -38,7 +38,8 @@ public class CustomUserDetailsService implements UserDetailsService {
         } else {
             authorities.add(new SimpleGrantedAuthority(Role.USER.getRoleName()));
         }
-        AuthUserAdaptor authenticatedUser = new AuthUserAdaptor(user, authorities);
+        UserModelDto userModel = UserModelDto.toDto(user);
+        AuthUser authenticatedUser = new AuthUser(userModel, authorities);
         authenticatedUser.setEnabled(true);
         authenticatedUser.setAccountNonExpired(true);
         authenticatedUser.setAccountNonLocked(true);

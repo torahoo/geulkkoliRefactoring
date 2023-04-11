@@ -1,24 +1,23 @@
 package com.geulkkoli.application.user;
 
-import com.geulkkoli.domain.user.User;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 
-public class CustomUserDetails implements UserDetails {
-    private User user;
+public class AuthUser implements UserDetails {
+    private UserModelDto userModel;
     private boolean isEnabled;
     private boolean isAccountNonExpired;
     private boolean isAccountNonLocked;
     private boolean isCredentialsNonExpired;
     private Collection<? extends GrantedAuthority> authorities;
 
-    public CustomUserDetails() {
+    public AuthUser() {
     }
 
-    public CustomUserDetails(User user, Collection<? extends GrantedAuthority> authorities) {
-        this.user = user;
+    public AuthUser(UserModelDto userModel, Collection<? extends GrantedAuthority> authorities) {
+        this.userModel = userModel;
         this.authorities = authorities;
     }
 
@@ -29,12 +28,12 @@ public class CustomUserDetails implements UserDetails {
 
     @Override
     public String getPassword() {
-        return user.getPassword();
+        return userModel.getPassword();
     }
 
     @Override
     public String getUsername() {
-        return user.getUserName();
+        return userModel.getUserName();
     }
 
     public void setEnabled(boolean enabled) {
@@ -75,5 +74,21 @@ public class CustomUserDetails implements UserDetails {
     @Override
     public boolean isEnabled() {
         return isEnabled;
+    }
+
+    public String nickName() {
+        return this.userModel.getNickName();
+    }
+
+    public String userName() {
+        return this.userModel.getUserName();
+    }
+
+    public String phoneNo() {
+        return this.userModel.getPhoneNo();
+    }
+
+    public String gender() {
+        return this.userModel.getGender();
     }
 }

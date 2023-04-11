@@ -3,7 +3,6 @@ package com.geulkkoli;
 
 import com.geulkkoli.domain.post.Post;
 import com.geulkkoli.domain.post.PostRepository;
-import com.geulkkoli.domain.user.User;
 import com.geulkkoli.domain.user.UserRepository;
 import com.geulkkoli.domain.user.service.UserService;
 import com.geulkkoli.web.user.JoinForm;

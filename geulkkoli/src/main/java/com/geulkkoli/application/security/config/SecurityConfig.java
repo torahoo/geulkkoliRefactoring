@@ -30,7 +30,8 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.authorizeRequests((auth) -> {
-            auth.antMatchers("/","/css/**").permitAll();
+            auth.antMatchers("/loginPage","/","/css/**","/js/**")
+                    .permitAll();
         });
         http.csrf().disable();
         http.formLogin()
@@ -39,7 +40,8 @@ public class SecurityConfig {
                 .defaultSuccessUrl("/index")
                 .failureUrl("/login/error")
                 .usernameParameter("email")
-                .passwordParameter("password");
+                .passwordParameter("password")
+                .failureHandler();
 
         return http.build();
     }
@@ -59,6 +61,8 @@ public class SecurityConfig {
     AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
         return authenticationConfiguration.getAuthenticationManager();
     }
+
+
 }
 
 

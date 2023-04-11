@@ -1,12 +1,10 @@
 package com.geulkkoli.web.user;
 
-import com.geulkkoli.application.user.AuthUserAdaptor;
-import com.geulkkoli.application.user.CustomUserDetailsService;
+import com.geulkkoli.application.user.UserSecurityService;
 import com.geulkkoli.domain.user.User;
 import com.geulkkoli.domain.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -18,7 +16,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
-import java.util.Optional;
 
 @Controller
 @RequiredArgsConstructor
@@ -29,7 +26,7 @@ public class UserController {
     public static final String JOIN_FORM = "user/joinForm";
     public static final String REDIRECT_INDEX = "redirect:/";
     private final UserService userService;
-    private final CustomUserDetailsService customUserDetailsService;
+    private final UserSecurityService customUserDetailsService;
 
     @GetMapping("/loginPage")
     public String loginForm(@ModelAttribute("loginForm") LoginForm form) {
