@@ -55,6 +55,15 @@ public class TestDataInit {
                 .phoneNo("01012345678")
                 .gender("male")
                 .build());
+
+        userRepository.save(User.builder()
+                .email("test@naver.com")
+                .userName("홍길동")
+                .nickName("점심뭐먹지")
+                .password("1111")
+                .phoneNo("01011112222")
+                .gender("female")
+                .build());
     }
 
 }

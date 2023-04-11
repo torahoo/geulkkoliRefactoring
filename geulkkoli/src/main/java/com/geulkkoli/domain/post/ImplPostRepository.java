@@ -39,6 +39,7 @@ public class ImplPostRepository implements PostRepository {
     @Override
     public void update (Long postId, Post updateParam) {
         Post findPost = entityManager.find(Post.class, postId);
+
         findPost.setTitle(updateParam.getTitle());
         findPost.setPostBody(updateParam.getPostBody());
     }

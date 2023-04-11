@@ -19,6 +19,8 @@
     <title>게시물 리스트</title>
 </head>
 <body>
+<header id="header"></header>
+<div th:include="header" ></div>
 
 <div class="container">
     <div class="py-5 text-center">
@@ -28,6 +30,9 @@
     <hr class="my-4">
     <div class="header">
         <div class="col">
+            <Button class="btn btn-primary btn-lg"
+                    th:onclick="|location.href='@{/}'|"
+                    th:text="'홈으로'" type="button">홈으로</Button>
             <Button class="btn btn-primary btn-lg" style="float: right"
                     th:onclick="|location.href='@{/post/add}'|"
                     th:text="'글 쓰기'" type="button">글쓰기</Button>
