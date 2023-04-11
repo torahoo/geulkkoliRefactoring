@@ -17,7 +17,7 @@ public interface UserRepository {
 
     Optional<User> findByPhoneNo(String phoneNo);
 
-    void update(User user, EditForm editForm);
+    void update(Long idl, EditForm editForm);
 
     void updatePassword(User user, EditPasswordForm form);
 }

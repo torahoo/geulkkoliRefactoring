@@ -4,8 +4,8 @@ import com.geulkkoli.domain.user.User;
 import com.geulkkoli.domain.user.service.EditService;
 import com.geulkkoli.domain.user.service.JoinService;
 import com.geulkkoli.domain.user.service.LoginService;
-import com.geulkkoli.web.user.edit.EditPasswordForm;
 import com.geulkkoli.web.user.edit.EditForm;
+import com.geulkkoli.web.user.edit.EditPasswordForm;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
@@ -129,10 +129,9 @@ public class UserController {
         }
 
         if (!bindingResult.hasErrors()) {
-            editService.update(user, editForm);
+            editService.update(user.getUserId(), editForm, httpServletRequest);
+            log.info("form = {}", editForm);
         }
-
-        log.info("form = {}", editForm);
 
         return "redirect:/edit";
     }
