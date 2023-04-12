@@ -20,14 +20,14 @@ class ImplPostRepositoryTest {
 
     @Test
     void save() {
-        Post post = new Post("title", "body", "nick");
+        Post post = new Post(1L, "title", "body", "nick");
         Post save = implPostRepository.save(post);
         Assertions.assertThat(save).isEqualTo(post);
     }
 
     @Test
     void findById() {
-        Post post = new Post("title", "body", "nick");
+        Post post = new Post(1L, "title", "body", "nick");
         Post save = implPostRepository.save(post);
         Optional<Post> find = implPostRepository.findById(save.getPostId());
         Assertions.assertThat(save).isEqualTo(find.get());
@@ -42,7 +42,7 @@ class ImplPostRepositoryTest {
     @Test
     void update() {
 
-        Post update = new Post("title02", "body02", "nick02");
+        Post update = new Post(1L, "title02", "body02", "nick02");
         implPostRepository.update(1L, update);
         Optional<Post> one = implPostRepository.findById(1L);
         Assertions.assertThat(one.get().getTitle()).isEqualTo(update.getTitle());
