@@ -12,10 +12,8 @@ import javax.validation.constraints.Pattern;
 @ToString
 public class EditForm {
 
-
     @NotEmpty
     private String userName;
-
 
     @NotEmpty
     @Length(min = 2, max = 8)
