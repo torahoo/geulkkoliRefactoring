@@ -16,7 +16,7 @@ import java.util.Optional;
 class ImplPostRepositoryTest {
 
     @Autowired
-    private ImplPostRepository implPostRepository;
+    private PostRepository implPostRepository;
 
     @Test
     void save() {
