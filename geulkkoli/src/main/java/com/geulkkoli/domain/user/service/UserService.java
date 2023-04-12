@@ -7,6 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @Service
@@ -39,5 +40,10 @@ public class UserService {
     public Optional<User> login(String email, String password) {
         return userRepository.findByEmail(email)
                 .filter(m -> m.matchPassword(password));
+    }
+
+    public User findById (Long userId) {
+        return userRepository.findById(userId)
+                .orElseThrow(()-> new NoSuchElementException("No user found id matches:"+userId));
     }
 }

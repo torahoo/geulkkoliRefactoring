@@ -5,12 +5,13 @@ import lombok.*;
 import org.hibernate.validator.constraints.Length;
 
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
 
 @Data
 @NoArgsConstructor
 public class AddDTO {
+
+    @NotBlank
+    private Long authorId;
 
     @NotBlank
     @Length(min = 1, max = 100)
@@ -24,7 +25,8 @@ public class AddDTO {
     private String nickName;
 
     @Builder
-    public AddDTO(String title, String postBody, String nickName) {
+    public AddDTO(Long authorId, String title, String postBody, String nickName) {
+        this.authorId = authorId;
         this.title = title;
         this.postBody = postBody;
         this.nickName = nickName;
@@ -32,6 +34,7 @@ public class AddDTO {
 
     public Post toEntity () {
         return Post.builder()
+                .authorId(authorId)
                 .title(title)
                 .postBody(postBody)
                 .nickName(nickName)
