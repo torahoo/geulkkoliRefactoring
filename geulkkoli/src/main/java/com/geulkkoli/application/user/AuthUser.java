@@ -91,4 +91,8 @@ public class AuthUser implements UserDetails {
     public String gender() {
         return this.userModel.getGender();
     }
+
+    public Long userId() {
+        return this.userModel.getUserId();
+    }
 }
