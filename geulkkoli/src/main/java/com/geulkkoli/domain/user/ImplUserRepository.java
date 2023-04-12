@@ -56,15 +56,14 @@ public class ImplUserRepository implements UserRepository {
     // User 정보 업데이트 (이메일은 변경 불가 / 비밀번호는 따로 변경 처리)
     @Override
     public void update(Long id, EditForm form) {
-
         User user = entityManager.find(User.class, id);
         user.updateUser(form.getUserName(), form.getNickName(), form.getPhoneNo(), form.getGender());
-
     }
 
     @Override
-    public void updatePassword(User user, EditPasswordForm form) {
-        user.setNewPassword(form.getNewPassword());
+    public void updatePassword(Long id, EditPasswordForm form) {
+        User user = entityManager.find(User.class, id);
+        user.updatePassword(form.getNewPassword());
     }
 
 }

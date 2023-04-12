@@ -39,12 +39,14 @@ public class EditService {
         session.setAttribute(SessionConst.LOGIN_USER, byId.get());
     }
 
+    // 현재 비밀번호 입력 시 기존 비밀번호와 일치하는지 확인
     public boolean isPasswordVerification(User user, EditPasswordForm editPasswordForm) {
         return user.matchPassword(editPasswordForm.getPassword());
     }
 
-    public void updatePassword(User user, EditPasswordForm editPasswordForm) {
-        userRepository.updatePassword(user, editPasswordForm);
+
+    public void updatePassword(Long id, EditPasswordForm editPasswordForm) {
+        userRepository.updatePassword(id, editPasswordForm);
     }
 
 }

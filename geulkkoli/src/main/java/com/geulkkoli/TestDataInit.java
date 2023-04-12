@@ -48,7 +48,7 @@ public class TestDataInit {
                 .email("tako@naver.com")
                 .userName("김")
                 .nickName("바나나")
-                .password("123")
+                .password("abc123!@#")
                 .phoneNo("01012345678")
                 .gender("male")
                 .build());

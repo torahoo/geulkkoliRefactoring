@@ -24,6 +24,6 @@ public class EditPasswordForm {
     private String newPassword;
 
     @NotEmpty
-    private String verifyNewPassword;
+    private String verifyPassword;
 
 }

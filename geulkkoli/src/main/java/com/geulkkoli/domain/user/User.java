@@ -44,18 +44,17 @@ public class User {
         this.gender = gender;
     }
 
+    public boolean matchPassword(String password) {
+        return password.matches(this.password);
+    }
+
     public void updateUser(String userName, String nickName, String phoneNo, String gender){
         this.userName = userName;
         this.nickName = nickName;
         this.phoneNo = phoneNo;
         this.gender = gender;
     }
-
-    public boolean matchPassword(String password) {
-        return password.matches(this.password);
-    }
-
-    public void setNewPassword(String password) {
+    public void updatePassword(String password) {
         this.password = password;
     }
 }
