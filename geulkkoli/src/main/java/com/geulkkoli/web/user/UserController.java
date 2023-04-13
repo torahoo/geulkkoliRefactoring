@@ -1,9 +1,7 @@
 package com.geulkkoli.web.user;
 
 import com.geulkkoli.domain.user.User;
-import com.geulkkoli.domain.user.service.EditService;
-import com.geulkkoli.domain.user.service.JoinService;
-import com.geulkkoli.domain.user.service.LoginService;
+import com.geulkkoli.domain.user.service.UserService;
 import com.geulkkoli.web.user.edit.EditForm;
 import com.geulkkoli.web.user.edit.EditPasswordForm;
 import lombok.RequiredArgsConstructor;
@@ -32,9 +30,7 @@ public class UserController {
     public static final String EDIT_FORM = "user/edit/editForm";
     public static final String EDIT_PASSWORD_FORM = "user/edit/editPassword";
     public static final String REDIRECT_INDEX = "redirect:/";
-    private final LoginService loginService;
-    private final JoinService joinService;
-    private final EditService editService;
+    private final UserService userService;
 
     @GetMapping("/login")
     public String loginForm(@ModelAttribute("loginForm") LoginForm form) {
@@ -49,7 +45,7 @@ public class UserController {
             return LOGIN_FORM;
         }
 
-        Optional<User> loginUser = loginService.login(form.getEmail(), form.getPassword());
+        Optional<User> loginUser = userService.login(form.getEmail(), form.getPassword());
 
         if (loginUser.isEmpty()) {
             bindingResult.reject("loginFail", "아이디 또는 비밀번호가 맞지 않습니다.");
@@ -76,24 +72,24 @@ public class UserController {
             return JOIN_FORM;
         }
 
-        if (joinService.isEmailDuplicate(form.getEmail())) {
+        if (userService.isEmailDuplicate(form.getEmail())) {
             bindingResult.rejectValue("email", "Duple.joinForm.email");
             return JOIN_FORM;
         }
 
-        if (joinService.isNickNameDuplicate(form.getNickName())) {
+        if (userService.isNickNameDuplicate(form.getNickName())) {
             bindingResult.rejectValue("nickName", "Duple.nickName");
             return JOIN_FORM;
 
         }
 
-        if (joinService.isPhoneNoDuplicate(form.getPhoneNo())) {
+        if (userService.isPhoneNoDuplicate(form.getPhoneNo())) {
             bindingResult.rejectValue("phoneNo", "Duple.phoneNo");
             return JOIN_FORM;
 
         }
 
-        // '중복' 검사라기보다는 비밀번호 '확인'에 가까운 것 같아서 에러코드명 변경
+        // 중복 검사라기보다는 비밀번호 확인에 가까운 것 같아서 에러코드명 변경
         if (!form.getPassword().equals(form.getVerifyPassword())) {
             bindingResult.rejectValue("verifyPassword", "Check.verifyPassword");
             return JOIN_FORM;
@@ -101,7 +97,7 @@ public class UserController {
         }
 
         if (!bindingResult.hasErrors()) {
-            joinService.join(form.toEntity());
+            userService.join(form.toEntity());
         }
 
         log.info("joinModel = {}", model);
@@ -130,18 +126,18 @@ public class UserController {
         }
 
         // 닉네임 중복 검사 && 본인의 기존 닉네임과 일치해도 중복이라고 안 뜨게
-        if (editService.isNickNameDuplicate(editForm.getNickName()) && !editForm.getNickName().equals(user.getNickName())) {
+        if (userService.isNickNameDuplicate(editForm.getNickName()) && !editForm.getNickName().equals(user.getNickName())) {
             bindingResult.rejectValue("nickName", "Duple.nickName");
             return EDIT_FORM;
         }
 
-        if (editService.isPhoneNoDuplicate(editForm.getPhoneNo()) && !editForm.getPhoneNo().equals(user.getPhoneNo())) {
+        if (userService.isPhoneNoDuplicate(editForm.getPhoneNo()) && !editForm.getPhoneNo().equals(user.getPhoneNo())) {
             bindingResult.rejectValue("phoneNo", "Duple.phoneNo");
             return EDIT_FORM;
         }
 
         if (!bindingResult.hasErrors()) {
-            editService.update(user.getUserId(), editForm, httpServletRequest);
+            userService.update(user.getUserId(), editForm, httpServletRequest);
             log.info("editForm = {}", editForm);
         }
 
@@ -162,7 +158,7 @@ public class UserController {
             return EDIT_PASSWORD_FORM;
         }
 
-        if (!editService.isPasswordVerification(user, form)) {
+        if (!userService.isPasswordVerification(user, form)) {
             bindingResult.rejectValue("password", "Check.password");
             return EDIT_PASSWORD_FORM;
         }
@@ -173,7 +169,7 @@ public class UserController {
         }
 
         if (!bindingResult.hasErrors()) {
-            editService.updatePassword(user.getUserId(), form);
+            userService.updatePassword(user.getUserId(), form);
             redirectAttributes.addAttribute("status", true);
             log.info("editPasswordForm = {}", form);
         }
@@ -189,5 +185,16 @@ public class UserController {
             session.invalidate();
         }
         return REDIRECT_INDEX;
+    }
+
+    @PostMapping("/memberDelete")
+    public String memberDelete(HttpServletRequest request) {
+
+        HttpSession session = request.getSession(false);
+        if (session != null) {
+            userService.delete((User)session.getAttribute(SessionConst.LOGIN_USER));
+            session.invalidate();
+        }
+        return "redirect:/";
     }
 }

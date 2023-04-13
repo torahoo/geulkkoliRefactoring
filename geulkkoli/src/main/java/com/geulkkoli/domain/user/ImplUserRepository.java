@@ -66,4 +66,10 @@ public class ImplUserRepository implements UserRepository {
         user.updatePassword(form.getNewPassword());
     }
 
+    @Override
+    public void delete(Long userId) {
+        User deleteUser = entityManager.find(User.class, userId);
+        entityManager.remove(deleteUser);
+    }
+
 }

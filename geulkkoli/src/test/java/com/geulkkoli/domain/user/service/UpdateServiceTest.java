@@ -22,13 +22,10 @@ import java.util.Optional;
 class UpdateServiceTest {
 
     @Autowired
-    EditService editService;
-
-    @Autowired
     UserRepository userRepository;
 
     @Autowired
-    LoginService loginService;
+    UserService  userService;
 
     @BeforeAll
     void init() {
@@ -59,7 +56,7 @@ class UpdateServiceTest {
                 .gender("female")
                 .build();
 
-        editService.update(3L, preupdateUser, mockHttpServletRequest);
+        userService.update(3L, preupdateUser, mockHttpServletRequest);
 
         Optional<User> one = userRepository.findById(3L);
 
@@ -82,13 +79,13 @@ class UpdateServiceTest {
         editPasswordForm.setVerifyPassword("abc123!@#");
 
         //when
-        boolean passwordVerification = editService.isPasswordVerification(user.get(), editPasswordForm);
+        boolean passwordVerification = userService.isPasswordVerification(user.get(), editPasswordForm);
         log.info("비밀번호 일치하는지 확인 = {}", passwordVerification);
 
-        editService.updatePassword(user.get().getUserId(), editPasswordForm);
+        userService.updatePassword(user.get().getUserId(), editPasswordForm);
 
         // user에는 getPassword가 없으므로 로그인으로 확인
-        Optional<User> login = loginService.login(user.get().getEmail(), editPasswordForm.getNewPassword());
+        Optional<User> login = userService.login(user.get().getEmail(), editPasswordForm.getNewPassword());
         log.info("로그인되는지 확인 = {}", login.toString());
 
         //then

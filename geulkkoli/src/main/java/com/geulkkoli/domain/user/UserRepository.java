@@ -20,4 +20,6 @@ public interface UserRepository {
     void update(Long id, EditForm editForm);
 
     void updatePassword(Long id, EditPasswordForm form);
+
+    void delete (Long postId);
 }
