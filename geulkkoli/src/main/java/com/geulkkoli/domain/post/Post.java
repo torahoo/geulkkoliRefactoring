@@ -3,24 +3,31 @@ package com.geulkkoli.domain.post;
 import lombok.*;
 import org.hibernate.Hibernate;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.util.Objects;
 
-@Setter
 @Getter
 @NoArgsConstructor
 @Entity
 @ToString
 public class Post {
 
-    @Id
+    @Id @Column(name = "post_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long postId;
+
+//    @Column(name = "author_id", nullable = false)
+//    private Long authorId;
+
+    @Setter
+    @Column(nullable = false)
     private String title;
+
+    @Setter
+    @Column(name = "body", nullable = false)
     private String postBody;
+
+    @Column(name = "nick_name", nullable = false)
     private String nickName;
 
     @Builder
