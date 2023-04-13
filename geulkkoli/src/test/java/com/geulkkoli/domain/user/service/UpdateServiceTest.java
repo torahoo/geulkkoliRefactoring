@@ -25,11 +25,11 @@ class UpdateServiceTest {
     UserRepository userRepository;
 
     @Autowired
-    UserService  userService;
+    UserService userService;
 
     @BeforeAll
     void init() {
-        User user = userRepository.save(User.builder()
+        userRepository.save(User.builder() // userId = 3L
                 .email("tako1@naver.com")
                 .userName("김1")
                 .nickName("바나나1")
@@ -37,8 +37,6 @@ class UpdateServiceTest {
                 .phoneNo("01012345671")
                 .gender("male")
                 .build());
-
-        log.info("user의 userId 조회 = {}", user.getUserId());
     }
 
 
@@ -48,7 +46,6 @@ class UpdateServiceTest {
         //given
         MockHttpServletRequest mockHttpServletRequest = new MockHttpServletRequest();
 
-        //when
         EditForm preupdateUser = EditForm.builder()
                 .userName("김2")
                 .nickName("바나나155")
@@ -56,11 +53,9 @@ class UpdateServiceTest {
                 .gender("female")
                 .build();
 
+        //when
         userService.update(3L, preupdateUser, mockHttpServletRequest);
-
         Optional<User> one = userRepository.findById(3L);
-
-        log.info("@Test ::2 one={}", one);
 
         // then
         Assertions.assertThat("바나나155").isEqualTo(one.get().getNickName());
@@ -80,13 +75,12 @@ class UpdateServiceTest {
 
         //when
         boolean passwordVerification = userService.isPasswordVerification(user.get(), editPasswordForm);
-        log.info("비밀번호 일치하는지 확인 = {}", passwordVerification);
 
-        userService.updatePassword(user.get().getUserId(), editPasswordForm);
+        if (passwordVerification)
+            userService.updatePassword(user.get().getUserId(), editPasswordForm);
 
-        // user에는 getPassword가 없으므로 로그인으로 확인
+        //user에는 getPassword가 없으므로 로그인으로 확인
         Optional<User> login = userService.login(user.get().getEmail(), editPasswordForm.getNewPassword());
-        log.info("로그인되는지 확인 = {}", login.toString());
 
         //then
         Assertions.assertThat(user).isEqualTo(login);

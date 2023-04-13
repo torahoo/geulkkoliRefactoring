@@ -1,5 +1,6 @@
 package com.geulkkoli.domain.post;
 
+import com.geulkkoli.domain.post.service.PostService;
 import lombok.extern.slf4j.Slf4j;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
