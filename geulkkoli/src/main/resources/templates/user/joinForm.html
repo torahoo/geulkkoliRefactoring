@@ -12,7 +12,7 @@
 </head>
 
 <body>
-<!--header, navigation 불러오기-->
+<header id="header" th:include="header"></header>
 <h1>회원가입</h1>
 
 <br>
@@ -88,7 +88,7 @@
 
   <br>
 
-  <div class="centerDiv">
+  <div class="mb-3">
     <h4>성별</h4>
     <div class="form-check form-check-inline">
       <input type="radio" name="gender" id="male" value="male" checked>
@@ -110,6 +110,9 @@
   <div class="mb-3 sub-div">
     <input type="submit" value="가입하기" class="btn btn-primary form-control-lg">
   </div>
+
+  <br>
+  <br>
 
 </form>
 
