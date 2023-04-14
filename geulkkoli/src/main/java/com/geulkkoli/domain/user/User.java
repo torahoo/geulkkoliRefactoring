@@ -1,5 +1,4 @@
 package com.geulkkoli.domain.user;
-
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -19,7 +18,6 @@ public class User {
     @Column(name = "name", nullable = false)
     private String userName;
 
-    @Getter(AccessLevel.NONE)
     @Column(name = "password", nullable = false)
     private String password;
 
@@ -57,4 +55,6 @@ public class User {
     public void updatePassword(String password) {
         this.password = password;
     }
+
+
 }

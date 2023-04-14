@@ -38,6 +38,21 @@ public class Post {
         this.nickName = nickName;
     }
 
+    //제목을 바꾼다.
+    public void changeTitle(String title) {
+        this.title = title;
+    }
+
+    //본문을 바꾼다.
+    public void changePostBody(String updateBody) {
+        this.postBody = updateBody;
+    }
+
+    //별명을 바꾼다.
+    public void changeNickName(String nickName) {
+        this.nickName = nickName;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

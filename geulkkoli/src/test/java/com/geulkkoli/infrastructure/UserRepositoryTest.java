@@ -72,6 +72,16 @@ class UserRepositoryTest {
     @Test
     @DisplayName("이메일로 회원 조회")
     void findByEmail() {
+        User user = User.builder()
+                .email("tako@naver.com")
+                .userName("김1")
+                .nickName("바나나1")
+                .password("12341")
+                .gender("male1")
+                .phoneNo("01012345679")
+                .build();
+
+         userRepository.save(user);
         User findByEmailUser = userRepository.findByEmail("tako@naver.com")
                 .orElseThrow(() -> new EmptyDataException("해당 데이터가 존재하지 않습니다."));
 
@@ -81,10 +91,20 @@ class UserRepositoryTest {
     @Test
     @DisplayName("닉네임으로 회원 조회")
     void findByNickName() {
-        User findByNickNameUser = userRepository.findByNickName("바나나")
+        User user = User.builder()
+                .email("tako1@naver.com")
+                .userName("김1")
+                .nickName("바나나1")
+                .password("12341")
+                .gender("male1")
+                .phoneNo("01012345679")
+                .build();
+
+        userRepository.save(user);
+         User findByNickNameUser = userRepository.findByNickName("바나나1")
                 .orElseThrow(() -> new EmptyDataException("해당 데이터가 존재하지 않습니다."));
 
-        assertThat(findByNickNameUser.getEmail()).isEqualTo("tako@naver.com");
+        assertThat(findByNickNameUser.getEmail()).isEqualTo("tako1@naver.com");
     }
 
 }

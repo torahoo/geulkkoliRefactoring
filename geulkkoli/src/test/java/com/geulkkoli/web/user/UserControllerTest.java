@@ -60,8 +60,6 @@ class UserControllerTest {
         //when
         mockMvc.perform(MockMvcRequestBuilders.post("/login")
                         .params(query_param))
-
-                //then
                 .andExpect(MockMvcResultMatchers.status().is3xxRedirection());
     }
 

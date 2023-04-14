@@ -1,10 +1,9 @@
 package com.geulkkoli.web.user;
 
 import com.geulkkoli.domain.user.User;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 import org.hibernate.validator.constraints.Length;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
@@ -13,7 +12,8 @@ import javax.validation.constraints.Pattern;
 @Getter
 @Setter
 @ToString
-public class JoinForm {
+@RequiredArgsConstructor
+public class JoinFormDto {
 
     // NotEmpty가 NotNull를 포함하므로 삭제
     @NotEmpty
@@ -44,10 +44,10 @@ public class JoinForm {
     @NotEmpty
     private String gender;
 
-    public User toEntity() {
+    public User toEntity(PasswordEncoder passwordEncoder) {
         return User.builder()
                 .userName(userName)
-                .password(password)
+                .password(passwordEncoder.encode(password))
                 .nickName(nickName)
                 .email(email)
                 .phoneNo(phoneNo)

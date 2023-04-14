@@ -1,11 +1,13 @@
 package com.geulkkoli.web.user;
 
+import com.geulkkoli.application.user.AuthUser;
 import com.geulkkoli.domain.user.User;
 import com.geulkkoli.domain.user.service.UserService;
 import com.geulkkoli.web.user.edit.EditForm;
 import com.geulkkoli.web.user.edit.EditPasswordForm;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -17,7 +19,6 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import javax.validation.Valid;
 import java.util.Optional;
 
 @Controller
@@ -32,42 +33,27 @@ public class UserController {
     public static final String REDIRECT_INDEX = "redirect:/";
     private final UserService userService;
 
-    @GetMapping("/login")
-    public String loginForm(@ModelAttribute("loginForm") LoginForm form) {
+    @GetMapping("/loginPage")
+    public String loginForm(@ModelAttribute("loginForm") LoginFormDto form) {
         return LOGIN_FORM;
     }
 
-
-    @PostMapping("/login")
-    public String login(@Valid @ModelAttribute LoginForm form, BindingResult bindingResult, HttpServletRequest request) {
-        log.info("login: email = {} , password = {}", form.getEmail(), form.getPassword());
-        if (bindingResult.hasErrors()) {
-            return LOGIN_FORM;
-        }
-
-        Optional<User> loginUser = userService.login(form.getEmail(), form.getPassword());
-
-        if (loginUser.isEmpty()) {
-            bindingResult.reject("loginFail", "아이디 또는 비밀번호가 맞지 않습니다.");
-            return LOGIN_FORM;
-        }
-
-        HttpSession session = request.getSession();
-        session.setAttribute(SessionConst.LOGIN_USER, loginUser.get());
-        return REDIRECT_INDEX;
+    @PostMapping("/loginPage")
+    public String loginError(@ModelAttribute("loginForm") LoginFormDto form) {
+        return LOGIN_FORM;
     }
 
     //join
+
+    //join
     @GetMapping("/join")
-    public String joinForm(@ModelAttribute("joinForm") JoinForm form) {
+    public String joinForm(@ModelAttribute("joinForm") JoinFormDto form) {
         return JOIN_FORM;
     }
 
     @PostMapping("/join")
-    public String userJoin(@Validated @ModelAttribute("joinForm") JoinForm form, BindingResult bindingResult, Model model) {
+    public String userJoin(@Validated @ModelAttribute("joinForm") JoinFormDto form, BindingResult bindingResult, Model model) {
         log.info("join Method={}", this);
-
-        // 이거 안 해주면 에러 메시지가 안 떠서 추가
         if (bindingResult.hasErrors()) {
             return JOIN_FORM;
         }
@@ -97,7 +83,7 @@ public class UserController {
         }
 
         if (!bindingResult.hasErrors()) {
-            userService.join(form.toEntity());
+            userService.join(form);
         }
 
         log.info("joinModel = {}", model);
@@ -108,37 +94,36 @@ public class UserController {
 
 
     @GetMapping("/edit")
-    public String editForm(@ModelAttribute("editForm") EditForm editForm, HttpServletRequest httpServletRequest, Model model) {
-        HttpSession session = httpServletRequest.getSession(false);
-        User user = (User) session.getAttribute(SessionConst.LOGIN_USER);
-        editForm.editForm(user.getUserName(), user.getNickName(), user.getPhoneNo(), user.getGender());
+    public String editForm(@ModelAttribute("editForm") EditForm editForm, @AuthenticationPrincipal AuthUser authUser, Model model) {
+        editForm.editForm(authUser.getUserName(), authUser.getNickName(), authUser.getPhoneNo(), authUser.getGender());
         model.addAttribute("editForm", editForm);
         return EDIT_FORM;
     }
 
+    /*
+    * TODO: 수정된 회원정보가 세션에 저장되어 있지 않음 추후에 바꾸겠다
+    * authUser가 기존의 세션 저장 방식을 대체한다
+    * */
     @PostMapping("/edit")
-    public String editForm(@Validated @ModelAttribute("editForm") EditForm editForm, BindingResult bindingResult, HttpServletRequest httpServletRequest) {
-        HttpSession session = httpServletRequest.getSession();
-        User user = (User) session.getAttribute(SessionConst.LOGIN_USER);
+    public String editForm(@Validated @ModelAttribute("editForm") EditForm editForm, BindingResult bindingResult, @AuthenticationPrincipal AuthUser authUser){
 
         if (bindingResult.hasErrors()) {
             return EDIT_FORM;
         }
 
         // 닉네임 중복 검사 && 본인의 기존 닉네임과 일치해도 중복이라고 안 뜨게
-        if (userService.isNickNameDuplicate(editForm.getNickName()) && !editForm.getNickName().equals(user.getNickName())) {
+        if (userService.isNickNameDuplicate(editForm.getNickName()) && !editForm.getNickName().equals(authUser.getNickName())) {
             bindingResult.rejectValue("nickName", "Duple.nickName");
             return EDIT_FORM;
         }
 
-        if (userService.isPhoneNoDuplicate(editForm.getPhoneNo()) && !editForm.getPhoneNo().equals(user.getPhoneNo())) {
+        if (userService.isPhoneNoDuplicate(editForm.getPhoneNo()) && !editForm.getPhoneNo().equals(authUser.getPhoneNo())) {
             bindingResult.rejectValue("phoneNo", "Duple.phoneNo");
             return EDIT_FORM;
         }
 
         if (!bindingResult.hasErrors()) {
-            userService.update(user.getUserId(), editForm, httpServletRequest);
-            log.info("editForm = {}", editForm);
+            Optional<User> updateUser = userService.update(authUser.getUserId(), editForm);
         }
 
         return "redirect:/edit";
@@ -150,15 +135,13 @@ public class UserController {
     }
 
     @PostMapping("/editPassword")
-    public String editPassword(@Validated @ModelAttribute("editPasswordForm") EditPasswordForm form, BindingResult bindingResult, HttpServletRequest httpServletRequest, RedirectAttributes redirectAttributes) {
-        HttpSession session = httpServletRequest.getSession();
-        User user = (User) session.getAttribute(SessionConst.LOGIN_USER);
+    public String editPassword(@Validated @ModelAttribute("editPasswordForm") EditPasswordForm form, BindingResult bindingResult, @AuthenticationPrincipal AuthUser authUser, RedirectAttributes redirectAttributes) {
 
         if (bindingResult.hasErrors()) {
             return EDIT_PASSWORD_FORM;
         }
 
-        if (!userService.isPasswordVerification(user, form)) {
+        if (!userService.isPasswordVerification(new User(), form)) {
             bindingResult.rejectValue("password", "Check.password");
             return EDIT_PASSWORD_FORM;
         }
@@ -169,7 +152,7 @@ public class UserController {
         }
 
         if (!bindingResult.hasErrors()) {
-            userService.updatePassword(user.getUserId(), form);
+            userService.updatePassword(authUser.getUserId(), form);
             redirectAttributes.addAttribute("status", true);
             log.info("editPasswordForm = {}", form);
         }
