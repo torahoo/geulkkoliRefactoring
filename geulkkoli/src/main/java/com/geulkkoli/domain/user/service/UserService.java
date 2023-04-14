@@ -2,8 +2,7 @@ package com.geulkkoli.domain.user.service;
 
 import com.geulkkoli.domain.user.User;
 import com.geulkkoli.domain.user.UserRepository;
-import com.geulkkoli.web.user.JoinForm;
-import com.geulkkoli.web.user.SessionConst;
+import com.geulkkoli.web.user.JoinFormDto;
 import com.geulkkoli.web.user.edit.EditForm;
 import com.geulkkoli.web.user.edit.EditPasswordForm;
 import lombok.RequiredArgsConstructor;
@@ -12,8 +11,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
@@ -38,7 +35,7 @@ public class UserService {
         return userRepository.findByPhoneNo(phoneNo).isPresent();
     }
 
-    public void join(JoinForm form) {
+    public void join(JoinFormDto form) {
         userRepository.save(form.toEntity(passwordEncoder));
     }
 

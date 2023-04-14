@@ -13,7 +13,7 @@ import javax.validation.constraints.Pattern;
 @Setter
 @ToString
 @RequiredArgsConstructor
-public class JoinForm {
+public class JoinFormDto {
 
     // NotEmpty가 NotNull를 포함하므로 삭제
     @NotEmpty

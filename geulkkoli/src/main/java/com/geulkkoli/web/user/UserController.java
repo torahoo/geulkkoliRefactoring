@@ -34,12 +34,12 @@ public class UserController {
     private final UserService userService;
 
     @GetMapping("/loginPage")
-    public String loginForm(@ModelAttribute("loginForm") LoginForm form) {
+    public String loginForm(@ModelAttribute("loginForm") LoginFormDto form) {
         return LOGIN_FORM;
     }
 
     @PostMapping("/loginPage")
-    public String loginError(@ModelAttribute("loginForm") LoginForm form) {
+    public String loginError(@ModelAttribute("loginForm") LoginFormDto form) {
         return LOGIN_FORM;
     }
 
@@ -47,12 +47,12 @@ public class UserController {
 
     //join
     @GetMapping("/join")
-    public String joinForm(@ModelAttribute("joinForm") JoinForm form) {
+    public String joinForm(@ModelAttribute("joinForm") JoinFormDto form) {
         return JOIN_FORM;
     }
 
     @PostMapping("/join")
-    public String userJoin(@Validated @ModelAttribute("joinForm") JoinForm form, BindingResult bindingResult, Model model) {
+    public String userJoin(@Validated @ModelAttribute("joinForm") JoinFormDto form, BindingResult bindingResult, Model model) {
         log.info("join Method={}", this);
         if (bindingResult.hasErrors()) {
             return JOIN_FORM;
@@ -112,7 +112,7 @@ public class UserController {
         }
 
         // 닉네임 중복 검사 && 본인의 기존 닉네임과 일치해도 중복이라고 안 뜨게
-        if (userService.isNickNameDuplicate(editForm.getNickName()) && !editForm.getNickName().equals(authUser.getNickName()))) {
+        if (userService.isNickNameDuplicate(editForm.getNickName()) && !editForm.getNickName().equals(authUser.getNickName())) {
             bindingResult.rejectValue("nickName", "Duple.nickName");
             return EDIT_FORM;
         }
@@ -141,7 +141,7 @@ public class UserController {
             return EDIT_PASSWORD_FORM;
         }
 
-        if (!userService.isPasswordVerification(user, form)) {
+        if (!userService.isPasswordVerification(new User(), form)) {
             bindingResult.rejectValue("password", "Check.password");
             return EDIT_PASSWORD_FORM;
         }
