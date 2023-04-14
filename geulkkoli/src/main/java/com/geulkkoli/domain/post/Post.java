@@ -1,33 +1,38 @@
 package com.geulkkoli.domain.post;
 
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.Hibernate;
 
 import javax.persistence.*;
 import java.util.Objects;
 
-/*Db에서 관리해야하는 postId를 Setter로 값 주입할 수 있는 코드라서 @Setter 지움*/
-
-@NoArgsConstructor
 @Getter
+@NoArgsConstructor
 @Entity
+@ToString
 public class Post {
 
-    @Id
+    @Id @Column(name = "post_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long postId;
-    //칼럼에 널 값이 들어오는 걸 허용하지 않음
+
+    @Column(name = "author_id", nullable = false)
+    private Long authorId;
+
+    @Setter
     @Column(nullable = false)
     private String title;
+
+    @Setter
     @Column(name = "body", nullable = false)
     private String postBody;
-    @Column(nullable = false)
+
+    @Column(name = "nick_name", nullable = false)
     private String nickName;
 
     @Builder
-    public Post(String title, String postBody, String nickName) {
+    public Post(Long authorId, String title, String postBody, String nickName) {
+        this.authorId = authorId;
         this.title = title;
         this.postBody = postBody;
         this.nickName = nickName;
