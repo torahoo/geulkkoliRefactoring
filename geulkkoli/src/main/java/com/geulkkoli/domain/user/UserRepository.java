@@ -1,5 +1,8 @@
 package com.geulkkoli.domain.user;
 
+import com.geulkkoli.web.user.edit.EditPasswordForm;
+import com.geulkkoli.web.user.edit.EditForm;
+
 import java.util.Optional;
 
 public interface UserRepository {
@@ -14,6 +17,9 @@ public interface UserRepository {
 
     Optional<User> findByPhoneNo(String phoneNo);
 
-    void delete (Long postId);
+    void update(Long id, EditForm editForm);
 
+    void updatePassword(Long id, EditPasswordForm form);
+
+    void delete (Long postId);
 }

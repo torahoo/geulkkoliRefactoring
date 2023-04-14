@@ -31,10 +31,10 @@ public class TestDataInit {
                 .authorId(1L)
                 .nickName("바나나")
                 .postBody("나는 멋지고 섹시한 개발자")//채&훈
-                .title("여러분").build()
-        );
+                .title("여러분").build());
 
         postRepository.save(Post.builder()
+
                 .authorId(2L)
                 .title("testTitle01")
                 .postBody("test postbody 01")//채&훈
@@ -57,19 +57,20 @@ public class TestDataInit {
                 .email("tako@naver.com")
                 .userName("김")
                 .nickName("바나나")
-                .password("1234")
+                .password("abc123!@#")
                 .phoneNo("01012345678")
                 .gender("male")
                 .build());
 
         userRepository.save(User.builder()
-                .email("test@naver.com")
-                .userName("홍길동")
-                .nickName("점심뭐먹지")
-                .password("1111")
-                .phoneNo("01011112222")
+                .email("tako2@naver.com")
+                .userName("이")
+                .nickName("사과")
+                .password("123")
+                .phoneNo("01098765432")
                 .gender("female")
                 .build());
     }
+
 
 }

@@ -6,7 +6,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.util.Objects;
 
 @NoArgsConstructor
 @Entity
@@ -17,20 +16,20 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long userId;
 
-    @Column(name = "name", nullable = false, unique = true)
+    @Column(name = "name", nullable = false)
     private String userName;
 
     @Getter(AccessLevel.NONE)
-    @Column(name = "password", nullable = false,unique = true)
+    @Column(name = "password", nullable = false)
     private String password;
 
-    @Column(name = "nick_name", nullable = false ,unique = true)
+    @Column(name = "nick_name", nullable = false, unique = true)
     private String nickName;
 
-    @Column(name = "email", nullable = false,unique = true)
+    @Column(name = "email", nullable = false, unique = true)
     private String email;
 
-    @Column(name = "phone_No", nullable = false,unique = true)
+    @Column(name = "phone_No", nullable = false, unique = true)
     private String phoneNo;
 
     private String gender;
@@ -49,5 +48,13 @@ public class User {
         return password.matches(this.password);
     }
 
-
+    public void updateUser(String userName, String nickName, String phoneNo, String gender){
+        this.userName = userName;
+        this.nickName = nickName;
+        this.phoneNo = phoneNo;
+        this.gender = gender;
+    }
+    public void updatePassword(String password) {
+        this.password = password;
+    }
 }

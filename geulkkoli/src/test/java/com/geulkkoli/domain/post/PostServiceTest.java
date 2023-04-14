@@ -1,6 +1,7 @@
 package com.geulkkoli.domain.post;
 
 import com.geulkkoli.domain.post.service.PostService;
+
 import com.geulkkoli.web.post.dto.ListDTO;
 import lombok.extern.slf4j.Slf4j;
 import org.assertj.core.api.Assertions;
