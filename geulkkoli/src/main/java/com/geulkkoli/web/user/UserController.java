@@ -1,11 +1,13 @@
 package com.geulkkoli.web.user;
 
+import com.geulkkoli.application.user.AuthUser;
 import com.geulkkoli.domain.user.User;
 import com.geulkkoli.domain.user.service.UserService;
 import com.geulkkoli.web.user.edit.EditForm;
 import com.geulkkoli.web.user.edit.EditPasswordForm;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -17,7 +19,6 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import javax.validation.Valid;
 import java.util.Optional;
 
 @Controller
@@ -93,37 +94,36 @@ public class UserController {
 
 
     @GetMapping("/edit")
-    public String editForm(@ModelAttribute("editForm") EditForm editForm, HttpServletRequest httpServletRequest, Model model) {
-        HttpSession session = httpServletRequest.getSession(false);
-        User user = (User) session.getAttribute(SessionConst.LOGIN_USER);
-        editForm.editForm(user.getUserName(), user.getNickName(), user.getPhoneNo(), user.getGender());
+    public String editForm(@ModelAttribute("editForm") EditForm editForm, @AuthenticationPrincipal AuthUser authUser, Model model) {
+        editForm.editForm(authUser.getUserName(), authUser.getNickName(), authUser.getPhoneNo(), authUser.getGender());
         model.addAttribute("editForm", editForm);
         return EDIT_FORM;
     }
 
+    /*
+    * TODO: 수정된 회원정보가 세션에 저장되어 있지 않음 추후에 바꾸겠다
+    * authUser가 기존의 세션 저장 방식을 대체한다
+    * */
     @PostMapping("/edit")
-    public String editForm(@Validated @ModelAttribute("editForm") EditForm editForm, BindingResult bindingResult, HttpServletRequest httpServletRequest) {
-        HttpSession session = httpServletRequest.getSession();
-        User user = (User) session.getAttribute(SessionConst.LOGIN_USER);
+    public String editForm(@Validated @ModelAttribute("editForm") EditForm editForm, BindingResult bindingResult, @AuthenticationPrincipal AuthUser authUser){
 
         if (bindingResult.hasErrors()) {
             return EDIT_FORM;
         }
 
         // 닉네임 중복 검사 && 본인의 기존 닉네임과 일치해도 중복이라고 안 뜨게
-        if (userService.isNickNameDuplicate(editForm.getNickName()) && !editForm.getNickName().equals(user.getNickName())) {
+        if (userService.isNickNameDuplicate(editForm.getNickName()) && !editForm.getNickName().equals(authUser.getNickName()))) {
             bindingResult.rejectValue("nickName", "Duple.nickName");
             return EDIT_FORM;
         }
 
-        if (userService.isPhoneNoDuplicate(editForm.getPhoneNo()) && !editForm.getPhoneNo().equals(user.getPhoneNo())) {
+        if (userService.isPhoneNoDuplicate(editForm.getPhoneNo()) && !editForm.getPhoneNo().equals(authUser.getPhoneNo())) {
             bindingResult.rejectValue("phoneNo", "Duple.phoneNo");
             return EDIT_FORM;
         }
 
         if (!bindingResult.hasErrors()) {
-            userService.update(user.getUserId(), editForm, httpServletRequest);
-            log.info("editForm = {}", editForm);
+            Optional<User> updateUser = userService.update(authUser.getUserId(), editForm);
         }
 
         return "redirect:/edit";
@@ -135,9 +135,7 @@ public class UserController {
     }
 
     @PostMapping("/editPassword")
-    public String editPassword(@Validated @ModelAttribute("editPasswordForm") EditPasswordForm form, BindingResult bindingResult, HttpServletRequest httpServletRequest, RedirectAttributes redirectAttributes) {
-        HttpSession session = httpServletRequest.getSession();
-        User user = (User) session.getAttribute(SessionConst.LOGIN_USER);
+    public String editPassword(@Validated @ModelAttribute("editPasswordForm") EditPasswordForm form, BindingResult bindingResult, @AuthenticationPrincipal AuthUser authUser, RedirectAttributes redirectAttributes) {
 
         if (bindingResult.hasErrors()) {
             return EDIT_PASSWORD_FORM;
@@ -154,7 +152,7 @@ public class UserController {
         }
 
         if (!bindingResult.hasErrors()) {
-            userService.updatePassword(user.getUserId(), form);
+            userService.updatePassword(authUser.getUserId(), form);
             redirectAttributes.addAttribute("status", true);
             log.info("editPasswordForm = {}", form);
         }

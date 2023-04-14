@@ -42,18 +42,16 @@ public class UserService {
         userRepository.save(form.toEntity(passwordEncoder));
     }
 
-    @org.springframework.transaction.annotation.Transactional(readOnly = true)
+    @Transactional(readOnly = true)
     public Optional<User> login(String email, String password) {
         return userRepository.findByEmail(email)
                 .filter(m -> m.matchPassword(password));
     }
 
-    public void update(Long id, EditForm editForm, HttpServletRequest httpServletRequest) {
+    public Optional<User> update(Long id, EditForm editForm) {
         userRepository.update(id, editForm);
 
-        Optional<User> byId = userRepository.findById(id);
-        HttpSession session = httpServletRequest.getSession();
-        session.setAttribute(SessionConst.LOGIN_USER, byId.get());
+        return userRepository.findById(id);
     }
 
     // 현재 비밀번호 입력 시 기존 비밀번호와 일치하는지 확인
@@ -67,9 +65,10 @@ public class UserService {
 
     public void delete(User user) {
         userRepository.delete(user.getUserId());
+    }
 
-    public User findById(Long userId) {
-        return userRepository.findById(userId)
-                .orElseThrow(()-> new NoSuchElementException("No user found id matches:"+userId));
+    public User findById(Long id) {
+        return userRepository.findById(id)
+                .orElseThrow(() -> new NoSuchElementException("No user found id matches:" + id));
     }
 }

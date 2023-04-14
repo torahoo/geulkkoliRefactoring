@@ -48,8 +48,9 @@
     <label for="email">
       <h4>E-mail</h4>
     </label>
+    <!-- userName == email -->
     <input type="email" name="email" id="email"
-           th:value="${session.loginUser.getEmail()}"
+           th:value="${#request.getUserPrincipal().getName()}"
            class="form-control form-control-lg" readonly>
   </div>
   <br>

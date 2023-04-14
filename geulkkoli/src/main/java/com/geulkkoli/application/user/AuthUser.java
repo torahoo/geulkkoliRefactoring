@@ -12,7 +12,6 @@ public class AuthUser extends User {
     private final String userName;
     private final String nickName;
     private final String phoneNo;
-
     private final String gender;
     private boolean isEnabled;
     private boolean isAccountNonExpired;

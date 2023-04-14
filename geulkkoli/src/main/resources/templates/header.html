@@ -13,10 +13,6 @@
             <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
                 <li><a id="home" href="#" class="nav-link px-2 text-secondary">Home</a></li>
             </ul>
-
-            <div sec:authorize="hasRole('USER')">
-                <span style="color: #1a1e21" sec:authorize="isAuthenticated()" sec:authentication="principal.nickName"></span>
-            </div>
               <button type="button"
                         onclick="location.href='/loginPage'"
                         sec:authorize="!isAuthenticated()"
@@ -30,7 +26,7 @@
                 </button>
 
                 <button type="button"
-                        onclick="location.href='/modify'"
+                        onclick="location.href='/edit'"
                         sec:authorize="hasRole('USER')"
                         class="btn btn-primary">modify
                 </button>
