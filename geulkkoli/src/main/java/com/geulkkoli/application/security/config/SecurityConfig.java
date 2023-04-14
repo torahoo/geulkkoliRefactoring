@@ -30,11 +30,15 @@ public class SecurityConfig {
 
     /**
      * 시큐리티 필터 설정
-     * 루트 페이지는 인증 없이 접속 가능
-     * 로그인 정보를 URL
+     * 루트 페이지, 로그인 페이지, css,js 경론는 인증 없이 접속 가능
+     * csrf 공격 방지를 위한 설정을 끈다
+     * 인증방식이 form방식인 걸 알려준다
+     * 로그인 폼 페이즈가 어디인지 알려준다
+     * 로그인 정보 URI가 어디인지 알려준다
      * 실패시 URL 정보
      * userName 키 이름을 email로 바꿔준다.
-     * 비빌먼호 키 이름을 password로 바꿔준다.
+     * 비빌먼호 키 이름을 password로 바꿔준다
+     * 햐
      */
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
