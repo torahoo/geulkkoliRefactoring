@@ -8,12 +8,14 @@ import com.geulkkoli.domain.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
+import org.springframework.context.annotation.Profile;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
 @Slf4j
 @RequiredArgsConstructor
 @Component
+@Profile("!test")
 public class TestDataInit {
 
     private final PostRepository postRepository;
@@ -26,25 +28,29 @@ public class TestDataInit {
     public void initData() {
         log.info("test data init");
         postRepository.save(Post.builder()
-                .nickName("륜투더환")
+                .authorId(1L)
+                .nickName("바나나")
                 .postBody("나는 멋지고 섹시한 개발자")//채&훈
                 .title("여러분").build()
         );
 
         postRepository.save(Post.builder()
+                .authorId(2L)
                 .title("testTitle01")
                 .postBody("test postbody 01")//채&훈
-                .nickName("test nickname01").build()
+                .nickName("점심뭐먹지").build()
         );
         postRepository.save(Post.builder()
+                .authorId(2L)
                 .title("testTitle02")
                 .postBody("test postbody 02")//채&훈
-                .nickName("test nickname02").build()
+                .nickName("점심뭐먹지").build()
         )
         ;postRepository.save(Post.builder()
+                .authorId(2L)
                 .title("testTitle03")
                 .postBody("test postbody 03")//채&훈
-                .nickName("test nickname03").build()
+                .nickName("점심뭐먹지").build()
         );
 
         userRepository.save(User.builder()

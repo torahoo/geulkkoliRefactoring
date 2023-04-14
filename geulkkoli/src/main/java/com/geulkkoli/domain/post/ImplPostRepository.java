@@ -49,4 +49,8 @@ public class ImplPostRepository implements PostRepository {
         Post deletePost = entityManager.find(Post.class, postId);
         entityManager.remove(deletePost);
     }
+
+    public void clear () {
+        entityManager.close();
+    }
 }

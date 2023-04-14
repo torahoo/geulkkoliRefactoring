@@ -16,8 +16,8 @@ public class Post {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long postId;
 
-//    @Column(name = "author_id", nullable = false)
-//    private Long authorId;
+    @Column(name = "author_id", nullable = false)
+    private Long authorId;
 
     @Setter
     @Column(nullable = false)
@@ -31,7 +31,8 @@ public class Post {
     private String nickName;
 
     @Builder
-    public Post(String title, String postBody, String nickName) {
+    public Post(Long authorId, String title, String postBody, String nickName) {
+        this.authorId = authorId;
         this.title = title;
         this.postBody = postBody;
         this.nickName = nickName;

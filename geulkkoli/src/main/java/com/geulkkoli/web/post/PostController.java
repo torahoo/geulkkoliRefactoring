@@ -3,6 +3,7 @@ package com.geulkkoli.web.post;
 import com.geulkkoli.domain.post.Post;
 import com.geulkkoli.domain.post.service.PostService;
 import com.geulkkoli.domain.user.User;
+import com.geulkkoli.domain.user.service.UserService;
 import com.geulkkoli.web.post.dto.AddDTO;
 import com.geulkkoli.web.post.dto.EditDTO;
 import com.geulkkoli.web.post.dto.PageDTO;
@@ -25,6 +26,7 @@ import java.util.Objects;
 public class PostController {
 
     private final PostService postService;
+    private final UserService userService;
 
     // 게시판 리스트 html로 이동
     @GetMapping("/list")
@@ -61,6 +63,7 @@ public class PostController {
         }
         User loginUser = (User) session.getAttribute(SessionConst.LOGIN_USER);
         post.setNickName(loginUser.getNickName());
+        post.setAuthorId(loginUser.getUserId());
 
         Long postId = postService.savePost(post.toEntity());
         redirectAttributes.addAttribute("addStatus", true);
@@ -73,7 +76,9 @@ public class PostController {
     public String postRead(Model model, @PathVariable Long postId) {
         log.info("postId={}", postId);
         PageDTO postPage = PageDTO.toDTO(postService.findById(postId));
+        User authorUser = userService.findById(postPage.getAuthorId());
         model.addAttribute("post", postPage);
+        model.addAttribute("authorUser", authorUser);
         return "/post/postPage";
     }
 
