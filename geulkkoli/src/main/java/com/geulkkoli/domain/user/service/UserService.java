@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.transaction.Transactional;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @Service
@@ -63,5 +64,9 @@ public class UserService {
 
     public void delete(User user) {
         userRepository.delete(user.getUserId());
+    
+    public User findById (Long userId) {
+        return userRepository.findById(userId)
+                .orElseThrow(()-> new NoSuchElementException("No user found id matches:"+userId));
     }
 }
