@@ -1,6 +1,5 @@
 package com.geulkkoli.web.user;
 
-import com.geulkkoli.application.user.UserSecurityService;
 import com.geulkkoli.domain.user.User;
 import com.geulkkoli.domain.user.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -15,8 +14,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import javax.validation.Valid;
-import java.util.Objects;
 
 @Controller
 @RequiredArgsConstructor

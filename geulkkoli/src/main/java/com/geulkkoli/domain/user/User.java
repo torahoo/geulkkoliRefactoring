@@ -19,18 +19,18 @@ public class User {
     private String userName;
 
     @Getter()
-    @Column(name = "password", nullable = false,unique = true)
+    @Column(nullable = false, unique = true)
     private String password;
 
-    @Column(name = "nick_name", nullable = false ,unique = true)
+    @Column(nullable = false, unique = true)
     private String nickName;
 
-    @Column(name = "email", nullable = false,unique = true)
+    @Column(nullable = false, unique = true)
     private String email;
 
-    @Column(name = "phone_No", nullable = false,unique = true)
+    @Column(nullable = false, unique = true)
     private String phoneNo;
-
+    @Column(nullable = false, unique = true)
     private String gender;
 
 
@@ -44,4 +44,4 @@ public class User {
         this.gender = gender;
     }
 
-   }
+}

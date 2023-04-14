@@ -1,5 +1,8 @@
-package com.geulkkoli.application.user;
+package com.geulkkoli.application.security;
 
+import com.geulkkoli.application.user.AuthUser;
+import com.geulkkoli.application.user.Role;
+import com.geulkkoli.application.user.UserModelDto;
 import com.geulkkoli.domain.user.User;
 import com.geulkkoli.domain.user.UserRepository;
 import org.springframework.security.core.GrantedAuthority;
@@ -46,5 +49,7 @@ public class UserSecurityService implements UserDetailsService {
         authenticatedUser.setCredentialsNonExpired(true);
         return authenticatedUser;
     }
+
+
 
 }

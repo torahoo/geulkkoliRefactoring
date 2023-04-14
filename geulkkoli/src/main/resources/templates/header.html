@@ -13,9 +13,11 @@
             <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
                 <li><a id="home" href="#" class="nav-link px-2 text-secondary">Home</a></li>
             </ul>
-            <div></div>
-            <div class="text-end">
-                <button type="button"
+
+            <div sec:authorize="hasRole('USER')">
+                <span style="color: #1a1e21" sec:authorize="isAuthenticated()" sec:authentication="principal.nickName"></span>
+            </div>
+              <button type="button"
                         onclick="location.href='/loginPage'"
                         sec:authorize="!isAuthenticated()"
                         class="btn btn-primary">Login
@@ -24,17 +26,20 @@
                 <button type="button"
                         onclick="location.href='/join'"
                         sec:authorize="!isAuthenticated()"
-                        class="btn btn-outline-primary">Sign-up</button>
+                        class="btn btn-outline-primary">Sign-up
+                </button>
 
                 <button type="button"
                         onclick="location.href='/modify'"
                         sec:authorize="hasRole('USER')"
-                        class="btn btn-primary">modify</button>
+                        class="btn btn-primary">modify
+                </button>
 
-                <button  type="button"
+                <button type="button"
                         onclick="location.href='/logout'"
                         sec:authorize="hasRole('USER')"
-                        class="btn btn-outline-primary">logout</button>
+                        class="btn btn-outline-primary">logout
+                </button>
 
             </div>
         </div>

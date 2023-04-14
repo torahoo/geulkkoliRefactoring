@@ -40,11 +40,5 @@ public class UserService {
         userRepository.delete(user.getUserId());
     }
 
-    @Transactional(readOnly = true)
-    public Optional<User> login(String email, String password) {
-        return userRepository.findByEmail(email)
-                .filter(m -> passwordEncoder.matches(password, m.getPassword()));
-    }
-
 
 }

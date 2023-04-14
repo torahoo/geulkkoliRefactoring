@@ -1,5 +1,6 @@
 package com.geulkkoli.application.security.config;
 
+import com.geulkkoli.application.security.UserSecurityService;
 import com.geulkkoli.application.security.handler.LoginFailureHandler;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -17,17 +18,18 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
  * 시큐리티 설정파일
  */
 @Configuration
-@EnableWebSecurity
 public class SecurityConfig {
 
     private final LoginFailureHandler loginFailureHandler;
+    private final UserSecurityService userSecurityService;
 
-    public SecurityConfig(LoginFailureHandler loginFailureHandler) {
+    public SecurityConfig(LoginFailureHandler loginFailureHandler, UserSecurityService userSecurityService) {
         this.loginFailureHandler = loginFailureHandler;
+        this.userSecurityService = userSecurityService;
     }
 
     /**
-     * 시큐리티 설정파일
+     * 시큐리티 필터 설정
      * 루트 페이지는 인증 없이 접속 가능
      * 로그인 정보를 URL
      * 실패시 URL 정보
@@ -36,7 +38,8 @@ public class SecurityConfig {
      */
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http.authorizeRequests((auth) -> {
+        http.userDetailsService(userSecurityService)
+                .authorizeRequests((auth) -> {
                     auth.antMatchers( "/", "/loginPage", "/css/**", "/js/**")
                             .permitAll();
                 }).csrf().disable()
@@ -64,10 +67,6 @@ public class SecurityConfig {
         return new BCryptPasswordEncoder();
     }
 
-    @Bean
-    AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
-        return authenticationConfiguration.getAuthenticationManager();
-    }
 
 
 }

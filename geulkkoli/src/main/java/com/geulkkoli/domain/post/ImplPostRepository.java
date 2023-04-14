@@ -2,12 +2,18 @@ package com.geulkkoli.domain.post;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Example;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.repository.query.FluentQuery;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Function;
 
 @Slf4j
 @Repository
@@ -29,6 +35,7 @@ public class ImplPostRepository implements PostRepository {
         return Optional.of(post);
     }
 
+
     @Override
     public List<Post> findAll() {
         return entityManager
@@ -36,15 +43,16 @@ public class ImplPostRepository implements PostRepository {
                 .getResultList();
     }
 
+
     @Override
-    public void update (Long postId, Post updateParam) {
+    public void update(Long postId, Post updateParam) {
         Post findPost = entityManager.find(Post.class, postId);
         findPost.changeTitle(updateParam.getTitle());
         findPost.changePostBody(updateParam.getPostBody());
     }
 
     @Override
-    public void delete (Long postId) {
+    public void delete(Long postId) {
         Post deletePost = entityManager.find(Post.class, postId);
         entityManager.remove(deletePost);
     }

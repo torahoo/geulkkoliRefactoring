@@ -1,39 +1,33 @@
 package com.geulkkoli.application.user;
 
+import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.User;
 
 import java.util.Collection;
 
-public class AuthUser implements UserDetails {
-    private UserModelDto userModel;
+@Getter
+public class AuthUser extends User {
+    private final Long userId;
+    private final String userName;
+    private final String nickName;
+    private final String phoneNo;
+
+    private final String gender;
     private boolean isEnabled;
     private boolean isAccountNonExpired;
     private boolean isAccountNonLocked;
     private boolean isCredentialsNonExpired;
-    private Collection<? extends GrantedAuthority> authorities;
+    private Collection<GrantedAuthority> authorities;
 
-    public AuthUser() {
-    }
-
-    public AuthUser(UserModelDto userModel, Collection<? extends GrantedAuthority> authorities) {
-        this.userModel = userModel;
+    public AuthUser(UserModelDto userModel, Collection<GrantedAuthority> authorities) {
+        super(userModel.getEmail(), userModel.getPassword(), authorities);
         this.authorities = authorities;
-    }
-
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return authorities;
-    }
-
-    @Override
-    public String getPassword() {
-        return userModel.getPassword();
-    }
-
-    @Override
-    public String getUsername() {
-        return userModel.getUserName();
+        this.nickName = userModel.getNickName();
+        this.userId = userModel.getUserId();
+        this.gender = userModel.getGender();
+        this.phoneNo = userModel.getPhoneNo();
+        this.userName = userModel.getUserName();
     }
 
     public void setEnabled(boolean enabled) {
@@ -74,25 +68,5 @@ public class AuthUser implements UserDetails {
     @Override
     public boolean isEnabled() {
         return isEnabled;
-    }
-
-    public String nickName() {
-        return this.userModel.getNickName();
-    }
-
-    public String userName() {
-        return this.userModel.getUserName();
-    }
-
-    public String phoneNo() {
-        return this.userModel.getPhoneNo();
-    }
-
-    public String gender() {
-        return this.userModel.getGender();
-    }
-
-    public Long userId() {
-        return this.userModel.getUserId();
     }
 }
