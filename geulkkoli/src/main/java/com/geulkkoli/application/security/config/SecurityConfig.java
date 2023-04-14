@@ -18,7 +18,7 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
  * 시큐리티 설정파일
  */
 @Configuration
-public class SecurityConfig {
+public class  SecurityConfig {
 
     private final LoginFailureHandler loginFailureHandler;
     private final UserSecurityService userSecurityService;
@@ -37,8 +37,11 @@ public class SecurityConfig {
      * 로그인 정보 URI가 어디인지 알려준다
      * 실패시 URL 정보
      * userName 키 이름을 email로 바꿔준다.
-     * 비빌먼호 키 이름을 password로 바꿔준다
-     * 햐
+     * password의 키 이름을 password로 바꿔준다
+     * 로그아웃에 관련된 처리이다
+     * 로그아웃 진입 경로를 뜻한다
+     * 로그아웃 성공시 경로를 뜻한다
+     * 로그아웃 버튼을 누르면 세션에서 값이 사라지는 설정이다.
      */
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
