@@ -38,7 +38,7 @@ public class UserService {
         userRepository.save(user);
     }
 
-    @org.springframework.transaction.annotation.Transactional(readOnly = true)
+
     public Optional<User> login(String email, String password) {
         return userRepository.findByEmail(email)
                 .filter(m -> m.matchPassword(password));
