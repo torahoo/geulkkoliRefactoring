@@ -1,5 +1,8 @@
 package com.geulkkoli.web.user;
 
+import com.geulkkoli.application.security.UserSecurityService;
+import com.geulkkoli.application.security.config.SecurityConfig;
+import com.geulkkoli.application.security.handler.LoginFailureHandler;
 import com.geulkkoli.domain.user.User;
 import com.geulkkoli.domain.user.UserRepository;
 import com.geulkkoli.domain.user.service.UserService;
@@ -9,7 +12,9 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.mock.web.MockHttpSession;
+import org.springframework.context.annotation.Import;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.test.context.support.WithAnonymousUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
@@ -21,13 +26,19 @@ import java.util.Optional;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 
 @WebMvcTest(UserController.class)
+@Import({SecurityConfig.class, LoginFailureHandler.class, UserSecurityService.class})
 class UserControllerTest {
     public static final String TESTER_MAIL = "tester@naver.com";
     public static final String TESTER_PASSWORD = "qwe123!@";
+
     @Autowired
     MockMvc mockMvc;
+
+    @Autowired
+    PasswordEncoder passwordEncoder;
 
     @MockBean
     private UserRepository userRepository;
@@ -42,45 +53,15 @@ class UserControllerTest {
                 .email(TESTER_MAIL)
                 .userName("유저이름1")
                 .nickName("유저닉1")
-                .password(TESTER_PASSWORD)
+                .password(passwordEncoder.encode(TESTER_PASSWORD))
                 .phoneNo("01012345678")
                 .gender("male")
                 .build();
     }
 
     @Test
-    void userLogin() throws Exception {
-        //given
-        given(userService.login(any(), any())).willReturn(Optional.of(user));
-
-        MultiValueMap<String, String> query_param = new LinkedMultiValueMap<>();
-        query_param.add("email", TESTER_MAIL);
-        query_param.add("password", TESTER_PASSWORD);
-
-        //when
-        mockMvc.perform(MockMvcRequestBuilders.post("/login")
-                        .params(query_param))
-                .andExpect(MockMvcResultMatchers.status().is3xxRedirection());
-    }
-
-    @Test
-    @DisplayName("세션이 상태유지를 하는 지 테스트 한다.")
-    void isSessionStateful() throws Exception {
-        given(userService.login(any(), any())).willReturn(Optional.of(user));
-
-        MockHttpSession session = new MockHttpSession();
-        mockMvc.perform(MockMvcRequestBuilders.post("/login")
-                        .param("email", TESTER_MAIL)
-                        .param("password", TESTER_PASSWORD)
-                        .session(session))
-
-                //then
-                .andExpect(MockMvcResultMatchers.status().is3xxRedirection());
-        assertThat(session.getAttribute(SessionConst.LOGIN_USER)).isNotNull();
-    }
-
-    @Test
     @DisplayName("회원가입 잘 저장 되는지 테스트")
+    @WithAnonymousUser
     void joinUserTest() throws Exception {
         //given
         User joinUser=User.builder()
@@ -116,6 +97,7 @@ class UserControllerTest {
     }
 
     @Test
+    @WithAnonymousUser
     @DisplayName("회원가입 이메일 중복체크 되는지 테스트")
     void joinEmailDupleTest() throws Exception {
         //given
@@ -132,7 +114,8 @@ class UserControllerTest {
 
         //when
         mockMvc.perform(MockMvcRequestBuilders.post("/join")
-                        .params(query_param))
+                        .params(query_param)
+                        .with(csrf()))
                 .andExpect(MockMvcResultMatchers.status().isOk());
         User findByEmailIdUser = userRepository.findByEmail("tako@naver.com").
                 orElse(null);
@@ -160,7 +143,8 @@ class UserControllerTest {
 
         //when
         mockMvc.perform(MockMvcRequestBuilders.post("/join")
-                        .params(query_param))
+                        .params(query_param)
+                        .with(csrf()))
                 .andExpect(MockMvcResultMatchers.status().isOk());
         User findByEmailIdUser = userRepository.findByEmail("takoNickTest@naver.com").
                 orElse(null);
@@ -185,7 +169,8 @@ class UserControllerTest {
 
         //when
         mockMvc.perform(MockMvcRequestBuilders.post("/join")
-                        .params(query_param))
+                        .params(query_param)
+                        .with(csrf()))
                 .andExpect(MockMvcResultMatchers.status().isOk());
         User rejectUser = userRepository.findByNickName("takodachi").
                 orElse(null);

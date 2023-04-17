@@ -54,7 +54,7 @@ class UpdateServiceTest {
                 .build();
 
         //when
-        userService.update(3L, preupdateUser, mockHttpServletRequest);
+        userService.update(3L, preupdateUser);
         Optional<User> one = userRepository.findById(3L);
 
         // then

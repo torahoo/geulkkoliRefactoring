@@ -38,13 +38,6 @@ public class UserController {
         return LOGIN_FORM;
     }
 
-    @PostMapping("/loginPage")
-    public String loginError(@ModelAttribute("loginForm") LoginFormDto form) {
-        return LOGIN_FORM;
-    }
-
-    //join
-
     //join
     @GetMapping("/join")
     public String joinForm(@ModelAttribute("joinForm") JoinFormDto form) {
@@ -54,44 +47,35 @@ public class UserController {
     @PostMapping("/join")
     public String userJoin(@Validated @ModelAttribute("joinForm") JoinFormDto form, BindingResult bindingResult, Model model) {
         log.info("join Method={}", this);
-        if (bindingResult.hasErrors()) {
-            return JOIN_FORM;
-        }
 
         if (userService.isEmailDuplicate(form.getEmail())) {
             bindingResult.rejectValue("email", "Duple.joinForm.email");
-            return JOIN_FORM;
         }
 
         if (userService.isNickNameDuplicate(form.getNickName())) {
             bindingResult.rejectValue("nickName", "Duple.nickName");
-            return JOIN_FORM;
-
         }
 
         if (userService.isPhoneNoDuplicate(form.getPhoneNo())) {
             bindingResult.rejectValue("phoneNo", "Duple.phoneNo");
-            return JOIN_FORM;
-
         }
 
         // 중복 검사라기보다는 비밀번호 확인에 가까운 것 같아서 에러코드명 변경
         if (!form.getPassword().equals(form.getVerifyPassword())) {
             bindingResult.rejectValue("verifyPassword", "Check.verifyPassword");
-            return JOIN_FORM;
-
         }
 
         if (!bindingResult.hasErrors()) {
             userService.join(form);
+
+            log.info("joinModel = {}", model);
+            log.info("joinForm = {}", form);
+
+            return REDIRECT_INDEX;
+        } else {
+            return JOIN_FORM;
         }
-
-        log.info("joinModel = {}", model);
-        log.info("joinForm = {}", form);
-
-        return REDIRECT_INDEX;
     }
-
 
     @GetMapping("/edit")
     public String editForm(@ModelAttribute("editForm") EditForm editForm, @AuthenticationPrincipal AuthUser authUser, Model model) {
@@ -158,16 +142,6 @@ public class UserController {
         }
 
         return "redirect:/edit";
-    }
-
-    @GetMapping("/logout")
-    public String logout(HttpServletRequest request) {
-
-        HttpSession session = request.getSession(false);
-        if (session != null) {
-            session.invalidate();
-        }
-        return REDIRECT_INDEX;
     }
 
     @PostMapping("/memberDelete")
