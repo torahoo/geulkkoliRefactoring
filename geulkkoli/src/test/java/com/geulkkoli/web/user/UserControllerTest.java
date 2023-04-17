@@ -14,7 +14,6 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.test.context.support.WithAnonymousUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
@@ -28,6 +27,17 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 
+
+/*
+    MockMvc는 가상의 클라이언트를 생성해주는 것과 비슷하게 사용 가능한데,
+    파라미터를 맵으로 선언해 넣어주는 방법과 일일이 .params로 지정해주는 방법이 있다.
+    아래 테스트에서는 요청 시 요청 사항들을 보다 간략하고 보기 쉽게 하게 위해 대부분 맵을 사용하였다.
+
+
+    WebMvcTest로 변경함에 따라 SpringBootTest에서 불러왔던 여러 컴포넌트를 불러올 수 없게 되므로
+    MockBean으로 가상의 빈 객체를 쓰겠다고 선언해 준 이후,
+    given으로 해당 메서드의 파라미터로 뭔가 넣었을 때 return될 값을 정해준다.
+ */
 @WebMvcTest(UserController.class)
 @Import({SecurityConfig.class, LoginFailureHandler.class, UserSecurityService.class})
 class UserControllerTest {
@@ -61,7 +71,6 @@ class UserControllerTest {
 
     @Test
     @DisplayName("회원가입 잘 저장 되는지 테스트")
-    @WithAnonymousUser
     void joinUserTest() throws Exception {
         //given
         User joinUser=User.builder()
@@ -97,7 +106,6 @@ class UserControllerTest {
     }
 
     @Test
-    @WithAnonymousUser
     @DisplayName("회원가입 이메일 중복체크 되는지 테스트")
     void joinEmailDupleTest() throws Exception {
         //given

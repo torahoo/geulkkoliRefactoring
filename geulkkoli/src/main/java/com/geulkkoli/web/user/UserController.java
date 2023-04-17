@@ -19,7 +19,6 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import java.util.Optional;
 
 @Controller
 @RequiredArgsConstructor
@@ -91,23 +90,20 @@ public class UserController {
     @PostMapping("/edit")
     public String editForm(@Validated @ModelAttribute("editForm") EditForm editForm, BindingResult bindingResult, @AuthenticationPrincipal AuthUser authUser){
 
-        if (bindingResult.hasErrors()) {
-            return EDIT_FORM;
-        }
-
         // 닉네임 중복 검사 && 본인의 기존 닉네임과 일치해도 중복이라고 안 뜨게
         if (userService.isNickNameDuplicate(editForm.getNickName()) && !editForm.getNickName().equals(authUser.getNickName())) {
             bindingResult.rejectValue("nickName", "Duple.nickName");
-            return EDIT_FORM;
         }
 
         if (userService.isPhoneNoDuplicate(editForm.getPhoneNo()) && !editForm.getPhoneNo().equals(authUser.getPhoneNo())) {
             bindingResult.rejectValue("phoneNo", "Duple.phoneNo");
-            return EDIT_FORM;
+
         }
 
         if (!bindingResult.hasErrors()) {
-            Optional<User> updateUser = userService.update(authUser.getUserId(), editForm);
+            userService.update(authUser.getUserId(), editForm);
+        } else {
+            return EDIT_FORM;
         }
 
         return "redirect:/edit";
