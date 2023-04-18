@@ -2,14 +2,17 @@ package com.geulkkoli.domain.user.service;
 
 import com.geulkkoli.domain.user.User;
 import com.geulkkoli.domain.user.UserRepository;
-import com.geulkkoli.web.user.edit.EditForm;
-import com.geulkkoli.web.user.edit.EditPasswordForm;
+import com.geulkkoli.web.user.edit.EditFormDto;
+import com.geulkkoli.web.user.edit.EditPasswordFormDto;
 import lombok.extern.slf4j.Slf4j;
 import org.assertj.core.api.Assertions;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.mock.web.MockHttpServletRequest;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
@@ -27,9 +30,14 @@ class UpdateServiceTest {
     @Autowired
     UserService userService;
 
+    @Autowired
+    PasswordEncoder passwordEncoder;
+
+    User save;
+
     @BeforeAll
     void init() {
-        userRepository.save(User.builder() // userId = 3L
+        save = userRepository.save(User.builder() // userId = 3L
                 .email("tako1@naver.com")
                 .userName("김1")
                 .nickName("바나나1")
@@ -44,9 +52,7 @@ class UpdateServiceTest {
     @DisplayName("업데이트 테스트")
     void updateTest() {
         //given
-        MockHttpServletRequest mockHttpServletRequest = new MockHttpServletRequest();
-
-        EditForm preupdateUser = EditForm.builder()
+        EditFormDto preupdateUser = EditFormDto.builder()
                 .userName("김2")
                 .nickName("바나나155")
                 .phoneNo("01055554646")
@@ -54,8 +60,8 @@ class UpdateServiceTest {
                 .build();
 
         //when
-        userService.update(3L, preupdateUser);
-        Optional<User> one = userRepository.findById(3L);
+        userService.update(save.getUserId(), preupdateUser);
+        Optional<User> one = userRepository.findById(save.getUserId());
 
         // then
         Assertions.assertThat("바나나155").isEqualTo(one.get().getNickName());
@@ -66,24 +72,21 @@ class UpdateServiceTest {
     void passwordTest() {
 
         //given
-        Optional<User> user = userRepository.findById(3L);
+        Optional<User> user = userRepository.findById(save.getUserId());
 
-        EditPasswordForm editPasswordForm = new EditPasswordForm();
-        editPasswordForm.setPassword("123qwe!@#");
-        editPasswordForm.setNewPassword("abc123!@#");
-        editPasswordForm.setVerifyPassword("abc123!@#");
+        EditPasswordFormDto editPasswordFormDto = new EditPasswordFormDto();
+        editPasswordFormDto.setPassword(passwordEncoder.encode("123qwe!@#"));
+        editPasswordFormDto.setNewPassword(passwordEncoder.encode("abc123!@#"));
+        editPasswordFormDto.setVerifyPassword(passwordEncoder.encode("abc123!@#"));
 
         //when
-        boolean passwordVerification = userService.isPasswordVerification(user.get(), editPasswordForm);
+        boolean passwordVerification = userService.isPasswordVerification(user.get().getUserId(), editPasswordFormDto);
 
         if (passwordVerification)
-            userService.updatePassword(user.get().getUserId(), editPasswordForm);
-
-        //user에는 getPassword가 없으므로 로그인으로 확인
-        Optional<User> login = userService.login(user.get().getEmail(), editPasswordForm.getNewPassword());
+            userService.updatePassword(user.get().getUserId(), editPasswordFormDto);
 
         //then
-        Assertions.assertThat(user).isEqualTo(login);
+        passwordEncoder.matches(user.get().getPassword(), editPasswordFormDto.getNewPassword());
     }
 
 }

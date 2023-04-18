@@ -3,8 +3,8 @@ package com.geulkkoli.web.user;
 import com.geulkkoli.application.user.AuthUser;
 import com.geulkkoli.domain.user.User;
 import com.geulkkoli.domain.user.service.UserService;
-import com.geulkkoli.web.user.edit.EditForm;
-import com.geulkkoli.web.user.edit.EditPasswordForm;
+import com.geulkkoli.web.user.edit.EditFormDto;
+import com.geulkkoli.web.user.edit.EditPasswordFormDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -77,9 +77,9 @@ public class UserController {
     }
 
     @GetMapping("/edit")
-    public String editForm(@ModelAttribute("editForm") EditForm editForm, @AuthenticationPrincipal AuthUser authUser, Model model) {
-        editForm.editForm(authUser.getUserName(), authUser.getNickName(), authUser.getPhoneNo(), authUser.getGender());
-        model.addAttribute("editForm", editForm);
+    public String editForm(@ModelAttribute("editForm") EditFormDto editFormDto, @AuthenticationPrincipal AuthUser authUser, Model model) {
+        editFormDto.editFormDto(authUser.getUserName(), authUser.getNickName(), authUser.getPhoneNo(), authUser.getGender());
+        model.addAttribute("editForm", editFormDto);
         return EDIT_FORM;
     }
 
@@ -88,40 +88,43 @@ public class UserController {
     * authUser가 기존의 세션 저장 방식을 대체한다
     * */
     @PostMapping("/edit")
-    public String editForm(@Validated @ModelAttribute("editForm") EditForm editForm, BindingResult bindingResult, @AuthenticationPrincipal AuthUser authUser){
+    public String editForm(@Validated @ModelAttribute("editForm") EditFormDto editFormDto, BindingResult bindingResult, @AuthenticationPrincipal AuthUser authUser){
 
-        // 닉네임 중복 검사 && 본인의 기존 닉네임과 일치해도 중복이라고 안 뜨게
-        if (userService.isNickNameDuplicate(editForm.getNickName()) && !editForm.getNickName().equals(authUser.getNickName())) {
-            bindingResult.rejectValue("nickName", "Duple.nickName");
+        if (bindingResult.hasErrors()) {
+            return EDIT_FORM;
         }
 
-        if (userService.isPhoneNoDuplicate(editForm.getPhoneNo()) && !editForm.getPhoneNo().equals(authUser.getPhoneNo())) {
-            bindingResult.rejectValue("phoneNo", "Duple.phoneNo");
+        // 닉네임 중복 검사 && 본인의 기존 닉네임과 일치해도 중복이라고 안 뜨게
+        if (userService.isNickNameDuplicate(editFormDto.getNickName()) && !editFormDto.getNickName().equals(authUser.getNickName())) {
+            bindingResult.rejectValue("nickName", "Duple.nickName");
+            return EDIT_FORM;
+        }
 
+        if (userService.isPhoneNoDuplicate(editFormDto.getPhoneNo()) && !editFormDto.getPhoneNo().equals(authUser.getPhoneNo())) {
+            bindingResult.rejectValue("phoneNo", "Duple.phoneNo");
+            return EDIT_FORM;
         }
 
         if (!bindingResult.hasErrors()) {
-            userService.update(authUser.getUserId(), editForm);
-        } else {
-            return EDIT_FORM;
+            userService.update(authUser.getUserId(), editFormDto);
         }
 
         return "redirect:/edit";
     }
 
     @GetMapping("/editPassword")
-    public String editPasswordForm(@ModelAttribute("editPasswordForm") EditPasswordForm form) {
+    public String editPasswordForm(@ModelAttribute("editPasswordForm") EditPasswordFormDto form) {
         return EDIT_PASSWORD_FORM;
     }
 
     @PostMapping("/editPassword")
-    public String editPassword(@Validated @ModelAttribute("editPasswordForm") EditPasswordForm form, BindingResult bindingResult, @AuthenticationPrincipal AuthUser authUser, RedirectAttributes redirectAttributes) {
+    public String editPassword(@Validated @ModelAttribute("editPasswordForm") EditPasswordFormDto form, BindingResult bindingResult, @AuthenticationPrincipal AuthUser authUser, RedirectAttributes redirectAttributes) {
 
         if (bindingResult.hasErrors()) {
             return EDIT_PASSWORD_FORM;
         }
 
-        if (!userService.isPasswordVerification(new User(), form)) {
+        if (!userService.isPasswordVerification(authUser.getUserId(), form)) {
             bindingResult.rejectValue("password", "Check.password");
             return EDIT_PASSWORD_FORM;
         }
