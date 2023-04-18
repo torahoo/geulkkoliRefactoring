@@ -21,6 +21,7 @@ import java.util.Optional;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.*;
 
 @WebMvcTest(UserController.class)
 class UserControllerTest {
@@ -58,7 +59,7 @@ class UserControllerTest {
         query_param.add("password", TESTER_PASSWORD);
 
         //when
-        mockMvc.perform(MockMvcRequestBuilders.post("/login")
+        mockMvc.perform(MockMvcRequestBuilders.post("/login").with(csrf())
                         .params(query_param))
                 .andExpect(MockMvcResultMatchers.status().is3xxRedirection());
     }
@@ -159,7 +160,7 @@ class UserControllerTest {
         query_param.add("gender", "male");
 
         //when
-        mockMvc.perform(MockMvcRequestBuilders.post("/join")
+        mockMvc.perform(MockMvcRequestBuilders.post("/join").with(csrf())
                         .params(query_param))
                 .andExpect(MockMvcResultMatchers.status().isOk());
         User findByEmailIdUser = userRepository.findByEmail("takoNickTest@naver.com").
