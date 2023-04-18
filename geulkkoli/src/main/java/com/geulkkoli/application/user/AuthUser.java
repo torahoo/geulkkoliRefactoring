@@ -9,7 +9,7 @@ import java.util.Collection;
 @Getter
 public class AuthUser extends User {
     private final Long userId;
-    private final String userName;
+    private final String userRealName;
     private final String nickName;
     private final String phoneNo;
     private final String gender;
@@ -26,7 +26,7 @@ public class AuthUser extends User {
         this.userId = userModel.getUserId();
         this.gender = userModel.getGender();
         this.phoneNo = userModel.getPhoneNo();
-        this.userName = userModel.getUserName();
+        this.userRealName = userModel.getUserName();
     }
 
     public void setEnabled(boolean enabled) {

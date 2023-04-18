@@ -2,6 +2,7 @@ package com.geulkkoli.application.security.config;
 
 import com.geulkkoli.application.security.UserSecurityService;
 import com.geulkkoli.application.security.handler.LoginFailureHandler;
+import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -47,7 +48,8 @@ public class  SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.userDetailsService(userSecurityService)
                 .authorizeRequests((auth) -> {
-                    auth.antMatchers( "/", "/loginPage", "/css/**", "/js/**")
+                    auth.requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll();
+                    auth.mvcMatchers( "/", "/loginPage")
                             .permitAll();
                 }).csrf().disable()
                 .formLogin()

@@ -95,7 +95,7 @@ public class UserController {
 
     @GetMapping("/edit")
     public String editForm(@ModelAttribute("editForm") EditForm editForm, @AuthenticationPrincipal AuthUser authUser, Model model) {
-        editForm.editForm(authUser.getUserName(), authUser.getNickName(), authUser.getPhoneNo(), authUser.getGender());
+        editForm.editForm(authUser.getUserRealName(), authUser.getNickName(), authUser.getPhoneNo(), authUser.getGender());
         model.addAttribute("editForm", editForm);
         return EDIT_FORM;
     }
