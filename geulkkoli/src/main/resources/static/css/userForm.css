@@ -66,3 +66,14 @@ input[type=submit], input[type=button]{
     background: 100%, lightgoldenrodyellow;
     display: inline;
 }
+
+.loginBox{
+    max-width: 560px;
+    margin: auto;
+}
+
+.noBack{
+    background: none;
+    border: none;
+    color: gray;
+}

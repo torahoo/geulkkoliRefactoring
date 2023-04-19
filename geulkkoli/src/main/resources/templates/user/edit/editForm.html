@@ -60,10 +60,10 @@
       <h4>비밀번호</h4>
     </label>
     <br>
-    <h5 th:if="${param.status}" th:text="'비밀번호 변경 완료'" class="bold"> </h5>
+    <h5 th:if="${param.status}" th:text="'비밀번호 변경 완료'" class="bold"></h5>
     <br>
-      <input type="button" name="password" id="password" value="비밀번호 재설정"
-             class="btn btn-primary form-control-lg" onclick="location.href='/editPassword'">
+    <input type="button" name="password" id="password" value="비밀번호 재설정"
+           class="btn btn-primary form-control-lg" onclick="location.href='/editPassword'">
   </div>
   <br>
 
@@ -106,7 +106,7 @@
   </div>
 
 </form>
-
+<div id="footer" th:include="footer"></div>
 </body>
 
 </html>
