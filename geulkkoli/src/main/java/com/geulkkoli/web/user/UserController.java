@@ -36,12 +36,17 @@ public class UserController {
     public String loginForm(@ModelAttribute("loginForm") LoginFormDto form) {
         return LOGIN_FORM;
     }
+    @PostMapping("/loginPage")
+    public String loginError(@ModelAttribute("loginForm") LoginFormDto form) {
+        return LOGIN_FORM;
+    }
 
     //join
     @GetMapping("/join")
     public String joinForm(@ModelAttribute("joinForm") JoinFormDto form) {
         return JOIN_FORM;
     }
+
 
     @PostMapping("/join")
     public String userJoin(@Validated @ModelAttribute("joinForm") JoinFormDto form, BindingResult bindingResult, Model model) {
@@ -79,17 +84,17 @@ public class UserController {
 
     @GetMapping("/edit")
     public String editForm(@ModelAttribute("editForm") EditFormDto editFormDto, @AuthenticationPrincipal AuthUser authUser, Model model) {
-        editFormDto.editFormDto(authUser.getUserName(), authUser.getNickName(), authUser.getPhoneNo(), authUser.getGender());
+        editFormDto.editFormDto(authUser.getUsername(), authUser.getNickName(), authUser.getPhoneNo(), authUser.getGender());
         model.addAttribute("editForm", editFormDto);
         return EDIT_FORM;
     }
 
     /*
-    * TODO: 수정된 회원정보가 세션에 저장되어 있지 않음 추후에 바꾸겠다
-    * authUser가 기존의 세션 저장 방식을 대체한다
-    * */
+     * TODO: 수정된 회원정보가 세션에 저장되어 있지 않음 추후에 바꾸겠다
+     * authUser가 기존의 세션 저장 방식을 대체한다
+     * */
     @PostMapping("/edit")
-    public String editForm(@Validated @ModelAttribute("editForm") EditFormDto editFormDto, BindingResult bindingResult, @AuthenticationPrincipal AuthUser authUser){
+    public String editForm(@Validated @ModelAttribute("editForm") EditFormDto editFormDto, BindingResult bindingResult, @AuthenticationPrincipal AuthUser authUser) {
 
         if (bindingResult.hasErrors()) {
             return EDIT_FORM;
@@ -149,7 +154,7 @@ public class UserController {
 
         HttpSession session = request.getSession(false);
         if (session != null) {
-            userService.delete((User)session.getAttribute(SessionConst.LOGIN_USER));
+            userService.delete((User) session.getAttribute(SessionConst.LOGIN_USER));
             session.invalidate();
         }
         return "redirect:/";

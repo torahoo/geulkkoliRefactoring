@@ -5,6 +5,7 @@ drop table if exists favorites;
 drop table if exists post;
 drop table if exists users;
 drop table if exists topic_tags;
+drop table if exists report;
 CREATE table if not exists users
 (
     user_id   BIGINT PRIMARY KEY AUTO_INCREMENT,
@@ -66,5 +67,11 @@ CREATE TABLE IF NOT EXISTS user_followings
     CONSTRAINT fk_followee FOREIGN KEY (followee_id) REFERENCES users (user_id) ON DELETE CASCADE
     );
 
-
+create table if not exists report(
+    report_id bigint primary key  auto_increment,
+    reported_post_id bigint not null,
+    reporter_id bigint not null,
+    constraint fk_reported_post foreign key (reported_post_id) references post(post_id),
+    constraint fk_reporter foreign key (reporter_id) references users(user_id)
+)
 
