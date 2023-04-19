@@ -15,6 +15,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
@@ -32,7 +33,7 @@ public class UserController {
     public static final String REDIRECT_INDEX = "redirect:/";
     private final UserService userService;
 
-    @GetMapping("/loginPage")
+    @RequestMapping("/loginPage")
     public String loginForm(@ModelAttribute("loginForm") LoginFormDto form) {
         return LOGIN_FORM;
     }
