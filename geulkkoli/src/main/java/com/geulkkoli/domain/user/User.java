@@ -42,9 +42,9 @@ public class User {
         this.gender = gender;
     }
 
-    public boolean matchPassword(String password) {
-        return password.matches(this.password);
-    }
+//    public boolean matchPassword(String password) {
+//        return password.matches(this.password);
+//    }
 
     public void updateUser(String userName, String nickName, String phoneNo, String gender){
         this.userName = userName;
