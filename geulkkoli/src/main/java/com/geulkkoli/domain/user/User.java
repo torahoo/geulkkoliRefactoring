@@ -1,10 +1,13 @@
 package com.geulkkoli.domain.user;
+import com.geulkkoli.domain.admin.Report;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.HashSet;
+import java.util.Set;
 
 @NoArgsConstructor
 @Entity
@@ -31,6 +34,9 @@ public class User {
     private String phoneNo;
 
     private String gender;
+
+    @OneToMany
+    private Set<Report> reports = new HashSet();
 
     @Builder
     public User(String userName, String password, String nickName, String email, String phoneNo, String gender) {
