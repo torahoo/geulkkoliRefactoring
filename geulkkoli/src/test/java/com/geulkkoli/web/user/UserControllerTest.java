@@ -1,5 +1,8 @@
 package com.geulkkoli.web.user;
 
+import com.geulkkoli.application.security.UserSecurityService;
+import com.geulkkoli.application.security.config.SecurityConfig;
+import com.geulkkoli.application.security.handler.LoginFailureHandler;
 import com.geulkkoli.domain.user.User;
 import com.geulkkoli.domain.user.UserRepository;
 import com.geulkkoli.domain.user.service.UserService;
@@ -9,7 +12,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.mock.web.MockHttpSession;
+import org.springframework.context.annotation.Import;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
@@ -21,13 +25,30 @@ import java.util.Optional;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 
+
+/*
+    MockMvc는 가상의 클라이언트를 생성해주는 것과 비슷하게 사용 가능한데,
+    파라미터를 맵으로 선언해 넣어주는 방법과 일일이 .params로 지정해주는 방법이 있다.
+    아래 테스트에서는 요청 시 요청 사항들을 보다 간략하고 보기 쉽게 하게 위해 대부분 맵을 사용하였다.
+
+
+    WebMvcTest로 변경함에 따라 SpringBootTest에서 불러왔던 여러 컴포넌트를 불러올 수 없게 되므로
+    MockBean으로 가상의 빈 객체를 쓰겠다고 선언해 준 이후,
+    given으로 해당 메서드의 파라미터로 뭔가 넣었을 때 return될 값을 정해준다.
+ */
 @WebMvcTest(UserController.class)
+@Import({SecurityConfig.class, LoginFailureHandler.class, UserSecurityService.class})
 class UserControllerTest {
     public static final String TESTER_MAIL = "tester@naver.com";
     public static final String TESTER_PASSWORD = "qwe123!@";
+
     @Autowired
     MockMvc mockMvc;
+
+    @Autowired
+    PasswordEncoder passwordEncoder;
 
     @MockBean
     private UserRepository userRepository;
@@ -42,41 +63,10 @@ class UserControllerTest {
                 .email(TESTER_MAIL)
                 .userName("유저이름1")
                 .nickName("유저닉1")
-                .password(TESTER_PASSWORD)
+                .password(passwordEncoder.encode(TESTER_PASSWORD))
                 .phoneNo("01012345678")
                 .gender("male")
                 .build();
-    }
-
-    @Test
-    void userLogin() throws Exception {
-        //given
-        given(userService.login(any(), any())).willReturn(Optional.of(user));
-
-        MultiValueMap<String, String> query_param = new LinkedMultiValueMap<>();
-        query_param.add("email", TESTER_MAIL);
-        query_param.add("password", TESTER_PASSWORD);
-
-        //when
-        mockMvc.perform(MockMvcRequestBuilders.post("/login")
-                        .params(query_param))
-                .andExpect(MockMvcResultMatchers.status().is3xxRedirection());
-    }
-
-    @Test
-    @DisplayName("세션이 상태유지를 하는 지 테스트 한다.")
-    void isSessionStateful() throws Exception {
-        given(userService.login(any(), any())).willReturn(Optional.of(user));
-
-        MockHttpSession session = new MockHttpSession();
-        mockMvc.perform(MockMvcRequestBuilders.post("/login")
-                        .param("email", TESTER_MAIL)
-                        .param("password", TESTER_PASSWORD)
-                        .session(session))
-
-                //then
-                .andExpect(MockMvcResultMatchers.status().is3xxRedirection());
-        assertThat(session.getAttribute(SessionConst.LOGIN_USER)).isNotNull();
     }
 
     @Test
@@ -132,7 +122,8 @@ class UserControllerTest {
 
         //when
         mockMvc.perform(MockMvcRequestBuilders.post("/join")
-                        .params(query_param))
+                        .params(query_param)
+                        .with(csrf()))
                 .andExpect(MockMvcResultMatchers.status().isOk());
         User findByEmailIdUser = userRepository.findByEmail("tako@naver.com").
                 orElse(null);
@@ -160,7 +151,8 @@ class UserControllerTest {
 
         //when
         mockMvc.perform(MockMvcRequestBuilders.post("/join")
-                        .params(query_param))
+                        .params(query_param)
+                        .with(csrf()))
                 .andExpect(MockMvcResultMatchers.status().isOk());
         User findByEmailIdUser = userRepository.findByEmail("takoNickTest@naver.com").
                 orElse(null);
@@ -185,7 +177,8 @@ class UserControllerTest {
 
         //when
         mockMvc.perform(MockMvcRequestBuilders.post("/join")
-                        .params(query_param))
+                        .params(query_param)
+                        .with(csrf()))
                 .andExpect(MockMvcResultMatchers.status().isOk());
         User rejectUser = userRepository.findByNickName("takodachi").
                 orElse(null);
