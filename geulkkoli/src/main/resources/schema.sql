@@ -1,11 +1,10 @@
-
+drop table if exists report;
 drop table if exists user_followings;
 drop table if exists comments;
 drop table if exists favorites;
 drop table if exists post;
 drop table if exists users;
 drop table if exists topic_tags;
-drop table if exists report;
 CREATE table if not exists users
 (
     user_id   BIGINT PRIMARY KEY AUTO_INCREMENT,
@@ -16,12 +15,12 @@ CREATE table if not exists users
     phone_no  varchar(20)  not null,
     gender    varchar(10)  not null,
     CONSTRAINT unique_email_nick_name_phone_no UNIQUE (email, nick_name, phone_no)
-    );
+);
 create table if not exists topic_tags
 (
     topic_id   bigint primary key auto_increment,
     topic_body varchar(255) not null unique
-    );
+);
 create table if not exists post
 (
     post_id           BIGINT PRIMARY KEY AUTO_INCREMENT,
@@ -35,8 +34,8 @@ create table if not exists post
     created_at        TIMESTAMP      NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at        TIMESTAMP      NOT NULL DEFAULT CURRENT_TIMESTAMP,
     CONSTRAINT fk_users foreign key (author_id) REFERENCES users (user_id) ON DELETE CASCADE,
-    CONSTRAINT fk_post_topic foreign key (post_topic) references topic_tags(topic_id) ON DELETE CASCADE
-    );
+    CONSTRAINT fk_post_topic foreign key (post_topic) references topic_tags (topic_id) ON DELETE CASCADE
+);
 drop table if exists comments;
 
 create table if not exists comments
@@ -49,7 +48,7 @@ create table if not exists comments
     updated_at TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP,
     CONSTRAINT fk_comment_author FOREIGN KEY (author_id) REFERENCES users (user_id) ON DELETE CASCADE,
     CONSTRAINT fk_comment_post FOREIGN KEY (post_id) REFERENCES post (post_id) ON DELETE CASCADE
-    );
+);
 create table if not exists favorites
 (
     favorites_id      BIGINT primary key AUTO_INCREMENT,
@@ -57,7 +56,7 @@ create table if not exists favorites
     favorites_user_id BIGINT not null unique,
     constraint fk_like_user FOREIGN KEY (favorites_user_id) REFERENCES users (user_id) ON DELETE cascade,
     constraint fk_like_post FOREIGN KEY (post_id) REFERENCES post (post_id) ON DELETE CASCADE
-    );
+);
 CREATE TABLE IF NOT EXISTS user_followings
 (
     followings_id bigint primary key AUTO_INCREMENT,
@@ -65,13 +64,15 @@ CREATE TABLE IF NOT EXISTS user_followings
     followee_id   BIGINT NOT NULL,
     CONSTRAINT fk_follower FOREIGN KEY (follower_id) REFERENCES users (user_id) ON DELETE CASCADE,
     CONSTRAINT fk_followee FOREIGN KEY (followee_id) REFERENCES users (user_id) ON DELETE CASCADE
-    );
+);
 
-create table if not exists report(
-    report_id bigint primary key  auto_increment,
-    reported_post_id bigint not null,
-    reporter_id bigint not null,
-    constraint fk_reported_post foreign key (reported_post_id) references post(post_id),
-    constraint fk_reporter foreign key (reporter_id) references users(user_id)
+create table if not exists report
+(
+    report_id        bigint primary key auto_increment,
+    reported_post_id bigint    not null,
+    reporter_id      bigint    not null,
+    reported_at      TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    constraint fk_reported_post foreign key (reported_post_id) references post (post_id),
+    constraint fk_reporter foreign key (reporter_id) references users (user_id)
 )
 

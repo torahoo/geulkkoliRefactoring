@@ -1,4 +1,5 @@
 package com.geulkkoli.domain.user;
+
 import com.geulkkoli.domain.admin.Report;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -16,6 +17,7 @@ import java.util.Set;
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "user_id")
     private Long userId;
 
     @Column(name = "name", nullable = false)
@@ -35,8 +37,8 @@ public class User {
 
     private String gender;
 
-    @OneToMany
-    private Set<Report> reports = new HashSet();
+    @OneToMany(mappedBy = "reporter")
+    private Set<Report> reports = new HashSet<>();
 
     @Builder
     public User(String userName, String password, String nickName, String email, String phoneNo, String gender) {
@@ -48,15 +50,19 @@ public class User {
         this.gender = gender;
     }
 
-    public void updateUser(String userName, String nickName, String phoneNo, String gender){
+    public void updateUser(String userName, String nickName, String phoneNo, String gender) {
         this.userName = userName;
         this.nickName = nickName;
         this.phoneNo = phoneNo;
         this.gender = gender;
     }
+
     public void updatePassword(String password) {
         this.password = password;
     }
 
+    public void addReport(Report report) {
+        this.reports.add(report);
+    }
 
 }
