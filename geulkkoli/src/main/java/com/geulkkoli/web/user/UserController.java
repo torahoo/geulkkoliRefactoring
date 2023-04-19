@@ -1,6 +1,7 @@
 package com.geulkkoli.web.user;
 
 import com.geulkkoli.application.user.AuthUser;
+import com.geulkkoli.application.user.UserModelDto;
 import com.geulkkoli.domain.user.User;
 import com.geulkkoli.domain.user.service.UserService;
 import com.geulkkoli.web.user.edit.EditFormDto;
@@ -29,6 +30,7 @@ public class UserController {
     public static final String JOIN_FORM = "user/joinForm";
     public static final String EDIT_FORM = "user/edit/editForm";
     public static final String EDIT_PASSWORD_FORM = "user/edit/editPassword";
+    public static final String MY_PAGE_FORM = "user/myPage";
     public static final String REDIRECT_INDEX = "redirect:/";
     private final UserService userService;
 
@@ -153,4 +155,14 @@ public class UserController {
         }
         return "redirect:/";
     }
+
+
+
+    @GetMapping("/myPage")
+    public String myPage(@ModelAttribute("myPageForm") MyPageFormDto myPageFormDto, UserModelDto userModelDto, @AuthenticationPrincipal AuthUser authUser , Model model) {
+        myPageFormDto.myPageFormDto(authUser.getUserName(), authUser.getEmail(userModelDto));
+        model.addAttribute("myPageForm", myPageFormDto);
+        return MY_PAGE_FORM;
+    }
+
 }

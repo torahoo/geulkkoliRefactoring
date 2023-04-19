@@ -32,6 +32,12 @@
                 </button>
 
                 <button type="button"
+                        onclick="location.href='/myPage'"
+                        sec:authorize="hasRole('USER')"
+                        class="btn btn-primary">mypage
+                </button>
+
+                <button type="button"
                         onclick="location.href='/logout'"
                         sec:authorize="hasRole('USER')"
                         class="btn btn-outline-primary">logout

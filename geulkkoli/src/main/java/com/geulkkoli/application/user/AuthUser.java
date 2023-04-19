@@ -29,6 +29,10 @@ public class AuthUser extends User {
         this.userName = userModel.getUserName();
     }
 
+    public String getEmail(UserModelDto userModelDto) {
+        return userModelDto.getEmail();
+    }
+
     public void setEnabled(boolean enabled) {
         isEnabled = enabled;
     }

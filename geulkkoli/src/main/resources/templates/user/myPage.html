@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>마이페이지</title>
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/userForm.css">
+</head>
+
+<body>
+<header id="header" th:include="header"></header>
+<h1>마이 페이지</h1>
+
+<br>
+<br>
+
+<form action="" th:action th:object="${myPageForm}" method="post">
+    <div class="mb-3">
+        <label for="userName">
+            <h4>이름</h4>
+        </label>
+        <input type="text" name="userName" id="userName"
+               th:field="*{userName}"
+               th:errorclass="field-error"
+               placeholder="홍길동" class="form-control form-control-lg" readonly>
+    </div>
+
+    <br>
+
+    <div class="mb-3">
+        <label for="email">
+            <h4>E-mail</h4>
+        </label>
+        <!-- userName == email -->
+        <input type="email" name="email" id="email"
+               th:value="${#request.getUserPrincipal().getName()}"
+               class="form-control form-control-lg" readonly>
+    </div>
+
+    <br>
+    <br>
+
+    <div class="mb-3">
+    <button type="button"
+            onclick="location.href='/edit'"
+            class="btn btn-primary">회원 수정
+    </button>
+
+    <button type="button"
+            onclick="location.href='/delete'"
+            class="btn btn-primary">탈퇴
+    </button>
+    </div>
+
+
+</form>
+
+</body>
+
+</html>
