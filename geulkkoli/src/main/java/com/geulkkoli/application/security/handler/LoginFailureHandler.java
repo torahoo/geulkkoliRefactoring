@@ -14,8 +14,6 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
 import java.util.Locale;
 
 @Component
@@ -33,13 +31,13 @@ public class LoginFailureHandler extends SimpleUrlAuthenticationFailureHandler {
         String email = request.getParameter("email");
         log.info("email = {}",email);
         String errorMessage;
-        if (exception instanceof BadCredentialsException) {
+        if (exception instanceof BadCredentialsException) {  // 비밀번호 틀렸을 때
             errorMessage = messageSource.getMessage("error.BadCredentialsException", null, Locale.KOREA);
-        } else if (exception instanceof InternalAuthenticationServiceException) {
+        } else if (exception instanceof InternalAuthenticationServiceException) { // 인증 과정 중에 일어난 내부 예외
             errorMessage = messageSource.getMessage("error.InternalAuthenticationServiceException", null, Locale.KOREA);
-        } else if (exception instanceof UsernameNotFoundException) {
+        } else if (exception instanceof UsernameNotFoundException) { // ID가 틀렸을 때
             errorMessage = messageSource.getMessage("error.UsernameNotFoundException", null, Locale.KOREA);
-        } else if (exception instanceof AuthenticationCredentialsNotFoundException) {
+        } else if (exception instanceof AuthenticationCredentialsNotFoundException) { // ID나 비밀번호 입력 안 했을 때
             errorMessage = messageSource.getMessage("error.AuthenticationCredentialsNotFoundException", null, Locale.KOREA);
         } else {
             errorMessage = messageSource.getMessage("error.OtherException", null, Locale.KOREA);

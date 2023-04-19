@@ -3,8 +3,8 @@ package com.geulkkoli.web.user;
 import com.geulkkoli.application.user.AuthUser;
 import com.geulkkoli.domain.user.User;
 import com.geulkkoli.domain.user.service.UserService;
-import com.geulkkoli.web.user.edit.EditForm;
-import com.geulkkoli.web.user.edit.EditPasswordForm;
+import com.geulkkoli.web.user.edit.EditFormDto;
+import com.geulkkoli.web.user.edit.EditPasswordFormDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -19,7 +19,6 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import java.util.Optional;
 
 @Controller
 @RequiredArgsConstructor
@@ -38,13 +37,6 @@ public class UserController {
         return LOGIN_FORM;
     }
 
-    @PostMapping("/loginPage")
-    public String loginError(@ModelAttribute("loginForm") LoginFormDto form) {
-        return LOGIN_FORM;
-    }
-
-    //join
-
     //join
     @GetMapping("/join")
     public String joinForm(@ModelAttribute("joinForm") JoinFormDto form) {
@@ -54,49 +46,41 @@ public class UserController {
     @PostMapping("/join")
     public String userJoin(@Validated @ModelAttribute("joinForm") JoinFormDto form, BindingResult bindingResult, Model model) {
         log.info("join Method={}", this);
-        if (bindingResult.hasErrors()) {
-            return JOIN_FORM;
-        }
 
         if (userService.isEmailDuplicate(form.getEmail())) {
             bindingResult.rejectValue("email", "Duple.joinForm.email");
-            return JOIN_FORM;
         }
 
         if (userService.isNickNameDuplicate(form.getNickName())) {
             bindingResult.rejectValue("nickName", "Duple.nickName");
-            return JOIN_FORM;
-
         }
 
         if (userService.isPhoneNoDuplicate(form.getPhoneNo())) {
             bindingResult.rejectValue("phoneNo", "Duple.phoneNo");
-            return JOIN_FORM;
-
         }
 
         // 중복 검사라기보다는 비밀번호 확인에 가까운 것 같아서 에러코드명 변경
         if (!form.getPassword().equals(form.getVerifyPassword())) {
             bindingResult.rejectValue("verifyPassword", "Check.verifyPassword");
-            return JOIN_FORM;
-
         }
 
         if (!bindingResult.hasErrors()) {
             userService.join(form);
+
+            log.info("joinModel = {}", model);
+            log.info("joinForm = {}", form);
+
+            return REDIRECT_INDEX;
+        } else {
+            return JOIN_FORM;
         }
-
-        log.info("joinModel = {}", model);
-        log.info("joinForm = {}", form);
-
-        return REDIRECT_INDEX;
     }
 
 
     @GetMapping("/edit")
-    public String editForm(@ModelAttribute("editForm") EditForm editForm, @AuthenticationPrincipal AuthUser authUser, Model model) {
-        editForm.editForm(authUser.getUserRealName(), authUser.getNickName(), authUser.getPhoneNo(), authUser.getGender());
-        model.addAttribute("editForm", editForm);
+    public String editForm(@ModelAttribute("editForm") EditFormDto editFormDto, @AuthenticationPrincipal AuthUser authUser, Model model) {
+        editFormDto.editFormDto(authUser.getUserName(), authUser.getNickName(), authUser.getPhoneNo(), authUser.getGender());
+        model.addAttribute("editForm", editFormDto);
         return EDIT_FORM;
     }
 
@@ -105,43 +89,43 @@ public class UserController {
     * authUser가 기존의 세션 저장 방식을 대체한다
     * */
     @PostMapping("/edit")
-    public String editForm(@Validated @ModelAttribute("editForm") EditForm editForm, BindingResult bindingResult, @AuthenticationPrincipal AuthUser authUser){
+    public String editForm(@Validated @ModelAttribute("editForm") EditFormDto editFormDto, BindingResult bindingResult, @AuthenticationPrincipal AuthUser authUser){
 
         if (bindingResult.hasErrors()) {
             return EDIT_FORM;
         }
 
         // 닉네임 중복 검사 && 본인의 기존 닉네임과 일치해도 중복이라고 안 뜨게
-        if (userService.isNickNameDuplicate(editForm.getNickName()) && !editForm.getNickName().equals(authUser.getNickName())) {
+        if (userService.isNickNameDuplicate(editFormDto.getNickName()) && !editFormDto.getNickName().equals(authUser.getNickName())) {
             bindingResult.rejectValue("nickName", "Duple.nickName");
             return EDIT_FORM;
         }
 
-        if (userService.isPhoneNoDuplicate(editForm.getPhoneNo()) && !editForm.getPhoneNo().equals(authUser.getPhoneNo())) {
+        if (userService.isPhoneNoDuplicate(editFormDto.getPhoneNo()) && !editFormDto.getPhoneNo().equals(authUser.getPhoneNo())) {
             bindingResult.rejectValue("phoneNo", "Duple.phoneNo");
             return EDIT_FORM;
         }
 
         if (!bindingResult.hasErrors()) {
-            Optional<User> updateUser = userService.update(authUser.getUserId(), editForm);
+            userService.update(authUser.getUserId(), editFormDto);
         }
 
         return "redirect:/edit";
     }
 
     @GetMapping("/editPassword")
-    public String editPasswordForm(@ModelAttribute("editPasswordForm") EditPasswordForm form) {
+    public String editPasswordForm(@ModelAttribute("editPasswordForm") EditPasswordFormDto form) {
         return EDIT_PASSWORD_FORM;
     }
 
     @PostMapping("/editPassword")
-    public String editPassword(@Validated @ModelAttribute("editPasswordForm") EditPasswordForm form, BindingResult bindingResult, @AuthenticationPrincipal AuthUser authUser, RedirectAttributes redirectAttributes) {
+    public String editPassword(@Validated @ModelAttribute("editPasswordForm") EditPasswordFormDto form, BindingResult bindingResult, @AuthenticationPrincipal AuthUser authUser, RedirectAttributes redirectAttributes) {
 
         if (bindingResult.hasErrors()) {
             return EDIT_PASSWORD_FORM;
         }
 
-        if (!userService.isPasswordVerification(new User(), form)) {
+        if (!userService.isPasswordVerification(authUser.getUserId(), form)) {
             bindingResult.rejectValue("password", "Check.password");
             return EDIT_PASSWORD_FORM;
         }
@@ -158,16 +142,6 @@ public class UserController {
         }
 
         return "redirect:/edit";
-    }
-
-    @GetMapping("/logout")
-    public String logout(HttpServletRequest request) {
-
-        HttpSession session = request.getSession(false);
-        if (session != null) {
-            session.invalidate();
-        }
-        return REDIRECT_INDEX;
     }
 
     @PostMapping("/memberDelete")
