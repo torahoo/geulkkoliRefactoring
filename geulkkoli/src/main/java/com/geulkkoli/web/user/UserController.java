@@ -15,6 +15,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
@@ -32,7 +33,7 @@ public class UserController {
     public static final String REDIRECT_INDEX = "redirect:/";
     private final UserService userService;
 
-    @GetMapping("/loginPage")
+    @RequestMapping("/loginPage")
     public String loginForm(@ModelAttribute("loginForm") LoginFormDto form) {
         return LOGIN_FORM;
     }
@@ -78,7 +79,7 @@ public class UserController {
 
     @GetMapping("/edit")
     public String editForm(@ModelAttribute("editForm") EditFormDto editFormDto, @AuthenticationPrincipal AuthUser authUser, Model model) {
-        editFormDto.editFormDto(authUser.getUserName(), authUser.getNickName(), authUser.getPhoneNo(), authUser.getGender());
+        editFormDto.editFormDto(authUser.getUserRealName(), authUser.getNickName(), authUser.getPhoneNo(), authUser.getGender());
         model.addAttribute("editForm", editFormDto);
         return EDIT_FORM;
     }
@@ -90,22 +91,20 @@ public class UserController {
     @PostMapping("/edit")
     public String editForm(@Validated @ModelAttribute("editForm") EditFormDto editFormDto, BindingResult bindingResult, @AuthenticationPrincipal AuthUser authUser){
 
-        if (bindingResult.hasErrors()) {
-            return EDIT_FORM;
-        }
+
 
         // 닉네임 중복 검사 && 본인의 기존 닉네임과 일치해도 중복이라고 안 뜨게
         if (userService.isNickNameDuplicate(editFormDto.getNickName()) && !editFormDto.getNickName().equals(authUser.getNickName())) {
             bindingResult.rejectValue("nickName", "Duple.nickName");
-            return EDIT_FORM;
         }
 
         if (userService.isPhoneNoDuplicate(editFormDto.getPhoneNo()) && !editFormDto.getPhoneNo().equals(authUser.getPhoneNo())) {
             bindingResult.rejectValue("phoneNo", "Duple.phoneNo");
-            return EDIT_FORM;
         }
 
-        if (!bindingResult.hasErrors()) {
+        if (bindingResult.hasErrors()) {
+            return EDIT_FORM;
+        } else {
             userService.update(authUser.getUserId(), editFormDto);
         }
 
@@ -120,21 +119,18 @@ public class UserController {
     @PostMapping("/editPassword")
     public String editPassword(@Validated @ModelAttribute("editPasswordForm") EditPasswordFormDto form, BindingResult bindingResult, @AuthenticationPrincipal AuthUser authUser, RedirectAttributes redirectAttributes) {
 
-        if (bindingResult.hasErrors()) {
-            return EDIT_PASSWORD_FORM;
-        }
-
         if (!userService.isPasswordVerification(authUser.getUserId(), form)) {
             bindingResult.rejectValue("password", "Check.password");
-            return EDIT_PASSWORD_FORM;
         }
 
         if (!form.getNewPassword().equals(form.getVerifyPassword())) {
             bindingResult.rejectValue("verifyPassword", "Check.verifyPassword");
-            return EDIT_PASSWORD_FORM;
         }
 
-        if (!bindingResult.hasErrors()) {
+
+        if (bindingResult.hasErrors()) {
+            return EDIT_PASSWORD_FORM;
+        } else {
             userService.updatePassword(authUser.getUserId(), form);
             redirectAttributes.addAttribute("status", true);
             log.info("editPasswordForm = {}", form);
