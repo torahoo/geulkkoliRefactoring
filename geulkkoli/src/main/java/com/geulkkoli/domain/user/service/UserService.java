@@ -67,4 +67,8 @@ public class UserService {
                 .orElseThrow(() -> new NoSuchElementException("No user found id matches:" + id));
     }
 
+    public Optional<User> findByEmail(String userName, String phoneNo) {
+        return userRepository.findByEmail(userName, phoneNo);
+    }
+
 }

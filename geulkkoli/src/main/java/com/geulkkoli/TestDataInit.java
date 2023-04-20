@@ -60,7 +60,7 @@ public class TestDataInit {
         joinForm.setEmail("tako99@naver.com");
         joinForm.setUserName("김");
         joinForm.setNickName("바나나11");
-        joinForm.setPhoneNo("9190232333");
+        joinForm.setPhoneNo("01012345678");
         joinForm.setGender("male");
         joinForm.setPassword("123");
         userService.join(joinForm);
