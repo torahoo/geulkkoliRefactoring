@@ -1,7 +1,7 @@
 
 package com.geulkkoli;
 
-importnmcom.geulkkoli.domain.post.Post;
+import com.geulkkoli.domain.post.Post;
 import com.geulkkoli.domain.post.PostRepository;
 import com.geulkkoli.domain.user.service.UserService;
 import com.geulkkoli.web.user.JoinFormDto;
@@ -20,6 +20,7 @@ public class TestDataInit {
 
     private final PostRepository postRepository;
     private final UserService userService;
+
     /**
      * 확인용 초기 데이터 추가
      */
@@ -45,7 +46,8 @@ public class TestDataInit {
                 .postBody("test postbody 02")//채&훈
                 .nickName("점심뭐먹지").build()
         )
-        ;postRepository.save(Post.builder()
+        ;
+        postRepository.save(Post.builder()
                 .authorId(2L)
                 .title("testTitle03")
                 .postBody("test postbody 03")//채&훈
@@ -53,9 +55,9 @@ public class TestDataInit {
         );
 
         /*
-        * 시큐리티가 제공하는 비밀번호 암호화를 userService에서 쓰기 때문에
-        * userService로 테스트 데이터를 저정한다.
-        * */
+         * 시큐리티가 제공하는 비밀번호 암호화를 userService에서 쓰기 때문에
+         * userService로 테스트 데이터를 저정한다.
+         * */
         JoinFormDto joinForm = new JoinFormDto();
         joinForm.setEmail("tako99@naver.com");
         joinForm.setUserName("김");
