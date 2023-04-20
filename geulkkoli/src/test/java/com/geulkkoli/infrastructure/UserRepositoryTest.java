@@ -2,21 +2,20 @@ package com.geulkkoli.infrastructure;
 
 import com.geulkkoli.domain.user.User;
 import com.geulkkoli.domain.user.UserRepository;
-import com.geulkkoli.domain.user.UserRepositoryVer2;
 import com.geulkkoli.exception.EmptyDataException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.transaction.annotation.Transactional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@SpringBootTest
-@Transactional
+
+@DataJpaTest
 class UserRepositoryTest {
     @Autowired
-    private UserRepositoryVer2 userRepository;
+    private UserRepository userRepository;
 
     @Test
     void save() {

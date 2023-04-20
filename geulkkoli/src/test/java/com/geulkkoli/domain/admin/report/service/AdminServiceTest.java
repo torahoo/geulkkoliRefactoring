@@ -6,8 +6,6 @@ import com.geulkkoli.domain.post.Post;
 import com.geulkkoli.domain.post.PostRepository;
 import com.geulkkoli.domain.user.User;
 import com.geulkkoli.domain.user.UserRepository;
-import com.geulkkoli.domain.user.UserRepositoryVer2;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +23,7 @@ class AdminServiceTest {
     @Autowired
     PostRepository postRepository;
     @Autowired
-    UserRepositoryVer2 userRepository;
+    UserRepository userRepository;
 
     @Test
     @DisplayName("신고를 저장한다.")
@@ -45,6 +43,7 @@ class AdminServiceTest {
                 .nickName("바나나")
                 .password("12345")
                 .phoneNo("01012345678")
+                .gender("male")
                 .build();
         userRepository.save(reporter);
 

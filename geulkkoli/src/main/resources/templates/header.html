@@ -24,7 +24,15 @@
                     sec:authorize="isAnonymous()"
                     class="btn btn-outline-primary">Sign-up
             </button>
+            <button th:if="${#request.getAttribute('loginError')!= null}" type="button"
+                    onclick="location.href='/loginPage'"
+                    class="btn btn-primary">Login
+            </button>
 
+            <button th:if="${#request.getAttribute('loginError')!= null}" type="button"
+                    onclick="location.href='/join'"
+                    class="btn btn-outline-primary">Sign-up
+            </button>
             <button type="button"
                     onclick="location.href='/admin/'"
                     sec:authorize="hasRole('ADMIN')"

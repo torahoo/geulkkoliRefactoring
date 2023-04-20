@@ -1,10 +1,8 @@
 
 package com.geulkkoli;
 
-import com.geulkkoli.domain.post.Post;
+importnmcom.geulkkoli.domain.post.Post;
 import com.geulkkoli.domain.post.PostRepository;
-import com.geulkkoli.domain.user.User;
-import com.geulkkoli.domain.user.UserRepository;
 import com.geulkkoli.domain.user.service.UserService;
 import com.geulkkoli.web.user.JoinFormDto;
 import lombok.RequiredArgsConstructor;
@@ -12,7 +10,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.annotation.Profile;
 import org.springframework.context.event.EventListener;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 @Slf4j
@@ -22,9 +19,7 @@ import org.springframework.stereotype.Component;
 public class TestDataInit {
 
     private final PostRepository postRepository;
-    private final UserRepository userRepository;
     private final UserService userService;
-    private final PasswordEncoder passwordEncoder;
     /**
      * 확인용 초기 데이터 추가
      */
@@ -69,18 +64,6 @@ public class TestDataInit {
         joinForm.setGender("male");
         joinForm.setPassword("qwe123!!!");
         userService.join(joinForm);
-
-        userRepository.save(User.builder()
-                .userName("이")
-                .password(passwordEncoder.encode("123"))
-                .nickName("타코다치")
-                .email("admin")
-                .phoneNo("05200520052")
-                .gender("male")
-
-                .build());
-
-
 
     }
 

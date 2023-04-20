@@ -2,7 +2,6 @@ package com.geulkkoli.domain.user.service;
 
 import com.geulkkoli.domain.user.User;
 import com.geulkkoli.domain.user.UserRepository;
-import com.geulkkoli.domain.user.UserRepositoryVer2;
 import com.geulkkoli.web.user.JoinFormDto;
 import com.geulkkoli.web.user.edit.EditFormDto;
 import com.geulkkoli.web.user.edit.EditPasswordFormDto;
@@ -40,15 +39,8 @@ public class UserService {
         userRepository.save(form.toEntity(passwordEncoder));
     }
 
-//    @Transactional(readOnly = true)
-//    public Optional<User> login(String email, String password) {
-//        return userRepository.findByEmail(email)
-//                .filter(m -> m.matchPassword(password));
-//    }
-
-    public Optional<User> update(Long id, EditFormDto editFormDto) {
+    public void update(Long id, EditFormDto editFormDto) {
         userRepository.update(id, editFormDto);
-        return userRepository.findById(id);
     }
 
     // 현재 비밀번호 입력 시 기존 비밀번호와 일치하는지 확인
@@ -61,7 +53,7 @@ public class UserService {
     }
 
     public void delete(User user) {
-        userRepository.delete(user.getUserId());
+        userRepository.deleteById(user.getUserId());
     }
 
     public User findById(Long id) {
