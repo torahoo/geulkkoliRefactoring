@@ -37,11 +37,11 @@ class UpdateServiceTest {
 
     @BeforeAll
     void init() {
-        save = userRepository.save(User.builder() // userId = 3L
+        save = userRepository.save(User.builder()
                 .email("tako1@naver.com")
                 .userName("김1")
                 .nickName("바나나1")
-                .password("123qwe!@#")
+                .password(passwordEncoder.encode("123qwe!@#"))
                 .phoneNo("01012345671")
                 .gender("male")
                 .build());
@@ -75,9 +75,9 @@ class UpdateServiceTest {
         Optional<User> user = userRepository.findById(save.getUserId());
 
         EditPasswordFormDto editPasswordFormDto = new EditPasswordFormDto();
-        editPasswordFormDto.setPassword(passwordEncoder.encode("123qwe!@#"));
-        editPasswordFormDto.setNewPassword(passwordEncoder.encode("abc123!@#"));
-        editPasswordFormDto.setVerifyPassword(passwordEncoder.encode("abc123!@#"));
+        editPasswordFormDto.setPassword("123qwe!@#");
+        editPasswordFormDto.setNewPassword("abc123!@#");
+        editPasswordFormDto.setVerifyPassword("abc123!@#");
 
         //when
         boolean passwordVerification = userService.isPasswordVerification(user.get().getUserId(), editPasswordFormDto);

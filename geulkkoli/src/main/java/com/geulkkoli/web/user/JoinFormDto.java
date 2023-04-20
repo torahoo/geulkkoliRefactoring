@@ -15,7 +15,6 @@ import javax.validation.constraints.Pattern;
 @RequiredArgsConstructor
 public class JoinFormDto {
 
-    // NotEmpty가 NotNull를 포함하므로 삭제
     @NotEmpty
     private String userName;
 

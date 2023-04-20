@@ -3,7 +3,6 @@ package com.geulkkoli;
 
 import com.geulkkoli.domain.post.Post;
 import com.geulkkoli.domain.post.PostRepository;
-import com.geulkkoli.domain.user.UserRepository;
 import com.geulkkoli.domain.user.service.UserService;
 import com.geulkkoli.web.user.JoinFormDto;
 import lombok.RequiredArgsConstructor;
@@ -63,7 +62,7 @@ public class TestDataInit {
         joinForm.setNickName("바나나11");
         joinForm.setPhoneNo("9190232333");
         joinForm.setGender("male");
-        joinForm.setPassword("qwe123!!!");
+        joinForm.setPassword("123");
         userService.join(joinForm);
     }
 

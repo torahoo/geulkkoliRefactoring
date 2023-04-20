@@ -45,18 +45,17 @@ public class UserService {
 //                .filter(m -> m.matchPassword(password));
 //    }
 
-    public Optional<User> update(Long id, EditFormDto editFormDto) {
-        userRepository.update(id, editFormDto);
+    public Optional<User> update(Long id, EditFormDto form) {
+        userRepository.update(id, form);
         return userRepository.findById(id);
     }
 
-    // 현재 비밀번호 입력 시 기존 비밀번호와 일치하는지 확인
-    public boolean isPasswordVerification(Long id, EditPasswordFormDto editPasswordFormDto) {
-        return passwordEncoder.matches(findById(id).getPassword(), editPasswordFormDto.getPassword());
+    public boolean isPasswordVerification(Long id, EditPasswordFormDto form) {
+        return passwordEncoder.matches(form.getPassword(), findById(id).getPassword());
     }
 
-    public void updatePassword(Long id, EditPasswordFormDto editPasswordFormDto) {
-        userRepository.updatePassword(id, passwordEncoder.encode(editPasswordFormDto.getNewPassword()));
+    public void updatePassword(Long id, EditPasswordFormDto form) {
+        userRepository.updatePassword(id, passwordEncoder.encode(form.getNewPassword()));
     }
 
     public void delete(User user) {
@@ -66,6 +65,6 @@ public class UserService {
     public User findById(Long id) {
         return userRepository.findById(id)
                 .orElseThrow(() -> new NoSuchElementException("No user found id matches:" + id));
-
     }
+
 }
