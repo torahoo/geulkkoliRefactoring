@@ -1,6 +1,7 @@
 package com.geulkkoli.domain.user.service;
 
 import com.geulkkoli.domain.user.UserRepository;
+import com.geulkkoli.domain.user.UserRepositoryVer2;
 import com.geulkkoli.web.user.JoinFormDto;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -18,7 +19,7 @@ class UserServiceTest {
     @Autowired
     UserService userService;
     @Autowired
-    UserRepository userRepository;
+    UserRepositoryVer2 userRepository;
 
     @BeforeEach
     void init() {

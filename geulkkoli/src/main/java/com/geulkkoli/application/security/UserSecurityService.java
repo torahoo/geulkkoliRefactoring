@@ -5,6 +5,7 @@ import com.geulkkoli.application.user.Role;
 import com.geulkkoli.application.user.UserModelDto;
 import com.geulkkoli.domain.user.User;
 import com.geulkkoli.domain.user.UserRepository;
+import com.geulkkoli.domain.user.UserRepositoryVer2;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -21,9 +22,9 @@ import java.util.Optional;
 @Transactional
 public class UserSecurityService implements UserDetailsService {
 
-    private final UserRepository userRepository;
+    private final UserRepositoryVer2 userRepository;
 
-    public UserSecurityService(UserRepository userRepository) {
+    public UserSecurityService(UserRepositoryVer2 userRepository) {
         this.userRepository = userRepository;
     }
 

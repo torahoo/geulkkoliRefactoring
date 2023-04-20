@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 @Controller
@@ -34,10 +35,11 @@ public class UserController {
 
     @GetMapping("/loginPage")
     public String loginForm(@ModelAttribute("loginForm") LoginFormDto form) {
-        return LOGIN_FORM;
+       return LOGIN_FORM;
     }
     @PostMapping("/loginPage")
-    public String loginError(@ModelAttribute("loginForm") LoginFormDto form) {
+    public String loginError(@ModelAttribute("loginForm") LoginFormDto loginFormDto, @AuthenticationPrincipal AuthUser authUser) {
+        log.info("auther {}", authUser);
         return LOGIN_FORM;
     }
 

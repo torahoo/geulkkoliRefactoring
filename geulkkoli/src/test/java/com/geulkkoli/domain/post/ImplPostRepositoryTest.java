@@ -43,7 +43,7 @@ class ImplPostRepositoryTest {
     void update() {
 
         Post update = new Post(1L, "title02", "body02", "nick02");
-        implPostRepository.update(1L, update);
+        implPostRepository.save(update);
         Optional<Post> one = implPostRepository.findById(1L);
         Assertions.assertThat(one.get().getTitle()).isEqualTo(update.getTitle());
     }

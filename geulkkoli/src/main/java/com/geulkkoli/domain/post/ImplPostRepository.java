@@ -10,8 +10,8 @@ import java.util.List;
 import java.util.Optional;
 
 @Slf4j
-@Repository
 @Transactional
+@Repository
 @RequiredArgsConstructor
 public class ImplPostRepository implements PostRepository {
 

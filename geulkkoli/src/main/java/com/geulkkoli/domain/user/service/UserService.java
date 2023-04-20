@@ -2,6 +2,7 @@ package com.geulkkoli.domain.user.service;
 
 import com.geulkkoli.domain.user.User;
 import com.geulkkoli.domain.user.UserRepository;
+import com.geulkkoli.domain.user.UserRepositoryVer2;
 import com.geulkkoli.web.user.JoinFormDto;
 import com.geulkkoli.web.user.edit.EditFormDto;
 import com.geulkkoli.web.user.edit.EditPasswordFormDto;

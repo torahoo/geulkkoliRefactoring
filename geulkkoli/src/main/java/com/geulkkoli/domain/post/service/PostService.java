@@ -24,9 +24,9 @@ public class PostService {
 
     private final PostRepository postRepository;
 
-    public Post findById (Long postId) {
+    public Post findById(Long postId) {
         return postRepository.findById(postId)
-                .orElseThrow(()-> new NoSuchElementException("No post found id matches:"+postId));
+                .orElseThrow(() -> new NoSuchElementException("No post found id matches:" + postId));
     }
 
     public List<ListDTO> findAll() {
@@ -45,11 +45,12 @@ public class PostService {
         return savePost.getPostId();
     }
 
-    public void updatePost (Long postId, Post updateParam) {
-        postRepository.update(postId, updateParam);
+    public void updatePost(Long postId, Post updateParam) {
+
+        postRepository.save(updateParam);
     }
 
-    public void deletePost (Long postId) {
+    public void deletePost(Long postId) {
         postRepository.delete(postId);
     }
 }

@@ -2,6 +2,7 @@ package com.geulkkoli.infrastructure;
 
 import com.geulkkoli.domain.user.User;
 import com.geulkkoli.domain.user.UserRepository;
+import com.geulkkoli.domain.user.UserRepositoryVer2;
 import com.geulkkoli.exception.EmptyDataException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -15,7 +16,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @Transactional
 class UserRepositoryTest {
     @Autowired
-    private UserRepository userRepository;
+    private UserRepositoryVer2 userRepository;
 
     @Test
     void save() {
@@ -45,7 +46,7 @@ class UserRepositoryTest {
                 .build();
 
         userRepository.save(user);
-        User findUser = userRepository.findById(2L)
+        User findUser = userRepository.findById(1L)
                 .orElseThrow(() -> new EmptyDataException("해당 데이터가 존제하지 않습니다."));
 
         assertThat(findUser).isEqualTo(user);
