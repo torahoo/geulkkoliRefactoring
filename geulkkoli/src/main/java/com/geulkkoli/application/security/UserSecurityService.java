@@ -39,6 +39,7 @@ public class UserSecurityService implements UserDetailsService {
         List<GrantedAuthority> authorities = new ArrayList<>();
         if (user.getEmail().contains("admin")) {
             authorities.add(new SimpleGrantedAuthority(Role.ADMIN.getRoleName()));
+            authorities.add(new SimpleGrantedAuthority(Role.USER.getRoleName()));
         } else {
             authorities.add(new SimpleGrantedAuthority(Role.USER.getRoleName()));
         }
@@ -50,7 +51,5 @@ public class UserSecurityService implements UserDetailsService {
         authenticatedUser.setCredentialsNonExpired(true);
         return authenticatedUser;
     }
-
-
 
 }

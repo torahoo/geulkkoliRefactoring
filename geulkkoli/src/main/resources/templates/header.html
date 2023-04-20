@@ -11,33 +11,38 @@
     <div class="container">
         <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
             <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
-                <li><a id="home" href="#" class="nav-link px-2 text-secondary">Home</a></li>
+                <li><a id="home" href="/" class="nav-link px-2 text-secondary">Home</a></li>
             </ul>
-              <button type="button"
-                        onclick="location.href='/loginPage'"
-                        sec:authorize="!isAuthenticated()"
-                        class="btn btn-primary">Login
-                </button>
+            <button type="button"
+                    onclick="location.href='/loginPage'"
+                    sec:authorize="isAnonymous()"
+                    class="btn btn-primary">Login
+            </button>
 
-                <button type="button"
-                        onclick="location.href='/join'"
-                        sec:authorize="!isAuthenticated()"
-                        class="btn btn-outline-primary">Sign-up
-                </button>
+            <button type="button"
+                    onclick="location.href='/join'"
+                    sec:authorize="isAnonymous()"
+                    class="btn btn-outline-primary">Sign-up
+            </button>
 
-                <button type="button"
-                        onclick="location.href='/edit'"
-                        sec:authorize="hasRole('USER')"
-                        class="btn btn-primary">modify
-                </button>
+            <button type="button"
+                    onclick="location.href='/admin/'"
+                    sec:authorize="hasRole('ADMIN')"
+                    class="btn btn-primary">admin
+            </button>
 
-                <button type="button"
-                        onclick="location.href='/logout'"
-                        sec:authorize="hasRole('USER')"
-                        class="btn btn-outline-primary">logout
-                </button>
+            <button type="button"
+                    onclick="location.href='/edit'"
+                    sec:authorize="hasRole('USER')"
+                    class="btn btn-primary">modify
+            </button>
 
-            </div>
+            <button type="button"
+                    onclick="location.href='/logout'"
+                    sec:authorize="hasRole('USER')"
+                    class="btn btn-outline-primary">logout
+            </button>
+
         </div>
     </div>
 </header>

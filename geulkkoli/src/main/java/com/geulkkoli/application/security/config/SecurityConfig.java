@@ -47,6 +47,7 @@ public class  SecurityConfig {
                     auth.requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll(); // 정적 리소스들(css,js)등을 권장 방식에 맞게 인증 체크에서 제외 시켰다
                     auth.mvcMatchers( "/", "/loginPage")
                             .permitAll();
+                    auth.mvcMatchers("/admin/**").hasRole("ADMIN");
                 }).csrf().disable()
                 .formLogin()
                 .loginPage("/loginPage")
