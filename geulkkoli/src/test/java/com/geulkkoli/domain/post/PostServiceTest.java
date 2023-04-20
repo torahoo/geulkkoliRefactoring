@@ -1,5 +1,6 @@
 package com.geulkkoli.domain.post;
 
+import com.geulkkoli.domain.post.entity.Post;
 import com.geulkkoli.domain.post.service.PostService;
 
 import com.geulkkoli.web.post.dto.ListDTO;

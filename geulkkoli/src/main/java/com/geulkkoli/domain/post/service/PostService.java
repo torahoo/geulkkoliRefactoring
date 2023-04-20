@@ -1,11 +1,8 @@
 package com.geulkkoli.domain.post.service;
 
-import com.geulkkoli.domain.post.Post;
+import com.geulkkoli.domain.post.entity.Post;
 import com.geulkkoli.domain.post.PostRepository;
-import com.geulkkoli.web.post.dto.AddDTO;
-import com.geulkkoli.web.post.dto.EditDTO;
 import com.geulkkoli.web.post.dto.ListDTO;
-import com.geulkkoli.web.post.dto.PageDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -14,7 +11,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.Optional;
 
 @Slf4j
 @Service

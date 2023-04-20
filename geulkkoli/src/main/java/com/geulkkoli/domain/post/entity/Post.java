@@ -1,4 +1,4 @@
-package com.geulkkoli.domain.post;
+package com.geulkkoli.domain.post.entity;
 
 import lombok.*;
 import org.hibernate.Hibernate;

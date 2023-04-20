@@ -1,5 +1,7 @@
 package com.geulkkoli.domain.post;
 
+import com.geulkkoli.domain.post.entity.Post;
+
 import java.util.List;
 import java.util.Optional;
 public interface PostRepository {
