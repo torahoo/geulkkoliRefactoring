@@ -1,6 +1,6 @@
 package com.geulkkoli.web.post;
 
-import com.geulkkoli.domain.post.Post;
+import com.geulkkoli.domain.post.entity.Post;
 import com.geulkkoli.domain.post.service.PostService;
 import com.geulkkoli.domain.user.User;
 import com.geulkkoli.domain.user.service.UserService;

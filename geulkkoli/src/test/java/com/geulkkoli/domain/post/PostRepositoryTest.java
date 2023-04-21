@@ -1,5 +1,6 @@
 package com.geulkkoli.domain.post;
 
+import com.geulkkoli.domain.post.entity.Post;
 import com.geulkkoli.domain.user.ImplUserRepository;
 import com.geulkkoli.domain.user.User;
 import lombok.extern.slf4j.Slf4j;

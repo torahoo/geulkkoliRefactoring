@@ -1,7 +1,7 @@
 
 package com.geulkkoli;
 
-import com.geulkkoli.domain.post.Post;
+import com.geulkkoli.domain.post.entity.Post;
 import com.geulkkoli.domain.post.PostRepository;
 import com.geulkkoli.domain.user.UserRepository;
 import com.geulkkoli.domain.user.service.UserService;

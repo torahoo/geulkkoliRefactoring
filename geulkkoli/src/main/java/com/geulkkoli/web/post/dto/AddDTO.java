@@ -1,6 +1,6 @@
 package com.geulkkoli.web.post.dto;
 
-import com.geulkkoli.domain.post.Post;
+import com.geulkkoli.domain.post.entity.Post;
 import lombok.*;
 import org.hibernate.validator.constraints.Length;
 
