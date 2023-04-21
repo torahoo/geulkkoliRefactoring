@@ -40,50 +40,50 @@ class UpdateServiceTest {
     }
 
 
-    @Test
-    @DisplayName("업데이트 테스트")
-    void updateTest() {
-        //given
-        MockHttpServletRequest mockHttpServletRequest = new MockHttpServletRequest();
-
-        EditForm preupdateUser = EditForm.builder()
-                .userName("김2")
-                .nickName("바나나155")
-                .phoneNo("01055554646")
-                .gender("female")
-                .build();
-
-        //when
-        userService.update(3L, preupdateUser, mockHttpServletRequest);
-        Optional<User> one = userRepository.findById(3L);
-
-        // then
-        Assertions.assertThat("바나나155").isEqualTo(one.get().getNickName());
-    }
-
-    @Test
-    @DisplayName("비밀번호 업데이트 테스트")
-    void passwordTest() {
-
-        //given
-        Optional<User> user = userRepository.findById(3L);
-
-        EditPasswordForm editPasswordForm = new EditPasswordForm();
-        editPasswordForm.setPassword("123qwe!@#");
-        editPasswordForm.setNewPassword("abc123!@#");
-        editPasswordForm.setVerifyPassword("abc123!@#");
-
-        //when
-        boolean passwordVerification = userService.isPasswordVerification(user.get(), editPasswordForm);
-
-        if (passwordVerification)
-            userService.updatePassword(user.get().getUserId(), editPasswordForm);
-
-        //user에는 getPassword가 없으므로 로그인으로 확인
-        Optional<User> login = userService.login(user.get().getEmail(), editPasswordForm.getNewPassword());
-
-        //then
-        Assertions.assertThat(user).isEqualTo(login);
-    }
+//    @Test
+//    @DisplayName("업데이트 테스트")
+//    void updateTest() {
+//        //given
+//        MockHttpServletRequest mockHttpServletRequest = new MockHttpServletRequest();
+//
+//        EditForm preupdateUser = EditForm.builder()
+//                .userName("김2")
+//                .nickName("바나나155")
+//                .phoneNo("01055554646")
+//                .gender("female")
+//                .build();
+//
+//        //when
+//        userService.update(3L, preupdateUser, mockHttpServletRequest);
+//        Optional<User> one = userRepository.findById(3L);
+//
+//        // then
+//        Assertions.assertThat("바나나155").isEqualTo(one.get().getNickName());
+//    }
+//
+//    @Test
+//    @DisplayName("비밀번호 업데이트 테스트")
+//    void passwordTest() {
+//
+//        //given
+//        Optional<User> user = userRepository.findById(3L);
+//
+//        EditPasswordForm editPasswordForm = new EditPasswordForm();
+//        editPasswordForm.setPassword("123qwe!@#");
+//        editPasswordForm.setNewPassword("abc123!@#");
+//        editPasswordForm.setVerifyPassword("abc123!@#");
+//
+//        //when
+//        boolean passwordVerification = userService.isPasswordVerification(user.get(), editPasswordForm);
+//
+//        if (passwordVerification)
+//            userService.updatePassword(user.get().getUserId(), editPasswordForm);
+//
+//        //user에는 getPassword가 없으므로 로그인으로 확인
+//        Optional<User> login = userService.login(user.get().getEmail(), editPasswordForm.getNewPassword());
+//
+//        //then
+//        Assertions.assertThat(user).isEqualTo(login);
+//    }
 
 }

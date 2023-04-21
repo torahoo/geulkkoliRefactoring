@@ -2,7 +2,8 @@
 package com.geulkkoli;
 
 import com.geulkkoli.domain.post.entity.Post;
-import com.geulkkoli.domain.post.PostRepository;
+import com.geulkkoli.domain.post.repository.PostRepository;
+import com.geulkkoli.domain.user.User;
 import com.geulkkoli.domain.user.UserRepository;
 import com.geulkkoli.domain.user.service.UserService;
 import com.geulkkoli.web.user.JoinFormDto;
@@ -28,31 +29,6 @@ public class TestDataInit {
     @EventListener(ApplicationReadyEvent.class)
     public void initData() {
         log.info("test data init");
-        postRepository.save(Post.builder()
-                .authorId(1L)
-                .nickName("바나나")
-                .postBody("나는 멋지고 섹시한 개발자")//채&훈
-                .title("여러분").build());
-
-        postRepository.save(Post.builder()
-
-                .authorId(2L)
-                .title("testTitle01")
-                .postBody("test postbody 01")//채&훈
-                .nickName("점심뭐먹지").build()
-        );
-        postRepository.save(Post.builder()
-                .authorId(2L)
-                .title("testTitle02")
-                .postBody("test postbody 02")//채&훈
-                .nickName("점심뭐먹지").build()
-        )
-        ;postRepository.save(Post.builder()
-                .authorId(2L)
-                .title("testTitle03")
-                .postBody("test postbody 03")//채&훈
-                .nickName("점심뭐먹지").build()
-        );
 
         /*
         * 시큐리티가 제공하는 비밀번호 암호화를 userService에서 쓰기 때문에
@@ -66,6 +42,44 @@ public class TestDataInit {
         joinForm.setGender("male");
         joinForm.setPassword("123");
         userService.join(joinForm);
+
+        User user01 = userService.findById(1L);
+
+        JoinFormDto joinForm2 = new JoinFormDto();
+        joinForm2.setEmail("test01@naver.com");
+        joinForm2.setUserName("테스트유저");
+        joinForm2.setNickName("준호떡볶이도둑");
+        joinForm2.setPhoneNo("01012345678");
+        joinForm2.setGender("male");
+        joinForm2.setPassword("123");
+        userService.join(joinForm);
+
+        User user02 = userService.findById(2L);
+
+        postRepository.save(Post.builder()
+                .user(user01)
+                .nickName("바나나")
+                .postBody("나는 멋지고 섹시한 개발자")//채&훈
+                .title("여러분").build());
+
+        postRepository.save(Post.builder()
+                .user(user01)
+                .title("testTitle01")
+                .postBody("test postbody 01")//채&훈
+                .nickName("점심뭐먹지").build()
+        );
+        postRepository.save(Post.builder()
+                .user(user02)
+                .title("testTitle02")
+                .postBody("test postbody 02")//채&훈
+                .nickName("점심뭐먹지").build()
+        )
+        ;postRepository.save(Post.builder()
+                .user(user02)
+                .title("testTitle03")
+                .postBody("test postbody 03")//채&훈
+                .nickName("점심뭐먹지").build()
+        );
     }
 
 }

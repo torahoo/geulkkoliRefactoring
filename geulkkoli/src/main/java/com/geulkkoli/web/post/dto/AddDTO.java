@@ -1,6 +1,7 @@
 package com.geulkkoli.web.post.dto;
 
 import com.geulkkoli.domain.post.entity.Post;
+import com.geulkkoli.domain.user.User;
 import lombok.*;
 import org.hibernate.validator.constraints.Length;
 
@@ -34,7 +35,6 @@ public class AddDTO {
 
     public Post toEntity () {
         return Post.builder()
-                .authorId(authorId)
                 .title(title)
                 .postBody(postBody)
                 .nickName(nickName)

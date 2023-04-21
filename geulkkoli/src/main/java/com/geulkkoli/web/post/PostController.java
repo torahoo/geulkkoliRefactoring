@@ -65,7 +65,7 @@ public class PostController {
         post.setNickName(loginUser.getNickName());
         post.setAuthorId(loginUser.getUserId());
 
-        Long postId = postService.savePost(post.toEntity());
+        Long postId = postService.savePost(post);
         redirectAttributes.addAttribute("addStatus", true);
         redirectAttributes.addAttribute("postId", postId);
         return "redirect:/post/read/{postId}";

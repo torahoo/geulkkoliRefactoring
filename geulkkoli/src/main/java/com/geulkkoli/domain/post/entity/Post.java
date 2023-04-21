@@ -14,7 +14,7 @@ import java.util.Set;
 @NoArgsConstructor
 @Entity
 @ToString
-public class Post {
+public class Post extends ConfigDate {
 
     @Id @Column(name = "post_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -43,10 +43,6 @@ public class Post {
     @Setter
     private String imageUploadName;
 
-    @Setter
-    @Embedded
-    private ConfigDate configDate;
-
     //댓글의 게시글 매핑
     @OneToMany(mappedBy = "post")
     private Set<Comments> comments = new LinkedHashSet<>();
@@ -60,27 +56,10 @@ public class Post {
     private Set<HashTags> hashTags = new LinkedHashSet<>();
 
     @Builder
-    public Post(User user, String title, String postBody, String nickName, int postHits, ConfigDate configDate) {
+    public Post(User user, String title, String postBody, String nickName) {
         this.user = user;
         this.title = title;
         this.postBody = postBody;
-        this.nickName = nickName;
-        this.postHits = postHits;
-        this.configDate = configDate;
-    }
-
-    //제목을 바꾼다.
-    public void changeTitle(String title) {
-        this.title = title;
-    }
-
-    //본문을 바꾼다.
-    public void changePostBody(String updateBody) {
-        this.postBody = updateBody;
-    }
-
-    //별명을 바꾼다.
-    public void changeNickName(String nickName) {
         this.nickName = nickName;
     }
 
@@ -99,12 +78,31 @@ public class Post {
 
     //==연관관계 메서드==//
 
-    /**
-     * 유저 세팅
-     */
+    //제목을 바꾼다.
+    public void changeTitle(String title) {
+        this.title = title;
+    }
+
+    //본문을 바꾼다.
+    public void changePostBody(String updateBody) {
+        this.postBody = updateBody;
+    }
+
+    //별명을 바꾼다.
+    public void changeNickName(String nickName) {
+        this.nickName = nickName;
+    }
+
+    //유저를 바꾼다.
     public void setUser (User user) {
         this.user = new User();
         user.getPosts().add(this);
     }
+
+    //조회수를 바꾼다.
+    public void changeHits (int postHits) {
+        this.postHits = postHits;
+    }
+
 }
 
