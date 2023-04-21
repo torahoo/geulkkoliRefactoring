@@ -21,7 +21,6 @@ import org.springframework.stereotype.Component;
 public class TestDataInit {
 
     private final PostRepository postRepository;
-    private final UserRepository userRepository;
     private final UserService userService;
     /**
      * 확인용 초기 데이터 추가
@@ -40,7 +39,7 @@ public class TestDataInit {
         joinForm.setNickName("바나나11");
         joinForm.setPhoneNo("9190232333");
         joinForm.setGender("male");
-        joinForm.setPassword("123");
+        joinForm.setPassword("qwe123!!!");
         userService.join(joinForm);
 
         User user01 = userService.findById(1L);
