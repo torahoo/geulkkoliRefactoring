@@ -12,7 +12,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.NoSuchElementException;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -38,7 +37,6 @@ public class UserService {
     public void join(JoinFormDto form) {
         userRepository.save(form.toEntity(passwordEncoder));
     }
-
     public void update(Long id, EditFormDto editFormDto) {
         userRepository.update(id, editFormDto);
     }
@@ -59,6 +57,5 @@ public class UserService {
     public User findById(Long id) {
         return userRepository.findById(id)
                 .orElseThrow(() -> new NoSuchElementException("No user found id matches:" + id));
-
     }
 }

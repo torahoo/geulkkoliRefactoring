@@ -18,6 +18,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
+import static org.assertj.core.api.Assertions.*;
+
 
 @SpringBootTest
 @Transactional
@@ -65,7 +67,7 @@ class UpdateServiceTest {
         Optional<User> one = userRepository.findById(save.getUserId());
 
         // then
-        Assertions.assertThat("바나나155").isEqualTo(one.get().getNickName());
+        assertThat("바나나155").isEqualTo(one.get().getNickName());
     }
 
     @Test

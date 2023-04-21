@@ -1,5 +1,6 @@
 package com.geulkkoli.web.user;
 
+import com.geulkkoli.application.security.UserSecurityService;
 import com.geulkkoli.application.user.AuthUser;
 import com.geulkkoli.domain.user.User;
 import com.geulkkoli.domain.user.service.UserService;
@@ -18,9 +19,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-
 @Controller
 @RequiredArgsConstructor
 @Slf4j
@@ -32,6 +30,7 @@ public class UserController {
     public static final String EDIT_PASSWORD_FORM = "user/edit/editPassword";
     public static final String REDIRECT_INDEX = "redirect:/";
     private final UserService userService;
+    private final UserSecurityService userSecurityService;
 
     @RequestMapping("/loginPage")
     public String loginForm(@ModelAttribute("loginForm") LoginFormDto form) {
@@ -66,7 +65,7 @@ public class UserController {
         }
 
         if (!bindingResult.hasErrors()) {
-            userService.join(form);
+            userSecurityService.join(form);
 
             log.info("joinModel = {}", model);
             log.info("joinForm = {}", form);
@@ -90,8 +89,6 @@ public class UserController {
      * */
     @PostMapping("/edit")
     public String editForm(@Validated @ModelAttribute("editForm") EditFormDto editFormDto, BindingResult bindingResult, @AuthenticationPrincipal AuthUser authUser) {
-
-
 
         // 닉네임 중복 검사 && 본인의 기존 닉네임과 일치해도 중복이라고 안 뜨게
         if (userService.isNickNameDuplicate(editFormDto.getNickName()) && !editFormDto.getNickName().equals(authUser.getNickName())) {
@@ -118,8 +115,8 @@ public class UserController {
 
     @PostMapping("/editPassword")
     public String editPassword(@Validated @ModelAttribute("editPasswordForm") EditPasswordFormDto form, BindingResult bindingResult, @AuthenticationPrincipal AuthUser authUser, RedirectAttributes redirectAttributes) {
-
-        if (!userService.isPasswordVerification(authUser.getUserId(), form)) {
+        User user = userService.findById(authUser.getUserId());
+        if (!userSecurityService.isPasswordVerification(user, form)) {
             bindingResult.rejectValue("password", "Check.password");
         }
 
@@ -127,11 +124,10 @@ public class UserController {
             bindingResult.rejectValue("verifyPassword", "Check.verifyPassword");
         }
 
-
         if (bindingResult.hasErrors()) {
             return EDIT_PASSWORD_FORM;
         } else {
-            userService.updatePassword(authUser.getUserId(), form);
+            userSecurityService.updatePassword(authUser.getUserId(), form);
             redirectAttributes.addAttribute("status", true);
             log.info("editPasswordForm = {}", form);
         }
@@ -139,14 +135,20 @@ public class UserController {
         return "redirect:/edit";
     }
 
+    /**
+     * 서비스에서 쓰는 객체의 이름은 User인데 memberDelete라는 이름으로 되어 있어서 통일성을 위해 이름을 고친다.
+     * 또한 컨트롤러에서는 탈퇴를 지원하므로 삭제가 아닌 탈퇴라는 의미가 이 메서드에 좀 더 정확한 거 같아 이름을 고친다.
+     */
     @PostMapping("/memberDelete")
-    public String memberDelete(HttpServletRequest request) {
-
-        HttpSession session = request.getSession(false);
-        if (session != null) {
-            userService.delete((User) session.getAttribute(SessionConst.LOGIN_USER));
-            session.invalidate();
+    public String unsubscribe(@AuthenticationPrincipal AuthUser authUser) {
+        try {
+            User findUser = userService.findById(authUser.getUserId());
+            userService.delete(findUser);
+        } catch (Exception e) {
+            //만약 findUser가 null이라면? 다른 에러페이지를 보여줘야하지 않을까?
+            return "redirect:/";
         }
         return "redirect:/";
     }
+
 }

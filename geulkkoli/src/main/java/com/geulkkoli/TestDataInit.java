@@ -1,6 +1,7 @@
 
 package com.geulkkoli;
 
+import com.geulkkoli.application.security.UserSecurityService;
 import com.geulkkoli.domain.post.Post;
 import com.geulkkoli.domain.post.PostRepository;
 import com.geulkkoli.domain.user.service.UserService;
@@ -19,7 +20,7 @@ import org.springframework.stereotype.Component;
 public class TestDataInit {
 
     private final PostRepository postRepository;
-    private final UserService userService;
+    private final UserSecurityService userSecurityService;
 
     /**
      * 확인용 초기 데이터 추가
@@ -65,7 +66,7 @@ public class TestDataInit {
         joinForm.setPhoneNo("9190232333");
         joinForm.setGender("male");
         joinForm.setPassword("qwe123!!!");
-        userService.join(joinForm);
+        userSecurityService.join(joinForm);
 
     }
 
