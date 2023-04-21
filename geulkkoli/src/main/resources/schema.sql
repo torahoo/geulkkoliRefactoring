@@ -68,11 +68,22 @@ CREATE TABLE IF NOT EXISTS user_followings
 
 create table if not exists report
 (
-    report_id        bigint primary key auto_increment,
-    reported_post_id bigint    not null,
-    reporter_id      bigint    not null,
-    reported_at      TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    constraint fk_reported_post foreign key (reported_post_id) references post (post_id),
+    report_id bigint primary key auto_increment,
+    report_post_id bigint not null,
+    reporter_id bigint not null,
+    reported_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    constraint fk_reported_post foreign key (report_post_id) references post (post_id),
     constraint fk_reporter foreign key (reporter_id) references users (user_id)
-)
+);
 
+create table if not exists permissions
+(
+    permission_id bigint primary key auto_increment,
+    user_id bigint not null,
+    role int not null,
+    is_enabled boolean not null,
+    is_account_non_expired boolean not null,
+    is_account_non_locked boolean not null,
+    is_credentials_non_expired boolean not null,
+    constraint fk_permission_user foreign key (user_id) references users (user_id)
+);
