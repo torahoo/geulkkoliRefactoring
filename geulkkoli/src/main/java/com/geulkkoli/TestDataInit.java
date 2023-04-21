@@ -51,13 +51,13 @@ public class TestDataInit {
         joinForm2.setPhoneNo("01012345678");
         joinForm2.setGender("male");
         joinForm2.setPassword("123");
-        userService.join(joinForm);
+        userService.join(joinForm2);
 
         User user02 = userService.findById(2L);
 
         postRepository.save(Post.builder()
                 .user(user01)
-                .nickName("바나나")
+                .nickName(user01.getNickName())
                 .postBody("나는 멋지고 섹시한 개발자")//채&훈
                 .title("여러분").build());
 
@@ -65,19 +65,19 @@ public class TestDataInit {
                 .user(user01)
                 .title("testTitle01")
                 .postBody("test postbody 01")//채&훈
-                .nickName("점심뭐먹지").build()
+                .nickName(user01.getNickName()).build()
         );
         postRepository.save(Post.builder()
                 .user(user02)
                 .title("testTitle02")
                 .postBody("test postbody 02")//채&훈
-                .nickName("점심뭐먹지").build()
+                .nickName(user02.getNickName()).build()
         )
         ;postRepository.save(Post.builder()
                 .user(user02)
                 .title("testTitle03")
                 .postBody("test postbody 03")//채&훈
-                .nickName("점심뭐먹지").build()
+                .nickName(user02.getNickName()).build()
         );
     }
 

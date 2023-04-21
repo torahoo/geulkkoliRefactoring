@@ -1,10 +1,8 @@
 package com.geulkkoli.domain.post.repository;
 
 import com.geulkkoli.domain.post.entity.Post;
-import com.geulkkoli.domain.post.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.hibernate.Transaction;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 

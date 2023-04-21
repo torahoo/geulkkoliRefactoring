@@ -13,7 +13,7 @@ import java.util.Objects;
 @Entity
 @NoArgsConstructor
 @Getter
-public class Comments {
+public class Comments extends ConfigDate{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -31,9 +31,6 @@ public class Comments {
 
     private String commentBody;
 
-    @Embedded
-    private ConfigDate configDate;
-
     @Override
     public boolean equals(Object obj) {
         if (this == obj) return true;
@@ -49,11 +46,10 @@ public class Comments {
     }
 
     @Builder
-    public Comments (User user, Post post, String commentBody, ConfigDate configDate) {
+    public Comments (User user, Post post, String commentBody) {
         this.user = user;
         this.post = post;
         this.commentBody = commentBody;
-        this.configDate = configDate;
     }
 
     //==연관관계 메서드==//
@@ -72,5 +68,9 @@ public class Comments {
     public void setPost (Post post) {
         this.post = new Post();
         post.getComments().add(this);
+    }
+
+    public void changeComments (String commentBody) {
+        this.commentBody = commentBody;
     }
 }
