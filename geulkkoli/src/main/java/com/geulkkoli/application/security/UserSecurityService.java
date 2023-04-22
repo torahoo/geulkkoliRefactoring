@@ -49,6 +49,7 @@ public class UserSecurityService implements UserDetailsService {
         } else {
             authorities.add(new SimpleGrantedAuthority(Role.USER.getRoleName()));
         }
+
         AccountActivityElement activityElement = permission.getAccountActivityElement();
         UserModelDto userModel = UserModelDto.toDto(user);
 
@@ -63,9 +64,13 @@ public class UserSecurityService implements UserDetailsService {
 
     public void join(JoinFormDto form) {
         User user = userRepository.save(form.toEntity(passwordEncoder));
-        AccountActivityElement element = AccountActivityElement.builder().isAccountNonLocked(true).isAccountNonExpired(true).isCredentialsNonExpired(true).isEnabled(true).build();
+        AccountActivityElement element = accountActivity();
         Permission permission = Permission.of(user, Role.USER, element);
         permissionRepository.save(permission);
+    }
+
+    private AccountActivityElement accountActivity() {
+        return AccountActivityElement.builder().isAccountNonLocked(true).isAccountNonExpired(true).isCredentialsNonExpired(true).isEnabled(true).build();
     }
 
     public boolean isPasswordVerification(User user, EditPasswordFormDto editPasswordFormDto) {

@@ -9,10 +9,10 @@ import java.util.Collection;
 @Getter
 public class AuthUser extends User {
     private final Long userId;
-    private final String userRealName;
-    private final String nickName;
-    private final String phoneNo;
-    private final String gender;
+    private String userRealName;
+    private String nickName;
+    private String phoneNo;
+    private String gender;
     private boolean isEnabled;
     private boolean isAccountNonExpired;
     private boolean isAccountNonLocked;
@@ -67,5 +67,33 @@ public class AuthUser extends User {
     @Override
     public boolean isEnabled() {
         return isEnabled;
+    }
+
+    public String getNickName() {
+        return nickName;
+    }
+
+    public String getPhoneNo() {
+        return phoneNo;
+    }
+
+    public String getGender() {
+        return gender;
+    }
+
+    public void modifyNickName(String nickName) {
+        this.nickName = nickName;
+    }
+
+    public void modifyPhoneNo(String phoneNo) {
+        this.phoneNo = phoneNo;
+    }
+
+    public void modifyGender(String gender) {
+        this.gender = gender;
+    }
+
+    public void modifyUserRealName(String userRealName) {
+        this.userRealName = userRealName;
     }
 }

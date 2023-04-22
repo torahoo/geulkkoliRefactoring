@@ -67,12 +67,12 @@ public class  SecurityConfig {
 
     /*
      * password를 복호화 해줄 때 사용한다.
+     *
      * */
     @Bean
     PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
-
 
 
 }

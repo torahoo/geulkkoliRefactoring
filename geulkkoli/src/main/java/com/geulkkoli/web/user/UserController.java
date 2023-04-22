@@ -9,6 +9,7 @@ import com.geulkkoli.web.user.edit.EditPasswordFormDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -84,7 +85,6 @@ public class UserController {
     }
 
     /*
-     * TODO: 수정된 회원정보가 세션에 저장되어 있지 않음 추후에 바꾸겠다
      * authUser가 기존의 세션 저장 방식을 대체한다
      * */
     @PostMapping("/edit")
@@ -103,7 +103,15 @@ public class UserController {
             return EDIT_FORM;
         } else {
             userService.update(authUser.getUserId(), editFormDto);
+            // 세션에 저장된 authUser의 정보를 수정한다.
+            Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+            AuthUser newAuth = (AuthUser) principal;
+            newAuth.modifyNickName(editFormDto.getNickName());
+            newAuth.modifyPhoneNo(editFormDto.getPhoneNo());
+            newAuth.modifyGender(editFormDto.getGender());
+            newAuth.modifyUserRealName(editFormDto.getUserName());
         }
+
 
         return "redirect:/edit";
     }
