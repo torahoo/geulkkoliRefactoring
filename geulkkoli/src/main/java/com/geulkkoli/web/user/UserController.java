@@ -77,8 +77,10 @@ public class UserController {
         }
     }
 
-    @GetMapping("/edit")
+    @GetMapping("user/edit")
     public String editForm(@ModelAttribute("editForm") EditFormDto editFormDto, @AuthenticationPrincipal AuthUser authUser, Model model) {
+        log.info("editForm : {}",editFormDto.toString());
+        log.info("authUser : {}",authUser.toString());
         editFormDto.editFormDto(authUser.getUserRealName(), authUser.getNickName(), authUser.getPhoneNo(), authUser.getGender());
         model.addAttribute("editForm", editFormDto);
         return EDIT_FORM;
@@ -87,9 +89,9 @@ public class UserController {
     /*
      * authUser가 기존의 세션 저장 방식을 대체한다
      * */
-    @PostMapping("/edit")
+    @PostMapping("user/edit")
     public String editForm(@Validated @ModelAttribute("editForm") EditFormDto editFormDto, BindingResult bindingResult, @AuthenticationPrincipal AuthUser authUser) {
-
+        log.info("editForm : {}",editFormDto.toString());
         // 닉네임 중복 검사 && 본인의 기존 닉네임과 일치해도 중복이라고 안 뜨게
         if (userService.isNickNameDuplicate(editFormDto.getNickName()) && !editFormDto.getNickName().equals(authUser.getNickName())) {
             bindingResult.rejectValue("nickName", "Duple.nickName");
@@ -111,17 +113,15 @@ public class UserController {
             newAuth.modifyGender(editFormDto.getGender());
             newAuth.modifyUserRealName(editFormDto.getUserName());
         }
-
-
-        return "redirect:/edit";
+        return "redirect:/user/edit";
     }
 
-    @GetMapping("/editPassword")
+    @GetMapping("user/edit/editPassword")
     public String editPasswordForm(@ModelAttribute("editPasswordForm") EditPasswordFormDto form) {
         return EDIT_PASSWORD_FORM;
     }
 
-    @PostMapping("/editPassword")
+    @PostMapping("user/edit/editPassword")
     public String editPassword(@Validated @ModelAttribute("editPasswordForm") EditPasswordFormDto form, BindingResult bindingResult, @AuthenticationPrincipal AuthUser authUser, RedirectAttributes redirectAttributes) {
         User user = userService.findById(authUser.getUserId());
         if (!userSecurityService.isPasswordVerification(user, form)) {
@@ -140,14 +140,14 @@ public class UserController {
             log.info("editPasswordForm = {}", form);
         }
 
-        return "redirect:/edit";
+        return "redirect:/user/edit";
     }
 
     /**
      * 서비스에서 쓰는 객체의 이름은 User인데 memberDelete라는 이름으로 되어 있어서 통일성을 위해 이름을 고친다.
-     * 또한 컨트롤러에서는 탈퇴를 지원하므로 삭제가 아닌 탈퇴라는 의미가 이 메서드에 좀 더 정확한 거 같아 이름을 고친다.
+     * 또한 사용자 입장에서는 자신의 정보를 삭제하는 게 아니라 탈퇴하는 서비스를 쓰고 있으므로 uri를 의미에 더 가깝게 고쳤다.
      */
-    @PostMapping("/memberDelete")
+    @PostMapping("user/edit/unsubscribe")
     public String unsubscribe(@AuthenticationPrincipal AuthUser authUser) {
         try {
             User findUser = userService.findById(authUser.getUserId());

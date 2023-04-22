@@ -74,7 +74,7 @@ public class UserSecurityService implements UserDetailsService {
     }
 
     public boolean isPasswordVerification(User user, EditPasswordFormDto editPasswordFormDto) {
-        return passwordEncoder.matches(user.getPassword(), editPasswordFormDto.getPassword());
+        return passwordEncoder.matches(editPasswordFormDto.getPassword(), user.getPassword());
     }
 
     public void updatePassword(Long id, EditPasswordFormDto editPasswordFormDto) {
