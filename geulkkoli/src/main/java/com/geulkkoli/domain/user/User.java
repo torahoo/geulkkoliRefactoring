@@ -2,8 +2,8 @@ package com.geulkkoli.domain.user;
 
 import com.geulkkoli.application.security.Permission;
 import com.geulkkoli.application.security.RoleEntity;
-import com.geulkkoli.domain.admin.report.Report;
-import com.geulkkoli.domain.admin.suspension.AccountLock;
+import com.geulkkoli.domain.admin.Report;
+import com.geulkkoli.domain.admin.AccountLock;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -119,5 +119,8 @@ public class User {
             this.permission.getUsers().remove(this);
         }
         this.permission = permission;
-        permission.addUser(this);    }
+        permission.addUser(this);
+    }
+
+
 }

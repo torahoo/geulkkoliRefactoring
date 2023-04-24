@@ -1,5 +1,6 @@
 package com.geulkkoli.domain.admin.suspension;
 
+import com.geulkkoli.domain.admin.AccountLock;
 import com.geulkkoli.domain.user.User;
 import org.assertj.core.api.Condition;
 import org.junit.jupiter.api.Test;

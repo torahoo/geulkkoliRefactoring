@@ -1,6 +1,5 @@
-package com.geulkkoli.domain.admin.suspension;
+package com.geulkkoli.domain.admin;
 
-import com.geulkkoli.application.security.Permission;
 import com.geulkkoli.domain.user.User;
 
 import javax.persistence.*;
@@ -13,6 +12,7 @@ public class AccountLock {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
     private User lockedUser;
     private String reason;
 
