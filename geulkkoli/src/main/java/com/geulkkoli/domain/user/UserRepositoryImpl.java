@@ -1,14 +1,10 @@
 package com.geulkkoli.domain.user;
 
-import com.geulkkoli.web.user.edit.EditFormDto;
+import com.geulkkoli.web.user.edit.UserInfoEditDto;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
-import java.util.Optional;
 
 
 @Transactional
@@ -21,7 +17,7 @@ public class UserRepositoryImpl implements UserRepositoryCustom {
 
     // User 정보 업데이트 (이메일은 변경 불가 / 비밀번호는 따로 변경 처리)
     @Override
-    public void update(Long id, EditFormDto form) {
+    public void edit(Long id, UserInfoEditDto form) {
         QUser user = QUser.user;
         queryFactory.update(user)
                 .set(user.userName, form.getUserName())
@@ -33,7 +29,7 @@ public class UserRepositoryImpl implements UserRepositoryCustom {
     }
 
     @Override
-    public void updatePassword(Long id, String password) {
+    public void editPassword(Long id, String password) {
         QUser user = QUser.user;
         queryFactory.update(user)
                 .set(user.password, password)

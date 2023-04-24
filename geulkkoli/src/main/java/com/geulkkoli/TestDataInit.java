@@ -2,6 +2,7 @@
 package com.geulkkoli;
 
 import com.geulkkoli.application.security.UserSecurityService;
+import com.geulkkoli.domain.admin.report.service.AdminService;
 import com.geulkkoli.domain.post.Post;
 import com.geulkkoli.domain.post.PostRepository;
 import com.geulkkoli.domain.user.service.UserService;
@@ -21,6 +22,7 @@ public class TestDataInit {
 
     private final PostRepository postRepository;
     private final UserSecurityService userSecurityService;
+    private final AdminService adminService;
 
     /**
      * 확인용 초기 데이터 추가

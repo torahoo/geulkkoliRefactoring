@@ -2,9 +2,8 @@ package com.geulkkoli.domain.user.service;
 
 import com.geulkkoli.domain.user.User;
 import com.geulkkoli.domain.user.UserRepository;
-import com.geulkkoli.web.user.JoinFormDto;
-import com.geulkkoli.web.user.edit.EditFormDto;
-import com.geulkkoli.web.user.edit.EditPasswordFormDto;
+import com.geulkkoli.web.user.edit.UserInfoEditDto;
+import com.geulkkoli.web.user.edit.PasswordEditDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -34,20 +33,17 @@ public class UserService {
         return userRepository.findByPhoneNo(phoneNo).isPresent();
     }
 
-    public void join(JoinFormDto form) {
-        userRepository.save(form.toEntity(passwordEncoder));
-    }
-    public void update(Long id, EditFormDto editFormDto) {
-        userRepository.update(id, editFormDto);
+    public void edit(Long id, UserInfoEditDto userInfoEditDto) {
+        userRepository.edit(id, userInfoEditDto);
     }
 
     // 현재 비밀번호 입력 시 기존 비밀번호와 일치하는지 확인
-    public boolean isPasswordVerification(Long id, EditPasswordFormDto editPasswordFormDto) {
-        return passwordEncoder.matches(findById(id).getPassword(), editPasswordFormDto.getPassword());
+    public boolean isPasswordVerification(Long id, PasswordEditDto passwordEditDto) {
+        return passwordEncoder.matches(findById(id).getPassword(), passwordEditDto.getOldPassword());
     }
 
-    public void updatePassword(Long id, EditPasswordFormDto editPasswordFormDto) {
-        userRepository.updatePassword(id, passwordEncoder.encode(editPasswordFormDto.getNewPassword()));
+    public void editPassword(Long id, PasswordEditDto passwordEditDto) {
+        userRepository.editPassword(id, passwordEncoder.encode(passwordEditDto.getNewPassword()));
     }
 
     public void delete(User user) {

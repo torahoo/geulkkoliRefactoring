@@ -4,8 +4,8 @@ import com.geulkkoli.application.security.UserSecurityService;
 import com.geulkkoli.application.user.AuthUser;
 import com.geulkkoli.domain.user.User;
 import com.geulkkoli.domain.user.service.UserService;
-import com.geulkkoli.web.user.edit.EditFormDto;
-import com.geulkkoli.web.user.edit.EditPasswordFormDto;
+import com.geulkkoli.web.user.edit.UserInfoEditDto;
+import com.geulkkoli.web.user.edit.PasswordEditDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -78,11 +78,11 @@ public class UserController {
     }
 
     @GetMapping("user/edit")
-    public String editForm(@ModelAttribute("editForm") EditFormDto editFormDto, @AuthenticationPrincipal AuthUser authUser, Model model) {
-        log.info("editForm : {}",editFormDto.toString());
+    public String editForm(@ModelAttribute("editForm") UserInfoEditDto userInfoEditDto, @AuthenticationPrincipal AuthUser authUser, Model model) {
+        log.info("editForm : {}", userInfoEditDto.toString());
         log.info("authUser : {}",authUser.toString());
-        editFormDto.editFormDto(authUser.getUserRealName(), authUser.getNickName(), authUser.getPhoneNo(), authUser.getGender());
-        model.addAttribute("editForm", editFormDto);
+        userInfoEditDto.editFormDto(authUser.getUserRealName(), authUser.getNickName(), authUser.getPhoneNo(), authUser.getGender());
+        model.addAttribute("editForm", userInfoEditDto);
         return EDIT_FORM;
     }
 
@@ -90,39 +90,39 @@ public class UserController {
      * authUser가 기존의 세션 저장 방식을 대체한다
      * */
     @PostMapping("user/edit")
-    public String editForm(@Validated @ModelAttribute("editForm") EditFormDto editFormDto, BindingResult bindingResult, @AuthenticationPrincipal AuthUser authUser) {
-        log.info("editForm : {}",editFormDto.toString());
+    public String editForm(@Validated @ModelAttribute("editForm") UserInfoEditDto userInfoEditDto, BindingResult bindingResult, @AuthenticationPrincipal AuthUser authUser) {
+        log.info("editForm : {}", userInfoEditDto.toString());
         // 닉네임 중복 검사 && 본인의 기존 닉네임과 일치해도 중복이라고 안 뜨게
-        if (userService.isNickNameDuplicate(editFormDto.getNickName()) && !editFormDto.getNickName().equals(authUser.getNickName())) {
+        if (userService.isNickNameDuplicate(userInfoEditDto.getNickName()) && !userInfoEditDto.getNickName().equals(authUser.getNickName())) {
             bindingResult.rejectValue("nickName", "Duple.nickName");
         }
 
-        if (userService.isPhoneNoDuplicate(editFormDto.getPhoneNo()) && !editFormDto.getPhoneNo().equals(authUser.getPhoneNo())) {
+        if (userService.isPhoneNoDuplicate(userInfoEditDto.getPhoneNo()) && !userInfoEditDto.getPhoneNo().equals(authUser.getPhoneNo())) {
             bindingResult.rejectValue("phoneNo", "Duple.phoneNo");
         }
 
         if (bindingResult.hasErrors()) {
             return EDIT_FORM;
         } else {
-            userService.update(authUser.getUserId(), editFormDto);
+            userService.edit(authUser.getUserId(), userInfoEditDto);
             // 세션에 저장된 authUser의 정보를 수정한다.
             Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
             AuthUser newAuth = (AuthUser) principal;
-            newAuth.modifyNickName(editFormDto.getNickName());
-            newAuth.modifyPhoneNo(editFormDto.getPhoneNo());
-            newAuth.modifyGender(editFormDto.getGender());
-            newAuth.modifyUserRealName(editFormDto.getUserName());
+            newAuth.modifyNickName(userInfoEditDto.getNickName());
+            newAuth.modifyPhoneNo(userInfoEditDto.getPhoneNo());
+            newAuth.modifyGender(userInfoEditDto.getGender());
+            newAuth.modifyUserRealName(userInfoEditDto.getUserName());
         }
         return "redirect:/user/edit";
     }
 
     @GetMapping("user/edit/editPassword")
-    public String editPasswordForm(@ModelAttribute("editPasswordForm") EditPasswordFormDto form) {
+    public String editPasswordForm(@ModelAttribute("editPasswordForm") PasswordEditDto form) {
         return EDIT_PASSWORD_FORM;
     }
 
     @PostMapping("user/edit/editPassword")
-    public String editPassword(@Validated @ModelAttribute("editPasswordForm") EditPasswordFormDto form, BindingResult bindingResult, @AuthenticationPrincipal AuthUser authUser, RedirectAttributes redirectAttributes) {
+    public String editPassword(@Validated @ModelAttribute("editPasswordForm") PasswordEditDto form, BindingResult bindingResult, @AuthenticationPrincipal AuthUser authUser, RedirectAttributes redirectAttributes) {
         User user = userService.findById(authUser.getUserId());
         if (!userSecurityService.isPasswordVerification(user, form)) {
             bindingResult.rejectValue("password", "Check.password");

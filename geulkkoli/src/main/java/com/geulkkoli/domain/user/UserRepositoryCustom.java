@@ -1,11 +1,11 @@
 package com.geulkkoli.domain.user;
 
-import com.geulkkoli.web.user.edit.EditFormDto;
+import com.geulkkoli.web.user.edit.UserInfoEditDto;
 public interface UserRepositoryCustom {
 
 
-    void update(Long id, EditFormDto editFormDto);
+    void edit(Long id, UserInfoEditDto userInfoEditDto);
 
-    void updatePassword(Long id, String newPassword);
+    void editPassword(Long id, String newPassword);
 
 }

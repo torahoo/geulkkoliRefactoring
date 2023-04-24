@@ -11,12 +11,12 @@ import javax.validation.constraints.Pattern;
 @Getter
 @Setter
 @ToString
-public class EditPasswordFormDto {
+public class PasswordEditDto {
 
     @NotEmpty
     @Length(min = 8, max = 20)
     @Pattern(regexp = "(?=.*[0-9])(?=.*[a-zA-Z])(?=.*[*\\W])(?=\\S+$).{8,20}")
-    private String password;
+    private String oldPassword;
 
     @NotEmpty
     @Length(min = 8, max = 20)
