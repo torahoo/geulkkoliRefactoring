@@ -96,6 +96,7 @@ class ImplCommentsRepositoryTest {
         Comments save = implCommentsRepository.save(comment);
 
         Assertions.assertThat(comment.getCommentBody()).isEqualTo(save.getCommentBody());
+        Assertions.assertThat("test댓글").isEqualTo(save.getCommentBody());
 
     }
 
@@ -111,6 +112,9 @@ class ImplCommentsRepositoryTest {
                 .orElseThrow(() -> new NoSuchElementException("no comment id found : " + save.getCommentId()));
 
         Assertions.assertThat(find).isEqualTo(save);
+        Assertions.assertThat(find.getCommentBody()).isEqualTo("test댓글");
+        Assertions.assertThat(find.getPost()).isEqualTo(save.getPost());
+        Assertions.assertThat(find.getUser()).isEqualTo(save.getUser());
     }
 
     @Test
@@ -123,6 +127,7 @@ class ImplCommentsRepositoryTest {
         Comments save = implCommentsRepository.save(comment);
         List<Comments> all = implCommentsRepository.findAll();
         Assertions.assertThat(1).isEqualTo(all.size());
+        Assertions.assertThat("test댓글").isEqualTo(all.get(0).getCommentBody());
     }
 
     @Test
@@ -141,6 +146,7 @@ class ImplCommentsRepositoryTest {
                 .orElseThrow(() -> new NoSuchElementException("no comment id found : " + save.getCommentId()));
 
         Assertions.assertThat(find.getCommentBody()).isEqualTo(update.getCommentBody());
+        Assertions.assertThat(find.getCommentBody()).isEqualTo("수정바디");
     }
 
     @Test
