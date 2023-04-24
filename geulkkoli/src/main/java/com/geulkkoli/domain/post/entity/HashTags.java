@@ -1,6 +1,7 @@
 package com.geulkkoli.domain.post.entity;
 
 import com.geulkkoli.domain.user.User;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -21,6 +22,12 @@ public class HashTags {
 
     @Column(nullable = false)
     private String hashTagName;
+
+    @Builder
+    public HashTags (Post post, String hashTagName) {
+        this.post = post;
+        this.hashTagName = hashTagName;
+    }
 
     //==연관관계 메서드==//
 

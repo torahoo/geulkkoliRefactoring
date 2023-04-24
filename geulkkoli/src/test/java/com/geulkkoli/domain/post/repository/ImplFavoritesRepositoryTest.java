@@ -17,8 +17,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.NoSuchElementException;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 @Slf4j
 @SpringBootTest
 @Transactional
@@ -74,31 +72,34 @@ class ImplFavoritesRepositoryTest {
     @Test
     public void 좋아요_저장 () {
         //given
-        Favorites favorites = Favorites.builder()
+        Favorites favorite = Favorites.builder()
                 .post(post01)
                 .user(user)
                 .build();
 
         //when
-        Favorites save = implFavoritesRepository.save(favorites);
+        Favorites save = implFavoritesRepository.save(favorite);
 
         //then
-        Assertions.assertThat(favorites.getPost()).isEqualTo(save.getPost());
-        Assertions.assertThat(favorites.getPost().getTitle()).isEqualTo("여러분");
-        Assertions.assertThat(favorites.getUser().getEmail()).isEqualTo("test@naver.com");
+        Assertions.assertThat(favorite.getPost()).isEqualTo(save.getPost());
+        Assertions.assertThat(favorite.getPost().getTitle()).isEqualTo("여러분");
+        Assertions.assertThat(favorite.getUser().getEmail()).isEqualTo("test@naver.com");
     }
 
+    /**
+     * 동일 내용이 persist될 시에 같은 id 값을 가지는지 테스트
+     */
     @Test
     public void 중복_좋아요_확인 () throws Exception {
         //given
-        Favorites favorites = Favorites.builder()
+        Favorites favorite = Favorites.builder()
                 .post(post01)
                 .user(user)
                 .build();
 
         //when
-        Favorites save = implFavoritesRepository.save(favorites);
-        Favorites save2 = implFavoritesRepository.save(favorites);
+        Favorites save = implFavoritesRepository.save(favorite);
+        Favorites save2 = implFavoritesRepository.save(favorite);
 
         //then
         Assertions.assertThat(save.getFavoritesId()).isEqualTo(save2.getFavoritesId());
@@ -107,11 +108,11 @@ class ImplFavoritesRepositoryTest {
     @Test
     public void 좋아요_하나_조회 (){
         //given
-        Favorites favorites = Favorites.builder()
+        Favorites favorite = Favorites.builder()
                 .post(post01)
                 .user(user)
                 .build();
-        Favorites save = implFavoritesRepository.save(favorites);
+        Favorites save = implFavoritesRepository.save(favorite);
 
         //when
         Favorites find = implFavoritesRepository.findById(save.getFavoritesId())
@@ -126,11 +127,11 @@ class ImplFavoritesRepositoryTest {
     @Test
     public void 전체_좋아요_조회 () throws Exception {
         //given
-        Favorites favorites = Favorites.builder()
+        Favorites favorite = Favorites.builder()
                 .post(post01)
                 .user(user)
                 .build();
-        Favorites save = implFavoritesRepository.save(favorites);
+        Favorites save = implFavoritesRepository.save(favorite);
 
         //when
         List<Favorites> all = implFavoritesRepository.findAll();
@@ -144,17 +145,17 @@ class ImplFavoritesRepositoryTest {
     @Test
     public void 좋아요_삭제 () throws Exception {
         //given
-        Favorites favorites = Favorites.builder()
+        Favorites favorite = Favorites.builder()
                 .post(post01)
                 .user(user)
                 .build();
-        Favorites save = implFavoritesRepository.save(favorites);
+        Favorites save = implFavoritesRepository.save(favorite);
 
-        Favorites favorites2 = Favorites.builder()
+        Favorites favorite2 = Favorites.builder()
                 .post(post02)
                 .user(user)
                 .build();
-        Favorites save2 = implFavoritesRepository.save(favorites2);
+        Favorites save2 = implFavoritesRepository.save(favorite2);
 
         //when
         implFavoritesRepository.delete(save.getFavoritesId());

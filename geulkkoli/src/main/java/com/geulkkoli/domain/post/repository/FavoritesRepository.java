@@ -6,9 +6,8 @@ import java.util.List;
 import java.util.Optional;
 
 public interface FavoritesRepository {
-    Favorites save (Favorites favorites);
-    Optional<Favorites> findById (Long favoritesId);
+    Favorites save (Favorites favorite);
+    Optional<Favorites> findById (Long favoriteId);
     List<Favorites> findAll();
-    void update (Long favoritesId, Favorites updateParam);
-    void delete (Long favoritesId);
+    void delete (Long favoriteId);
 }

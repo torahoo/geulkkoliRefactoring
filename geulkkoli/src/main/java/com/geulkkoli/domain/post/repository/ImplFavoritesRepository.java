@@ -19,15 +19,15 @@ public class ImplFavoritesRepository implements FavoritesRepository{
     private final EntityManager em;
 
     @Override
-    public Favorites save(Favorites favorites) {
-        em.persist(favorites);
-        return favorites;
+    public Favorites save(Favorites favorite) {
+        em.persist(favorite);
+        return favorite;
     }
 
     @Override
-    public Optional<Favorites> findById(Long favoritesId) {
-        Favorites favorites = em.find(Favorites.class, favoritesId);
-        return Optional.of(favorites);
+    public Optional<Favorites> findById(Long favoriteId) {
+        Favorites favorite = em.find(Favorites.class, favoriteId);
+        return Optional.of(favorite);
     }
 
     @Override
@@ -37,16 +37,9 @@ public class ImplFavoritesRepository implements FavoritesRepository{
     }
 
     @Override
-    public void update(Long favoritesId, Favorites updateParam) {
-        Favorites findFavorites = em.find(Favorites.class, favoritesId);
-        findFavorites.setPost(updateParam.getPost());
-        findFavorites.setUser(updateParam.getUser());
-    }
-
-    @Override
-    public void delete(Long favoritesId) {
-        Favorites findFavorites = em.find(Favorites.class, favoritesId);
-        em.remove(findFavorites);
+    public void delete(Long favoriteId) {
+        Favorites findFavorite = em.find(Favorites.class, favoriteId);
+        em.remove(findFavorite);
     }
 
     public void clear () {

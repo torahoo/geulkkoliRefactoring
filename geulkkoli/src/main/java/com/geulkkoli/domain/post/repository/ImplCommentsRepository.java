@@ -19,15 +19,15 @@ public class ImplCommentsRepository implements CommentsRepository {
     private final EntityManager em;
 
     @Override
-    public Comments save(Comments comments) {
-        em.persist(comments);
-        return comments;
+    public Comments save(Comments comment) {
+        em.persist(comment);
+        return comment;
     }
 
     @Override
-    public Optional<Comments> findById(Long commentsId) {
-        Comments findComments = em.find(Comments.class, commentsId);
-        return Optional.of(findComments);
+    public Optional<Comments> findById(Long commentId) {
+        Comments findComment = em.find(Comments.class, commentId);
+        return Optional.of(findComment);
     }
 
     @Override
@@ -37,15 +37,15 @@ public class ImplCommentsRepository implements CommentsRepository {
     }
 
     @Override
-    public void update(Long commentsId, Comments updateParam) {
-        Comments comments = em.find(Comments.class, commentsId);
-        comments.changeComments(updateParam.getCommentBody());
+    public void update(Long commentId, Comments updateParam) {
+        Comments comment = em.find(Comments.class, commentId);
+        comment.changeComments(updateParam.getCommentBody());
     }
 
     @Override
-    public void delete(Long commentsId) {
-        Comments delete = em.find(Comments.class, commentsId);
-        em.remove(delete);
+    public void delete(Long commentId) {
+        Comments findComment = em.find(Comments.class, commentId);
+        em.remove(findComment);
     }
 
     public void clear () {
