@@ -2,6 +2,7 @@ package com.geulkkoli.domain.user.service;
 
 import com.geulkkoli.domain.user.User;
 import com.geulkkoli.domain.user.UserRepository;
+import com.geulkkoli.domain.user.UserRepositoryCustom;
 import com.geulkkoli.web.user.edit.EditFormDto;
 import com.geulkkoli.web.user.edit.EditPasswordFormDto;
 import lombok.extern.slf4j.Slf4j;
@@ -16,6 +17,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
+
+import static org.assertj.core.api.Assertions.*;
 
 
 @SpringBootTest
@@ -64,7 +67,7 @@ class UpdateServiceTest {
         Optional<User> one = userRepository.findById(save.getUserId());
 
         // then
-        Assertions.assertThat("바나나155").isEqualTo(one.get().getNickName());
+        assertThat("바나나155").isEqualTo(one.get().getNickName());
     }
 
     @Test

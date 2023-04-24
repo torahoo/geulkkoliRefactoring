@@ -1,5 +1,6 @@
 package com.geulkkoli.web.post;
 
+import com.geulkkoli.application.user.AuthUser;
 import com.geulkkoli.domain.post.Post;
 import com.geulkkoli.domain.post.service.PostService;
 import com.geulkkoli.domain.user.User;
@@ -10,6 +11,7 @@ import com.geulkkoli.web.post.dto.PageDTO;
 import com.geulkkoli.web.user.SessionConst;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -37,33 +39,26 @@ public class PostController {
 
     //게시글 addForm html 로 이동
     @GetMapping("/add")
-    public String postAddForm(Model model, HttpServletRequest request) {
+    public String postAddForm(Model model, @AuthenticationPrincipal AuthUser authUser) {
         model.addAttribute("post", new AddDTO());// 빈 객체?
 
-        HttpSession session = request.getSession(false);
-        if (Objects.isNull(session)|| Objects.isNull(session.getAttribute(SessionConst.LOGIN_USER))) {
+        if (Objects.isNull(authUser)) {
             return "redirect:/post/list";
         }
-        User loginUser = (User) session.getAttribute(SessionConst.LOGIN_USER);
-
-        model.addAttribute("loginUser", loginUser);
-        log.info("loginUser={}", loginUser.getNickName());
 
         return "/post/postAddForm";
     }
 
     //새 게시글 등록
     @PostMapping("/add")
-    public String postAdd(@ModelAttribute AddDTO post, RedirectAttributes redirectAttributes, HttpServletRequest request) {
+    public String postAdd(@ModelAttribute AddDTO post, RedirectAttributes redirectAttributes, @AuthenticationPrincipal AuthUser authUser) {
         log.info("title={}", post.getTitle());
 
-        HttpSession session = request.getSession(false);
-        if (Objects.isNull(session)|| Objects.isNull(session.getAttribute(SessionConst.LOGIN_USER))) {
+        if (Objects.isNull(authUser)) {
             return "redirect:/post/list";
         }
-        User loginUser = (User) session.getAttribute(SessionConst.LOGIN_USER);
-        post.setNickName(loginUser.getNickName());
-        post.setAuthorId(loginUser.getUserId());
+        post.setNickName(authUser.getNickName());
+        post.setAuthorId(authUser.getUserId());
 
         Long postId = postService.savePost(post.toEntity());
         redirectAttributes.addAttribute("addStatus", true);

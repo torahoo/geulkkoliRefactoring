@@ -1,10 +1,9 @@
 
 package com.geulkkoli;
 
+import com.geulkkoli.application.security.UserSecurityService;
 import com.geulkkoli.domain.post.Post;
 import com.geulkkoli.domain.post.PostRepository;
-import com.geulkkoli.domain.user.User;
-import com.geulkkoli.domain.user.UserRepository;
 import com.geulkkoli.domain.user.service.UserService;
 import com.geulkkoli.web.user.JoinFormDto;
 import lombok.RequiredArgsConstructor;
@@ -12,7 +11,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.annotation.Profile;
 import org.springframework.context.event.EventListener;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 @Slf4j
@@ -22,9 +20,8 @@ import org.springframework.stereotype.Component;
 public class TestDataInit {
 
     private final PostRepository postRepository;
-    private final UserRepository userRepository;
-    private final UserService userService;
-    private final PasswordEncoder passwordEncoder;
+    private final UserSecurityService userSecurityService;
+
     /**
      * 확인용 초기 데이터 추가
      */
@@ -50,7 +47,8 @@ public class TestDataInit {
                 .postBody("test postbody 02")//채&훈
                 .nickName("점심뭐먹지").build()
         )
-        ;postRepository.save(Post.builder()
+        ;
+        postRepository.save(Post.builder()
                 .authorId(2L)
                 .title("testTitle03")
                 .postBody("test postbody 03")//채&훈
@@ -58,9 +56,9 @@ public class TestDataInit {
         );
 
         /*
-        * 시큐리티가 제공하는 비밀번호 암호화를 userService에서 쓰기 때문에
-        * userService로 테스트 데이터를 저정한다.
-        * */
+         * 시큐리티가 제공하는 비밀번호 암호화를 userService에서 쓰기 때문에
+         * userService로 테스트 데이터를 저정한다.
+         * */
         JoinFormDto joinForm = new JoinFormDto();
         joinForm.setEmail("tako99@naver.com");
         joinForm.setUserName("김");
@@ -68,19 +66,7 @@ public class TestDataInit {
         joinForm.setPhoneNo("9190232333");
         joinForm.setGender("male");
         joinForm.setPassword("qwe123!!!");
-        userService.join(joinForm);
-
-        userRepository.save(User.builder()
-                .userName("이")
-                .password(passwordEncoder.encode("123"))
-                .nickName("타코다치")
-                .email("admin")
-                .phoneNo("05200520052")
-                .gender("male")
-
-                .build());
-
-
+        userSecurityService.join(joinForm);
 
     }
 

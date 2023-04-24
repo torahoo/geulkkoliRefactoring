@@ -5,6 +5,7 @@ import com.geulkkoli.application.security.handler.LoginFailureHandler;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -15,7 +16,7 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
  * 시큐리티 설정파일
  */
 @Configuration
-public class  SecurityConfig {
+public class SecurityConfig {
 
     private final LoginFailureHandler loginFailureHandler;
     private final UserSecurityService userSecurityService;
@@ -44,9 +45,11 @@ public class  SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.userDetailsService(userSecurityService)
                 .authorizeRequests((auth) -> {
-                    auth.requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll();
-                    auth.mvcMatchers( "/", "/loginPage")
+                    auth.requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll(); // 정적 리소스들(css,js)등을 권장 방식에 맞게 인증 체크에서 제외 시켰다
+                    auth.mvcMatchers(HttpMethod.GET, "/", "/loginPage", "/post/read/**", "/post/list/**", "/post/search/**", "/post/category/*")
                             .permitAll();
+                    auth.mvcMatchers("/post/add/**", "/post/update/**", "/post/delete/**").hasAnyRole("USER", "ADMIN");
+                    auth.mvcMatchers("/user/edit/**").hasRole("USER");
                     auth.mvcMatchers("/admin/**").hasRole("ADMIN");
                 }).csrf().disable()
                 .formLogin()
@@ -72,8 +75,6 @@ public class  SecurityConfig {
     PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
-
-
 
 }
 

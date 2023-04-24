@@ -5,59 +5,71 @@ import com.geulkkoli.domain.post.service.PostService;
 import com.geulkkoli.web.post.dto.ListDTO;
 import lombok.extern.slf4j.Slf4j;
 import org.assertj.core.api.Assertions;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+
+import static org.assertj.core.api.Assertions.*;
 
 /**
  * TestDataInit Class 참조
  */
 @SpringBootTest
-@Slf4j
 @Transactional
 class PostServiceTest {
 
     @Autowired
     private PostService postService;
 
+
+    @BeforeEach
+    void init() {
+        postService.savePost(new Post(1L, "title", "body", "nick"));
+        postService.savePost(new Post(2L, "title", "body", "nick"));
+        postService.savePost(new Post(3L, "title", "body", "nick"));
+        postService.savePost(new Post(4L, "title", "body", "nick"));
+    }
+
+    @AfterEach
+    void tearDown() {
+        postService.deleteAll();
+    }
     @Test
     void findById() {
         Post post = postService.findById(1L);
-        Assertions.assertThat("여러분").isEqualTo(post.getTitle());
+
+        assertThat("title").isEqualTo(post.getTitle());
     }
 
     @Test
     void findAll() {
-        List<ListDTO> all = postService.findAll();
-        Assertions.assertThat(all.size()).isEqualTo(4);
-    }
 
-    @Test
-    void savePost() {
-        Post post = Post.builder().authorId(1L).title("Test").postBody("test code").nickName("Tester").build();
-        Long postId = postService.savePost(post);
-        Assertions.assertThat(postId).isEqualTo(5);
+
+        assertThat(postService.findAll().size()).isEqualTo(4);
     }
 
     @Test
     void updatePost() {
-//        Post onePost = postService.findById(1L);
-//        log.info("onePost={}", onePost);
-//        Post update = new Post("title02", "body02", onePost.getNickName());
-        log.info("@Test ::1 one={}", postService.findById(1L));
         postService.updatePost(1L, new Post(1L, "title update", "body update", "nick update"));
+
         Post one = postService.findById(1L);
-        log.info("@Test ::2 one={}", one);
-        Assertions.assertThat("title update").isEqualTo(one.getTitle());
+
+        assertThat("title update").isEqualTo(one.getTitle());
     }
 
     @Test
-    void DeletePost() {
+    void deletePost() {
+
         postService.deletePost(1L);
+
         List<ListDTO> all = postService.findAll();
-        Assertions.assertThat(all.size()).isEqualTo(3);
+        assertThat(all.size()).isEqualTo(3);
     }
 }

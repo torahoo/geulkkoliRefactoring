@@ -6,13 +6,13 @@ import com.geulkkoli.exception.EmptyDataException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.transaction.annotation.Transactional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@SpringBootTest
-@Transactional
+
+@DataJpaTest
 class UserRepositoryTest {
     @Autowired
     private UserRepository userRepository;
@@ -45,7 +45,7 @@ class UserRepositoryTest {
                 .build();
 
         userRepository.save(user);
-        User findUser = userRepository.findById(2L)
+        User findUser = userRepository.findById(1L)
                 .orElseThrow(() -> new EmptyDataException("해당 데이터가 존제하지 않습니다."));
 
         assertThat(findUser).isEqualTo(user);
