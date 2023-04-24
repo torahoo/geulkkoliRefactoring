@@ -9,6 +9,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -39,10 +40,10 @@ public class AdminController {
 
     @ResponseBody
     @PostMapping("/calendar/update")
-    public ResponseEntity<Void> updateTheme(@RequestParam String date, @RequestParam String theme) {
-        log.info("비동기 통신 호출 date : {}, theme : {}", date, theme);
-        //LocalDate localDate = LocalDate.parse(date, DateTimeFormatter.BASIC_ISO_DATE);
-        //calendarService.updateTheme(localDate, theme);
+    public ResponseEntity<Void> updateTheme(@RequestBody DailyThemeDto dailyThemeDto) {
+        log.info("date : {}, theme : {}", dailyThemeDto.getDate(), dailyThemeDto.getTheme());
+//        LocalDate localDate = LocalDate.parse(dailyThemeDto.getDate(), DateTimeFormatter.BASIC_ISO_DATE);
+//        calendarService.updateTheme(localDate, dailyThemeDto.getTheme());
         return ResponseEntity.ok().build();
     }
 
@@ -50,5 +51,13 @@ public class AdminController {
     public String reportedPostList(Model model){
         model.addAttribute("list", postService.findAll());
         return "/admin/reportedPostList";
+    }
+
+    //lock user with spring security
+    @ResponseBody
+    @PostMapping("/lockUser")
+    public ResponseEntity<Void> lockUser(@RequestParam Long userId){
+        log.info("username : {}", userId);
+        return ResponseEntity.ok().build();
     }
 }
