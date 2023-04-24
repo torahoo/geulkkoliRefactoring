@@ -1,8 +1,7 @@
 package com.geulkkoli.domain.user;
 
-import com.geulkkoli.application.user.AccountActivityElement;
-import com.geulkkoli.application.user.AccountStatus;
-import com.geulkkoli.application.user.Permission;
+import com.geulkkoli.application.security.AccountStatus;
+import com.geulkkoli.application.security.Permission;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -20,24 +19,13 @@ class UserTest {
                 .phoneNo("010-1234-5678")
                 .gender("M").build();
 
-        AccountActivityElement element = AccountActivityElement.builder()
-                .isAccountNonExpired(true)
-                .isCredentialsNonExpired(true)
-                .isAccountNonLocked(true)
-                .isEnabled(true)
-                .build();
+        Permission permission = Permission.of(AccountStatus.ACTIVE);
+        user.addPermission(permission);
 
-        Permission permission = Permission.of(element, AccountStatus.ACTIVE);
-        permission.addUser(user);
+        Permission rockPermission = Permission.of( AccountStatus.LOCKED);
+        user.rock(rockPermission);
 
-        AccountActivityElement element2 = AccountActivityElement.builder()
-                .isAccountNonExpired(true)
-                .isCredentialsNonExpired(true)
-                .isAccountNonLocked(false)
-                .isEnabled(true)
-                .build();
-        user.rock(element2);
 
-        assertFalse(user.getPermission().getAccountActivityElement().isAccountNonLocked());
+        assertFalse(user.getPermission().isAccountNonLocked());
     }
 }

@@ -1,4 +1,4 @@
-package com.geulkkoli.application.user;
+package com.geulkkoli.application.security;
 
 import com.geulkkoli.application.user.util.RoleNameAttributeConverter;
 import com.geulkkoli.domain.user.User;
@@ -40,7 +40,6 @@ public class RoleEntity {
 
     public void addUser(User user) {
         this.users.add(user);
-        user.addRole(this);
     }
 
     @Override

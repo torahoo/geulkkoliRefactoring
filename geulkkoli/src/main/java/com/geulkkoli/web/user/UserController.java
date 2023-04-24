@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.web.servlet.view.RedirectView;
 
 @Controller
 @RequiredArgsConstructor
@@ -80,7 +81,7 @@ public class UserController {
     @GetMapping("user/edit")
     public String editForm(@ModelAttribute("editForm") UserInfoEditDto userInfoEditDto, @AuthenticationPrincipal AuthUser authUser, Model model) {
         log.info("editForm : {}", userInfoEditDto.toString());
-        log.info("authUser : {}",authUser.toString());
+        log.info("authUser : {}", authUser.toString());
         userInfoEditDto.editFormDto(authUser.getUserRealName(), authUser.getNickName(), authUser.getPhoneNo(), authUser.getGender());
         model.addAttribute("editForm", userInfoEditDto);
         return EDIT_FORM;
@@ -158,5 +159,4 @@ public class UserController {
         }
         return "redirect:/";
     }
-
 }

@@ -29,8 +29,7 @@ public class LoginFailureHandler extends SimpleUrlAuthenticationFailureHandler {
     @Override
     public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception) throws IOException, ServletException {
 
-        String email = request.getParameter("email");
-        log.info("email = {}",email);
+        log.info("exception = {}", exception.getMessage());
         String errorMessage;
         if (exception instanceof BadCredentialsException) {  // 비밀번호 틀렸을 때
             errorMessage = messageSource.getMessage("error.BadCredentialsException", null, Locale.KOREA);

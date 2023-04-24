@@ -1,15 +1,10 @@
 package com.geulkkoli.application.security;
 
-import com.geulkkoli.application.user.AccountStatus;
 import com.geulkkoli.application.user.AuthUser;
-import com.geulkkoli.application.user.Role;
-import com.geulkkoli.application.user.RoleEntity;
 import com.geulkkoli.domain.user.User;
-import com.geulkkoli.domain.user.UserRepository;
 import com.geulkkoli.domain.user.service.UserService;
 import com.geulkkoli.web.user.JoinFormDto;
 import com.geulkkoli.web.user.edit.PasswordEditDto;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
@@ -23,7 +18,6 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Objects;
-import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
@@ -42,7 +36,6 @@ class UserSecurityServiceTest {
     @Autowired
     PasswordEncoder passwordEncoder;
 
-    User saveUser;
 
 
     @Test
@@ -120,7 +113,7 @@ class UserSecurityServiceTest {
         joinForm.setPhoneNo("01012345671");
         joinForm.setGender("male");
         joinForm.setPassword("123qwe!@#");
-        saveUser = userSecurityService.join(joinForm);
+        User saveUser = userSecurityService.join(joinForm);
 
         //when
         UserDetails user = userSecurityService.loadUserByUsername("tako1@naver.com");
@@ -148,7 +141,15 @@ class UserSecurityServiceTest {
     @Test
     @DisplayName("이메일은 존재하지만 권한 정보가 존재하지 않을 경우 AuthenticationException 예외가 발생한다.")
     void exception_thrown_for_non_existent_permission() {
+        JoinFormDto joinForm = new JoinFormDto();
+        joinForm.setEmail("tako1@naver.com");
+        joinForm.setUserName("tako1@naver.com");
+        joinForm.setNickName("바나나1");
+        joinForm.setPhoneNo("01012345671");
+        joinForm.setGender("male");
+        joinForm.setPassword("123qwe!@#");
+        User saveUser = userSecurityService.join(joinForm);
 
-        assertThrows(AuthenticationException.class, () -> userSecurityService.loadUserByUsername("tako11@naver.com"));
+        assertThrows(AuthenticationException.class, () -> userSecurityService.loadUserByUsername("tako1@naver.com"));
     }
 }

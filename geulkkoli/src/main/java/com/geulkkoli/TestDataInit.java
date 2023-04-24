@@ -2,10 +2,10 @@
 package com.geulkkoli;
 
 import com.geulkkoli.application.security.UserSecurityService;
-import com.geulkkoli.domain.admin.report.service.AdminService;
+import com.geulkkoli.domain.admin.service.AdminServiceImpl;
 import com.geulkkoli.domain.post.Post;
 import com.geulkkoli.domain.post.PostRepository;
-import com.geulkkoli.domain.user.service.UserService;
+import com.geulkkoli.domain.user.User;
 import com.geulkkoli.web.user.JoinFormDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -13,6 +13,7 @@ import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.annotation.Profile;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -22,11 +23,12 @@ public class TestDataInit {
 
     private final PostRepository postRepository;
     private final UserSecurityService userSecurityService;
-    private final AdminService adminService;
+    private final AdminServiceImpl adminServiceImpl;
 
     /**
      * 확인용 초기 데이터 추가
      */
+    @Transactional
     @EventListener(ApplicationReadyEvent.class)
     public void initData() {
         log.info("test data init");
@@ -68,8 +70,8 @@ public class TestDataInit {
         joinForm.setPhoneNo("9190232333");
         joinForm.setGender("male");
         joinForm.setPassword("qwe123!!!");
-        userSecurityService.join(joinForm);
-
+        User user = userSecurityService.join(joinForm);
+        log.info("id : {}", user.getUserId());
     }
 
 }
