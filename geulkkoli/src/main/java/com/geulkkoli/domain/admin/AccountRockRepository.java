@@ -5,6 +5,8 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
+
 @Repository
 public interface AccountRockRepository extends JpaRepository<AccountLock, Long> {
 
@@ -12,6 +14,6 @@ public interface AccountRockRepository extends JpaRepository<AccountLock, Long> 
     <S extends AccountLock> S save(S entity);
 
     @Query("select a from AccountLock a where a.lockedUser.userId = :userId")
-    AccountLock findByUserId(@Param("userId") Long userId);
+    Optional<AccountLock> findByUserId(@Param("userId") Long userId);
 
 }
