@@ -3,10 +3,12 @@ package com.geulkkoli.infrastructure;
 import com.geulkkoli.domain.user.User;
 import com.geulkkoli.domain.user.UserRepository;
 import com.geulkkoli.exception.EmptyDataException;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.transaction.annotation.Transactional;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -16,6 +18,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 class UserRepositoryTest {
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    TestEntityManager entityManager;
 
     @Test
     void save() {
@@ -45,6 +49,10 @@ class UserRepositoryTest {
                 .build();
 
         userRepository.save(user);
+
+        entityManager.flush();
+        entityManager.clear();
+
         User findUser = userRepository.findById(1L)
                 .orElseThrow(() -> new EmptyDataException("해당 데이터가 존제하지 않습니다."));
 
@@ -81,7 +89,7 @@ class UserRepositoryTest {
                 .phoneNo("01012345679")
                 .build();
 
-         userRepository.save(user);
+        userRepository.save(user);
         User findByEmailUser = userRepository.findByEmail("tako@naver.com")
                 .orElseThrow(() -> new EmptyDataException("해당 데이터가 존재하지 않습니다."));
 
@@ -101,7 +109,7 @@ class UserRepositoryTest {
                 .build();
 
         userRepository.save(user);
-         User findByNickNameUser = userRepository.findByNickName("바나나1")
+        User findByNickNameUser = userRepository.findByNickName("바나나1")
                 .orElseThrow(() -> new EmptyDataException("해당 데이터가 존재하지 않습니다."));
 
         assertThat(findByNickNameUser.getEmail()).isEqualTo("tako1@naver.com");

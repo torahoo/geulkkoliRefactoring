@@ -1,5 +1,8 @@
 package com.geulkkoli.domain.user;
 
+import com.geulkkoli.application.user.AccountActivityElement;
+import com.geulkkoli.application.user.Permission;
+import com.geulkkoli.application.user.RoleEntity;
 import com.geulkkoli.domain.admin.report.Report;
 import lombok.Builder;
 import lombok.Getter;
@@ -7,6 +10,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.util.LinkedHashSet;
+import java.util.Objects;
 import java.util.Set;
 
 @NoArgsConstructor
@@ -45,14 +49,23 @@ public class User {
     @OneToMany(mappedBy = "reporter")
     private Set<Report> reports = new LinkedHashSet<>();
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "role_id")
+    private RoleEntity role;
+
+    @ManyToOne( fetch = FetchType.LAZY)
+    @JoinColumn(name = "permission_id")
+    private Permission permission;
+
     @Builder
-    public User(String userName, String password, String nickName, String email, String phoneNo, String gender) {
+    public User(String userName, String password, String nickName, String email, String phoneNo, String gender, Set<Report> reports) {
         this.userName = userName;
         this.password = password;
         this.nickName = nickName;
         this.email = email;
         this.phoneNo = phoneNo;
         this.gender = gender;
+        this.reports = reports;
     }
 
     public void updateUser(String userName, String nickName, String phoneNo, String gender) {
@@ -72,4 +85,28 @@ public class User {
         report.reporter(this);
     }
 
+    public void rock(AccountActivityElement accountActivityElement) {
+        this.permission.changeAccountActivityElement(accountActivityElement);
+    }
+
+    public void addPermission(Permission permission) {
+        this.permission = permission;
+    }
+
+    public void addRole(RoleEntity role) {
+        this.role = role;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof User)) return false;
+        User user = (User) o;
+        return Objects.equals(userId, user.userId);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(userId);
+    }
 }

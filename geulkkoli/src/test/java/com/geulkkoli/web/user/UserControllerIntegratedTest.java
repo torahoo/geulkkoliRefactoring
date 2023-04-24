@@ -40,24 +40,24 @@ class UserControllerIntegratedTest {
         query_param.add("password", "abc123!@#");
 
         //when
-        mockMvc.perform(MockMvcRequestBuilders.post("/login")
+        mockMvc.perform(MockMvcRequestBuilders.post("/login-process")
                         .params(query_param))
 
                 //then
-                .andExpect(MockMvcResultMatchers.status().is3xxRedirection());
+                .andExpect(MockMvcResultMatchers.status().isOk());
     }
 
     @Test
     @DisplayName("세션이 상태유지를 하는 지 테스트 한다.")
     void isSessionStateful() throws Exception {
         MockHttpSession session = new MockHttpSession();
-        mockMvc.perform(MockMvcRequestBuilders.post("/login")
+        mockMvc.perform(MockMvcRequestBuilders.post("/login-process")
                         .param("email", "tako@naver.com")
                         .param("password", "abc123!@#")
                         .session(session))
 
                 //then
-                .andExpect(MockMvcResultMatchers.status().is3xxRedirection());
+                .andExpect(MockMvcResultMatchers.status().isOk());
         assertThat(session.getAttribute(SessionConst.LOGIN_USER)).isNotNull();
     }
 
@@ -91,7 +91,7 @@ class UserControllerIntegratedTest {
     void joinEmailDupleTest() throws Exception {
         //given
         MultiValueMap<String, String> query_param = new LinkedMultiValueMap<>();
-        query_param.add("userName", "fish");
+        query_param.add("userName", "김");
         query_param.add("password", "1234WnRnal@");
         query_param.add("verifyPassword", "1234WnRnal@");
         query_param.add("nickName", "타코메일");
@@ -149,7 +149,7 @@ class UserControllerIntegratedTest {
         //when
         mockMvc.perform(MockMvcRequestBuilders.post("/join")
                         .params(query_param));
-        User rejectUser = userRepository.findByNickName("takodachi").
+        User rejectUser = userRepository.findByPhoneNo("01071397733").
                 orElse(null);
 
         //then

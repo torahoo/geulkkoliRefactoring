@@ -10,7 +10,7 @@ import javax.validation.constraints.Pattern;
 
 @Getter
 @ToString
-public class EditFormDto {
+public class UserInfoEditDto {
 
     @NotEmpty
     private String userName;
@@ -29,14 +29,14 @@ public class EditFormDto {
     private String gender;
 
     @Builder
-    public EditFormDto(String userName, String nickName, String phoneNo, String gender) {
+    public UserInfoEditDto(String userName, String nickName, String phoneNo, String gender) {
         this.userName = userName;
         this.nickName = nickName;
         this.phoneNo = phoneNo;
         this.gender = gender;
     }
 
-    public EditFormDto editFormDto(String userName, String nickName, String phoneNo, String gender) {
+    public UserInfoEditDto editFormDto(String userName, String nickName, String phoneNo, String gender) {
         this.userName = userName;
         this.nickName = nickName;
         this.phoneNo = phoneNo;

@@ -4,6 +4,8 @@ import lombok.Builder;
 import lombok.Getter;
 
 import javax.persistence.Embeddable;
+import java.util.Objects;
+
 @Getter
 @Embeddable
 public class AccountActivityElement {
@@ -23,5 +25,16 @@ public class AccountActivityElement {
         this.isCredentialsNonExpired = isCredentialsNonExpired;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof AccountActivityElement)) return false;
+        AccountActivityElement that = (AccountActivityElement) o;
+        return isEnabled == that.isEnabled && isAccountNonExpired == that.isAccountNonExpired && isAccountNonLocked == that.isAccountNonLocked && isCredentialsNonExpired == that.isCredentialsNonExpired;
+    }
 
+    @Override
+    public int hashCode() {
+        return Objects.hash(isEnabled, isAccountNonExpired, isAccountNonLocked, isCredentialsNonExpired);
+    }
 }

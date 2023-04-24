@@ -5,6 +5,7 @@ import org.springframework.context.MessageSource;
 import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.InternalAuthenticationServiceException;
+import org.springframework.security.authentication.LockedException;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler;
@@ -39,7 +40,10 @@ public class LoginFailureHandler extends SimpleUrlAuthenticationFailureHandler {
             errorMessage = messageSource.getMessage("error.UsernameNotFoundException", null, Locale.KOREA);
         } else if (exception instanceof AuthenticationCredentialsNotFoundException) { // ID나 비밀번호 입력 안 했을 때
             errorMessage = messageSource.getMessage("error.AuthenticationCredentialsNotFoundException", null, Locale.KOREA);
-        } else {
+        }  else if (exception instanceof LockedException){
+            errorMessage = messageSource.getMessage("error.LockedException", null, Locale.KOREA);
+        }
+        else {
             errorMessage = messageSource.getMessage("error.OtherException", null, Locale.KOREA);
         }
 

@@ -2,58 +2,71 @@ package com.geulkkoli.domain.user.service;
 
 import com.geulkkoli.domain.user.User;
 import com.geulkkoli.domain.user.UserRepository;
-import com.geulkkoli.web.user.JoinFormDto;
-import org.junit.jupiter.api.BeforeEach;
+import com.geulkkoli.web.user.edit.UserInfoEditDto;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
+import org.junit.jupiter.api.TestInstance;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.transaction.annotation.Transactional;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.BDDMockito.given;
+import java.util.Optional;
 
-@ExtendWith(MockitoExtension.class)
+import static org.assertj.core.api.Assertions.assertThat;
+
+@SpringBootTest
+@Transactional
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class UserServiceTest {
 
-    @Mock
+    @Autowired
     UserRepository userRepository;
 
-    @InjectMocks
-    private UserService userService;
+    @Autowired
+    UserService userService;
 
-    @Test
-    void isEmailDuplicate() {
-        User user = User.builder()
-                .email("tako11@namver.com")
-                .userName("김11")
-                .nickName("바나나111")
-                .password("123412")
-                .gender("male")
-                .build();
-
-        given(userRepository.save(user)).willReturn(user);
+    User saveUser;
 
 
-        assertThat(userService.isEmailDuplicate("tako11@naver.com")).isTrue();
+    @BeforeAll
+    void init() {
+        saveUser = userRepository.save(User.builder() // userId = 3L
+                .email("tako1@naver.com").userName("김1").nickName("바나나1").password("123qwe!@#").phoneNo("01012345671").gender("male").build());
     }
 
     @Test
+    @DisplayName("이메일 중복")
+    void isEmailDuplicate() {
+        assertThat(userService.isEmailDuplicate("tako1@naver.com")).isTrue();
+    }
+
+    @Test
+    @DisplayName("별명 중복")
     void isNickNameDuplicate() {
 
-        assertThat(userService.isNickNameDuplicate("바나나111")).isTrue();
+        assertThat(userService.isNickNameDuplicate("바나나1")).isTrue();
     }
 
     @Test
+    @DisplayName("전화번호 중복확인")
     void isPhoneNoDuplicate() {
-        assertThat(userService.isPhoneNoDuplicate("01012345679")).isTrue();
+
+        assertThat(userService.isPhoneNoDuplicate("01012345671")).isTrue();
     }
 
+    @Test
+    @DisplayName("회원정보 수정 성공")
+    void updateTest() {
+        //given
+        UserInfoEditDto preupdateUser = UserInfoEditDto.builder().userName("김2").nickName("바나나155").phoneNo("01055554646").gender("female").build();
+
+        //when
+        userService.edit(saveUser.getUserId(), preupdateUser);
+        Optional<User> one = userRepository.findById(saveUser.getUserId());
+
+        // then
+        assertThat("바나나155").isEqualTo(one.get().getNickName());
+    }
 
 }
