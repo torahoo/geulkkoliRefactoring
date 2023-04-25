@@ -45,9 +45,7 @@ public class PostController {
 
     //게시글 addForm html 로 이동
     @GetMapping("/add")
-    public String postAddForm(@AuthenticationPrincipal AuthUser author,
-                              HttpServletRequest request, HttpServletResponse response,
-                              Model model) throws UnsupportedEncodingException {
+    public String postAddForm(Model model){
 
         model.addAttribute("post", new AddDTO());
 
@@ -56,7 +54,7 @@ public class PostController {
 
     //새 게시글 등록
     @PostMapping("/add")
-    public String postAdd(@Validated @ModelAttribute AddDTO post, BindingResult bindingResult, RedirectAttributes redirectAttributes, HttpServletResponse response, HttpServletRequest request) throws UnsupportedEncodingException {
+    public String postAdd(@Validated @ModelAttribute AddDTO post, RedirectAttributes redirectAttributes, HttpServletResponse response) throws UnsupportedEncodingException {
 
         User user = userService.findById(post.getAuthorId());
 
@@ -109,7 +107,7 @@ public class PostController {
     //임시저장기능 (현재는 빈 값만 들어옴)
     @GetMapping("/savedone")
     public void testBlanc(@AuthenticationPrincipal AuthUser authUser,
-                            HttpServletResponse response) throws UnsupportedEncodingException {
+                            HttpServletResponse response){
         log.info("쿠키 삭제");
         Cookie cookie = new Cookie(URLEncoder.encode(authUser.getNickName()), null);
         cookie.setMaxAge(0);
