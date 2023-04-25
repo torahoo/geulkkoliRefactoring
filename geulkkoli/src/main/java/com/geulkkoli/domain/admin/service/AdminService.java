@@ -4,7 +4,7 @@ import com.geulkkoli.domain.user.User;
 
 public interface AdminService {
 
-    void rockUser(Long userId);
+    void rockUser(Long userId, String reason);
 
     User findUser(long id);
 }

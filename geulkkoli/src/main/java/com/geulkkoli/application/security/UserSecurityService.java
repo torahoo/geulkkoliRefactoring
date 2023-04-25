@@ -20,6 +20,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import static java.lang.Boolean.TRUE;
+
 @Service
 @Transactional
 public class UserSecurityService implements UserDetailsService {
@@ -54,7 +56,7 @@ public class UserSecurityService implements UserDetailsService {
 
         UserModelDto userModel = UserModelDto.toDto(user);
 
-        if (Boolean.TRUE.equals(accountLockRepository.existsByLockedUser_UserId(user.getUserId()))) {
+        if (TRUE.equals(accountLockRepository.existsByLockedUser_UserId(user.getUserId()))) {
             return AuthUser.from(userModel, authorities, AccountStatus.LOCKED);
         }
         return AuthUser.from(userModel, authorities, AccountStatus.ACTIVE);

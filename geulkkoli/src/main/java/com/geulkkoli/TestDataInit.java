@@ -2,7 +2,6 @@
 package com.geulkkoli;
 
 import com.geulkkoli.application.security.UserSecurityService;
-import com.geulkkoli.domain.admin.AccountLock;
 import com.geulkkoli.domain.admin.AccountLockRepository;
 import com.geulkkoli.domain.admin.service.AdminServiceImpl;
 import com.geulkkoli.domain.post.Post;
@@ -16,8 +15,6 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.time.LocalDateTime;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -75,11 +72,9 @@ public class TestDataInit {
         joinForm.setPhoneNo("9190232333");
         joinForm.setGender("male");
         joinForm.setPassword("qwe123!!!");
-        User user = userSecurityService.join(joinForm);
-        AccountLock accountLock = AccountLock.of(user, "비밀번호가 너무 길어요", LocalDateTime.now().plusDays(1));
-        AccountLock lock = accountLockRepository.save(accountLock);
-        user.rock(lock);
+        userSecurityService.join(joinForm);
 
+        adminServiceImpl.rockUser(1L,"비밀번호가 너무 길어요");
     }
 
 }

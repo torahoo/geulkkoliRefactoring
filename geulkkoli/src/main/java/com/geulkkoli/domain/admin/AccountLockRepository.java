@@ -18,4 +18,6 @@ public interface AccountLockRepository extends JpaRepository<AccountLock, Long> 
     @Query("select count(a.lockedUser) > 0 from AccountLock a where a.lockedUser.userId = :userId")
     Boolean existsByLockedUser_UserId(@Param("userId") Long userId);
 
+
+
 }
