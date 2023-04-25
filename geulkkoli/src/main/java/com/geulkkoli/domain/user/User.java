@@ -1,9 +1,8 @@
 package com.geulkkoli.domain.user;
 
-import com.geulkkoli.application.user.AccountActivityElement;
-import com.geulkkoli.application.user.Permission;
-import com.geulkkoli.application.user.RoleEntity;
-import com.geulkkoli.domain.admin.report.Report;
+import com.geulkkoli.application.security.RoleEntity;
+import com.geulkkoli.domain.admin.AccountLock;
+import com.geulkkoli.domain.admin.Report;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -53,9 +52,8 @@ public class User {
     @JoinColumn(name = "role_id")
     private RoleEntity role;
 
-    @ManyToOne( fetch = FetchType.LAZY)
-    @JoinColumn(name = "permission_id")
-    private Permission permission;
+    @OneToMany(mappedBy = "lockedUser")
+    private Set<AccountLock> accountLocks = new LinkedHashSet<>();
 
     @Builder
     public User(String userName, String password, String nickName, String email, String phoneNo, String gender, Set<Report> reports) {
@@ -85,16 +83,15 @@ public class User {
         report.reporter(this);
     }
 
-    public void rock(AccountActivityElement accountActivityElement) {
-        this.permission.changeAccountActivityElement(accountActivityElement);
+    public void rock(AccountLock accountLock){
+        this.accountLocks.add(accountLock);
+        accountLock.addLockUser(this);
     }
 
-    public void addPermission(Permission permission) {
-        this.permission = permission;
-    }
 
     public void addRole(RoleEntity role) {
         this.role = role;
+        role.addUser(this);
     }
 
     @Override
@@ -109,4 +106,6 @@ public class User {
     public int hashCode() {
         return Objects.hash(userId);
     }
+
+
 }

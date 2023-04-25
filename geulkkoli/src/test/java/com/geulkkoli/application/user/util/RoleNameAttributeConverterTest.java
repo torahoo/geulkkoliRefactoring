@@ -1,6 +1,6 @@
 package com.geulkkoli.application.user.util;
 
-import com.geulkkoli.application.user.Role;
+import com.geulkkoli.application.security.Role;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 

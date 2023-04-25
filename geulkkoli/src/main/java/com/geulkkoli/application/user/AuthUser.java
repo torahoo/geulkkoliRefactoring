@@ -1,5 +1,6 @@
 package com.geulkkoli.application.user;
 
+import com.geulkkoli.application.security.AccountStatus;
 import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.User;
@@ -19,7 +20,7 @@ public class AuthUser extends User {
     private boolean isCredentialsNonExpired;
     private Collection<GrantedAuthority> authorities;
 
-    public AuthUser(UserModelDto userModel, Collection<GrantedAuthority> authorities) {
+    private AuthUser(UserModelDto userModel, Collection<GrantedAuthority> authorities, AccountStatus accountStatus) {
         super(userModel.getEmail(), userModel.getPassword(), authorities);
         this.authorities = authorities;
         this.nickName = userModel.getNickName();
@@ -27,23 +28,16 @@ public class AuthUser extends User {
         this.gender = userModel.getGender();
         this.phoneNo = userModel.getPhoneNo();
         this.userRealName = userModel.getUserName();
+        this.isAccountNonExpired = accountStatus.isAccountNonExpired();
+        this.isAccountNonLocked = accountStatus.isAccountNonLocked();
+        this.isCredentialsNonExpired = accountStatus.isCredentialsNonExpired();
+        this.isEnabled = accountStatus.isEnabled();
     }
 
-    public void setEnabled(boolean enabled) {
-        isEnabled = enabled;
+    public static AuthUser from(UserModelDto userModel, Collection<GrantedAuthority> authorities, AccountStatus accountStatus) {
+        return new AuthUser(userModel, authorities, accountStatus);
     }
 
-    public void setAccountNonExpired(boolean accountNonExpired) {
-        isAccountNonExpired = accountNonExpired;
-    }
-
-    public void setAccountNonLocked(boolean accountNonLocked) {
-        isAccountNonLocked = accountNonLocked;
-    }
-
-    public void setCredentialsNonExpired(boolean credentialsNonExpired) {
-        isCredentialsNonExpired = credentialsNonExpired;
-    }
 
     //사용자 계정이 만료되었는지 여부를 나타냅니다. 만료된 계정은 인증할 수 없습니다.
     @Override

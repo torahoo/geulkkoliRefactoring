@@ -4,8 +4,8 @@ import com.geulkkoli.application.security.UserSecurityService;
 import com.geulkkoli.application.user.AuthUser;
 import com.geulkkoli.domain.user.User;
 import com.geulkkoli.domain.user.service.UserService;
-import com.geulkkoli.web.user.edit.UserInfoEditDto;
 import com.geulkkoli.web.user.edit.PasswordEditDto;
+import com.geulkkoli.web.user.edit.UserInfoEditDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -80,7 +80,7 @@ public class UserController {
     @GetMapping("user/edit")
     public String editForm(@ModelAttribute("editForm") UserInfoEditDto userInfoEditDto, @AuthenticationPrincipal AuthUser authUser, Model model) {
         log.info("editForm : {}", userInfoEditDto.toString());
-        log.info("authUser : {}",authUser.toString());
+        log.info("authUser : {}", authUser.toString());
         userInfoEditDto.editFormDto(authUser.getUserRealName(), authUser.getNickName(), authUser.getPhoneNo(), authUser.getGender());
         model.addAttribute("editForm", userInfoEditDto);
         return EDIT_FORM;
@@ -158,5 +158,4 @@ public class UserController {
         }
         return "redirect:/";
     }
-
 }

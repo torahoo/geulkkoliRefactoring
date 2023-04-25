@@ -2,10 +2,12 @@
 package com.geulkkoli;
 
 import com.geulkkoli.application.security.UserSecurityService;
-import com.geulkkoli.domain.admin.report.service.AdminService;
+import com.geulkkoli.domain.admin.AccountLock;
+import com.geulkkoli.domain.admin.AccountLockRepository;
+import com.geulkkoli.domain.admin.service.AdminServiceImpl;
 import com.geulkkoli.domain.post.Post;
 import com.geulkkoli.domain.post.PostRepository;
-import com.geulkkoli.domain.user.service.UserService;
+import com.geulkkoli.domain.user.User;
 import com.geulkkoli.web.user.JoinFormDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -13,6 +15,9 @@ import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.annotation.Profile;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.time.LocalDateTime;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -22,11 +27,13 @@ public class TestDataInit {
 
     private final PostRepository postRepository;
     private final UserSecurityService userSecurityService;
-    private final AdminService adminService;
+    private final AdminServiceImpl adminServiceImpl;
+    private final AccountLockRepository accountLockRepository;
 
     /**
      * 확인용 초기 데이터 추가
      */
+    @Transactional
     @EventListener(ApplicationReadyEvent.class)
     public void initData() {
         log.info("test data init");
@@ -68,7 +75,10 @@ public class TestDataInit {
         joinForm.setPhoneNo("9190232333");
         joinForm.setGender("male");
         joinForm.setPassword("qwe123!!!");
-        userSecurityService.join(joinForm);
+        User user = userSecurityService.join(joinForm);
+        AccountLock accountLock = AccountLock.of(user, "비밀번호가 너무 길어요", LocalDateTime.now().plusDays(1));
+        AccountLock lock = accountLockRepository.save(accountLock);
+        user.rock(lock);
 
     }
 

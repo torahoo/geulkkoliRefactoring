@@ -1,4 +1,4 @@
-package com.geulkkoli.domain.admin.report;
+package com.geulkkoli.domain.admin;
 
 import com.geulkkoli.domain.post.Post;
 import com.geulkkoli.domain.user.User;
@@ -34,6 +34,9 @@ public class Report {
     @CreatedDate
     @Column(nullable = false, updatable = false, name = "reported_at")
     private LocalDateTime reportedAt;
+
+    @Column(nullable = false, length = 1000)
+    private String reason;
 
     protected Report() {
     }
