@@ -4,6 +4,7 @@ import com.geulkkoli.domain.user.User;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 @Entity
 public class AccountLock {
@@ -32,7 +33,7 @@ public class AccountLock {
         return new AccountLock(user, reason, localDateTime);
     }
 
-    public void lockedUser(User user) {
+    public void addLockUser(User user) {
         this.lockedUser = user;
     }
 
@@ -46,5 +47,18 @@ public class AccountLock {
 
     public LocalDateTime getLockeExpirationDate() {
         return lockeExpirationDate;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof AccountLock)) return false;
+        AccountLock that = (AccountLock) o;
+        return Objects.equals(id, that.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 }

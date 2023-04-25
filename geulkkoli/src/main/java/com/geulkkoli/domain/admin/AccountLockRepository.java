@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository;
 import java.util.Optional;
 
 @Repository
-public interface AccountRockRepository extends JpaRepository<AccountLock, Long> {
+public interface AccountLockRepository extends JpaRepository<AccountLock, Long> {
 
     @Override
     <S extends AccountLock> S save(S entity);

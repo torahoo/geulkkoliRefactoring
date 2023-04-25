@@ -1,9 +1,8 @@
 package com.geulkkoli.domain.user;
 
-import com.geulkkoli.application.security.Permission;
 import com.geulkkoli.application.security.RoleEntity;
-import com.geulkkoli.domain.admin.Report;
 import com.geulkkoli.domain.admin.AccountLock;
+import com.geulkkoli.domain.admin.Report;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -53,10 +52,6 @@ public class User {
     @JoinColumn(name = "role_id")
     private RoleEntity role;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "permission_id")
-    private Permission permission;
-
     @OneToMany(mappedBy = "lockedUser")
     private Set<AccountLock> accountLocks = new LinkedHashSet<>();
 
@@ -88,13 +83,11 @@ public class User {
         report.reporter(this);
     }
 
-    public void addPermission(Permission permission) {
-        if (this.permission != null) {
-            this.permission.getUsers().remove(this);
-        }
-        this.permission = permission;
-        permission.addUser(this);
+    public void rock(AccountLock accountLock){
+        this.accountLocks.add(accountLock);
+        accountLock.addLockUser(this);
     }
+
 
     public void addRole(RoleEntity role) {
         this.role = role;
@@ -112,14 +105,6 @@ public class User {
     @Override
     public int hashCode() {
         return Objects.hash(userId);
-    }
-
-    public void rock(Permission permission) {
-        if (this.permission != null) {
-            this.permission.getUsers().remove(this);
-        }
-        this.permission = permission;
-        permission.addUser(this);
     }
 
 

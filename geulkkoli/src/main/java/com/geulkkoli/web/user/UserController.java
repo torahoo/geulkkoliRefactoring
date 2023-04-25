@@ -4,8 +4,8 @@ import com.geulkkoli.application.security.UserSecurityService;
 import com.geulkkoli.application.user.AuthUser;
 import com.geulkkoli.domain.user.User;
 import com.geulkkoli.domain.user.service.UserService;
-import com.geulkkoli.web.user.edit.UserInfoEditDto;
 import com.geulkkoli.web.user.edit.PasswordEditDto;
+import com.geulkkoli.web.user.edit.UserInfoEditDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -19,7 +19,6 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import org.springframework.web.servlet.view.RedirectView;
 
 @Controller
 @RequiredArgsConstructor

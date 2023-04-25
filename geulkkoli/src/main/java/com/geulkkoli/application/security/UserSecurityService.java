@@ -1,6 +1,7 @@
 package com.geulkkoli.application.security;
 
 import com.geulkkoli.application.user.*;
+import com.geulkkoli.domain.admin.AccountLockRepository;
 import com.geulkkoli.domain.user.User;
 import com.geulkkoli.domain.user.UserRepository;
 import com.geulkkoli.web.user.JoinFormDto;
@@ -24,16 +25,16 @@ import java.util.Optional;
 public class UserSecurityService implements UserDetailsService {
 
     private final UserRepository userRepository;
-    private final PermissionRepository permissionRepository;
-
     private final RoleRepository roleRepository;
+
+    private final AccountLockRepository accountLockRepository;
     private final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
 
-    public UserSecurityService(UserRepository userRepository, PermissionRepository permissionRepository, RoleRepository roleRepository) {
+    public UserSecurityService(UserRepository userRepository, AccountLockRepository accountRockRepository, RoleRepository roleRepository) {
         this.userRepository = userRepository;
-        this.permissionRepository = permissionRepository;
         this.roleRepository = roleRepository;
+        this.accountLockRepository = accountRockRepository;
     }
 
     @Override
@@ -47,28 +48,19 @@ public class UserSecurityService implements UserDetailsService {
         List<GrantedAuthority> authorities = new ArrayList<>();
         authorizeRule(authorities, user);
 
-        if (authorities.isEmpty()){
+        if (authorities.isEmpty()) {
             throw new RoleException("권한을 찾을 수 없습니다.");
         }
 
         UserModelDto userModel = UserModelDto.toDto(user);
-        AuthUser authenticatedUser = new AuthUser(userModel, authorities);
 
-
-        Permission permission = user.getPermission();
-        addEnableElement(permission, authenticatedUser);
-
-        return authenticatedUser;
+        if (accountLockRepository.findByUserId(user.getUserId()).isPresent()) {
+            return AuthUser.from(userModel, authorities, AccountStatus.LOCKED);
+        }
+        return AuthUser.from(userModel, authorities, AccountStatus.ACTIVE);
     }
 
-    private void addEnableElement(Permission permission, AuthUser authenticatedUser) {
-        authenticatedUser.setEnabled(permission.isEnabled());
-        authenticatedUser.setAccountNonExpired(permission.isAccountNonExpired());
-        authenticatedUser.setAccountNonLocked(permission.isAccountNonLocked());
-        authenticatedUser.setCredentialsNonExpired(permission.isCredentialsNonExpired());
-    }
-
-    private List<GrantedAuthority> authorizeRule(List<GrantedAuthority> authorities, User user){
+    private List<GrantedAuthority> authorizeRule(List<GrantedAuthority> authorities, User user) {
         if (user.getRole().getRole().equals(Role.ADMIN)) {
             authorities.add(new SimpleGrantedAuthority(Role.ADMIN.getRoleName()));
             return authorities;
@@ -83,10 +75,6 @@ public class UserSecurityService implements UserDetailsService {
 
         RoleEntity roleEntity = roleRepository.save(RoleEntity.of(Role.USER));
         user.addRole(roleEntity);
-
-        Permission permission = Permission.of(AccountStatus.ACTIVE);
-        Permission userPermission = permissionRepository.save(permission);
-        user.addPermission(userPermission);
         userRepository.save(user);
         return user;
     }

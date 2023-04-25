@@ -47,7 +47,7 @@ public class RoleEntity {
         if (this == o) return true;
         if (!(o instanceof RoleEntity)) return false;
         RoleEntity that = (RoleEntity) o;
-        return role == that.role;
+        return Objects.equals(roleId, that.roleId);
     }
 
     @Override

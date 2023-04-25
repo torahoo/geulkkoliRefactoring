@@ -49,7 +49,6 @@ class UserSecurityServiceTest {
         joinForm.setPassword("123qwe!@#");
         User user = userSecurityService.join(joinForm);
 
-        assertThat(user.getPermission().getAccountStatus()).isEqualTo(AccountStatus.ACTIVE);
         assertThat(user.getRole()).isEqualTo(RoleEntity.of(Role.USER));
     }
 
