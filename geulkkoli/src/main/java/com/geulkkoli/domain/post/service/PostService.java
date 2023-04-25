@@ -40,11 +40,8 @@ public class PostService {
         return listDTOs;
     }
 
-    public Long savePost(AddDTO post) {
-        User user = userRepository.findById(post.getAuthorId())
-                .orElseThrow(() -> new NoSuchElementException("No user found id matches:" + post.getAuthorId()));
-        Post entityPost = post.toEntity();
-        entityPost.setUser(user);
+    public Long savePost(AddDTO post, User user) {
+        Post entityPost = post.toEntity(user);
         Post savePost = postRepository.save(entityPost);
         return savePost.getPostId();
     }

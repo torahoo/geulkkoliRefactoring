@@ -6,12 +6,13 @@ import lombok.*;
 import org.hibernate.validator.constraints.Length;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 @Data
 @NoArgsConstructor
 public class AddDTO {
 
-    @NotBlank
+    @NotNull
     private Long authorId;
 
     @NotBlank
@@ -33,11 +34,12 @@ public class AddDTO {
         this.nickName = nickName;
     }
 
-    public Post toEntity () {
+    public Post toEntity (User user) {
         return Post.builder()
                 .title(title)
                 .postBody(postBody)
                 .nickName(nickName)
+                .user(user)
                 .build();
     }
 }
