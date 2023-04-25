@@ -1,13 +1,17 @@
 package com.geulkkoli.domain.user;
 
+import com.geulkkoli.application.security.LockExpiredTimeException;
 import com.geulkkoli.application.security.RoleEntity;
 import com.geulkkoli.domain.admin.AccountLock;
 import com.geulkkoli.domain.admin.Report;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.tinylog.Logger;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
+import java.util.Comparator;
 import java.util.LinkedHashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -88,6 +92,19 @@ public class User {
         accountLock.addLockUser(this);
     }
 
+    public Boolean isLock() {
+        if (this.accountLocks.isEmpty()) {
+            return false;
+        }
+        return this.accountLocks.stream()
+                .map(AccountLock::getLockeExpirationDate)
+                .max(Comparator.naturalOrder())
+                .orElseThrow(() -> {
+                    Logger.debug("계정 잠금 기간이 설정되지 않았습니다.");
+                    return new LockExpiredTimeException("계정 잠금 기간이 설정되지 않았습니다.");
+                })
+                .isAfter(LocalDateTime.now());
+    }
 
     public void addRole(RoleEntity role) {
         this.role = role;
