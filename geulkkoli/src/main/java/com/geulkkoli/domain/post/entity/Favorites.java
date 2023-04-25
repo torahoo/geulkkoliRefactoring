@@ -30,10 +30,7 @@ public class Favorites {
 
     @Override
     public boolean equals(Object obj) {
-        if (this == obj) return true;
-        if (obj == null || Hibernate.getClass(this) != Hibernate.getClass(obj)) return false;
         Favorites favorites = (Favorites) obj;
-
         return getFavoritesId() != null && Objects.equals(getFavoritesId(), favorites.getFavoritesId());
     }
 
@@ -42,27 +39,21 @@ public class Favorites {
         return getClass().hashCode();
     }
 
-    @Builder
-    public Favorites (Post post, User user) {
-        this.post = post;
-        this.user = user;
-    }
-
     //==연관관계 메서드==//
 
     /**
      * 유저 세팅
      */
-    public void setUser (User user) {
-        this.user = new User();
+    public void addAuthor (User user) {
+        this.user = user;
         user.getFavorites().add(this);
     }
 
     /**
      * 게시글 세팅
      */
-    public void setPost (Post post) {
-        this.post = new Post();
+    public void addPost (Post post) {
+        this.post = post;
         post.getFavorites().add(this);
     }
 }

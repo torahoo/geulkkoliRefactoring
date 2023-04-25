@@ -14,7 +14,7 @@ import java.util.Set;
 @NoArgsConstructor
 @Entity
 @ToString
-public class Post {
+public class Post extends ConfigDate {
 
     @Id @Column(name = "post_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -43,10 +43,6 @@ public class Post {
     @Setter
     private String imageUploadName;
 
-    @Setter
-    @Embedded
-    private ConfigDate configDate;
-
     //댓글의 게시글 매핑
     @OneToMany(mappedBy = "post")
     private Set<Comments> comments = new LinkedHashSet<>();
@@ -60,14 +56,24 @@ public class Post {
     private Set<HashTags> hashTags = new LinkedHashSet<>();
 
     @Builder
-    public Post(User user, String title, String postBody, String nickName, int postHits, ConfigDate configDate) {
-        this.user = user;
+    public Post(String title, String postBody, String nickName) {
         this.title = title;
         this.postBody = postBody;
         this.nickName = nickName;
-        this.postHits = postHits;
-        this.configDate = configDate;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        Post post = (Post) o;
+        return getPostId() != null && Objects.equals(getPostId(), post.getPostId());
+    }
+
+    @Override
+    public int hashCode() {
+        return getClass().hashCode();
+    }
+
+    //==연관관계 메서드==//
 
     //제목을 바꾼다.
     public void changeTitle(String title) {
@@ -84,27 +90,16 @@ public class Post {
         this.nickName = nickName;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
-        Post post = (Post) o;
-        return getPostId() != null && Objects.equals(getPostId(), post.getPostId());
-    }
-
-    @Override
-    public int hashCode() {
-        return getClass().hashCode();
-    }
-
-    //==연관관계 메서드==//
-
-    /**
-     * 유저 세팅
-     */
-    public void setUser (User user) {
-        this.user = new User();
+    //유저를 등록한다.
+    public void addAuthor (User user) {
+        this.user = user;
         user.getPosts().add(this);
     }
+
+    //조회수를 바꾼다.
+    public void changeHits (int postHits) {
+        this.postHits = postHits;
+    }
+
 }
 
