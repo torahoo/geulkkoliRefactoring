@@ -13,6 +13,7 @@ import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.annotation.Profile;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -25,6 +26,7 @@ public class TestDataInit {
     /**
      * 확인용 초기 데이터 추가
      */
+    @Transactional
     @EventListener(ApplicationReadyEvent.class)
     public void initData() {
         log.info("test data init");
@@ -41,7 +43,6 @@ public class TestDataInit {
         joinForm.setGender("male");
         joinForm.setPassword("qwe123!!!");
         userService.join(joinForm);
-
         User user01 = userService.findById(1L);
 
         JoinFormDto joinForm2 = new JoinFormDto();
@@ -52,33 +53,35 @@ public class TestDataInit {
         joinForm2.setGender("male");
         joinForm2.setPassword("123");
         userService.join(joinForm2);
-
         User user02 = userService.findById(2L);
 
-        postRepository.save(Post.builder()
-                .user(user01)
+        Post save01 = postRepository.save(Post.builder()
                 .nickName(user01.getNickName())
                 .postBody("나는 멋지고 섹시한 개발자")//채&훈
-                .title("여러분").build());
+                .title("여러분")
+                .build());
+        save01.addAuthor(user01);
 
-        postRepository.save(Post.builder()
-                .user(user01)
+        Post save02 = postRepository.save(Post.builder()
                 .title("testTitle01")
                 .postBody("test postbody 01")//채&훈
-                .nickName(user01.getNickName()).build()
-        );
-        postRepository.save(Post.builder()
-                .user(user02)
+                .nickName(user01.getNickName())
+                .build());
+        save02.addAuthor(user01);
+
+        Post save03 = postRepository.save(Post.builder()
                 .title("testTitle02")
                 .postBody("test postbody 02")//채&훈
-                .nickName(user02.getNickName()).build()
-        )
-        ;postRepository.save(Post.builder()
-                .user(user02)
+                .nickName(user02.getNickName())
+                .build());
+        save03.addAuthor(user02);
+
+        Post save04 = postRepository.save(Post.builder()
                 .title("testTitle03")
                 .postBody("test postbody 03")//채&훈
-                .nickName(user02.getNickName()).build()
-        );
+                .nickName(user02.getNickName())
+                .build());
+        save04.addAuthor(user02);
     }
 
 }

@@ -57,26 +57,26 @@ class ImplHashTagsRepositoryTest {
     @BeforeEach
     void beforeEach () {
         post01 = implPostRepository.save(Post.builder()
-                .user(user)
                 .nickName("바나나")
                 .postBody("나는 멋지고 섹시한 개발자")//채&훈
                 .title("여러분").build()
         );
         post02 = implPostRepository.save(Post.builder()
-                .user(user)
                 .nickName("test")
                 .postBody("testBody")//채&훈
                 .title("testTitle").build()
         );
+        post01.addAuthor(user);
+        post02.addAuthor(user);
     }
 
     @Test
     public void 해시태그_저장 () {
         //given
         HashTags hashTag = HashTags.builder()
-                .post(post01)
                 .hashTagName("장르01")
                 .build();
+        hashTag.addPost(post01);
 
         //when
         HashTags save = implHashTagsRepository.save(hashTag);
@@ -90,9 +90,9 @@ class ImplHashTagsRepositoryTest {
     public void 좋아요_하나_조회 () {
         //given
         HashTags hashTag = HashTags.builder()
-                .post(post01)
                 .hashTagName("장르01")
                 .build();
+        hashTag.addPost(post01);
 
         HashTags save = implHashTagsRepository.save(hashTag);
         //when
@@ -109,9 +109,9 @@ class ImplHashTagsRepositoryTest {
     public void 전체_조회 () {
         //given
         HashTags hashTag = HashTags.builder()
-                .post(post01)
                 .hashTagName("장르01")
                 .build();
+        hashTag.addPost(post01);
 
         HashTags save = implHashTagsRepository.save(hashTag);
         //when
@@ -125,16 +125,16 @@ class ImplHashTagsRepositoryTest {
     public void 해시태그_삭제 () {
         //given
         HashTags hashTag = HashTags.builder()
-                .post(post01)
                 .hashTagName("장르01")
                 .build();
+        hashTag.addPost(post01);
 
         HashTags save = implHashTagsRepository.save(hashTag);
 
         HashTags hashTag2 = HashTags.builder()
-                .post(post02)
                 .hashTagName("장르02")
                 .build();
+        hashTag2.addPost(post02);
 
         HashTags save2 = implHashTagsRepository.save(hashTag2);
 

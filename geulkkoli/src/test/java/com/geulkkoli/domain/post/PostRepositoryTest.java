@@ -57,35 +57,36 @@ class PostRepositoryTest {
     @BeforeEach
     void beforeEach () {
 
-        implPostRepository.save(Post.builder()
-                .user(user)
+        Post save01 = implPostRepository.save(Post.builder()
                 .nickName("바나나")
                 .postBody("나는 멋지고 섹시한 개발자")//채&훈
                 .title("여러분").build()
         );
-        implPostRepository.save(Post.builder()
-                .user(user)
+        Post save02 = implPostRepository.save(Post.builder()
                 .title("testTitle01")
                 .postBody("test postbody 01")
                 .nickName("점심뭐먹지").build()
         );
-        implPostRepository.save(Post.builder()
-                .user(user)
+        Post save03 = implPostRepository.save(Post.builder()
                 .title("testTitle02")
                 .postBody("test postbody 02")
                 .nickName("점심뭐먹지").build()
         );
-        implPostRepository.save(Post.builder()
-                .user(user)
+        Post save04 = implPostRepository.save(Post.builder()
                 .title("testTitle03")
                 .postBody("test postbody 03")
                 .nickName("점심뭐먹지").build()
         );
+        save01.addAuthor(user);
+        save02.addAuthor(user);
+        save03.addAuthor(user);
+        save04.addAuthor(user);
     }
 
     @Test
     void save() {
-        Post post = new Post(user, "title", "body", "nick");
+        Post post = new Post("title", "body", "nick");
+        post.addAuthor(user);
         Post save = implPostRepository.save(post);
         Assertions.assertThat(save.getTitle()).isEqualTo(post.getTitle());
     }
@@ -98,14 +99,16 @@ class PostRepositoryTest {
                 .phoneNo("00000000000")
                 .password("123")
                 .gender("male").build();
-        Post post = new Post(user, "title", "body", "nick");
+        Post post = new Post("title", "body", "nick");
+        post.addAuthor(user);
         Post save = implPostRepository.save(post);
         Assertions.assertThat(save.getTitle()).isEqualTo(post.getTitle());
     }
 
     @Test
     void findById() {
-        Post post = new Post(user, "title", "body", "nick");
+        Post post = new Post("title", "body", "nick");
+        post.addAuthor(user);
         Post save = implPostRepository.save(post);
         Post find = implPostRepository.findById(save.getPostId())
                 .orElseThrow(()->new NoSuchElementException("No post found id matches : "+save.getPostId()));
@@ -120,7 +123,8 @@ class PostRepositoryTest {
 
     @Test
     void update() {
-        Post savePost = implPostRepository.save(new Post(user, "new01", "newBody01", "newNick01"));
+        Post savePost = implPostRepository.save(new Post("new01", "newBody01", "newNick01"));
+        savePost.addAuthor(user);
         Post update = new Post();
         update.setTitle("update");
         update.setPostBody("updateBody");
@@ -133,9 +137,11 @@ class PostRepositoryTest {
 
     @Test
     void delete() {
-        Post deletePost = implPostRepository.save(new Post(user, "deleteTitle", "deleteBody01", user.getNickName()));
+        Post deletePost = implPostRepository.save(new Post("deleteTitle", "deleteBody01", user.getNickName()));
+        deletePost.addAuthor(user);
         implPostRepository.delete(deletePost.getPostId());
         List<Post> all = implPostRepository.findAll();
         Assertions.assertThat(all.size()).isEqualTo(4);
     }
+
 }

@@ -35,11 +35,12 @@ public class AddDTO {
     }
 
     public Post toEntity (User user) {
-        return Post.builder()
+        Post post = Post.builder()
                 .title(title)
                 .postBody(postBody)
                 .nickName(nickName)
-                .user(user)
                 .build();
+        post.addAuthor(user);
+        return post;
     }
 }

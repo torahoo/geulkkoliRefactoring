@@ -34,7 +34,7 @@ public abstract class ConfigDate {
     @PreUpdate
     public void onPreUpdate () {
         this.updatedAt = LocalDateTime.now()
-                .format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.LONG));
+                .format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM));
     }
 
 }

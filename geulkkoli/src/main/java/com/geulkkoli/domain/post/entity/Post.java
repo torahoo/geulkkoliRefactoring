@@ -56,8 +56,7 @@ public class Post extends ConfigDate {
     private Set<HashTags> hashTags = new LinkedHashSet<>();
 
     @Builder
-    public Post(User user, String title, String postBody, String nickName) {
-        this.user = user;
+    public Post(String title, String postBody, String nickName) {
         this.title = title;
         this.postBody = postBody;
         this.nickName = nickName;
@@ -93,9 +92,9 @@ public class Post extends ConfigDate {
         this.nickName = nickName;
     }
 
-    //유저를 바꾼다.
-    public void setUser (User user) {
-        this.user = new User();
+    //유저를 등록한다.
+    public void addAuthor (User user) {
+        this.user = user;
         user.getPosts().add(this);
     }
 

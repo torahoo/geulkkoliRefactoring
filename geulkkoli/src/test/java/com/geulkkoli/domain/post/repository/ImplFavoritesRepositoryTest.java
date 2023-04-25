@@ -56,26 +56,26 @@ class ImplFavoritesRepositoryTest {
     @BeforeEach
     void beforeEach () {
         post01 = implPostRepository.save(Post.builder()
-                .user(user)
                 .nickName("바나나")
                 .postBody("나는 멋지고 섹시한 개발자")//채&훈
                 .title("여러분").build()
         );
         post02 = implPostRepository.save(Post.builder()
-                .user(user)
                 .nickName("test")
                 .postBody("testBody")//채&훈
                 .title("testTitle").build()
         );
+
+        post01.addAuthor(user);
+        post02.addAuthor(user);
     }
 
     @Test
     public void 좋아요_저장 () {
         //given
-        Favorites favorite = Favorites.builder()
-                .post(post01)
-                .user(user)
-                .build();
+        Favorites favorite = new Favorites();
+        favorite.addAuthor(user);
+        favorite.addPost(post01);
 
         //when
         Favorites save = implFavoritesRepository.save(favorite);
@@ -92,10 +92,9 @@ class ImplFavoritesRepositoryTest {
     @Test
     public void 중복_좋아요_확인 () throws Exception {
         //given
-        Favorites favorite = Favorites.builder()
-                .post(post01)
-                .user(user)
-                .build();
+        Favorites favorite = new Favorites();
+        favorite.addAuthor(user);
+        favorite.addPost(post01);
 
         //when
         Favorites save = implFavoritesRepository.save(favorite);
@@ -108,10 +107,9 @@ class ImplFavoritesRepositoryTest {
     @Test
     public void 좋아요_하나_조회 (){
         //given
-        Favorites favorite = Favorites.builder()
-                .post(post01)
-                .user(user)
-                .build();
+        Favorites favorite = new Favorites();
+        favorite.addAuthor(user);
+        favorite.addPost(post01);
         Favorites save = implFavoritesRepository.save(favorite);
 
         //when
@@ -127,10 +125,9 @@ class ImplFavoritesRepositoryTest {
     @Test
     public void 전체_좋아요_조회 () throws Exception {
         //given
-        Favorites favorite = Favorites.builder()
-                .post(post01)
-                .user(user)
-                .build();
+        Favorites favorite = new Favorites();
+        favorite.addAuthor(user);
+        favorite.addPost(post01);
         Favorites save = implFavoritesRepository.save(favorite);
 
         //when
@@ -145,16 +142,14 @@ class ImplFavoritesRepositoryTest {
     @Test
     public void 좋아요_삭제 () throws Exception {
         //given
-        Favorites favorite = Favorites.builder()
-                .post(post01)
-                .user(user)
-                .build();
+        Favorites favorite = new Favorites();
+        favorite.addAuthor(user);
+        favorite.addPost(post01);
         Favorites save = implFavoritesRepository.save(favorite);
 
-        Favorites favorite2 = Favorites.builder()
-                .post(post02)
-                .user(user)
-                .build();
+        Favorites favorite2 = new Favorites();
+        favorite2.addAuthor(user);
+        favorite2.addPost(post02);
         Favorites save2 = implFavoritesRepository.save(favorite2);
 
         //when

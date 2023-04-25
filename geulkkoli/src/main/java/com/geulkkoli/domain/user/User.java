@@ -38,7 +38,7 @@ public class User {
     private String gender;
 
     //게시글의 유저 매핑
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private Set<Post> posts = new LinkedHashSet<>();
 
     //댓글의 유저 매핑

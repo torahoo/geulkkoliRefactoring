@@ -24,8 +24,7 @@ public class HashTags {
     private String hashTagName;
 
     @Builder
-    public HashTags (Post post, String hashTagName) {
-        this.post = post;
+    public HashTags (String hashTagName) {
         this.hashTagName = hashTagName;
     }
 
@@ -34,8 +33,8 @@ public class HashTags {
     /**
      * 게시글 세팅
      */
-    public void setPost (Post post) {
-        this.post = new Post();
+    public void addPost (Post post) {
+        this.post = post;
         post.getHashTags().add(this);
     }
 }

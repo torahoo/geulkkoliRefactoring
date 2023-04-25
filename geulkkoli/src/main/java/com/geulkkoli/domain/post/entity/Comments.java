@@ -46,9 +46,7 @@ public class Comments extends ConfigDate{
     }
 
     @Builder
-    public Comments (User user, Post post, String commentBody) {
-        this.user = user;
-        this.post = post;
+    public Comments (String commentBody) {
         this.commentBody = commentBody;
     }
 
@@ -57,16 +55,16 @@ public class Comments extends ConfigDate{
     /**
      * 유저 세팅
      */
-    public void setUser (User user) {
-        this.user = new User();
+    public void addAuthor (User user) {
+        this.user = user;
         user.getComments().add(this);
     }
 
     /**
      * 게시글 세팅
      */
-    public void setPost (Post post) {
-        this.post = new Post();
+    public void addPost (Post post) {
+        this.post = post;
         post.getComments().add(this);
     }
 

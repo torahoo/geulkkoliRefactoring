@@ -60,38 +60,39 @@ class ImplCommentsRepositoryTest {
     void beforeEach () {
 
         post01 = implPostRepository.save(Post.builder()
-                .user(user)
                 .nickName("바나나")
                 .postBody("나는 멋지고 섹시한 개발자")//채&훈
                 .title("여러분").build()
         );
         post02 = implPostRepository.save(Post.builder()
-                .user(user)
                 .title("testTitle01")
                 .postBody("test postbody 01")
                 .nickName("점심뭐먹지").build()
         );
         post03 = implPostRepository.save(Post.builder()
-                .user(user)
                 .title("testTitle02")
                 .postBody("test postbody 02")
                 .nickName("점심뭐먹지").build()
         );
         post04 = implPostRepository.save(Post.builder()
-                .user(user)
                 .title("testTitle03")
                 .postBody("test postbody 03")
                 .nickName("점심뭐먹지").build()
         );
+
+        post01.addAuthor(user);
+        post02.addAuthor(user);
+        post03.addAuthor(user);
+        post04.addAuthor(user);
     }
 
     @Test
     void 댓글_저장 () {
         Comments comment = Comments.builder()
-                .user(user)
-                .post(post01)
                 .commentBody("test댓글")
                 .build();
+        comment.addAuthor(user);
+        comment.addPost(post01);
 
         Comments save = implCommentsRepository.save(comment);
 
@@ -103,10 +104,10 @@ class ImplCommentsRepositoryTest {
     @Test
     void findById () {
         Comments comment = Comments.builder()
-                .user(user)
-                .post(post01)
                 .commentBody("test댓글")
                 .build();
+        comment.addAuthor(user);
+        comment.addPost(post01);
         Comments save = implCommentsRepository.save(comment);
         Comments find = implCommentsRepository.findById(save.getCommentId())
                 .orElseThrow(() -> new NoSuchElementException("no comment id found : " + save.getCommentId()));
@@ -120,10 +121,10 @@ class ImplCommentsRepositoryTest {
     @Test
     void 전체_리스트_조회() {
         Comments comment = Comments.builder()
-                .user(user)
-                .post(post01)
                 .commentBody("test댓글")
                 .build();
+        comment.addAuthor(user);
+        comment.addPost(post01);
         Comments save = implCommentsRepository.save(comment);
         List<Comments> all = implCommentsRepository.findAll();
         Assertions.assertThat(1).isEqualTo(all.size());
@@ -133,10 +134,10 @@ class ImplCommentsRepositoryTest {
     @Test
     void 수정() {
         Comments comment = Comments.builder()
-                .user(user)
-                .post(post01)
                 .commentBody("test댓글")
                 .build();
+        comment.addAuthor(user);
+        comment.addPost(post01);
         Comments save = implCommentsRepository.save(comment);
         Comments update = new Comments();
         update.changeComments("수정바디");
@@ -152,17 +153,17 @@ class ImplCommentsRepositoryTest {
     @Test
     void 삭제() {
         Comments comment = Comments.builder()
-                .user(user)
-                .post(post01)
                 .commentBody("test댓글")
                 .build();
+        comment.addAuthor(user);
+        comment.addPost(post01);
         Comments save = implCommentsRepository.save(comment);
 
         Comments comment2 = Comments.builder()
-                .user(user)
-                .post(post01)
                 .commentBody("test댓글")
                 .build();
+        comment2.addAuthor(user);
+        comment2.addPost(post02);
         Comments save2 = implCommentsRepository.save(comment2);
 
         implCommentsRepository.delete(save.getCommentId());
