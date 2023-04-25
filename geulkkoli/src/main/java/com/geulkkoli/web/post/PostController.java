@@ -1,6 +1,7 @@
 package com.geulkkoli.web.post;
 
-import com.geulkkoli.domain.post.Post;
+import com.geulkkoli.application.user.AuthUser;
+import com.geulkkoli.domain.post.entity.Post;
 import com.geulkkoli.domain.post.service.PostService;
 import com.geulkkoli.domain.user.User;
 import com.geulkkoli.domain.user.service.UserService;
@@ -10,13 +11,20 @@ import com.geulkkoli.web.post.dto.PageDTO;
 import com.geulkkoli.web.user.SessionConst;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.Objects;
 
 @Slf4j
@@ -37,37 +45,24 @@ public class PostController {
 
     //게시글 addForm html 로 이동
     @GetMapping("/add")
-    public String postAddForm(Model model, HttpServletRequest request) {
-        model.addAttribute("post", new AddDTO());// 빈 객체?
+    public String postAddForm(Model model){
 
-        HttpSession session = request.getSession(false);
-        if (Objects.isNull(session)|| Objects.isNull(session.getAttribute(SessionConst.LOGIN_USER))) {
-            return "redirect:/post/list";
-        }
-        User loginUser = (User) session.getAttribute(SessionConst.LOGIN_USER);
-
-        model.addAttribute("loginUser", loginUser);
-        log.info("loginUser={}", loginUser.getNickName());
+        model.addAttribute("post", new AddDTO());
 
         return "/post/postAddForm";
     }
 
     //새 게시글 등록
     @PostMapping("/add")
-    public String postAdd(@ModelAttribute AddDTO post, RedirectAttributes redirectAttributes, HttpServletRequest request) {
-        log.info("title={}", post.getTitle());
+    public String postAdd(@Validated @ModelAttribute AddDTO post, RedirectAttributes redirectAttributes, HttpServletResponse response) throws UnsupportedEncodingException {
 
-        HttpSession session = request.getSession(false);
-        if (Objects.isNull(session)|| Objects.isNull(session.getAttribute(SessionConst.LOGIN_USER))) {
-            return "redirect:/post/list";
-        }
-        User loginUser = (User) session.getAttribute(SessionConst.LOGIN_USER);
-        post.setNickName(loginUser.getNickName());
-        post.setAuthorId(loginUser.getUserId());
+        User user = userService.findById(post.getAuthorId());
 
-        Long postId = postService.savePost(post.toEntity());
-        redirectAttributes.addAttribute("addStatus", true);
-        redirectAttributes.addAttribute("postId", postId);
+        long postId = postService.savePost(post, user);
+        redirectAttributes.addAttribute("postId",postId);
+
+        response.addCookie(new Cookie(URLEncoder.encode(post.getNickName(), "UTF-8"), "done"));
+
         return "redirect:/post/read/{postId}";
     }
 
@@ -110,9 +105,12 @@ public class PostController {
     }
 
     //임시저장기능 (현재는 빈 값만 들어옴)
-    @PostMapping("/test")
-    public String testBlanc(@ModelAttribute Post post) {
-        log.info("testBlanc={}", post.getTitle());
-        return "redirect:/post/list";
+    @GetMapping("/savedone")
+    public void testBlanc(@AuthenticationPrincipal AuthUser authUser,
+                            HttpServletResponse response){
+        log.info("쿠키 삭제");
+        Cookie cookie = new Cookie(URLEncoder.encode(authUser.getNickName()), null);
+        cookie.setMaxAge(0);
+        response.addCookie(cookie);
     }
 }

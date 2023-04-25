@@ -1,13 +1,12 @@
 package com.geulkkoli.web.post.dto;
 
-import com.geulkkoli.domain.post.Post;
+import com.geulkkoli.domain.post.entity.Post;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotEmpty;
 
 @Getter
 @Setter
