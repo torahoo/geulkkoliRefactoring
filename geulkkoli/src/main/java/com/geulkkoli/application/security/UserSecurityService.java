@@ -54,7 +54,7 @@ public class UserSecurityService implements UserDetailsService {
 
         UserModelDto userModel = UserModelDto.toDto(user);
 
-        if (accountLockRepository.findByUserId(user.getUserId()).isPresent()) {
+        if (Boolean.TRUE.equals(accountLockRepository.existsByLockedUser_UserId(user.getUserId()))) {
             return AuthUser.from(userModel, authorities, AccountStatus.LOCKED);
         }
         return AuthUser.from(userModel, authorities, AccountStatus.ACTIVE);
