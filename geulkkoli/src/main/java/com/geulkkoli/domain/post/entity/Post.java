@@ -64,8 +64,6 @@ public class Post extends ConfigDate {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
         Post post = (Post) o;
         return getPostId() != null && Objects.equals(getPostId(), post.getPostId());
     }

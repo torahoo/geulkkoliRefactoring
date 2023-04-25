@@ -33,10 +33,7 @@ public class Comments extends ConfigDate{
 
     @Override
     public boolean equals(Object obj) {
-        if (this == obj) return true;
-        if (obj == null || Hibernate.getClass(this) != Hibernate.getClass(obj)) return false;
         Comments comments = (Comments) obj;
-
         return getCommentId() != null && Objects.equals(getCommentId(), comments.getCommentId());
     }
 

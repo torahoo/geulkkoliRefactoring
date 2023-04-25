@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.Objects;
 
 @Entity
 @NoArgsConstructor
@@ -26,6 +27,12 @@ public class HashTags {
     @Builder
     public HashTags (String hashTagName) {
         this.hashTagName = hashTagName;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        HashTags hashTag = (HashTags) obj;
+        return getHashTagsId() != null && Objects.equals(getHashTagsId(), hashTag.getHashTagsId());
     }
 
     //==연관관계 메서드==//
