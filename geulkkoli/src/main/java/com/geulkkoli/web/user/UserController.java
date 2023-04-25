@@ -116,7 +116,7 @@ public class UserController {
 
         if (!bindingResult.hasErrors()) {
             userService.updatePassword(userId, form.getPassword());
-            return REDIRECT_INDEX;
+            return "redirect:/loginPage";
 
         } else {
             return RESET_PASSWORD_FORM;
