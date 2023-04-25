@@ -93,26 +93,22 @@ public class UserController {
 
         if (!bindingResult.hasErrors()) {
             request.getSession().setAttribute("userId", user.get().getUserId());
-            return  "forward:/resetPassword";
+            return "forward:/forwardSpace";
         } else {
-            return  FIND_PASSWORD_FORM;
+            return FIND_PASSWORD_FORM;
         }
     }
 
-    @GetMapping("/resetPassword")
-    public String resetPasswordForm(@ModelAttribute("resetPasswordForm") ResetPasswordFormDto form) {
+    @PostMapping("/forwardSpace") // post로 전송된 데이터 유지 & 비밀번호를 reset할 폼으로 이동하기 위해 폼 값 초기화
+    public String resetPasswordForm(Model model) {
+        model.addAttribute("resetPasswordForm", new ResetPasswordFormDto("", ""));
         return RESET_PASSWORD_FORM;
     }
 
     @PostMapping("/resetPassword")
-    public String userResetPassword(@ModelAttribute("resetPasswordForm") ResetPasswordFormDto form, BindingResult bindingResult, HttpServletRequest request) {
+    public String userResetPassword(@Validated @ModelAttribute("resetPasswordForm") ResetPasswordFormDto form, BindingResult bindingResult, HttpServletRequest request) {
 
-        if(form.getPassword() == null){
-            return RESET_PASSWORD_FORM;
-        }
-
-        Long userId = (Long)request.getSession().getAttribute("userId");
-        log.info("uu = {}", userId);
+        Long userId = (Long) request.getSession().getAttribute("userId");
 
         if (!form.getPassword().equals(form.getVerifyPassword())) {
             bindingResult.rejectValue("verifyPassword", "Check.verifyPassword");
