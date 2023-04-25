@@ -37,8 +37,18 @@ public class ImplUserRepository implements UserRepository {
     }
 
     @Override
-    public Optional<User> findByEmail(String userName, String phoneNo){
+    public Optional<User> findByEmail(String userName, String phoneNo) {
         return entityManager.createQuery("select u from User u where u.userName = :userName and u.phoneNo = :phoneNo", User.class)
+                .setParameter("userName", userName)
+                .setParameter("phoneNo", phoneNo)
+                .getResultList()
+                .stream().findAny();
+    }
+
+    @Override
+    public Optional<User> findByEmail(String email, String userName, String phoneNo) {
+        return entityManager.createQuery("select u from User u where u.email = :email and u.userName = :userName and u.phoneNo = :phoneNo", User.class)
+                .setParameter("email", email)
                 .setParameter("userName", userName)
                 .setParameter("phoneNo", phoneNo)
                 .getResultList()
@@ -61,16 +71,15 @@ public class ImplUserRepository implements UserRepository {
                 .stream().findAny();
     }
 
-    // User 정보 업데이트 (이메일은 변경 불가 / 비밀번호는 따로 변경 처리)
     @Override
-    public void update(Long id, EditFormDto form) {
-        User user = entityManager.find(User.class, id);
+    public void update(Long userId, EditFormDto form) {
+        User user = entityManager.find(User.class, userId);
         user.updateUser(form.getUserName(), form.getNickName(), form.getPhoneNo(), form.getGender());
     }
 
     @Override
-    public void updatePassword(Long id, String password) {
-        User user = entityManager.find(User.class, id);
+    public void updatePassword(Long userId, String password) {
+        User user = entityManager.find(User.class, userId);
         user.updatePassword(password);
     }
 

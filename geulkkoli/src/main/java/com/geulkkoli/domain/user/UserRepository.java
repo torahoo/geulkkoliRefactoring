@@ -14,6 +14,8 @@ public interface UserRepository {
 
     Optional<User> findByEmail(String userName, String phoneNo);
 
+    Optional<User> findByEmail(String email, String userName, String phoneNo);
+
     Optional<User> findByNickName(String nickName);
 
     Optional<User> findByPhoneNo(String phoneNo);
@@ -22,5 +24,5 @@ public interface UserRepository {
 
     void updatePassword(Long id, String newPassword);
 
-    void delete (Long postId);
+    void delete(Long postId);
 }

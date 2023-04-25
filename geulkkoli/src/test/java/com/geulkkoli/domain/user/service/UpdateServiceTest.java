@@ -80,10 +80,10 @@ class UpdateServiceTest {
         editPasswordFormDto.setVerifyPassword("abc123!@#");
 
         //when
-        boolean passwordVerification = userService.isPasswordVerification(user.get().getUserId(), editPasswordFormDto);
+        boolean passwordVerification = userService.isPasswordVerification(user.get().getUserId(), editPasswordFormDto.getPassword());
 
         if (passwordVerification)
-            userService.updatePassword(user.get().getUserId(), editPasswordFormDto);
+            userService.updatePassword(user.get().getUserId(), editPasswordFormDto.getNewPassword());
 
         //then
         passwordEncoder.matches(user.get().getPassword(), editPasswordFormDto.getNewPassword());

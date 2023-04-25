@@ -6,7 +6,9 @@ import com.geulkkoli.domain.user.service.UserService;
 import com.geulkkoli.web.user.edit.EditFormDto;
 import com.geulkkoli.web.user.edit.EditPasswordFormDto;
 import com.geulkkoli.web.user.find.FindEmailFormDto;
+import com.geulkkoli.web.user.find.FindPasswordFormDto;
 import com.geulkkoli.web.user.find.FoundEmailFormDto;
+import com.geulkkoli.web.user.find.ResetPasswordFormDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -33,6 +35,8 @@ public class UserController {
     public static final String LOGIN_FORM = "user/loginForm";
     public static final String FIND_EMAIL_FORM = "user/find/findEmailForm";
     public static final String FOUND_EMAIL_FORM = "user/find/foundEmailForm";
+    public static final String FIND_PASSWORD_FORM = "user/find/findPasswordForm";
+    public static final String RESET_PASSWORD_FORM = "user/find/resetPasswordForm";
     public static final String JOIN_FORM = "user/joinForm";
     public static final String EDIT_FORM = "user/edit/editForm";
     public static final String EDIT_PASSWORD_FORM = "user/edit/editPasswordForm";
@@ -55,7 +59,7 @@ public class UserController {
         Optional<User> user = userService.findByEmail(form.getUserName(), form.getPhoneNo());
 
         if (user.isEmpty()) {
-            bindingResult.addError(new ObjectError("empty", "Check.userNameAndPhoneNo"));
+            bindingResult.addError(new ObjectError("empty", "Check.findContent"));
         }
 
         if (!bindingResult.hasErrors()) {
@@ -66,12 +70,62 @@ public class UserController {
         } else {
             return FIND_EMAIL_FORM;
         }
-
     }
 
     @GetMapping("/foundEmail")
     public String foundEmailForm(@ModelAttribute("foundEmailForm") FoundEmailFormDto form) {
         return FOUND_EMAIL_FORM;
+    }
+
+    @GetMapping("/findPassword")
+    public String findPasswordForm(@ModelAttribute("findPasswordForm") FindPasswordFormDto form) {
+        return FIND_PASSWORD_FORM;
+    }
+
+    @PostMapping("/findPassword")
+    public String userFindPassword(@Validated @ModelAttribute("findPasswordForm") FindPasswordFormDto form, BindingResult bindingResult, HttpServletRequest request) {
+
+        Optional<User> user = userService.findByEmail(form.getEmail(), form.getUserName(), form.getPhoneNo());
+
+        if (user.isEmpty()) {
+            bindingResult.addError(new ObjectError("empty", "Check.findContent"));
+        }
+
+        if (!bindingResult.hasErrors()) {
+            request.getSession().setAttribute("userId", user.get().getUserId());
+            return  "forward:/resetPassword";
+        } else {
+            return  FIND_PASSWORD_FORM;
+        }
+    }
+
+    @GetMapping("/resetPassword")
+    public String resetPasswordForm(@ModelAttribute("resetPasswordForm") ResetPasswordFormDto form) {
+        return RESET_PASSWORD_FORM;
+    }
+
+    @PostMapping("/resetPassword")
+    public String userResetPassword(@ModelAttribute("resetPasswordForm") ResetPasswordFormDto form, BindingResult bindingResult, HttpServletRequest request) {
+
+        if(form.getPassword() == null){
+            return RESET_PASSWORD_FORM;
+        }
+
+        Long userId = (Long)request.getSession().getAttribute("userId");
+        log.info("uu = {}", userId);
+
+        if (!form.getPassword().equals(form.getVerifyPassword())) {
+            bindingResult.rejectValue("verifyPassword", "Check.verifyPassword");
+        }
+
+        if (!bindingResult.hasErrors()) {
+            userService.updatePassword(userId, form.getPassword());
+            return REDIRECT_INDEX;
+
+        } else {
+            return RESET_PASSWORD_FORM;
+        }
+
     }
 
     //join
@@ -81,7 +135,8 @@ public class UserController {
     }
 
     @PostMapping("/join")
-    public String userJoin(@Validated @ModelAttribute("joinForm") JoinFormDto form, BindingResult bindingResult, Model model) {
+    public String userJoin(@Validated @ModelAttribute("joinForm") JoinFormDto form, BindingResult
+            bindingResult, Model model) {
         log.info("join Method={}", this);
 
         if (userService.isEmailDuplicate(form.getEmail())) {
@@ -114,7 +169,8 @@ public class UserController {
     }
 
     @GetMapping("/edit")
-    public String editForm(@ModelAttribute("editForm") EditFormDto form, @AuthenticationPrincipal AuthUser authUser, Model model) {
+    public String editForm(@ModelAttribute("editForm") EditFormDto form, @AuthenticationPrincipal AuthUser
+            authUser, Model model) {
         form.editFormDto(authUser.getUserName(), authUser.getNickName(), authUser.getPhoneNo(), authUser.getGender());
         model.addAttribute("editForm", form);
         return EDIT_FORM;
@@ -124,7 +180,8 @@ public class UserController {
      * authUser가 기존의 세션 저장 방식을 대체한다
      * */
     @PostMapping("/edit")
-    public String userEdit(@Validated @ModelAttribute("editForm") EditFormDto form, BindingResult bindingResult, @AuthenticationPrincipal AuthUser authUser) {
+    public String userEdit(@Validated @ModelAttribute("editForm") EditFormDto form, BindingResult
+            bindingResult, @AuthenticationPrincipal AuthUser authUser) {
 
         if (userService.isNickNameDuplicate(form.getNickName()) && !form.getNickName().equals(authUser.getNickName())) {
             bindingResult.rejectValue("nickName", "Duple.nickName");
@@ -149,9 +206,11 @@ public class UserController {
     }
 
     @PostMapping("/editPassword")
-    public String userEditPassword(@Validated @ModelAttribute("editPasswordForm") EditPasswordFormDto form, BindingResult bindingResult, @AuthenticationPrincipal AuthUser authUser, RedirectAttributes redirectAttributes) {
+    public String userEditPassword(@Validated @ModelAttribute("editPasswordForm") EditPasswordFormDto
+                                           form, BindingResult bindingResult, @AuthenticationPrincipal AuthUser authUser, RedirectAttributes
+                                           redirectAttributes) {
 
-        if (!userService.isPasswordVerification(authUser.getUserId(), form)) {
+        if (!userService.isPasswordVerification(authUser.getUserId(), form.getPassword())) {
             bindingResult.rejectValue("password", "Check.password");
         }
 
@@ -160,7 +219,7 @@ public class UserController {
         }
 
         if (!bindingResult.hasErrors()) {
-            userService.updatePassword(authUser.getUserId(), form);
+            userService.updatePassword(authUser.getUserId(), form.getNewPassword());
             redirectAttributes.addAttribute("status", true);
             return "redirect:/edit";
 

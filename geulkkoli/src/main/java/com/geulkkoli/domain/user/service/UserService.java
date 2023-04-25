@@ -4,7 +4,6 @@ import com.geulkkoli.domain.user.User;
 import com.geulkkoli.domain.user.UserRepository;
 import com.geulkkoli.web.user.JoinFormDto;
 import com.geulkkoli.web.user.edit.EditFormDto;
-import com.geulkkoli.web.user.edit.EditPasswordFormDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -50,12 +49,12 @@ public class UserService {
         return userRepository.findById(id);
     }
 
-    public boolean isPasswordVerification(Long id, EditPasswordFormDto form) {
-        return passwordEncoder.matches(form.getPassword(), findById(id).getPassword());
+    public boolean isPasswordVerification(Long id, String password) {
+        return passwordEncoder.matches(password, findById(id).getPassword());
     }
 
-    public void updatePassword(Long id, EditPasswordFormDto form) {
-        userRepository.updatePassword(id, passwordEncoder.encode(form.getNewPassword()));
+    public void updatePassword(Long id, String password) {
+        userRepository.updatePassword(id, passwordEncoder.encode(password));
     }
 
     public void delete(User user) {
@@ -69,6 +68,10 @@ public class UserService {
 
     public Optional<User> findByEmail(String userName, String phoneNo) {
         return userRepository.findByEmail(userName, phoneNo);
+    }
+
+    public Optional<User> findByEmail(String email, String userName, String phoneNo) {
+        return userRepository.findByEmail(email, userName, phoneNo);
     }
 
 }
