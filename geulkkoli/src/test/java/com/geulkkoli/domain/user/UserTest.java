@@ -4,6 +4,7 @@ import com.geulkkoli.application.security.LockExpiredTimeException;
 import com.geulkkoli.application.security.Role;
 import com.geulkkoli.application.security.RoleEntity;
 import com.geulkkoli.domain.admin.Report;
+import com.geulkkoli.domain.admin.ReportRepository;
 import com.geulkkoli.domain.post.Post;
 import com.geulkkoli.domain.post.PostRepository;
 import com.geulkkoli.web.post.dto.AddDTO;
@@ -26,6 +27,10 @@ class UserTest {
 
     @Autowired
     private PostRepository postRepository;
+    @Autowired
+    private ReportRepository reportRepository;
+    @Autowired
+    private UserRepository userRepository;
 
     @Test
     @DisplayName("계정 잠금 테스트")
@@ -99,8 +104,12 @@ class UserTest {
                 .title("title")
                 .postBody("content")
                 .build();
-        Report report = user.writeReport(post, "reason");
-        user.deleteReport(report);
+        User user1 = userRepository.save(user);
+        Post save1 = postRepository.save(post);
+        Report report = user1.writeReport(save1, "reason");
+        Report save = reportRepository.save(report);
+        Report report1 = user1.deleteReport(save.getReportId());
+        reportRepository.delete(report1);
 
         assertThat(user).has(new Condition<>(u -> !u.getReports().contains(report), "report가 삭제되었다"));
     }

@@ -1,4 +1,4 @@
-package com.geulkkoli.infrastructure;
+package com.geulkkoli.domain.user;
 
 import com.geulkkoli.domain.user.User;
 import com.geulkkoli.domain.user.UserRepository;
@@ -115,4 +115,20 @@ class UserRepositoryTest {
         assertThat(findByNickNameUser.getEmail()).isEqualTo("tako1@naver.com");
     }
 
-}
+    @Test
+    @DisplayName("전화번호로 회원 조회")
+    void findByPhoneNo() {
+            User user = User.builder()
+                    .email("tako1@naver.com")
+                    .userName("김1")
+                    .nickName("바나나1")
+                    .password("12341")
+                    .gender("male1")
+                    .phoneNo("01012345679")
+                    .build();
+
+        User saveUser = userRepository.save(user);
+
+        assertThat(userRepository.findByPhoneNo(("01012345679"))).hasValue(saveUser);
+        }
+    }

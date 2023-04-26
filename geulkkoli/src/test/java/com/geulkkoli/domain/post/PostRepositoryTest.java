@@ -142,9 +142,13 @@ class PostRepositoryTest {
 
     @Test
     void delete() {
-        Post deletePost = postRepository.save(new Post("deleteTitle", "deleteBody01", user.getNickName()));
-        deletePost.addAuthor(user);
-        postRepository.delete(deletePost.getPostId());
+        Post post = user.writePost(AddDTO.builder()
+                .title("testTitle")
+                .postBody("test postbody")
+                .nickName("점심뭐먹지").build());
+        Post savePost = postRepository.save(post);
+        Post deletedPost = user.deletePost(savePost.getPostId());
+        postRepository.delete(deletedPost);
         List<Post> all = postRepository.findAll();
 
         assertThat(all.size()).isEqualTo(4);

@@ -99,7 +99,10 @@ public class Post extends ConfigDate {
         this.nickName = nickName;
     }
 
-    //유저를 등록한다.
+    /**
+     * TODO: 이제 회원쪽에서 작성하면서 동시에 post 객체를 만들 수 있다. 그렇다면 이 메서드는 필요할까?
+     *
+     */
     public void addAuthor (User user) {
         this.user = user;
         user.getPosts().add(this);

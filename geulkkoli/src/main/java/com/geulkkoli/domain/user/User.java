@@ -101,9 +101,19 @@ public class User {
     }
 
     public Post deletePost(Long postId) {
+        postIdIsNullThrow(postId);
         Post deltePost = findPost(postId);
         posts.remove(deltePost);
         return deltePost;
+    }
+
+    private void postIdIsNullThrow(Long postId) {
+        for (Post post : posts) {
+            if (Objects.isNull(post.getPostId()) || !post.getPostId().equals(postId)) {
+                throw new NoSuchPostException("게시글 아이디가 null 이거나 일치하는 게시글이 없습니다.");
+            }
+        }
+
     }
 
     private Post findPost(Long postId) {
@@ -179,16 +189,14 @@ public class User {
 
 
     public RoleEntity hasRole(Role role) {
-        RoleEntity roleEntity = RoleEntity.of(role,this);
+        RoleEntity roleEntity = RoleEntity.of(role, this);
         this.role = roleEntity;
-
         return roleEntity;
     }
 
     public RoleEntity getRole() {
         return role;
     }
-
 
 
     @Override
