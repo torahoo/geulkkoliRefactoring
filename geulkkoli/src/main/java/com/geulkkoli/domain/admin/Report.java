@@ -19,7 +19,7 @@ import java.util.Objects;
  */
 @Getter
 @Entity
-@Table(uniqueConstraints = {@UniqueConstraint(name = "REPORTER_REPORTRED_POST", columnNames = {"reported_post_id", "reporter_id"})})
+@Table(uniqueConstraints = {@UniqueConstraint(name = "REPORTER_REPORTED_POST", columnNames = {"reported_post_id", "reporter_id"})})
 public class Report {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -41,14 +41,15 @@ public class Report {
     protected Report() {
     }
 
-    private Report(Post reportedPost, User reporter, LocalDateTime reportedAt) {
+    private Report(Post reportedPost, User reporter, LocalDateTime reportedAt, String reason) {
         this.reportedPost = reportedPost;
         this.reporter = reporter;
         this.reportedAt = reportedAt;
+        this.reason = reason;
     }
 
-    public static Report of(Post reportedPost, User reporter, LocalDateTime reportedAt) {
-        return new Report(reportedPost, reporter, reportedAt);
+    public static Report of(Post reportedPost, User reporter, LocalDateTime reportedAt, String reason){
+        return new Report(reportedPost, reporter, reportedAt, reason);
     }
 
     public void reporter(User reporter) {

@@ -36,7 +36,7 @@
         <td th:text="${item.getDate()}"></td>
         <td th:text="${item.theme}" contenteditable="true"
             th:attr="data-id=${item.date}"
-            onblur="updateTheme(this.getAttribute('data-id'), this.innerText)">
+            id="themeInput">
         </td>
     </tr>
     </tbody>
@@ -44,19 +44,28 @@
 
 <footer id="footer"></footer>
 <div th:include="footer"></div>
-<script src="https://code.jquery.com/jquery-3.4.1.js"></script>
 <script>
+    const themeCell = document.getElementById('themeInput');
+    themeCell.addEventListener('blur', function() {
+        const date = this.getAttribute('data-id');
+        const theme = this.innerText;
+        updateTheme(date, theme);
+    });
+
     function updateTheme(date, theme) {
-        $.ajax({
-            url: '/admin/calendar/update',
-            type: 'POST',
-            data: {date: date, theme: theme},
-            success: function (data) {
+        var xhr = new XMLHttpRequest();
+        xhr.open("POST", "/admin/calendar/update");
+        xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+        xhr.send(JSON.stringify({date: date, theme: theme}));
+        xhr.onload = function () {
+            if (xhr.status === 200) {
                 console.log('Updated successfully.');
-            }, error: function () {
-                console.log('ajax Error')
+            } else {
+                console.error('An error occurred: ' + xhr.status);
+                console.error('error with : ' + date + " and "+theme);
             }
-        });
+        };
+
     }
 </script>
 </body>

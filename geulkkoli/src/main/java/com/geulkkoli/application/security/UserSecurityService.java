@@ -82,6 +82,17 @@ public class UserSecurityService implements UserDetailsService {
         return user;
     }
 
+
+    /*
+    * 관리자 실험을 위한 임시 관리자 계정 추가용 메서드*/
+    public void joinAdmin(JoinFormDto form) {
+        User user = form.toEntity(passwordEncoder);
+
+        RoleEntity roleEntity = roleRepository.save(RoleEntity.of(Role.ADMIN));
+        user.addRole(roleEntity);
+        userRepository.save(user);
+    }
+
     public boolean isPasswordVerification(User user, PasswordEditDto passwordEditDto) {
         return passwordEncoder.matches(passwordEditDto.getOldPassword(), user.getPassword());
     }

@@ -1,6 +1,6 @@
 package com.geulkkoli.web.admin;
 
-import com.geulkkoli.domain.post.service.PostService;
+import com.geulkkoli.domain.admin.service.AdminService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -18,7 +18,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class AdminController {
 
-    private final PostService postService;
+    private final AdminService adminService;
 
     @GetMapping("/") // 어드민 기본 페이지 링크
     public String adminIndex(Model model) {
@@ -39,16 +39,24 @@ public class AdminController {
 
     @ResponseBody
     @PostMapping("/calendar/update")
-    public ResponseEntity<Void> updateTheme(@RequestParam String date, @RequestParam String theme) {
-        log.info("비동기 통신 호출 date : {}, theme : {}", date, theme);
-        //LocalDate localDate = LocalDate.parse(date, DateTimeFormatter.BASIC_ISO_DATE);
-        //calendarService.updateTheme(localDate, theme);
+    public ResponseEntity<Void> updateTheme(@RequestBody DailyThemeDto dailyThemeDto) {
+        log.info("date : {}, theme : {}", dailyThemeDto.getDate(), dailyThemeDto.getTheme());
+//        LocalDate localDate = LocalDate.parse(dailyThemeDto.getDate(), DateTimeFormatter.BASIC_ISO_DATE);
+//        calendarService.updateTheme(localDate, dailyThemeDto.getTheme());
         return ResponseEntity.ok().build();
     }
 
     @GetMapping("/reportedPostList") //신고받은 게시물 링크
     public String reportedPostList(Model model){
-        model.addAttribute("list", postService.findAll());
+        model.addAttribute("list", adminService.findAllReportedPost());
         return "/admin/reportedPostList";
+    }
+
+    //lock user with spring security
+    @ResponseBody
+    @PostMapping("/lockUser")
+    public ResponseEntity<Void> lockUser(@RequestParam Long userId){
+        log.info("username : {}", userId);
+        return ResponseEntity.ok().build();
     }
 }
