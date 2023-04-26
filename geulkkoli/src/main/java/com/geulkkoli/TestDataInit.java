@@ -4,10 +4,13 @@ package com.geulkkoli;
 import com.geulkkoli.application.security.UserSecurityService;
 import com.geulkkoli.domain.admin.AccountLock;
 import com.geulkkoli.domain.admin.AccountLockRepository;
+import com.geulkkoli.domain.admin.ReportRepository;
 import com.geulkkoli.domain.admin.service.AdminServiceImpl;
 import com.geulkkoli.domain.post.Post;
 import com.geulkkoli.domain.post.PostRepository;
 import com.geulkkoli.domain.user.User;
+import com.geulkkoli.domain.user.UserRepository;
+import com.geulkkoli.domain.admin.Report;
 import com.geulkkoli.web.user.JoinFormDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -26,8 +29,10 @@ import java.time.LocalDateTime;
 public class TestDataInit {
 
     private final PostRepository postRepository;
+    private final ReportRepository reportRepository;
+    private final UserRepository userRepository;
     private final UserSecurityService userSecurityService;
-    private final AdminServiceImpl adminServiceImpl;
+
     private final AccountLockRepository accountLockRepository;
 
     /**
@@ -65,6 +70,14 @@ public class TestDataInit {
         );
 
         /*
+         * 신고받은 게시물 더미 데이터*/
+
+
+
+
+
+
+        /*
          * 시큐리티가 제공하는 비밀번호 암호화를 userService에서 쓰기 때문에
          * userService로 테스트 데이터를 저정한다.
          * */
@@ -79,6 +92,18 @@ public class TestDataInit {
         AccountLock accountLock = AccountLock.of(user, "비밀번호가 너무 길어요", LocalDateTime.now().plusDays(1));
         AccountLock lock = accountLockRepository.save(accountLock);
         user.rock(lock);
+
+        joinForm.setEmail("admin");
+        joinForm.setUserName("타코다치");
+        joinForm.setNickName("우무문어");
+        joinForm.setPhoneNo("01033132232");
+        joinForm.setGender("male");
+        joinForm.setPassword("123");
+        userSecurityService.joinAdmin(joinForm);
+
+        reportRepository.save(Report.of(postRepository.findById(2L).get(), userRepository.findByEmail("tako99@naver.com").get(),LocalDateTime.now(), "욕설"));
+        reportRepository.save(Report.of(postRepository.findById(1L).get(), userRepository.findByEmail("tako99@naver.com").get(),LocalDateTime.now(), "비 협조적"));
+        reportRepository.save(Report.of(postRepository.findById(4L).get(), userRepository.findByEmail("tako99@naver.com").get(),LocalDateTime.now(), "점심을 안먹음"));
 
     }
 

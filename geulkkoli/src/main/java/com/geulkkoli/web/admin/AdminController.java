@@ -1,6 +1,6 @@
 package com.geulkkoli.web.admin;
 
-import com.geulkkoli.domain.post.service.PostService;
+import com.geulkkoli.domain.admin.service.AdminService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -9,7 +9,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,7 +18,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class AdminController {
 
-    private final PostService postService;
+    private final AdminService adminService;
 
     @GetMapping("/") // 어드민 기본 페이지 링크
     public String adminIndex(Model model) {
@@ -49,7 +48,7 @@ public class AdminController {
 
     @GetMapping("/reportedPostList") //신고받은 게시물 링크
     public String reportedPostList(Model model){
-        model.addAttribute("list", postService.findAll());
+        model.addAttribute("list", adminService.findAllReportedPost());
         return "/admin/reportedPostList";
     }
 

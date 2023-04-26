@@ -7,4 +7,6 @@ public interface AdminService {
     void rockUser(Long userId);
 
     User findUser(long id);
+
+    Object findAllReportedPost();
 }
