@@ -3,7 +3,9 @@ package com.geulkkoli.domain.post.service;
 import com.geulkkoli.domain.post.Post;
 import com.geulkkoli.domain.post.PostRepository;
 import com.geulkkoli.domain.user.User;
+import com.geulkkoli.domain.user.UserRepository;
 import com.geulkkoli.web.post.dto.AddDTO;
+import com.geulkkoli.web.post.dto.EditDTO;
 import com.geulkkoli.web.post.dto.ListDTO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -19,9 +21,11 @@ import java.util.NoSuchElementException;
 public class PostService {
 
     private final PostRepository postRepository;
+    private final UserRepository userRepository;
 
-    public PostService(PostRepository postRepository) {
+    public PostService(PostRepository postRepository, UserRepository userRepository) {
         this.postRepository = postRepository;
+        this.userRepository = userRepository;
     }
 
     public Post findById(Long postId) {
@@ -40,14 +44,14 @@ public class PostService {
         return listDTOs;
     }
 
-    public Long savePost(AddDTO post, User user) {
+    public Post savePost(AddDTO post, User user) {
         Post writePost = user.writePost(post);
-        Post savePost = postRepository.save(writePost);
-        return savePost.getPostId();
+        return postRepository.save(writePost);
     }
 
-    public void updatePost(Long postId, Post updateParam) {
-        postRepository.update(postId, updateParam);
+    public void updatePost(Long postId, EditDTO updateParam, User user) {
+        Post post = user.editPost(postId, updateParam);
+        postRepository.save(post);
     }
 
     public void deletePost(Long postId) {

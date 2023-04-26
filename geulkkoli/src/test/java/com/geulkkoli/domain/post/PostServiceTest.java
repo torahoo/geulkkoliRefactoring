@@ -4,10 +4,10 @@ import com.geulkkoli.domain.post.service.PostService;
 import com.geulkkoli.domain.user.User;
 import com.geulkkoli.domain.user.UserRepository;
 import com.geulkkoli.web.post.dto.AddDTO;
+import com.geulkkoli.web.post.dto.EditDTO;
 import com.geulkkoli.web.post.dto.ListDTO;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -31,6 +31,7 @@ class PostServiceTest {
     @Test
     @Transactional
     void findById() {
+
         User user1 = User.builder()
                 .email("email@email.com")
                 .userName("userName")
@@ -39,7 +40,12 @@ class PostServiceTest {
                 .phoneNo("phoneNo")
                 .nickName("nickName")
                 .build();
-        postService.savePost(new AddDTO(1L, "title", "body", "nick"), user1);
+
+        userRepository.save(user1);
+
+        AddDTO addDTO = new AddDTO(1L, "title", "body", "nick");
+        postService.savePost(addDTO, user1);
+
         Post post = postService.findById(1L);
 
         assertThat("title").isEqualTo(post.getTitle());
@@ -82,13 +88,10 @@ class PostServiceTest {
 
         userRepository.save(user1);
 
-        Post update = Post.builder()
-                .title("title update")
-                .postBody("postBody update")
-                .nickName("nickName update")
-                .build();
-        postService.savePost(new AddDTO(1L, "title", "body", "nick"), user1);
-        postService.updatePost(1L, update);
+
+        Post post= postService.savePost(new AddDTO(1L, "title", "body", "nick"), user1);
+        EditDTO editDTO = new EditDTO(post.getPostId(),"title update", "body update", "nick update");
+        postService.updatePost(post.getPostId(), editDTO, user1);
 
         Post one = postService.findById(1L);
 
@@ -97,22 +100,18 @@ class PostServiceTest {
     }
 
     @Test
-    void deletePost() {        User user1 = User.builder()
-            .email("email@email.com")
-            .userName("userName")
-            .gender("gender")
-            .password("password")
-            .phoneNo("phoneNo")
-            .nickName("nickName")
-            .build();
+    void deletePost() {
+        User user1 = User.builder()
+                .email("email@email.com")
+                .userName("userName")
+                .gender("gender")
+                .password("password")
+                .phoneNo("phoneNo")
+                .nickName("nickName")
+                .build();
 
         userRepository.save(user1);
 
-        Post update = Post.builder()
-                .title("title update")
-                .postBody("postBody update")
-                .nickName("nickName update")
-                .build();
         postService.savePost(new AddDTO(1L, "title", "body", "nick"), user1);
 
         postService.deletePost(1L);

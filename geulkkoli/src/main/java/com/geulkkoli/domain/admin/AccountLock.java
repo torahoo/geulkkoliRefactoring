@@ -44,10 +44,6 @@ public class AccountLock {
         return new AccountLock(user, reason, localDateTime);
     }
 
-    public void addLockUser(User user) {
-        this.lockedUser = user;
-    }
-
     public User getLockedUser() {
         return lockedUser;
     }

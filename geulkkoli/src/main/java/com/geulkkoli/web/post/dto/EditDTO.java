@@ -24,11 +24,14 @@ public class EditDTO {
     @Length(min = 10, max = 10000)
     private String postBody;
 
+    private final String nickName;
+
     @Builder
-    public EditDTO(Long postId, String title, String postBody) {
+    public EditDTO(Long postId, String title, String postBody, String nickName) {
         this.postId = postId;
         this.title = title;
         this.postBody = postBody;
+        this.nickName = nickName;
     }
 
     public Post toEntity () {

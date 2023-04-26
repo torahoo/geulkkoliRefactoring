@@ -34,12 +34,10 @@ public class AdminServiceImpl implements AdminService {
 
     public void rockUser(Long userId, String reason) {
         User user = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("해당 유저가 존재하지 않습니다."));
-        AccountLock accountLock = AccountLock.of(user, reason, LocalDateTime.now().plusDays(2));
-        user.rock(accountLock);
-        accountLockRepository.save(accountLock);
+        accountLockRepository.save(user.rock(reason, LocalDateTime.now().plusDays(2)));
     }
 
-    public User findUser(long id) {
+    public User findUser(Long id) {
         return userRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("해당 유저가 존재하지 않습니다."));
     }
 

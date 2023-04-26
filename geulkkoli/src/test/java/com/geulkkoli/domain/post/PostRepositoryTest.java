@@ -2,6 +2,8 @@ package com.geulkkoli.domain.post;
 
 import com.geulkkoli.domain.user.User;
 import com.geulkkoli.domain.user.UserRepository;
+import com.geulkkoli.web.post.dto.AddDTO;
+import com.geulkkoli.web.post.dto.EditDTO;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -9,12 +11,10 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.test.context.ActiveProfiles;
 
 import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.*;
 
@@ -55,65 +55,59 @@ class PostRepositoryTest {
 
     @BeforeEach
     void beforeEach() {
+        AddDTO addDTO = AddDTO.builder()
+                .title("testTitle")
+                .postBody("test postbody")
+                .nickName("점심뭐먹지").build();
 
-        Post save01 = postRepository.save(Post.builder()
-                .nickName("바나나")
-                .postBody("나는 멋지고 섹시한 개발자")//채&훈
-                .title("여러분").build()
-        );
-        Post save02 = postRepository.save(Post.builder()
+        Post post = user.writePost(addDTO);
+        postRepository.save(post);
+
+
+        AddDTO addDTO1 = AddDTO.builder()
                 .title("testTitle01")
                 .postBody("test postbody 01")
-                .nickName("점심뭐먹지").build()
-        );
-        Post save03 = postRepository.save(Post.builder()
+                .nickName("점심뭐먹지").build();
+        Post post1 = user.writePost(addDTO1);
+
+        postRepository.save(post1);
+
+        AddDTO addDTO2 = AddDTO.builder()
                 .title("testTitle02")
                 .postBody("test postbody 02")
-                .nickName("점심뭐먹지").build()
-        );
-        Post save04 = postRepository.save(Post.builder()
+                .nickName("점심뭐먹지").build();
+
+        Post post2 = user.writePost(addDTO2);
+
+        postRepository.save(post2);
+
+        AddDTO addDTO3 = AddDTO.builder()
                 .title("testTitle03")
                 .postBody("test postbody 03")
-                .nickName("점심뭐먹지").build()
-        );
-        save01.addAuthor(user);
-        save02.addAuthor(user);
-        save03.addAuthor(user);
-        save04.addAuthor(user);
-    }
+                .nickName("점심뭐먹지").build();
 
-    private TestEntityManager em;
+        postRepository.save(user.writePost(addDTO3));
+    }
 
     @Test
     void save() {
-        Post post = new Post("title", "body", "nick");
-        post.addAuthor(user);
+        Post post = user.writePost(AddDTO.builder()
+                .title("testTitle")
+                .postBody("test postbody")
+                .nickName("점심뭐먹지").build());
         Post save = postRepository.save(post);
         assertThat(save.getTitle()).isEqualTo(post.getTitle());
-    }
-
-    @Test
-    void saveWithEmptyUser() {
-        User user = User.builder()
-                .userName("test")
-                .nickName("test")
-                .phoneNo("00000000000")
-                .password("123")
-                .gender("male").build();
-
-        Post post = new Post("title", "body", "nick");
-        post.addAuthor(user);
-        Post save = postRepository.save(post);
-
-        assertThat(save.getTitle()).isEqualTo(post.getTitle());
-        assertThat(save).isEqualTo(post);
     }
 
     @Test
     void findById() {
-        Post post = new Post("title", "body", "nick");
-        post.addAuthor(user);
+        Post post = user.writePost(AddDTO.builder()
+                .title("testTitle")
+                .postBody("test postbody")
+                .nickName("점심뭐먹지").build());
+
         Post save = postRepository.save(post);
+
         Post find = postRepository.findById(save.getPostId())
                 .orElseThrow(() -> new NoSuchElementException("No post found id matches : " + save.getPostId()));
 
@@ -127,26 +121,23 @@ class PostRepositoryTest {
     }
 
 
-    /**
-     * TODO
-     *  영속성 컨텍스트에 반영되지 않아 실패하지만 다음에 고쳐보겠다.
-     *  단일 테스트는 통과하지만 전체를 돌렸을 때는 empty를 반환한다.
-     */
+
     @Test
     void update() {
-        Post savePost = postRepository.save(new Post("new01", "newBody01", "newNick01"));
-        savePost.addAuthor(user);
+        Post post = user.writePost(AddDTO.builder()
+                .title("testTitle")
+                .postBody("test postbody")
+                .nickName("점심뭐먹지").build());
+        Post savePost = postRepository.save(post);
 
-        Post update = new Post();
-        update.setTitle("update");
-        update.setPostBody("updateBody");
+        Post modifyPost = user.editPost(savePost.getPostId(),new EditDTO(savePost.getPostId(),"modifyTitle","modifyBody",savePost.getNickName()));
 
-        postRepository.update(savePost.getPostId(), update);
+        postRepository.save(modifyPost);
 
         Post one = postRepository.findById(savePost.getPostId())
                 .orElseThrow(() -> new NoSuchElementException("No post found id matches : " + savePost.getPostId()));
-        assertThat(one.getTitle()).isEqualTo(update.getTitle());
-        assertThat(one.getPostBody()).isEqualTo(update.getPostBody());
+        assertThat(one.getTitle()).isEqualTo(modifyPost.getTitle());
+        assertThat(one.getPostBody()).isEqualTo(modifyPost.getPostBody());
     }
 
     @Test

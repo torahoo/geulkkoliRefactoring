@@ -29,12 +29,13 @@ public class RoleEntity {
     public RoleEntity() {
     }
 
-    private RoleEntity(Role role) {
+    private RoleEntity(Role role, User user) {
         this.role = role;
+        this.users.add(user);
     }
 
-    public static RoleEntity of(Role role ) {
-        return new RoleEntity(role);
+    public static RoleEntity of(Role role, User user ) {
+        return new RoleEntity(role,user);
     }
 
     public Long getRoleId() {
@@ -45,8 +46,16 @@ public class RoleEntity {
         return role;
     }
 
-    public void addUser(User user) {
-        this.users.add(user);
+    public Boolean isUser() {
+        return role.equals(Role.USER);
+    }
+
+    public Boolean isAdmin() {
+        return role.equals(Role.ADMIN);
+    }
+
+    public Set<User> getUsers() {
+        return users;
     }
 
     @Override

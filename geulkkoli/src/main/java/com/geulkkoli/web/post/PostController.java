@@ -52,7 +52,7 @@ public class PostController {
 
         User user = userService.findById(post.getAuthorId());
 
-        long postId = postService.savePost(post, user);
+        long postId = postService.savePost(post, user).getPostId();
         redirectAttributes.addAttribute("postId",postId);
 
         response.addCookie(new Cookie(URLEncoder.encode(post.getNickName(), "UTF-8"), "done"));
@@ -85,7 +85,8 @@ public class PostController {
     @PostMapping("/update/{postId}")
     public String postUpdate(@ModelAttribute EditDTO updateParam, @PathVariable Long postId, RedirectAttributes redirectAttributes) {
         log.info("updateParam={}, postId={}", updateParam.getPostBody(), postId);
-        postService.updatePost(postId, updateParam.toEntity());
+        User user = userService.findByNickName(updateParam.getNickName());
+        postService.updatePost(postId, updateParam, user);
         redirectAttributes.addAttribute("updateStatus", true);
 
         return "redirect:/post/read/{postId}";

@@ -68,8 +68,8 @@ public class UserSecurityService implements UserDetailsService {
     public User join(JoinFormDto form) {
         User user = form.toEntity(passwordEncoder);
 
-        RoleEntity roleEntity = roleRepository.save(RoleEntity.of(Role.USER));
-        user.addRole(roleEntity);
+        RoleEntity roleEntity = user.hasRole(Role.USER);
+        roleRepository.save(roleEntity);
         userRepository.save(user);
         return user;
     }
@@ -80,8 +80,8 @@ public class UserSecurityService implements UserDetailsService {
     public void joinAdmin(JoinFormDto form) {
         User user = form.toEntity(passwordEncoder);
 
-        RoleEntity roleEntity = roleRepository.save(RoleEntity.of(Role.ADMIN));
-        user.addRole(roleEntity);
+        RoleEntity roleEntity = user.hasRole(Role.USER);
+        roleRepository.save(roleEntity);
         userRepository.save(user);
     }
 

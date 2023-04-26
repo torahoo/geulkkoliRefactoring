@@ -49,7 +49,7 @@ class UserSecurityServiceTest {
         joinForm.setPassword("123qwe!@#");
         User user = userSecurityService.join(joinForm);
 
-        assertThat(user.getRole()).isEqualTo(RoleEntity.of(Role.USER));
+        assertThat(user.getRole()).isEqualTo(RoleEntity.of(Role.USER, user));
     }
 
     @Test

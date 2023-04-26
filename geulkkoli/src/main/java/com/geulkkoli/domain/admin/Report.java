@@ -34,7 +34,7 @@ public class Report {
     @Column(nullable = false, updatable = false, name = "reported_at")
     private LocalDateTime reportedAt;
 
-    @Column(nullable = false, length = 1000)
+    @Column(nullable = false, length = 100)
     private String reason;
 
     protected Report() {

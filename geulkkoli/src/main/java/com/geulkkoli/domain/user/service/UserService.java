@@ -47,4 +47,9 @@ public class UserService {
         return userRepository.findById(id)
                 .orElseThrow(() -> new NoSuchElementException("No user found id matches:" + id));
     }
+
+    public User findByNickName(String nickName) {
+        return userRepository.findByNickName(nickName)
+                .orElseThrow(() -> new NoSuchElementException("No user found nickname matches:" + nickName));
+    }
 }

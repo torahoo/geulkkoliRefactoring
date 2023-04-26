@@ -1,6 +1,7 @@
 package com.geulkkoli.domain.user;
 
 import com.geulkkoli.application.security.LockExpiredTimeException;
+import com.geulkkoli.application.security.Role;
 import com.geulkkoli.application.security.RoleEntity;
 import com.geulkkoli.domain.admin.AccountLock;
 import com.geulkkoli.domain.admin.Report;
@@ -8,6 +9,7 @@ import com.geulkkoli.domain.post.Post;
 import com.geulkkoli.domain.comment.Comments;
 import com.geulkkoli.domain.favorites.Favorites;
 import com.geulkkoli.web.post.dto.AddDTO;
+import com.geulkkoli.web.post.dto.EditDTO;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -92,27 +94,55 @@ public class User {
         this.password = password;
     }
 
-    //연관관계 편의 메서드
-    public Report writeReport(Post post, String reason) {
-        Report report = Report.of(post, this, LocalDateTime.now(), reason);
-        this.reports.add(report);
-        return report;
-    }
-
     public Post writePost(AddDTO addDTO) {
         Post post = new Post(addDTO, this);
         this.posts.add(post);
         return post;
     }
 
-    public void deleteReport(Report report) {
-        this.reports.remove(report);
+    public Post deletePost(Long postId) {
+        Post deltePost = this.posts.stream()
+                .filter(post -> post.getPostId().equals(postId))
+                .findFirst()
+                .orElseThrow(() -> new IllegalArgumentException("해당 게시글이 없습니다."));
+
+        posts.remove(deltePost);
+
+        return deltePost;
     }
 
-    //계정을 잠그는 연관 관계 메서드 입니다.
-    public void rock(AccountLock accountLock) {
+    public Post editPost(Long postId, EditDTO editDTO) {
+        Post post = this.posts.stream()
+                .filter(p -> p.getPostId().equals(postId))
+                .findFirst()
+                .orElseThrow(() -> new IllegalArgumentException("해당 게시글이 없습니다."));
+
+        post.changePostBody(editDTO.getPostBody());
+        post.changeTitle(editDTO.getTitle());
+        post.changeNickName(editDTO.getNickName());
+        return post;
+    }
+
+    public Report writeReport(Post post, String reason) {
+        Report report = Report.of(post, this, LocalDateTime.now(), reason);
+        this.reports.add(report);
+        return report;
+    }
+
+
+    public Report deleteReport(Report report) {
+        this.reports.remove(report);
+        return report;
+    }
+
+    /**
+     * @param reason             잠김 이유가 들어옵니다.
+     * @param lockExpirationDate 만료 날짜가 들어옵니다.
+     */
+    public AccountLock rock(String reason, LocalDateTime lockExpirationDate) {
+        AccountLock accountLock = AccountLock.of(this, reason, lockExpirationDate);
         this.accountLocks.add(accountLock);
-        accountLock.addLockUser(this);
+        return accountLock;
     }
 
     //계정이 잠금 여부를 확인하는 메서드 입니다.
@@ -139,10 +169,18 @@ public class User {
     }
 
 
-    public void addRole(RoleEntity role) {
-        this.role = role;
-        role.addUser(this);
+    public RoleEntity hasRole(Role role) {
+        RoleEntity roleEntity = RoleEntity.of(role,this);
+        this.role = roleEntity;
+
+        return roleEntity;
     }
+
+    public RoleEntity getRole() {
+        return role;
+    }
+
+
 
     @Override
     public boolean equals(Object o) {
