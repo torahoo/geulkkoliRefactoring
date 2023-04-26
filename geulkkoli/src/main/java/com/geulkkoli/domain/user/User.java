@@ -42,11 +42,11 @@ public class User {
     private Set<Post> posts = new LinkedHashSet<>();
 
     //댓글의 유저 매핑
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private Set<Comments> comments = new LinkedHashSet<>();
 
     //좋아요의 유저 매핑
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private Set<Favorites> favorites = new LinkedHashSet<>();
 
     @Builder
@@ -73,5 +73,29 @@ public class User {
         this.password = password;
     }
 
+    //연관관계 메서드
 
+    /**
+     * 유저가 작성한 게시글
+     */
+    public void writePost (Post post) {
+        post.addAuthor(this);
+        posts.add(post);
+    }
+
+    /**
+     * 유저가 작성한 댓글
+     */
+    public void writeComment (Comments comment){
+        comment.addAuthor(this);
+        comments.add(comment);
+    }
+
+    /**
+     *  유저가 누른 좋아요
+     */
+    public void pressFavorite (Favorites favorite) {
+        favorite.addAuthor(this);
+        favorites.add(favorite);
+    }
 }

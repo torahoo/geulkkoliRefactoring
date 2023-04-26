@@ -39,6 +39,7 @@ public class ImplHashTagsRepository implements HashTagsRepository {
     @Override
     public void delete(Long hashTagId) {
         HashTags findHashTag = em.find(HashTags.class, hashTagId);
+        findHashTag.getPost().getHashTags().remove(findHashTag);
         em.remove(findHashTag);
     }
 

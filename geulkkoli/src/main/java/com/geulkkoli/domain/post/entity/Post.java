@@ -44,15 +44,15 @@ public class Post extends ConfigDate {
     private String imageUploadName;
 
     //댓글의 게시글 매핑
-    @OneToMany(mappedBy = "post")
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
     private Set<Comments> comments = new LinkedHashSet<>();
 
     //좋아요의 게시글 매핑
-    @OneToMany(mappedBy = "post")
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
     private Set<Favorites> favorites = new LinkedHashSet<>();
 
     //해시태그의 게시글 매핑
-    @OneToMany(mappedBy = "post")
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
     private Set<HashTags> hashTags = new LinkedHashSet<>();
 
     @Builder
@@ -93,7 +93,24 @@ public class Post extends ConfigDate {
     //유저를 등록한다.
     public void addAuthor (User user) {
         this.user = user;
-        user.getPosts().add(this);
+    }
+
+    //해당 게시글에 댓글 넣기
+    public void addComment (Comments comment) {
+        comment.addPost(this);
+        comments.add(comment);
+    }
+
+    //해당 게시글에 좋아요 넣기
+    public void addFavorite (Favorites favorite) {
+        favorite.addPost(this);
+        favorites.add(favorite);
+    }
+
+    //해당 게시글에 들어가 있는 해시태그
+    public void addHashTag (HashTags hashTag) {
+        hashTag.addPost(this);
+        hashTags.add(hashTag);
     }
 
     //조회수를 바꾼다.

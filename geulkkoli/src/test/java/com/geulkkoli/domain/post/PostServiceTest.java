@@ -24,6 +24,12 @@ class PostServiceTest {
     @Autowired
     private PostService postService;
 
+    /**
+     * 엔티티 추가하며 바꿔야하는
+     * DTO등 들이 있어
+     * 일단 전체 주것처리 해놓음
+     */
+
 //    @Test
 //    void findById() {
 //        Post post = postService.findById(1L);

@@ -5,7 +5,6 @@ import com.geulkkoli.domain.post.entity.Post;
 import com.geulkkoli.domain.user.User;
 import com.geulkkoli.domain.user.UserRepository;
 import lombok.extern.slf4j.Slf4j;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -14,10 +13,11 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.*;
 
 @Slf4j
 @SpringBootTest
@@ -91,13 +91,37 @@ class ImplCommentsRepositoryTest {
         Comments comment = Comments.builder()
                 .commentBody("test댓글")
                 .build();
-        comment.addAuthor(user);
         comment.addPost(post01);
+        comment.addAuthor(user);
 
         Comments save = implCommentsRepository.save(comment);
 
-        Assertions.assertThat(comment.getCommentBody()).isEqualTo(save.getCommentBody());
-        Assertions.assertThat("test댓글").isEqualTo(save.getCommentBody());
+        assertThat(comment.getCommentBody()).isEqualTo(save.getCommentBody());
+        assertThat("test댓글").isEqualTo(save.getCommentBody());
+    }
+
+    @Test
+    void 게시물_댓글_저장 () {
+        Comments comment = Comments.builder()
+                .commentBody("test댓글")
+                .build();
+        user.writeComment(comment);
+        post01.addComment(comment);
+
+        Comments comment2 = Comments.builder()
+                .commentBody("test댓글2")
+                .build();
+        user.writeComment(comment2);
+        post01.addComment(comment2);
+
+        Comments save = implCommentsRepository.save(comment);
+        Comments save2 = implCommentsRepository.save(comment2);
+
+
+        ArrayList<Comments> postComment = new ArrayList<>(post01.getComments());
+        assertThat(comment.getCommentBody()).isEqualTo(save.getCommentBody());
+        assertThat("test댓글").isEqualTo(save.getCommentBody());
+        assertThat(postComment.contains(save)).isEqualTo(true);
 
     }
 
@@ -106,29 +130,30 @@ class ImplCommentsRepositoryTest {
         Comments comment = Comments.builder()
                 .commentBody("test댓글")
                 .build();
-        comment.addAuthor(user);
-        comment.addPost(post01);
+        user.writeComment(comment);
+        post01.addComment(comment);
         Comments save = implCommentsRepository.save(comment);
         Comments find = implCommentsRepository.findById(save.getCommentId())
                 .orElseThrow(() -> new NoSuchElementException("no comment id found : " + save.getCommentId()));
 
-        Assertions.assertThat(find).isEqualTo(save);
-        Assertions.assertThat(find.getCommentBody()).isEqualTo("test댓글");
-        Assertions.assertThat(find.getPost()).isEqualTo(save.getPost());
-        Assertions.assertThat(find.getUser()).isEqualTo(save.getUser());
+        assertThat(find).isEqualTo(save);
+        assertThat(find.getCommentBody()).isEqualTo("test댓글");
+        assertThat(find.getPost()).isEqualTo(save.getPost());
+        assertThat(find.getUser()).isEqualTo(save.getUser());
     }
+
 
     @Test
     void 전체_리스트_조회() {
         Comments comment = Comments.builder()
                 .commentBody("test댓글")
                 .build();
-        comment.addAuthor(user);
-        comment.addPost(post01);
+        user.writeComment(comment);
+        post01.addComment(comment);
         Comments save = implCommentsRepository.save(comment);
         List<Comments> all = implCommentsRepository.findAll();
-        Assertions.assertThat(1).isEqualTo(all.size());
-        Assertions.assertThat("test댓글").isEqualTo(all.get(0).getCommentBody());
+        assertThat(1).isEqualTo(all.size());
+        assertThat("test댓글").isEqualTo(all.get(0).getCommentBody());
     }
 
     @Test
@@ -136,8 +161,8 @@ class ImplCommentsRepositoryTest {
         Comments comment = Comments.builder()
                 .commentBody("test댓글")
                 .build();
-        comment.addAuthor(user);
-        comment.addPost(post01);
+        user.writeComment(comment);
+        post01.addComment(comment);
         Comments save = implCommentsRepository.save(comment);
         Comments update = new Comments();
         update.changeComments("수정바디");
@@ -146,8 +171,8 @@ class ImplCommentsRepositoryTest {
         Comments find = implCommentsRepository.findById(save.getCommentId())
                 .orElseThrow(() -> new NoSuchElementException("no comment id found : " + save.getCommentId()));
 
-        Assertions.assertThat(find.getCommentBody()).isEqualTo(update.getCommentBody());
-        Assertions.assertThat(find.getCommentBody()).isEqualTo("수정바디");
+        assertThat(find.getCommentBody()).isEqualTo(update.getCommentBody());
+        assertThat(find.getCommentBody()).isEqualTo("수정바디");
     }
 
     @Test
@@ -155,19 +180,19 @@ class ImplCommentsRepositoryTest {
         Comments comment = Comments.builder()
                 .commentBody("test댓글")
                 .build();
-        comment.addAuthor(user);
-        comment.addPost(post01);
+        user.writeComment(comment);
+        post01.addComment(comment);
         Comments save = implCommentsRepository.save(comment);
 
         Comments comment2 = Comments.builder()
-                .commentBody("test댓글")
+                .commentBody("test댓글2")
                 .build();
-        comment2.addAuthor(user);
-        comment2.addPost(post02);
+        user.writeComment(comment2);
+        post02.addComment(comment2);
         Comments save2 = implCommentsRepository.save(comment2);
 
         implCommentsRepository.delete(save.getCommentId());
         List<Comments> all = implCommentsRepository.findAll();
-        Assertions.assertThat(all.size()).isEqualTo(1);
+        assertThat(all.size()).isEqualTo(1);
     }
 }

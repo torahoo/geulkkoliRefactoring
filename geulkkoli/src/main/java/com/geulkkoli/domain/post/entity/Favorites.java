@@ -46,7 +46,6 @@ public class Favorites {
      */
     public void addAuthor (User user) {
         this.user = user;
-        user.getFavorites().add(this);
     }
 
     /**
@@ -54,6 +53,5 @@ public class Favorites {
      */
     public void addPost (Post post) {
         this.post = post;
-        post.getFavorites().add(this);
     }
 }

@@ -45,6 +45,8 @@ public class ImplCommentsRepository implements CommentsRepository {
     @Override
     public void delete(Long commentId) {
         Comments findComment = em.find(Comments.class, commentId);
+        findComment.getPost().getComments().remove(findComment);
+        findComment.getUser().getComments().remove(findComment);
         em.remove(findComment);
     }
 

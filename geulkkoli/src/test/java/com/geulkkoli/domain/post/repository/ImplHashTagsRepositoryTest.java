@@ -14,8 +14,11 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
+
+import static org.assertj.core.api.Assertions.*;
 
 @Slf4j
 @SpringBootTest
@@ -66,8 +69,8 @@ class ImplHashTagsRepositoryTest {
                 .postBody("testBody")//채&훈
                 .title("testTitle").build()
         );
-        post01.addAuthor(user);
-        post02.addAuthor(user);
+        user.writePost(post01);
+        user.writePost(post02);
     }
 
     @Test
@@ -76,14 +79,33 @@ class ImplHashTagsRepositoryTest {
         HashTags hashTag = HashTags.builder()
                 .hashTagName("장르01")
                 .build();
-        hashTag.addPost(post01);
+        post01.addHashTag(hashTag);
 
         //when
         HashTags save = implHashTagsRepository.save(hashTag);
 
         //then
-        Assertions.assertThat(save.getHashTagName()).isEqualTo("장르01");
-        Assertions.assertThat(save.getPost()).isEqualTo(post01);
+        assertThat(save.getHashTagName()).isEqualTo("장르01");
+        assertThat(save.getPost()).isEqualTo(post01);
+    }
+
+    @Test
+    public void 게시글_해시태그_저장 () throws Exception {
+        //given
+        HashTags hashTag = HashTags.builder()
+                .hashTagName("장르01")
+                .build();
+        post01.addHashTag(hashTag);
+
+        //when
+        HashTags save = implHashTagsRepository.save(hashTag);
+        ArrayList<HashTags> hashtags = new ArrayList<>(post01.getHashTags());
+
+        //then
+        assertThat(hashtags.get(0).getHashTagName()).isEqualTo("장르01");
+        assertThat(hashtags.size()).isEqualTo(1);
+        assertThat(hashtags.contains(save)).isTrue();
+        assertThat(hashtags.get(0).getHashTagsId()).isEqualTo(save.getHashTagsId());
     }
 
     @Test
@@ -92,7 +114,7 @@ class ImplHashTagsRepositoryTest {
         HashTags hashTag = HashTags.builder()
                 .hashTagName("장르01")
                 .build();
-        hashTag.addPost(post01);
+        post01.addHashTag(hashTag);
 
         HashTags save = implHashTagsRepository.save(hashTag);
         //when
@@ -100,9 +122,9 @@ class ImplHashTagsRepositoryTest {
                 .orElseThrow(() -> new NoSuchElementException("there's no such ID:" + save.getHashTagsId()));
 
         //then
-        Assertions.assertThat(find).isEqualTo(save);
-        Assertions.assertThat(find.getHashTagsId()).isEqualTo(save.getHashTagsId());
-        Assertions.assertThat(find.getHashTagName()).isEqualTo("장르01");
+        assertThat(find).isEqualTo(save);
+        assertThat(find.getHashTagsId()).isEqualTo(save.getHashTagsId());
+        assertThat(find.getHashTagName()).isEqualTo("장르01");
     }
 
     @Test
@@ -111,14 +133,14 @@ class ImplHashTagsRepositoryTest {
         HashTags hashTag = HashTags.builder()
                 .hashTagName("장르01")
                 .build();
-        hashTag.addPost(post01);
+        post01.addHashTag(hashTag);
 
         HashTags save = implHashTagsRepository.save(hashTag);
         //when
         List<HashTags> all = implHashTagsRepository.findAll();
         //then
-        Assertions.assertThat(all.size()).isEqualTo(1);
-        Assertions.assertThat(all.get(0).getHashTagName()).isEqualTo("장르01");
+        assertThat(all.size()).isEqualTo(1);
+        assertThat(all.get(0).getHashTagName()).isEqualTo("장르01");
     }
 
     @Test
@@ -127,14 +149,14 @@ class ImplHashTagsRepositoryTest {
         HashTags hashTag = HashTags.builder()
                 .hashTagName("장르01")
                 .build();
-        hashTag.addPost(post01);
+        post01.addHashTag(hashTag);
 
         HashTags save = implHashTagsRepository.save(hashTag);
 
         HashTags hashTag2 = HashTags.builder()
                 .hashTagName("장르02")
                 .build();
-        hashTag2.addPost(post02);
+        post01.addHashTag(hashTag2);
 
         HashTags save2 = implHashTagsRepository.save(hashTag2);
 
@@ -143,8 +165,8 @@ class ImplHashTagsRepositoryTest {
         List<HashTags> all = implHashTagsRepository.findAll();
 
         //then
-        Assertions.assertThat(all.size()).isEqualTo(1);
-        Assertions.assertThat(all.get(0).getHashTagName()).isEqualTo("장르02");
-        Assertions.assertThat(all.get(0).getHashTagsId()).isEqualTo(save2.getHashTagsId());
+        assertThat(all.size()).isEqualTo(1);
+        assertThat(all.get(0).getHashTagName()).isEqualTo("장르02");
+        assertThat(all.get(0).getHashTagsId()).isEqualTo(save2.getHashTagsId());
     }
 }

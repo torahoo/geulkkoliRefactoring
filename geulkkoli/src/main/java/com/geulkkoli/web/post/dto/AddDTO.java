@@ -34,13 +34,12 @@ public class AddDTO {
         this.nickName = nickName;
     }
 
-    public Post toEntity (User user) {
+    public Post toEntity () {
         Post post = Post.builder()
                 .title(title)
                 .postBody(postBody)
                 .nickName(nickName)
                 .build();
-        post.addAuthor(user);
         return post;
     }
 }

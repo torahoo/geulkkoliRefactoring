@@ -15,9 +15,12 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 
 import javax.transaction.Transactional;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
+
+import static org.assertj.core.api.Assertions.*;
 
 @Slf4j
 @SpringBootTest
@@ -77,71 +80,83 @@ class PostRepositoryTest {
                 .postBody("test postbody 03")
                 .nickName("점심뭐먹지").build()
         );
-        save01.addAuthor(user);
-        save02.addAuthor(user);
-        save03.addAuthor(user);
-        save04.addAuthor(user);
+        user.writePost(save01);
+        user.writePost(save02);
+        user.writePost(save03);
+        user.writePost(save04);
     }
 
     @Test
     void save() {
         Post post = new Post("title", "body", "nick");
-        post.addAuthor(user);
         Post save = implPostRepository.save(post);
-        Assertions.assertThat(save.getTitle()).isEqualTo(post.getTitle());
+        user.writePost(save);
+
+        assertThat(save.getTitle()).isEqualTo(post.getTitle());
+        assertThat(save.getPostBody()).isEqualTo("body");
     }
 
     @Test
-    void saveWithEmptyUser () {
-        User user = User.builder()
-                .userName("test")
-                .nickName("test")
-                .phoneNo("00000000000")
-                .password("123")
-                .gender("male").build();
-        Post post = new Post("title", "body", "nick");
-        post.addAuthor(user);
-        Post save = implPostRepository.save(post);
-        Assertions.assertThat(save.getTitle()).isEqualTo(post.getTitle());
+    public void 유저로부터_작성한_게시글 () {
+        //given
+        Post save = implPostRepository.save(new Post("title", "body", "nick"));
+        user.writePost(save);
+
+        //when
+        ArrayList<Post> authorPost = new ArrayList<>(user.getPosts());
+
+        //then
+        assertThat(authorPost.size()).isEqualTo(5);
+        assertThat(authorPost.contains(save)).isEqualTo(true);
     }
 
     @Test
     void findById() {
         Post post = new Post("title", "body", "nick");
-        post.addAuthor(user);
         Post save = implPostRepository.save(post);
+        user.writePost(save);
         Post find = implPostRepository.findById(save.getPostId())
                 .orElseThrow(()->new NoSuchElementException("No post found id matches : "+save.getPostId()));
-        Assertions.assertThat(save).isEqualTo(find);
+        assertThat(save).isEqualTo(find);
     }
 
     @Test
     void findAll() {
         List<Post> all = implPostRepository.findAll();
-        Assertions.assertThat(4).isEqualTo(all.size());
+        assertThat(4).isEqualTo(all.size());
     }
 
     @Test
     void update() {
         Post savePost = implPostRepository.save(new Post("new01", "newBody01", "newNick01"));
-        savePost.addAuthor(user);
+        user.writePost(savePost);
         Post update = new Post();
         update.setTitle("update");
         update.setPostBody("updateBody");
         implPostRepository.update(savePost.getPostId(), update);
         Post one = implPostRepository.findById(savePost.getPostId())
                 .orElseThrow(()->new NoSuchElementException("No post found id matches : "+savePost.getPostId()));
-        Assertions.assertThat(one.getTitle()).isEqualTo(update.getTitle());
-        Assertions.assertThat(one.getPostBody()).isEqualTo(update.getPostBody());
+        assertThat(one.getTitle()).isEqualTo(update.getTitle());
+        assertThat(one.getPostBody()).isEqualTo(update.getPostBody());
     }
 
     @Test
     void delete() {
+        //given
         Post deletePost = implPostRepository.save(new Post("deleteTitle", "deleteBody01", user.getNickName()));
-        deletePost.addAuthor(user);
+        user.writePost(deletePost);
+
         implPostRepository.delete(deletePost.getPostId());
+//        user.getPosts().remove(deletePost);
+
+        //when
         List<Post> all = implPostRepository.findAll();
-        Assertions.assertThat(all.size()).isEqualTo(4);
+        ArrayList<Post> authorPost = new ArrayList<>(user.getPosts());
+
+        //then
+        assertThat(all.size()).isEqualTo(4);
+        assertThat(authorPost.size()).isEqualTo(4);
+
     }
 
 }

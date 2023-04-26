@@ -47,6 +47,7 @@ public class ImplPostRepository implements PostRepository {
     @Override
     public void delete (Long postId) {
         Post deletePost = entityManager.find(Post.class, postId);
+        deletePost.getUser().getPosts().remove(deletePost);
         entityManager.remove(deletePost);
     }
 

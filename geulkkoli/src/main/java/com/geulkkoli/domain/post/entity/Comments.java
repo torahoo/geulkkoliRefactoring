@@ -50,19 +50,17 @@ public class Comments extends ConfigDate{
     //==연관관계 메서드==//
 
     /**
-     * 유저 세팅
+     * 댓글의 작성자
      */
     public void addAuthor (User user) {
         this.user = user;
-        user.getComments().add(this);
     }
 
     /**
-     * 게시글 세팅
+     * 댓글을 단 게시글
      */
     public void addPost (Post post) {
         this.post = post;
-        post.getComments().add(this);
     }
 
     public void changeComments (String commentBody) {

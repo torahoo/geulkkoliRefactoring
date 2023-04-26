@@ -5,7 +5,6 @@ import com.geulkkoli.domain.post.entity.Post;
 import com.geulkkoli.domain.user.User;
 import com.geulkkoli.domain.user.UserRepository;
 import lombok.extern.slf4j.Slf4j;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -14,8 +13,11 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
+
+import static org.assertj.core.api.Assertions.*;
 
 @Slf4j
 @SpringBootTest
@@ -66,24 +68,62 @@ class ImplFavoritesRepositoryTest {
                 .title("testTitle").build()
         );
 
-        post01.addAuthor(user);
-        post02.addAuthor(user);
+        user.writePost(post01);
+        user.writePost(post02);
     }
 
     @Test
     public void 좋아요_저장 () {
         //given
         Favorites favorite = new Favorites();
-        favorite.addAuthor(user);
-        favorite.addPost(post01);
 
         //when
         Favorites save = implFavoritesRepository.save(favorite);
+        post01.addFavorite(save);
+        user.pressFavorite(save);
 
         //then
-        Assertions.assertThat(favorite.getPost()).isEqualTo(save.getPost());
-        Assertions.assertThat(favorite.getPost().getTitle()).isEqualTo("여러분");
-        Assertions.assertThat(favorite.getUser().getEmail()).isEqualTo("test@naver.com");
+        assertThat(favorite.getPost()).isEqualTo(save.getPost());
+        assertThat(favorite.getPost().getTitle()).isEqualTo("여러분");
+        assertThat(favorite.getUser().getEmail()).isEqualTo("test@naver.com");
+    }
+
+    /**
+     * 유저가 해당 좋아요 정보를 가지고 있는지 체크
+     */
+    @Test
+    public void 유저_좋아요_저장 () throws Exception {
+        //given
+        Favorites save = implFavoritesRepository.save(new Favorites());
+        post01.addFavorite(save);
+        user.pressFavorite(save);
+
+        //when
+        ArrayList<Favorites> favorites = new ArrayList<>(user.getFavorites());
+
+        //then
+        assertThat(favorites.size()).isEqualTo(1);
+        assertThat(favorites.contains(save)).isEqualTo(true);
+        assertThat(favorites.get(0).getPost().getPostBody()).isEqualTo("나는 멋지고 섹시한 개발자");
+    }
+
+    /**
+     * 게시물에 해당 좋아요 정보를 가지고 있는지 체크
+     */
+    @Test
+    public void 게시물_좋아요_저장 () throws Exception {
+        //given
+        Favorites save = implFavoritesRepository.save(new Favorites());
+        post01.addFavorite(save);
+        user.pressFavorite(save);
+
+        //when
+        ArrayList<Favorites> favorites = new ArrayList<>(post01.getFavorites());
+
+        //then
+        assertThat(favorites.size()).isEqualTo(1);
+        assertThat(favorites.contains(save)).isEqualTo(true);
+        assertThat(favorites.get(0).getUser().getNickName()).isEqualTo("test");
     }
 
     /**
@@ -93,72 +133,75 @@ class ImplFavoritesRepositoryTest {
     public void 중복_좋아요_확인 () throws Exception {
         //given
         Favorites favorite = new Favorites();
-        favorite.addAuthor(user);
-        favorite.addPost(post01);
 
         //when
         Favorites save = implFavoritesRepository.save(favorite);
+        post01.addFavorite(save);
+        user.pressFavorite(save);
+
         Favorites save2 = implFavoritesRepository.save(favorite);
+        post01.addFavorite(save2);
+        user.pressFavorite(save2);
 
         //then
-        Assertions.assertThat(save.getFavoritesId()).isEqualTo(save2.getFavoritesId());
+        assertThat(save.getFavoritesId()).isEqualTo(save2.getFavoritesId());
     }
 
     @Test
     public void 좋아요_하나_조회 (){
         //given
-        Favorites favorite = new Favorites();
-        favorite.addAuthor(user);
-        favorite.addPost(post01);
-        Favorites save = implFavoritesRepository.save(favorite);
+        Favorites save = implFavoritesRepository.save(new Favorites());
+        post01.addFavorite(save);
+        user.pressFavorite(save);
 
         //when
         Favorites find = implFavoritesRepository.findById(save.getFavoritesId())
                 .orElseThrow(() -> new NoSuchElementException("can't find favoritesId:" + save.getFavoritesId()));
 
         //then
-        Assertions.assertThat(find).isEqualTo(save);
-        Assertions.assertThat(find.getUser().getEmail()).isEqualTo("test@naver.com");
-        Assertions.assertThat(find.getPost().getTitle()).isEqualTo("여러분");
+        assertThat(find).isEqualTo(save);
+        assertThat(find.getUser().getEmail()).isEqualTo("test@naver.com");
+        assertThat(find.getPost().getTitle()).isEqualTo("여러분");
     }
 
     @Test
     public void 전체_좋아요_조회 () throws Exception {
         //given
-        Favorites favorite = new Favorites();
-        favorite.addAuthor(user);
-        favorite.addPost(post01);
-        Favorites save = implFavoritesRepository.save(favorite);
+        Favorites save = implFavoritesRepository.save(new Favorites());
+        post01.addFavorite(save);
+        user.pressFavorite(save);
+
+        Favorites save2 = implFavoritesRepository.save(new Favorites());
+        post02.addFavorite(save2);
+        user.pressFavorite(save2);
 
         //when
         List<Favorites> all = implFavoritesRepository.findAll();
 
         //then
-        Assertions.assertThat(all.size()).isEqualTo(1);
-        Assertions.assertThat(all.get(0).getPost().getTitle()).isEqualTo("여러분");
-        Assertions.assertThat(all.get(0).getUser().getEmail()).isEqualTo("test@naver.com");
+        assertThat(all.size()).isEqualTo(2);
+        assertThat(all.get(0).getPost().getTitle()).isEqualTo("여러분");
+        assertThat(all.get(0).getUser().getEmail()).isEqualTo("test@naver.com");
     }
 
     @Test
     public void 좋아요_삭제 () throws Exception {
         //given
-        Favorites favorite = new Favorites();
-        favorite.addAuthor(user);
-        favorite.addPost(post01);
-        Favorites save = implFavoritesRepository.save(favorite);
+        Favorites save = implFavoritesRepository.save(new Favorites());
+        post01.addFavorite(save);
+        user.pressFavorite(save);
 
-        Favorites favorite2 = new Favorites();
-        favorite2.addAuthor(user);
-        favorite2.addPost(post02);
-        Favorites save2 = implFavoritesRepository.save(favorite2);
+        Favorites save2 = implFavoritesRepository.save(new Favorites());
+        post02.addFavorite(save2);
+        user.pressFavorite(save2);
 
         //when
         implFavoritesRepository.delete(save.getFavoritesId());
         List<Favorites> all = implFavoritesRepository.findAll();
 
         //then
-        Assertions.assertThat(all.size()).isEqualTo(1);
-        Assertions.assertThat(all.get(0).getPost().getTitle()).isEqualTo("testTitle");
-        Assertions.assertThat(all.get(0).getUser().getEmail()).isEqualTo("test@naver.com");
+        assertThat(all.size()).isEqualTo(1);
+        assertThat(all.get(0).getPost().getTitle()).isEqualTo("testTitle");
+        assertThat(all.get(0).getUser().getEmail()).isEqualTo("test@naver.com");
     }
 }
