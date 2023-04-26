@@ -12,8 +12,8 @@ public enum Role {
     ADMIN("ROLE_ADMIN", 1),
     USER("ROLE_USER", 2);
 
-    private String roleName;
-    private int roleCode;
+    private final String roleName;
+    private final int roleCode;
 
     Role(String roleName, int roleCode) {
         this.roleName = roleName;

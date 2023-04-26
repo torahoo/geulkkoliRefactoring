@@ -79,10 +79,6 @@ public class TestDataInit {
         joinForm.setPassword("123");
         userSecurityService.joinAdmin(joinForm);
 
-        reportRepository.save(Report.of(postRepository.findById(2L).get(), user, LocalDateTime.now(), "욕설"));
-        reportRepository.save(Report.of(postRepository.findById(1L).get(), user, LocalDateTime.now(), "비 협조적"));
-        reportRepository.save(Report.of(postRepository.findById(4L).get(), user, LocalDateTime.now(), "점심을 안먹음"));
-
         User user01 = userService.findById(1L);
 
         AddDTO addDTO = AddDTO.builder()
@@ -113,11 +109,15 @@ public class TestDataInit {
 
         AddDTO addDTO3 = AddDTO.builder()
                 .title("testTitle03")
-                .postBody("test postbody 03")
+                .postBody("test postbody 03")//채&훈
                 .nickName(user01.getNickName())
                 .build();
         Post post3 = user01.writePost(addDTO3);
         postRepository.save(post3);
+
+        reportRepository.save(Report.of(postRepository.findById(2L).get(), userRepository.findByEmail("tako99@naver.com").get(),LocalDateTime.now(), "욕설"));
+        reportRepository.save(Report.of(postRepository.findById(1L).get(), userRepository.findByEmail("tako99@naver.com").get(),LocalDateTime.now(), "비 협조적"));
+        reportRepository.save(Report.of(postRepository.findById(4L).get(), userRepository.findByEmail("tako99@naver.com").get(),LocalDateTime.now(), "점심을 안먹음"));
     }
 
 }

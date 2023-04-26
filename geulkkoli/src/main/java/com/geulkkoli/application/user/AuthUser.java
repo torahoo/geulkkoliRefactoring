@@ -14,11 +14,11 @@ public class AuthUser extends User {
     private String nickName;
     private String phoneNo;
     private String gender;
-    private boolean isEnabled;
-    private boolean isAccountNonExpired;
-    private boolean isAccountNonLocked;
-    private boolean isCredentialsNonExpired;
-    private Collection<GrantedAuthority> authorities;
+    private final boolean isEnabled;
+    private final boolean isAccountNonExpired;
+    private final boolean isAccountNonLocked;
+    private final boolean isCredentialsNonExpired;
+    private final Collection<GrantedAuthority> authorities;
 
     private AuthUser(UserModelDto userModel, Collection<GrantedAuthority> authorities, AccountStatus accountStatus) {
         super(userModel.getEmail(), userModel.getPassword(), authorities);

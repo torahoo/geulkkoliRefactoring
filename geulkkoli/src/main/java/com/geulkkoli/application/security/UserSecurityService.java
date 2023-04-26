@@ -6,6 +6,7 @@ import com.geulkkoli.domain.user.User;
 import com.geulkkoli.domain.user.UserRepository;
 import com.geulkkoli.web.user.dto.JoinFormDto;
 import com.geulkkoli.web.user.dto.PasswordEditDto;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -24,6 +25,7 @@ import static java.lang.Boolean.TRUE;
 
 @Service
 @Transactional
+@RequiredArgsConstructor
 public class UserSecurityService implements UserDetailsService {
 
     private final UserRepository userRepository;
@@ -31,13 +33,6 @@ public class UserSecurityService implements UserDetailsService {
 
     private final AccountLockRepository accountLockRepository;
     private final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-
-
-    public UserSecurityService(UserRepository userRepository, AccountLockRepository accountRockRepository, RoleRepository roleRepository) {
-        this.userRepository = userRepository;
-        this.roleRepository = roleRepository;
-        this.accountLockRepository = accountRockRepository;
-    }
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
@@ -48,7 +43,7 @@ public class UserSecurityService implements UserDetailsService {
 
         User user = findByEmailUser.get();
         List<GrantedAuthority> authorities = new ArrayList<>();
-        authorizeRule(authorities, user);
+        authorizeRole(authorities, user);
 
         if (authorities.isEmpty()) {
             throw new RoleException("권한을 찾을 수 없습니다.");
@@ -62,13 +57,11 @@ public class UserSecurityService implements UserDetailsService {
         return AuthUser.from(userModel, authorities, AccountStatus.ACTIVE);
     }
 
-    private List<GrantedAuthority> authorizeRule(List<GrantedAuthority> authorities, User user) {
+    private void authorizeRole(List<GrantedAuthority> authorities, User user) {
         if (user.getRole().getRole().equals(Role.ADMIN)) {
             authorities.add(new SimpleGrantedAuthority(Role.ADMIN.getRoleName()));
-            return authorities;
         } else {
             authorities.add(new SimpleGrantedAuthority(Role.USER.getRoleName()));
-            return authorities;
         }
     }
 

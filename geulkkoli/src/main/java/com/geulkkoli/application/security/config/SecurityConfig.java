@@ -48,12 +48,12 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.userDetailsService(userSecurityService)
                 .authorizeRequests((auth) -> {
-                    auth.requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll(); // 정적 리소스들(css,js)등을 권장 방식에 맞게 인증 체크에서 제외 시켰다
+                    auth.mvcMatchers("/admin/**").hasRole("ADMIN");
+                    auth.mvcMatchers("/user/edit/**").hasRole("USER");
+                    auth.mvcMatchers("/post/add/**", "/post/update/**", "/post/delete/**").hasAnyRole("USER", "ADMIN");
                     auth.mvcMatchers(HttpMethod.GET, "/", "/loginPage", "/post/read/**", "/post/list/**", "/post/search/**", "/post/category/*")
                             .permitAll();
-                    auth.mvcMatchers("/post/add/**", "/post/update/**", "/post/delete/**").hasAnyRole("USER", "ADMIN");
-                    auth.mvcMatchers("/user/edit/**").hasRole("USER");
-                    auth.mvcMatchers("/admin/**").hasRole("ADMIN");
+                    auth.requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll(); // 정적 리소스들(css,js)등을 권장 방식에 맞게 인증 체크에서 제외 시켰다
                 }).csrf().disable()
                 .formLogin()
                 .loginPage("/loginPage")
