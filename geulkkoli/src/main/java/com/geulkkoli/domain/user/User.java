@@ -101,25 +101,26 @@ public class User {
     }
 
     public Post deletePost(Long postId) {
-        Post deltePost = this.posts.stream()
+        Post deltePost = findPost(postId);
+        posts.remove(deltePost);
+        return deltePost;
+    }
+
+    private Post findPost(Long postId) {
+        return this.posts.stream()
                 .filter(post -> post.getPostId().equals(postId))
                 .findFirst()
-                .orElseThrow(() -> new IllegalArgumentException("해당 게시글이 없습니다."));
-
-        posts.remove(deltePost);
-
-        return deltePost;
+                .orElseThrow(() -> new NoSuchPostException("해당 게시글이 없습니다."));
     }
 
     public Post editPost(Long postId, EditDTO editDTO) {
         Post post = this.posts.stream()
                 .filter(p -> p.getPostId().equals(postId))
                 .findFirst()
-                .orElseThrow(() -> new IllegalArgumentException("해당 게시글이 없습니다."));
+                .orElseThrow(() -> new NoSuchPostException("해당 게시글이 없습니다."));
 
         post.changePostBody(editDTO.getPostBody());
         post.changeTitle(editDTO.getTitle());
-        post.changeNickName(editDTO.getNickName());
         return post;
     }
 
@@ -130,9 +131,17 @@ public class User {
     }
 
 
-    public Report deleteReport(Report report) {
-        this.reports.remove(report);
-        return report;
+    public Report deleteReport(Long reportId) {
+        Report deletReport = findReport(reportId);
+        reports.remove(deletReport);
+        return deletReport;
+    }
+
+    private Report findReport(Long reportId) {
+        return this.reports.stream()
+                .filter(report -> report.getReportId().equals(reportId))
+                .findFirst()
+                .orElseThrow(() -> new NoSuchReportException("해당 신고가 없습니다."));
     }
 
     /**
