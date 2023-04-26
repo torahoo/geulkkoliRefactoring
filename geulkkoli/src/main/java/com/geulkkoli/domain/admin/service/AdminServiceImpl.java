@@ -8,7 +8,6 @@ import com.geulkkoli.domain.post.Post;
 import com.geulkkoli.domain.user.User;
 import com.geulkkoli.domain.user.UserRepository;
 import com.geulkkoli.web.post.dto.ListDTO;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -28,13 +27,10 @@ public class AdminServiceImpl implements AdminService {
 
     private final AccountLockRepository accountLockRepository;
 
-    public AdminServiceImpl(ReportRepository reportRepository, UserRepository userRepository, AccountLockRepository accountLockRepository) {
-        this.reportRepository = reportRepository;
+    public AdminServiceImpl(UserRepository userRepository, ReportRepository reportRepository, AccountLockRepository accountLockRepository) {
         this.userRepository = userRepository;
+        this.reportRepository = reportRepository;
         this.accountLockRepository = accountLockRepository;
-    }
-
-    public AdminServiceImpl() {
     }
 
     public void rockUser(Long userId, String reason) {
