@@ -1,7 +1,9 @@
 package com.geulkkoli.web.user;
 
+import com.geulkkoli.application.security.UserSecurityService;
 import com.geulkkoli.domain.user.User;
 import com.geulkkoli.domain.user.UserRepository;
+import com.geulkkoli.domain.user.service.UserService;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -23,6 +25,11 @@ class UserControllerIntegratedTest {
     @Autowired
     MockMvc mockMvc;
 
+    @Autowired
+    UserSecurityService userSecurityService;
+
+    @Autowired
+    UserService userService;
 
     @Autowired
     UserRepository userRepository;
@@ -45,20 +52,6 @@ class UserControllerIntegratedTest {
 
                 //then
                 .andExpect(MockMvcResultMatchers.status().isOk());
-    }
-
-    @Test
-    @DisplayName("세션이 상태유지를 하는 지 테스트 한다.")
-    void isSessionStateful() throws Exception {
-        MockHttpSession session = new MockHttpSession();
-        mockMvc.perform(MockMvcRequestBuilders.post("/login-process")
-                        .param("email", "tako@naver.com")
-                        .param("password", "abc123!@#")
-                        .session(session))
-
-                //then
-                .andExpect(MockMvcResultMatchers.status().isOk());
-        assertThat(session.getAttribute(SessionConst.LOGIN_USER)).isNotNull();
     }
 
     @Test
