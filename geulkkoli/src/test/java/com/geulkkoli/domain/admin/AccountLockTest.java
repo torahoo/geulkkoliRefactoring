@@ -1,4 +1,4 @@
-package com.geulkkoli.domain.admin.suspension;
+package com.geulkkoli.domain.admin;
 
 import com.geulkkoli.domain.admin.AccountLock;
 import com.geulkkoli.domain.user.User;

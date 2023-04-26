@@ -1,7 +1,8 @@
 package com.geulkkoli.domain.post.repository;
 
+import com.geulkkoli.domain.comment.ImplCommentsRepository;
 import com.geulkkoli.domain.post.PostRepository;
-import com.geulkkoli.domain.post.entity.Comments;
+import com.geulkkoli.domain.comment.Comments;
 import com.geulkkoli.domain.post.Post;
 import com.geulkkoli.domain.user.User;
 import com.geulkkoli.domain.user.UserRepository;

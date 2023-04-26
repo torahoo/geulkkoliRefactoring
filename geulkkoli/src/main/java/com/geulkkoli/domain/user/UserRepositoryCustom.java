@@ -1,6 +1,6 @@
 package com.geulkkoli.domain.user;
 
-import com.geulkkoli.web.user.edit.UserInfoEditDto;
+import com.geulkkoli.web.user.dto.UserInfoEditDto;
 public interface UserRepositoryCustom {
 
 

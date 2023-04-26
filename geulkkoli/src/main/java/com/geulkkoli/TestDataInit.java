@@ -10,7 +10,7 @@ import com.geulkkoli.domain.admin.service.AdminServiceImpl;
 import com.geulkkoli.domain.admin.Report;
 import com.geulkkoli.domain.user.UserRepository;
 import com.geulkkoli.domain.user.service.UserService;
-import com.geulkkoli.web.user.JoinFormDto;
+import com.geulkkoli.web.user.dto.JoinFormDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.context.event.ApplicationReadyEvent;

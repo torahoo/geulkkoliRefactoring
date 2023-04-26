@@ -1,4 +1,4 @@
-package com.geulkkoli.domain.post.entity;
+package com.geulkkoli.domain.hashtag;
 
 import com.geulkkoli.domain.post.Post;
 import lombok.Builder;

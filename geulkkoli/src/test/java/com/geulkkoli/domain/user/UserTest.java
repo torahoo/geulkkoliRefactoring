@@ -5,6 +5,7 @@ import com.geulkkoli.domain.admin.AccountLock;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 
@@ -45,6 +46,6 @@ class UserTest {
         AccountLock accountLock = AccountLock.of(user, "reason", null);
         user.rock(accountLock);
 
-       assertThrows(LockExpiredTimeException.class, user::isLock);
+        assertThrows(LockExpiredTimeException.class, user::isLock);
     }
 }

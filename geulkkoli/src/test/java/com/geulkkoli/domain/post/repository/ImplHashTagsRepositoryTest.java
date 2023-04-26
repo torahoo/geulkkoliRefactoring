@@ -1,7 +1,8 @@
 package com.geulkkoli.domain.post.repository;
 
+import com.geulkkoli.domain.hashtag.HashTagsRepository;
 import com.geulkkoli.domain.post.PostRepository;
-import com.geulkkoli.domain.post.entity.HashTags;
+import com.geulkkoli.domain.hashtag.HashTags;
 import com.geulkkoli.domain.post.Post;
 import com.geulkkoli.domain.user.User;
 import com.geulkkoli.domain.user.UserRepository;

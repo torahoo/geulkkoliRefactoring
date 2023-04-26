@@ -1,7 +1,8 @@
 package com.geulkkoli.web.user;
 
 import com.geulkkoli.application.security.UserSecurityService;
-import com.geulkkoli.web.user.edit.UserInfoEditDto;
+import com.geulkkoli.web.user.dto.JoinFormDto;
+import com.geulkkoli.web.user.dto.UserInfoEditDto;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

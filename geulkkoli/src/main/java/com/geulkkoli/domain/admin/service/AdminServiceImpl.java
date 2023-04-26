@@ -24,7 +24,6 @@ public class AdminServiceImpl implements AdminService {
 
     private final ReportRepository reportRepository;
 
-
     private final AccountLockRepository accountLockRepository;
 
     public AdminServiceImpl(UserRepository userRepository, ReportRepository reportRepository, AccountLockRepository accountLockRepository) {

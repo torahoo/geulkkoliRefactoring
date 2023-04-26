@@ -1,6 +1,5 @@
-package com.geulkkoli.domain.post.repository;
+package com.geulkkoli.domain.comment;
 
-import com.geulkkoli.domain.post.entity.Comments;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;

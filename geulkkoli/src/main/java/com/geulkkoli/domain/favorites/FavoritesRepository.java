@@ -1,6 +1,6 @@
-package com.geulkkoli.domain.post.repository;
+package com.geulkkoli.domain.favorites;
 
-import com.geulkkoli.domain.post.entity.Favorites;
+import com.geulkkoli.domain.favorites.Favorites;
 
 import java.util.List;
 import java.util.Optional;

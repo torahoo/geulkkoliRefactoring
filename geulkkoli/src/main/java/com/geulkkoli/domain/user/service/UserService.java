@@ -2,8 +2,8 @@ package com.geulkkoli.domain.user.service;
 
 import com.geulkkoli.domain.user.User;
 import com.geulkkoli.domain.user.UserRepository;
-import com.geulkkoli.web.user.edit.UserInfoEditDto;
-import com.geulkkoli.web.user.edit.PasswordEditDto;
+import com.geulkkoli.web.user.dto.UserInfoEditDto;
+import com.geulkkoli.web.user.dto.PasswordEditDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;

@@ -4,8 +4,8 @@ import com.geulkkoli.application.user.*;
 import com.geulkkoli.domain.admin.AccountLockRepository;
 import com.geulkkoli.domain.user.User;
 import com.geulkkoli.domain.user.UserRepository;
-import com.geulkkoli.web.user.JoinFormDto;
-import com.geulkkoli.web.user.edit.PasswordEditDto;
+import com.geulkkoli.web.user.dto.JoinFormDto;
+import com.geulkkoli.web.user.dto.PasswordEditDto;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -20,7 +20,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static java.lang.Boolean.*;
 import static java.lang.Boolean.TRUE;
 
 @Service

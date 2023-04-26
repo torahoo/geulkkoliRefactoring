@@ -1,6 +1,4 @@
-package com.geulkkoli.domain.post.repository;
-
-import com.geulkkoli.domain.post.entity.HashTags;
+package com.geulkkoli.domain.hashtag;
 
 import java.util.List;
 import java.util.Optional;

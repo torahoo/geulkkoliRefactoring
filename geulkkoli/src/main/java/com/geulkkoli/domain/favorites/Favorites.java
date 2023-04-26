@@ -1,4 +1,4 @@
-package com.geulkkoli.domain.post.entity;
+package com.geulkkoli.domain.favorites;
 
 import com.geulkkoli.domain.post.Post;
 import com.geulkkoli.domain.user.User;

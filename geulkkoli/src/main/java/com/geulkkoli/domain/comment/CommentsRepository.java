@@ -1,6 +1,4 @@
-package com.geulkkoli.domain.post.repository;
-
-import com.geulkkoli.domain.post.entity.Comments;
+package com.geulkkoli.domain.comment;
 
 import java.util.List;
 import java.util.Optional;

@@ -1,6 +1,7 @@
-package com.geulkkoli.domain.post.repository;
+package com.geulkkoli.domain.favorites;
 
-import com.geulkkoli.domain.post.entity.Favorites;
+import com.geulkkoli.domain.favorites.Favorites;
+import com.geulkkoli.domain.favorites.FavoritesRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
@@ -14,7 +15,7 @@ import java.util.Optional;
 @Repository
 @Transactional
 @RequiredArgsConstructor
-public class ImplFavoritesRepository implements FavoritesRepository{
+public class ImplFavoritesRepository implements FavoritesRepository {
 
     private final EntityManager em;
 

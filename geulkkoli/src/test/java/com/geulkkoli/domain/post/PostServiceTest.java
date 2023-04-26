@@ -1,75 +1,123 @@
 package com.geulkkoli.domain.post;
 
 import com.geulkkoli.domain.post.service.PostService;
-
+import com.geulkkoli.domain.user.User;
+import com.geulkkoli.domain.user.UserRepository;
+import com.geulkkoli.web.post.dto.AddDTO;
 import com.geulkkoli.web.post.dto.ListDTO;
-import lombok.extern.slf4j.Slf4j;
-import org.assertj.core.api.Assertions;
-import org.junit.jupiter.api.*;
-import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * TestDataInit Class 참조
  */
 @SpringBootTest
-@Transactional
 class PostServiceTest {
 
     @Autowired
     private PostService postService;
 
+    @Autowired
+    private UserRepository userRepository;
 
-    @BeforeEach
-    void init() {
-        postService.savePost(new Post(1L, "title", "body", "nick"));
-        postService.savePost(new Post(2L, "title", "body", "nick"));
-        postService.savePost(new Post(3L, "title", "body", "nick"));
-        postService.savePost(new Post(4L, "title", "body", "nick"));
-    }
 
-    @AfterEach
-    void tearDown() {
-        postService.deleteAll();
-    }
     @Test
+    @Transactional
     void findById() {
+        User user1 = User.builder()
+                .email("email@email.com")
+                .userName("userName")
+                .gender("gender")
+                .password("password")
+                .phoneNo("phoneNo")
+                .nickName("nickName")
+                .build();
+        postService.savePost(new AddDTO(1L, "title", "body", "nick"), user1);
         Post post = postService.findById(1L);
 
         assertThat("title").isEqualTo(post.getTitle());
     }
 
     @Test
+    @Transactional
     void findAll() {
+        User user1 = User.builder()
+                .email("email@email.com")
+                .userName("userName")
+                .gender("gender")
+                .password("password")
+                .phoneNo("phoneNo")
+                .nickName("nickName")
+                .build();
+
+        userRepository.save(user1);
+
+        postService.savePost(new AddDTO(1L, "title", "body", "nick"), user1);
+        postService.savePost(new AddDTO(1L, "title", "body", "nick"), user1);
+        postService.savePost(new AddDTO(1L, "title", "body", "nick"), user1);
+        postService.savePost(new AddDTO(1L, "title", "body", "nick"), user1);
 
 
         assertThat(postService.findAll().size()).isEqualTo(4);
     }
 
     @Test
+    @Transactional
     void updatePost() {
-        postService.updatePost(1L, new Post(1L, "title update", "body update", "nick update"));
+        User user1 = User.builder()
+                .email("email@email.com")
+                .userName("userName")
+                .gender("gender")
+                .password("password")
+                .phoneNo("phoneNo")
+                .nickName("nickName")
+                .build();
+
+        userRepository.save(user1);
+
+        Post update = Post.builder()
+                .title("title update")
+                .postBody("postBody update")
+                .nickName("nickName update")
+                .build();
+        postService.savePost(new AddDTO(1L, "title", "body", "nick"), user1);
+        postService.updatePost(1L, update);
 
         Post one = postService.findById(1L);
+
 
         assertThat("title update").isEqualTo(one.getTitle());
     }
 
     @Test
-    void deletePost() {
+    void deletePost() {        User user1 = User.builder()
+            .email("email@email.com")
+            .userName("userName")
+            .gender("gender")
+            .password("password")
+            .phoneNo("phoneNo")
+            .nickName("nickName")
+            .build();
+
+        userRepository.save(user1);
+
+        Post update = Post.builder()
+                .title("title update")
+                .postBody("postBody update")
+                .nickName("nickName update")
+                .build();
+        postService.savePost(new AddDTO(1L, "title", "body", "nick"), user1);
 
         postService.deletePost(1L);
 
         List<ListDTO> all = postService.findAll();
-        assertThat(all.size()).isEqualTo(3);
+        assertThat(all.size()).isEqualTo(0);
     }
 }

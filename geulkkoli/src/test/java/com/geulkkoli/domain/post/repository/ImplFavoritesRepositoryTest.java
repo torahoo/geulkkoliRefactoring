@@ -1,7 +1,8 @@
 package com.geulkkoli.domain.post.repository;
 
+import com.geulkkoli.domain.favorites.ImplFavoritesRepository;
 import com.geulkkoli.domain.post.PostRepository;
-import com.geulkkoli.domain.post.entity.Favorites;
+import com.geulkkoli.domain.favorites.Favorites;
 import com.geulkkoli.domain.post.Post;
 import com.geulkkoli.domain.user.User;
 import com.geulkkoli.domain.user.UserRepository;
@@ -56,12 +57,12 @@ class ImplFavoritesRepositoryTest {
 
     @BeforeEach
     void beforeEach () {
-        post01 = postRepositoq.save(Post.builder()
+        post01 = postRepository.save(Post.builder()
                 .nickName("바나나")
                 .postBody("나는 멋지고 섹시한 개발자")//채&훈
                 .title("여러분").build()
         );
-        post02 = postRepositoq.save(Post.builder()
+        post02 = postRepository.save(Post.builder()
                 .nickName("test")
                 .postBody("testBody")//채&훈
                 .title("testTitle").build()

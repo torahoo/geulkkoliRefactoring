@@ -7,18 +7,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class AdminServiceImplTest {
+class AdminServiceTest {
 
 
     @Autowired
-    AdminServiceImpl adminServiceImpl;
+    AdminService adminServiceImpl;
 
     @Autowired
     UserSecurityService userSecurityService;
 
-
-    @Autowired
-    UserRepository userRepository;
 
 
 

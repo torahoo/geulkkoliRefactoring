@@ -4,13 +4,13 @@ import com.geulkkoli.application.security.LockExpiredTimeException;
 import com.geulkkoli.application.security.RoleEntity;
 import com.geulkkoli.domain.admin.AccountLock;
 import com.geulkkoli.domain.admin.Report;
-import com.geulkkoli.domain.post.entity.Comments;
-import com.geulkkoli.domain.post.entity.Favorites;
 import com.geulkkoli.domain.post.Post;
+import com.geulkkoli.domain.comment.Comments;
+import com.geulkkoli.domain.favorites.Favorites;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.tinylog.Logger;
+import org.springframework.util.CollectionUtils;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -107,27 +107,29 @@ public class User {
     }
 
     public Boolean isLock() {
-        if (this.accountLocks.isEmpty()) {
+        if (CollectionUtils.isEmpty(this.accountLocks)) {
             return false;
         }
 
-        accountLocks.stream()
-                .map(AccountLock::getLockeExpirationDate)
-                .findAny()
-                .orElseThrow(() -> {
-                    Logger.debug("계정 잠금 기간이 설정되지 않았습니다.");
-                    return new LockExpiredTimeException("계정 잠금 기간이 설정되지 않았습니다.");
-                });
+        checkLockExpiredDate();
 
         return this.accountLocks.stream()
                 .map(AccountLock::getLockeExpirationDate)
                 .max(Comparator.naturalOrder())
                 .orElseThrow(() -> {
-                    Logger.debug("계정 잠금 기간이 설정되지 않았습니다.");
                     return new LockExpiredTimeException("계정 잠금 기간이 설정되지 않았습니다.");
                 })
                 .isAfter(LocalDateTime.now());
     }
+
+    private void checkLockExpiredDate() {
+        for (AccountLock accountLock : this.accountLocks) {
+            if (Objects.isNull(accountLock.getLockeExpirationDate())) {
+                throw new LockExpiredTimeException("계정 잠금 기간이 설정되지 않았습니다.");
+            }
+        }
+    }
+
 
     public void addRole(RoleEntity role) {
         this.role = role;

@@ -1,8 +1,8 @@
 package com.geulkkoli.domain.post;
 
-import com.geulkkoli.domain.post.entity.Comments;
-import com.geulkkoli.domain.post.entity.Favorites;
-import com.geulkkoli.domain.post.entity.HashTags;
+import com.geulkkoli.domain.comment.Comments;
+import com.geulkkoli.domain.favorites.Favorites;
+import com.geulkkoli.domain.hashtag.HashTags;
 import com.geulkkoli.domain.user.User;
 import lombok.*;
 

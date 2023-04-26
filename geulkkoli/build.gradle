@@ -51,11 +51,6 @@ dependencies {
     testCompileOnly 'org.projectlombok:lombok'
     testAnnotationProcessor 'org.projectlombok:lombok'
 
-    //tinyLog Slfj4 바인딩
-    implementation 'org.slf4j:slf4j-api:1.7.36'
-    runtimeOnly 'org.tinylog:slf4j-tinylog:2.6.0'
-    implementation 'org.tinylog:tinylog-api:2.6.1'
-    implementation 'org.tinylog:tinylog-impl:2.6.1'
 }
 
 tasks.named('test') {

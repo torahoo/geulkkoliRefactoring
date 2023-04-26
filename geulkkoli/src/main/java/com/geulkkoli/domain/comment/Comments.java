@@ -1,4 +1,4 @@
-package com.geulkkoli.domain.post.entity;
+package com.geulkkoli.domain.comment;
 
 import com.geulkkoli.domain.post.ConfigDate;
 import com.geulkkoli.domain.post.Post;
