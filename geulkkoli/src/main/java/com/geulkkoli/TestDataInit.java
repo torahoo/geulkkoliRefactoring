@@ -30,7 +30,6 @@ public class TestDataInit {
 
     private final PostRepository postRepository;
     private final ReportRepository reportRepository;
-    private final UserRepository userRepository;
     private final UserSecurityService userSecurityService;
     private final AdminServiceImpl adminServiceImpl;
     private final UserService userService;
@@ -69,7 +68,6 @@ public class TestDataInit {
         joinForm2.setGender("male");
         joinForm2.setPassword("123");
         userSecurityService.join(joinForm2);
-        User user02 = userService.findById(2L);
 
         joinForm.setEmail("admin");
         joinForm.setUserName("타코다치");
@@ -114,10 +112,15 @@ public class TestDataInit {
                 .build();
         Post post3 = user01.writePost(addDTO3);
         postRepository.save(post3);
-
-        reportRepository.save(Report.of(postRepository.findById(2L).get(), userRepository.findByEmail("tako99@naver.com").get(),LocalDateTime.now(), "욕설"));
-        reportRepository.save(Report.of(postRepository.findById(1L).get(), userRepository.findByEmail("tako99@naver.com").get(),LocalDateTime.now(), "비 협조적"));
-        reportRepository.save(Report.of(postRepository.findById(4L).get(), userRepository.findByEmail("tako99@naver.com").get(),LocalDateTime.now(), "점심을 안먹음"));
+        /**
+         * 신고받은 게시물 더미 데이터를 리팩토링한 방식으로 다시 작성해봤습니다.
+         */
+        Report report = user.writeReport(postRepository.findById(2L).get(), "욕설");
+        Report report1 = user.writeReport(postRepository.findById(1L).get(), "비 협조적");
+        Report report2 = user.writeReport(postRepository.findById(4L).get(), "점심을 안먹음");
+        reportRepository.save(report);
+        reportRepository.save(report1);
+        reportRepository.save(report2);
     }
 
 }
