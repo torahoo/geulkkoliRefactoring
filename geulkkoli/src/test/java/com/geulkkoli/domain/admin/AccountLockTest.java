@@ -1,6 +1,5 @@
 package com.geulkkoli.domain.admin;
 
-import com.geulkkoli.domain.admin.AccountLock;
 import com.geulkkoli.domain.user.User;
 import org.assertj.core.api.Condition;
 import org.junit.jupiter.api.Test;
@@ -27,7 +26,7 @@ class AccountLockTest {
         AccountLock accountLock = AccountLock.of(user, "정지사유", LocalDateTime.now().plusDays(7));
 
         assertAll(() -> assertThat(accountLock).has(new Condition<>(a -> a.getReason().equals("정지사유"), "정지사유")),
-                () -> assertThat(accountLock).has(new Condition<>(a -> a.getLockeExpirationDate().isAfter(LocalDateTime.now()), "lockExpirationDate")),
+                () -> assertThat(accountLock).has(new Condition<>(a -> a.getLockExpirationDate().isAfter(LocalDateTime.now()), "lockExpirationDate")),
                 () -> assertThat(accountLock).has(new Condition<>(a -> a.getLockedUser().equals(user), "lockedUser")));
 
     }

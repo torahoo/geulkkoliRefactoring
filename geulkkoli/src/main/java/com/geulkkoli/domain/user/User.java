@@ -116,7 +116,7 @@ public class User {
         checkLockExpiredDate();
 
         return this.accountLocks.stream()
-                .map(AccountLock::getLockeExpirationDate)
+                .map(AccountLock::getLockExpirationDate)
                 .max(Comparator.naturalOrder())
                 .orElseThrow(() -> {
                     return new LockExpiredTimeException("계정 잠금 기간이 설정되지 않았습니다.");
@@ -126,7 +126,7 @@ public class User {
 
     private void checkLockExpiredDate() {
         for (AccountLock accountLock : this.accountLocks) {
-            if (Objects.isNull(accountLock.getLockeExpirationDate())) {
+            if (Objects.isNull(accountLock.getLockExpirationDate())) {
                 throw new LockExpiredTimeException("계정 잠금 기간이 설정되지 않았습니다.");
             }
         }
