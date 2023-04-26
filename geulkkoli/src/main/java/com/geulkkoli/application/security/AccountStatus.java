@@ -1,8 +1,9 @@
 package com.geulkkoli.application.security;
 
-import lombok.Getter;
-
-@Getter
+/**
+ * 계정 상태를 나타내는 Enum
+ * 각각 계정이 활성화 되어있는지, 비밀번호가 만료되었는지, 계정이 만료되었는지, 계정이 잠겨있는지를 나타낸다.
+ */
 public enum AccountStatus {
     PASSWORD_EXPIRED(true,true,true,false),
     LOCKED(true,true,false,true),
@@ -21,4 +22,19 @@ public enum AccountStatus {
         this.isCredentialsNonExpired = isCredentialsNonExpired;
     }
 
+    public boolean isEnabled() {
+        return isEnabled;
+    }
+
+    public boolean isAccountNonExpired() {
+        return isAccountNonExpired;
+    }
+
+    public boolean isAccountNonLocked() {
+        return isAccountNonLocked;
+    }
+
+    public boolean isCredentialsNonExpired() {
+        return isCredentialsNonExpired;
+    }
 }

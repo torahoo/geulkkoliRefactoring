@@ -37,14 +37,7 @@ public class UserService {
         userRepository.edit(id, userInfoEditDto);
     }
 
-    // 현재 비밀번호 입력 시 기존 비밀번호와 일치하는지 확인
-    public boolean isPasswordVerification(Long id, PasswordEditDto passwordEditDto) {
-        return passwordEncoder.matches(findById(id).getPassword(), passwordEditDto.getOldPassword());
-    }
-
-    public void editPassword(Long id, PasswordEditDto passwordEditDto) {
-        userRepository.editPassword(id, passwordEncoder.encode(passwordEditDto.getNewPassword()));
-    }
+    // password Encoder를 사용하는 곳을 usersecurityservice로 옮겼기 때문에 이 메서드는 필요 없어져 지웁니다.
 
     public void delete(User user) {
         userRepository.deleteById(user.getUserId());

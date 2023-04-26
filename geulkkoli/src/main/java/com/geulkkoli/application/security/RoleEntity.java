@@ -8,6 +8,13 @@ import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
+/**
+ * Created by hoogokok on 2023/4/21
+ * Role Entity
+ * Role Entity는 Role Enum 타입을 DB에 저장하기 위한 엔티티 입니다.
+ * Role Entity는 User Entity와 일대다 연관관계를 가집니다.
+ * User Entity는 Role Entity와 다대일 연관관계를 가집니다.
+ */
 @Entity
 public class RoleEntity {
     @Id

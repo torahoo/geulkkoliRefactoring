@@ -10,12 +10,11 @@ import java.time.LocalDateTime;
 import java.util.Objects;
 
 /**
- * TODO
- *  신고된 게시글 모아보기
- *  불온한 회원 정지시키기
- *  관리자는 회원의 규정을 어긴 이력을 볼 수 있다.
- *  관리자는 회원의 계정을 잠금 시킬 수 있다.
- *  관리자는 회원의 계정을 영구 정지 시킬 수 있다.
+ * 신고 이력을 담담하는 엔티티 입니다.
+ * 신고 이력은 신고된 게시글, 신고자, 신고 날짜, 신고 이유를 담고 있습니다.
+ * 한 게시글에 여러번 신고가 들어올 수 있으므로 일대다 연관관계로 설정했습니다.
+ * 관리자는 이 신고 이력을 통해 신고된 게시글을 찾을 수 있습니다.
+ * 회원 서비스에서 원한다면 신고자는 자신이 신고한 게시글을 찾을 수 있습니다.
  */
 @Getter
 @Entity
@@ -47,6 +46,10 @@ public class Report {
         this.reportedAt = reportedAt;
         this.reason = reason;
     }
+
+    /**
+     * 신고 이력을 생성하는 정적 팩토리 메서드 입니다.
+     */
 
     public static Report of(Post reportedPost, User reporter, LocalDateTime reportedAt, String reason){
         return new Report(reportedPost, reporter, reportedAt, reason);

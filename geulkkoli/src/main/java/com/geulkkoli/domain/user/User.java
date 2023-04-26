@@ -101,11 +101,13 @@ public class User {
         report.reporter(this);
     }
 
+    //계정을 잠그는 연관 관계 메서드 입니다.
     public void rock(AccountLock accountLock) {
         this.accountLocks.add(accountLock);
         accountLock.addLockUser(this);
     }
 
+    //계정이 잠금 여부를 확인하는 메서드 입니다.
     public Boolean isLock() {
         if (CollectionUtils.isEmpty(this.accountLocks)) {
             return false;

@@ -40,6 +40,9 @@ public class SecurityConfig {
      * 로그아웃 진입 경로를 뜻한다
      * 로그아웃 성공시 경로를 뜻한다
      * 로그아웃 버튼을 누르면 세션에서 값이 사라지는 설정이다.
+     * 로그아웃 성공시 세션을 무효화 시킨다.
+     * auth mvcMatchers는 특정 경로에 대한 권한을 설정합니다.
+     * permitAll()은 누구나 겁근 가능하다는 뜻입니다.
      */
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
