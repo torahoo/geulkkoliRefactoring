@@ -31,7 +31,7 @@ class UserTest {
     }
 
     @Test
-    @DisplayName("계정 잠금 테스트")
+    @DisplayName("계정 잠금 시간이 설정이 되어있지 않다면 LockExpiredTimeException을 던진다")
     void if_no_lock_expiration_time_is_throw_LockedExpiredTimeException() {
 
         User user = User.builder()

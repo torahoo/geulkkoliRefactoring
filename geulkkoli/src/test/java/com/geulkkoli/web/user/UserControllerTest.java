@@ -56,8 +56,11 @@ class UserControllerTest {
 
     @MockBean
     private UserService userService;
+    @MockBean
+    private UserSecurityService userSecurityService;
 
     User user;
+
     @BeforeEach
     public void init() {
         user = User.builder()
@@ -75,7 +78,7 @@ class UserControllerTest {
     @DisplayName("회원가입 잘 저장 되는지 테스트")
     void joinUserTest() throws Exception {
         //given
-        User joinUser=User.builder()
+        User joinUser = User.builder()
                 .userName("fishs")
                 .password("qwe123!@")
                 .nickName("takos")
