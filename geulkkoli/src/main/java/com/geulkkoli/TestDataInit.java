@@ -10,6 +10,7 @@ import com.geulkkoli.domain.admin.service.AdminServiceImpl;
 import com.geulkkoli.domain.admin.Report;
 import com.geulkkoli.domain.user.UserRepository;
 import com.geulkkoli.domain.user.service.UserService;
+import com.geulkkoli.web.post.dto.AddDTO;
 import com.geulkkoli.web.user.dto.JoinFormDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -33,6 +34,7 @@ public class TestDataInit {
     private final UserSecurityService userSecurityService;
     private final AdminServiceImpl adminServiceImpl;
     private final UserService userService;
+
     /**
      * 확인용 초기 데이터 추가
      */
@@ -77,40 +79,45 @@ public class TestDataInit {
         joinForm.setPassword("123");
         userSecurityService.joinAdmin(joinForm);
 
-        reportRepository.save(Report.of(postRepository.findById(2L).get(), userRepository.findByEmail("tako99@naver.com").get(),LocalDateTime.now(), "욕설"));
-        reportRepository.save(Report.of(postRepository.findById(1L).get(), userRepository.findByEmail("tako99@naver.com").get(),LocalDateTime.now(), "비 협조적"));
-        reportRepository.save(Report.of(postRepository.findById(4L).get(), userRepository.findByEmail("tako99@naver.com").get(),LocalDateTime.now(), "점심을 안먹음"));
+        reportRepository.save(Report.of(postRepository.findById(2L).get(), user, LocalDateTime.now(), "욕설"));
+        reportRepository.save(Report.of(postRepository.findById(1L).get(), user, LocalDateTime.now(), "비 협조적"));
+        reportRepository.save(Report.of(postRepository.findById(4L).get(), user, LocalDateTime.now(), "점심을 안먹음"));
 
         User user01 = userService.findById(1L);
 
-
-        Post save01 = postRepository.save(Post.builder()
-                .nickName(user01.getNickName())
-                .postBody("나는 멋지고 섹시한 개발자")//채&훈
+        AddDTO addDTO = AddDTO.builder()
                 .title("여러분")
-                .build());
-        save01.addAuthor(user01);
-
-        Post save02 = postRepository.save(Post.builder()
-                .title("testTitle01")
-                .postBody("test postbody 01")//채&훈
+                .postBody("나는 멋지고 섹시한 개발자")
                 .nickName(user01.getNickName())
-                .build());
-        save02.addAuthor(user01);
+                .build();
+        Post post = user01.writePost(addDTO);
+        postRepository.save(post);
 
-        Post save03 = postRepository.save(Post.builder()
+
+        AddDTO addDTO1 = AddDTO.builder()
+                .title("testTitle01")
+                .postBody("test postbody 01")
+                .nickName(user01.getNickName())
+                .build();
+        Post post1 = user01.writePost(addDTO1);
+        postRepository.save(post1);
+
+
+        AddDTO addDTO2 = AddDTO.builder()
                 .title("testTitle02")
-                .postBody("test postbody 02")//채&훈
-                .nickName(user02.getNickName())
-                .build());
-        save03.addAuthor(user02);
+                .postBody("test postbody 02")
+                .nickName(user01.getNickName())
+                .build();
+        Post post2 = user01.writePost(addDTO2);
+        postRepository.save(post2);
 
-        Post save04 = postRepository.save(Post.builder()
+        AddDTO addDTO3 = AddDTO.builder()
                 .title("testTitle03")
-                .postBody("test postbody 03")//채&훈
-                .nickName(user02.getNickName())
-                .build());
-        save04.addAuthor(user02);
+                .postBody("test postbody 03")
+                .nickName(user01.getNickName())
+                .build();
+        Post post3 = user01.writePost(addDTO3);
+        postRepository.save(post3);
     }
 
 }

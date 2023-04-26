@@ -2,13 +2,17 @@ package com.geulkkoli.domain.user;
 
 import com.geulkkoli.application.security.LockExpiredTimeException;
 import com.geulkkoli.domain.admin.AccountLock;
+import com.geulkkoli.domain.admin.Report;
+import com.geulkkoli.domain.post.Post;
+import org.assertj.core.api.Condition;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 
 import java.time.LocalDateTime;
+import java.util.Set;
 
+import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 class UserTest {
@@ -47,5 +51,31 @@ class UserTest {
         user.rock(accountLock);
 
         assertThrows(LockExpiredTimeException.class, user::isLock);
+    }
+
+    @Test
+    void addReport() {
+        User user = User.builder()
+                .email("email@gmail.com")
+                .userName("userName")
+                .password("password")
+                .nickName("nickName")
+                .phoneNo("0102221111")
+                .gender("male")
+                .build();
+        Post post = Post.builder()
+                .nickName("nickName")
+                .title("title")
+                .postBody("content")
+                .build();
+        Set<Report> reports = user.getReports();
+
+        Report reason = user.writeReport(post, "reason");
+
+        assertThat(user).has(new Condition<>(u -> u.getReports().contains(reason), "report가 추가되었다"));
+    }
+
+    @Test
+    void deleteReport() {
     }
 }

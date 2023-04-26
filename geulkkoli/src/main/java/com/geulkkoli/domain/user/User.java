@@ -7,6 +7,7 @@ import com.geulkkoli.domain.admin.Report;
 import com.geulkkoli.domain.post.Post;
 import com.geulkkoli.domain.comment.Comments;
 import com.geulkkoli.domain.favorites.Favorites;
+import com.geulkkoli.web.post.dto.AddDTO;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -14,10 +15,7 @@ import org.springframework.util.CollectionUtils;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.util.Comparator;
-import java.util.LinkedHashSet;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 
 @NoArgsConstructor
 @Entity
@@ -51,7 +49,7 @@ public class User {
      * casacde = CascadeType.AlL:: addReport할때 report.reporter()에 값을 넣으면 같이 영속성에 저장되게 하는 설정
      * report가 단일 소유가 아니기에 설정을 취소한다 추후에 post,like,comment일 때 적용하자
      */
-    @OneToMany(mappedBy = "reporter")
+    @OneToMany(mappedBy = "reporter", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Report> reports = new LinkedHashSet<>();
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -62,7 +60,7 @@ public class User {
     private Set<AccountLock> accountLocks = new LinkedHashSet<>();
 
     //게시글의 유저 매핑
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Post> posts = new LinkedHashSet<>();
 
     //댓글의 유저 매핑
@@ -74,14 +72,13 @@ public class User {
     private Set<Favorites> favorites = new LinkedHashSet<>();
 
     @Builder
-    public User(String userName, String password, String nickName, String email, String phoneNo, String gender, Set<Report> reports) {
+    public User(String userName, String password, String nickName, String email, String phoneNo, String gender) {
         this.userName = userName;
         this.password = password;
         this.nickName = nickName;
         this.email = email;
         this.phoneNo = phoneNo;
         this.gender = gender;
-        this.reports = reports;
     }
 
     public void updateUser(String userName, String nickName, String phoneNo, String gender) {
@@ -96,9 +93,20 @@ public class User {
     }
 
     //연관관계 편의 메서드
-    public void addReport(Report report) {
+    public Report writeReport(Post post, String reason) {
+        Report report = Report.of(post, this, LocalDateTime.now(), reason);
         this.reports.add(report);
-        report.reporter(this);
+        return report;
+    }
+
+    public Post writePost(AddDTO addDTO) {
+        Post post = new Post(addDTO, this);
+        this.posts.add(post);
+        return post;
+    }
+
+    public void deleteReport(Report report) {
+        this.reports.remove(report);
     }
 
     //계정을 잠그는 연관 관계 메서드 입니다.
@@ -118,9 +126,7 @@ public class User {
         return this.accountLocks.stream()
                 .map(AccountLock::getLockeExpirationDate)
                 .max(Comparator.naturalOrder())
-                .orElseThrow(() -> {
-                    return new LockExpiredTimeException("계정 잠금 기간이 설정되지 않았습니다.");
-                })
+                .orElseThrow(() -> new LockExpiredTimeException("계정 잠금 기간이 설정되지 않았습니다."))
                 .isAfter(LocalDateTime.now());
     }
 
@@ -151,5 +157,7 @@ public class User {
         return Objects.hash(userId);
     }
 
-
 }
+
+
+

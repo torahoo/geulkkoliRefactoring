@@ -4,6 +4,7 @@ import com.geulkkoli.domain.comment.Comments;
 import com.geulkkoli.domain.favorites.Favorites;
 import com.geulkkoli.domain.hashtag.HashTags;
 import com.geulkkoli.domain.user.User;
+import com.geulkkoli.web.post.dto.AddDTO;
 import lombok.*;
 
 import javax.persistence.*;
@@ -61,6 +62,13 @@ public class Post extends ConfigDate {
         this.title = title;
         this.postBody = postBody;
         this.nickName = nickName;
+    }
+
+    public Post(AddDTO addDTO, User user) {
+        this.title = addDTO.getTitle();
+        this.postBody = addDTO.getPostBody();
+        this.nickName = addDTO.getNickName();
+        this.user = user;
     }
 
     @Override

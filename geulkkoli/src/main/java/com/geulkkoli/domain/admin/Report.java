@@ -55,10 +55,6 @@ public class Report {
         return new Report(reportedPost, reporter, reportedAt, reason);
     }
 
-    public void reporter(User reporter) {
-        this.reporter = reporter;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

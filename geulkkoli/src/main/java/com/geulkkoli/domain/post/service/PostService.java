@@ -41,8 +41,8 @@ public class PostService {
     }
 
     public Long savePost(AddDTO post, User user) {
-        Post entityPost = post.toEntity(user);
-        Post savePost = postRepository.save(entityPost);
+        Post writePost = user.writePost(post);
+        Post savePost = postRepository.save(writePost);
         return savePost.getPostId();
     }
 
