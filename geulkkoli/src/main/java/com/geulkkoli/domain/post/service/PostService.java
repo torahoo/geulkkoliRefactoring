@@ -1,11 +1,11 @@
 package com.geulkkoli.domain.post.service;
 
-import com.geulkkoli.domain.post.Post;
-import com.geulkkoli.domain.post.PostRepository;
+import com.geulkkoli.domain.post.entity.Post;
+import com.geulkkoli.domain.post.repository.PostRepository;
+import com.geulkkoli.domain.user.User;
+import com.geulkkoli.domain.user.UserRepository;
 import com.geulkkoli.web.post.dto.AddDTO;
-import com.geulkkoli.web.post.dto.EditDTO;
 import com.geulkkoli.web.post.dto.ListDTO;
-import com.geulkkoli.web.post.dto.PageDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -14,7 +14,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.Optional;
 
 @Slf4j
 @Service
@@ -23,6 +22,7 @@ import java.util.Optional;
 public class PostService {
 
     private final PostRepository postRepository;
+    private final UserRepository userRepository;
 
     public Post findById (Long postId) {
         return postRepository.findById(postId)
@@ -40,8 +40,9 @@ public class PostService {
         return listDTOs;
     }
 
-    public Long savePost(Post post) {
-        Post savePost = postRepository.save(post);
+    public Long savePost(AddDTO post, User user) {
+        Post entityPost = post.toEntity(user);
+        Post savePost = postRepository.save(entityPost);
         return savePost.getPostId();
     }
 

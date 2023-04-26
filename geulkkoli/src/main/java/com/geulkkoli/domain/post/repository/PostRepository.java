@@ -1,4 +1,6 @@
-package com.geulkkoli.domain.post;
+package com.geulkkoli.domain.post.repository;
+
+import com.geulkkoli.domain.post.entity.Post;
 
 import java.util.List;
 import java.util.Optional;

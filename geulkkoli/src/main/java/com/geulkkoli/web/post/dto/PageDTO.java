@@ -1,6 +1,6 @@
 package com.geulkkoli.web.post.dto;
 
-import com.geulkkoli.domain.post.Post;
+import com.geulkkoli.domain.post.entity.Post;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -43,7 +43,7 @@ public class PageDTO {
     public static PageDTO toDTO (Post post) {
         return PageDTO.builder()
                 .postId(post.getPostId())
-                .authorId(post.getAuthorId())
+                .authorId(post.getUser().getUserId())
                 .title(post.getTitle())
                 .postBody(post.getPostBody())
                 .nickName(post.getNickName())
