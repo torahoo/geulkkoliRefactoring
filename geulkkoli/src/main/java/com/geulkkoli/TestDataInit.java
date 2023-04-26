@@ -2,7 +2,6 @@
 package com.geulkkoli;
 
 import com.geulkkoli.application.security.UserSecurityService;
-import com.geulkkoli.domain.admin.AccountLock;
 import com.geulkkoli.domain.admin.AccountLockRepository;
 import com.geulkkoli.domain.admin.ReportRepository;
 import com.geulkkoli.domain.admin.service.AdminServiceImpl;
@@ -33,8 +32,6 @@ public class TestDataInit {
     private final UserRepository userRepository;
     private final UserSecurityService userSecurityService;
     private final AdminServiceImpl adminServiceImpl;
-    private final AccountLockRepository accountLockRepository;
-
     /**
      * 확인용 초기 데이터 추가
      */
