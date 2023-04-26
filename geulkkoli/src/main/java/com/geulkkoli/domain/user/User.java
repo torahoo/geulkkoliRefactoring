@@ -87,7 +87,7 @@ public class User {
         report.reporter(this);
     }
 
-    public void rock(AccountLock accountLock){
+    public void rock(AccountLock accountLock) {
         this.accountLocks.add(accountLock);
         accountLock.addLockUser(this);
     }
@@ -96,6 +96,15 @@ public class User {
         if (this.accountLocks.isEmpty()) {
             return false;
         }
+
+        accountLocks.stream()
+                .map(AccountLock::getLockeExpirationDate)
+                .findAny()
+                .orElseThrow(() -> {
+                    Logger.debug("계정 잠금 기간이 설정되지 않았습니다.");
+                    return new LockExpiredTimeException("계정 잠금 기간이 설정되지 않았습니다.");
+                });
+
         return this.accountLocks.stream()
                 .map(AccountLock::getLockeExpirationDate)
                 .max(Comparator.naturalOrder())
