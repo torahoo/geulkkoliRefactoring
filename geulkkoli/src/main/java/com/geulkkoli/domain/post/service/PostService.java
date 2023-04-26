@@ -2,6 +2,8 @@ package com.geulkkoli.domain.post.service;
 
 import com.geulkkoli.domain.post.Post;
 import com.geulkkoli.domain.post.PostRepository;
+import com.geulkkoli.domain.user.User;
+import com.geulkkoli.web.post.dto.AddDTO;
 import com.geulkkoli.web.post.dto.ListDTO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -16,11 +18,11 @@ import java.util.NoSuchElementException;
 @Transactional
 public class PostService {
 
+    private final PostRepository postRepository;
+
     public PostService(PostRepository postRepository) {
         this.postRepository = postRepository;
     }
-
-    private final PostRepository postRepository;
 
     public Post findById(Long postId) {
         return postRepository.findById(postId)
@@ -38,8 +40,9 @@ public class PostService {
         return listDTOs;
     }
 
-    public Long savePost(Post post) {
-        Post savePost = postRepository.save(post);
+    public Long savePost(AddDTO post, User user) {
+        Post entityPost = post.toEntity(user);
+        Post savePost = postRepository.save(entityPost);
         return savePost.getPostId();
     }
 

@@ -1,23 +1,30 @@
 package com.geulkkoli.domain.post;
 
+import com.geulkkoli.domain.post.entity.Comments;
+import com.geulkkoli.domain.post.entity.Favorites;
+import com.geulkkoli.domain.post.entity.HashTags;
+import com.geulkkoli.domain.user.User;
 import lombok.*;
-import org.hibernate.Hibernate;
 
 import javax.persistence.*;
+import java.util.LinkedHashSet;
 import java.util.Objects;
+import java.util.Set;
 
 @Getter
 @NoArgsConstructor
 @Entity
 @ToString
-public class Post {
+public class Post extends ConfigDate {
 
     @Id @Column(name = "post_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long postId;
 
-    @Column(name = "author_id", nullable = false)
-    private Long authorId;
+    //게시글 작성자
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private User user;
 
     @Setter
     @Column(nullable = false)
@@ -30,13 +37,44 @@ public class Post {
     @Column(name = "nick_name", nullable = false)
     private String nickName;
 
+    @Setter
+    @Column(nullable = false)
+    private int postHits;
+
+    @Setter
+    private String imageUploadName;
+
+    //댓글의 게시글 매핑
+    @OneToMany(mappedBy = "post")
+    private Set<Comments> comments = new LinkedHashSet<>();
+
+    //좋아요의 게시글 매핑
+    @OneToMany(mappedBy = "post")
+    private Set<Favorites> favorites = new LinkedHashSet<>();
+
+    //해시태그의 게시글 매핑
+    @OneToMany(mappedBy = "post")
+    private Set<HashTags> hashTags = new LinkedHashSet<>();
+
     @Builder
-    public Post(Long authorId, String title, String postBody, String nickName) {
-        this.authorId = authorId;
+    public Post(String title, String postBody, String nickName) {
         this.title = title;
         this.postBody = postBody;
         this.nickName = nickName;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        Post post = (Post) o;
+        return getPostId() != null && Objects.equals(getPostId(), post.getPostId());
+    }
+
+    @Override
+    public int hashCode() {
+        return getClass().hashCode();
+    }
+
+    //==연관관계 메서드==//
 
     //제목을 바꾼다.
     public void changeTitle(String title) {
@@ -53,17 +91,16 @@ public class Post {
         this.nickName = nickName;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
-        Post post = (Post) o;
-        return getPostId() != null && Objects.equals(getPostId(), post.getPostId());
+    //유저를 등록한다.
+    public void addAuthor (User user) {
+        this.user = user;
+        user.getPosts().add(this);
     }
 
-    @Override
-    public int hashCode() {
-        return getClass().hashCode();
+    //조회수를 바꾼다.
+    public void changeHits (int postHits) {
+        this.postHits = postHits;
     }
+
 }
 

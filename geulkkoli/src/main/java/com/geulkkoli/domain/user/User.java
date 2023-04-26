@@ -4,6 +4,9 @@ import com.geulkkoli.application.security.LockExpiredTimeException;
 import com.geulkkoli.application.security.RoleEntity;
 import com.geulkkoli.domain.admin.AccountLock;
 import com.geulkkoli.domain.admin.Report;
+import com.geulkkoli.domain.post.entity.Comments;
+import com.geulkkoli.domain.post.entity.Favorites;
+import com.geulkkoli.domain.post.Post;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -23,7 +26,6 @@ import java.util.Set;
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "user_id")
     private Long userId;
 
     @Column(name = "name", nullable = false)
@@ -58,6 +60,18 @@ public class User {
 
     @OneToMany(mappedBy = "lockedUser")
     private Set<AccountLock> accountLocks = new LinkedHashSet<>();
+
+    //게시글의 유저 매핑
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private Set<Post> posts = new LinkedHashSet<>();
+
+    //댓글의 유저 매핑
+    @OneToMany(mappedBy = "user")
+    private Set<Comments> comments = new LinkedHashSet<>();
+
+    //좋아요의 유저 매핑
+    @OneToMany(mappedBy = "user")
+    private Set<Favorites> favorites = new LinkedHashSet<>();
 
     @Builder
     public User(String userName, String password, String nickName, String email, String phoneNo, String gender, Set<Report> reports) {

@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+>
 <head>
     <meta charset="utf-8">
     <link href="../css/bootstrap.min.css"
@@ -39,14 +40,8 @@
                            th:field="*{title}"
                            placeholder="제목을 입력하세요 ...">
                 </div>
-                <div class="d-flex align-items-center text-50 p-3 my-3 rounded box-shadow">
-                    <img class="mr-3" th:src="@{/images/defaultProfile.png}" src="" alt="" width="48" height="48">
-                    <div sec:authorize="hasAnyAuthority('ROLE_USER', 'ROLE_ADMIN')"
-                         class="lh-100">
-                        <h6 class="mb-0 lh-100" sec:authentication="principal.nickName"></h6>
-                        <small sec:authentication="principal.username"></small>
-                    </div>
-                </div>
+                <input type="hidden" name="nickName" th:value="${#authentication.principal.nickName}">
+                <input type="hidden" name="authorId" th:value="${#authentication.principal.userId}">
                 <div class="mb-3">
                     <label th:text="내용">내용</label>
                     <textarea class="form-control"
@@ -59,15 +54,13 @@
                 <div class="row">
                     <div class="col">
                         <button class="w-100 btn btn-primary btn-lg"
-                                type="submit" id="submit" th:value="등록">등록
-                        </button>
+                                type="submit" id="submit" th:value="등록">등록</button>
                     </div>
                     <div class="col">
                         <button class="w-100 btn btn-primary btn-lg"
                                 type="button"
                                 th:onclick="|location.href='@{/post/list}'|"
-                                th:value="취소">취소
-                        </button>
+                                th:value="취소">취소</button>
                     </div>
                 </div>
             </form>
@@ -79,51 +72,37 @@
 <footer id="footer"></footer>
 <div th:include="footer"></div>
 
-<script type="text/javascript">
+<script type="text/javascript" th:inline="javascript">
 
-    <!--
-    임시저장 -->
-    const writer = document.querySelector('#postBody');
+    window.onload = function () {
 
-    writer.addEventListener('keyup', function () {
-        console.log(writer.value);
-        window.localStorage.setItem('nickName', writer.value);
-    })
+        const user = encodeURIComponent([[${#authentication.principal.nickName}]]);
+        console.log('user =' + user);
+        const title = document.getElementById('title');
+        const postBody = document.getElementById('postBody');
 
-    const submit = document.querySelector('#submit');
+        if(getCookie(user) == 'done') {
+            title.value = window.localStorage.removeItem(user+'Title')
+            postBody.value = window.localStorage.removeItem(user+'PostBody');
 
-    submit.addEventListener('click', makeRequest);
-
-    var httpRequest = null;
-
-    function makeRequest() {
-        httpRequest = new XMLHttpRequest();
-
-        if (!httpRequest) {
-            alert('XMLHTTP 인스턴스를 만들 수가 없어요 ㅠㅠ');
-            return false;
+            fetch("/post/savedone");
         }
-        httpRequest.onreadystatechange = alertContents;
-        httpRequest.open('POST', '/post/test', false);
-        httpRequest.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-        httpRequest.send();
-    }
 
-    function alertContents() {
-        if (httpRequest.readyState === XMLHttpRequest.DONE) {
-            if (httpRequest.status === 200) {
-                window.localStorage.removeItem('nickName');
-                console.log('localStrorage-' + window.localStorage.getItem('nickName'));
-                window.location = "/post/list";
-            } else {
-                window.location = "/post/list";
-            }
-        }
-    }
+        console.log('불러오기 > ' + getCookie(user))
+        title.value = window.localStorage.getItem(user+'Title');
+        postBody.value = window.localStorage.getItem(user+'PostBody');
 
-    <!-- /end 임시저장 -->
+        title.addEventListener('keyup', function () {
+            window.localStorage.setItem(user+'Title', title.value);
+        })
+
+        postBody.addEventListener('keyup', function () {
+            window.localStorage.setItem(user+'PostBody', postBody.value);
+        })
+    }
 
 </script>
+<script src="/script/cookie.js"></script>
 
 </body>
 </html>
