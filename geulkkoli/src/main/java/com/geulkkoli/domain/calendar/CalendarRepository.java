@@ -8,9 +8,7 @@ public interface CalendarRepository {
     Calendar save (Calendar calendar);
 
     Optional<Calendar> findById (Long calendarId);
+
     List<Calendar> findAll();
-
-
-
 
 }

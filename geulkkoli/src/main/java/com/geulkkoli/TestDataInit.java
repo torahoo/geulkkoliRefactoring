@@ -8,7 +8,6 @@ import com.geulkkoli.application.security.UserSecurityService;
 import com.geulkkoli.domain.admin.ReportRepository;
 import com.geulkkoli.domain.admin.service.AdminServiceImpl;
 import com.geulkkoli.domain.admin.Report;
-import com.geulkkoli.domain.user.UserRepository;
 import com.geulkkoli.domain.user.service.UserService;
 import com.geulkkoli.web.post.dto.AddDTO;
 import com.geulkkoli.web.user.dto.JoinFormDto;
@@ -19,8 +18,6 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.time.LocalDateTime;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -68,6 +65,15 @@ public class TestDataInit {
         joinForm2.setGender("male");
         joinForm2.setPassword("123");
         userSecurityService.join(joinForm2);
+
+        JoinFormDto joinForm3 = new JoinFormDto();
+        joinForm3.setEmail("cheese@naver.com");
+        joinForm3.setUserName("비밀");
+        joinForm3.setNickName("김륜환만세");
+        joinForm3.setPhoneNo("01099995555");
+        joinForm3.setGender("female");
+        joinForm3.setPassword("123");
+        userSecurityService.join(joinForm3);
 
         joinForm.setEmail("admin");
         joinForm.setUserName("타코다치");

@@ -73,6 +73,10 @@ public class User {
     @OneToMany(mappedBy = "user")
     private Set<Favorites> favorites = new LinkedHashSet<>();
 
+    //출석체크의 유저 매핑
+//    @OneToMany(mappedBy = "user")
+//    private Set<Calendar> calendar = new LinkedHashSet<>();
+
     @Builder
     public User(String userName, String password, String nickName, String email, String phoneNo, String gender) {
         this.userName = userName;

@@ -1,5 +1,6 @@
 package com.geulkkoli.domain.post;
 
+import com.geulkkoli.domain.calendar.Calendar;
 import com.geulkkoli.domain.comment.Comments;
 import com.geulkkoli.domain.favorites.Favorites;
 import com.geulkkoli.domain.hashtag.HashTags;
@@ -57,6 +58,10 @@ public class Post extends ConfigDate {
     @OneToMany(mappedBy = "post")
     private Set<HashTags> hashTags = new LinkedHashSet<>();
 
+    // 캘린더의 게시글 매핑
+    @OneToMany(mappedBy = "post")
+    private Set<Calendar> calendar = new LinkedHashSet<>();
+    
     @Builder
     public Post(String title, String postBody, String nickName) {
         this.title = title;

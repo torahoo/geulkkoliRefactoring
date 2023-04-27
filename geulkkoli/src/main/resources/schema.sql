@@ -5,6 +5,7 @@ drop table if exists favorites;
 drop table if exists post;
 drop table if exists users;
 drop table if exists topic_tags;
+
 CREATE table if not exists users
 (
     user_id   BIGINT PRIMARY KEY AUTO_INCREMENT,
@@ -86,4 +87,18 @@ create table if not exists permissions
     is_account_non_locked boolean not null,
     is_credentials_non_expired boolean not null,
     constraint fk_permission_user foreign key (user_id) references users (user_id)
+);
+
+drop table if exists calendar;
+
+create table if not exists calendar
+(
+    calendar_id BIGINT PRIMARY KEY AUTO_INCREMENT,
+    post_active  int       NOT NULL,
+    post_id    BIGINT       NOT NULL,
+    calendar_user_id BIGINT    NOT NULL,
+    created_at TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT fk_calendar_author FOREIGN KEY (calendar_user_id) REFERENCES users (user_id) ON DELETE CASCADE,
+    CONSTRAINT fk_calendar_post FOREIGN KEY (post_id) REFERENCES post (post_id) ON DELETE CASCADE
 );

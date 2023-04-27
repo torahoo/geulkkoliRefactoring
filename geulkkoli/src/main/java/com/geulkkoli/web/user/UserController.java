@@ -164,9 +164,9 @@ public class UserController {
 
 
 
-    @GetMapping("/myPage")
-    public String myPage(@ModelAttribute("myPageForm") MyPageFormDto myPageFormDto, UserModelDto userModelDto, @AuthenticationPrincipal AuthUser authUser , Model model) {
-        myPageFormDto.myPageFormDto(authUser.getUserName(), authUser.getEmail(userModelDto));
+    @GetMapping("user/myPage")
+    public String myPage(@ModelAttribute("myPageForm") MyPageFormDto myPageFormDto, @AuthenticationPrincipal AuthUser authUser , Model model) {
+        myPageFormDto.myPageFormDto(authUser.getUserRealName(), authUser.getEmail());
         model.addAttribute("myPageForm", myPageFormDto);
         return MY_PAGE_FORM;
     }

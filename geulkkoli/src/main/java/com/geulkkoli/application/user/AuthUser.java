@@ -14,6 +14,7 @@ public class AuthUser extends User {
     private String nickName;
     private String phoneNo;
     private String gender;
+    private String email;
     private final boolean isEnabled;
     private final boolean isAccountNonExpired;
     private final boolean isAccountNonLocked;
@@ -32,6 +33,11 @@ public class AuthUser extends User {
         this.isAccountNonLocked = accountStatus.isAccountNonLocked();
         this.isCredentialsNonExpired = accountStatus.isCredentialsNonExpired();
         this.isEnabled = accountStatus.isEnabled();
+    }
+
+    public void AuthUser(String userRealName, String email) {
+        this.userRealName = userRealName;
+        this.email = email;
     }
 
     public static AuthUser from(UserModelDto userModel, Collection<GrantedAuthority> authorities, AccountStatus accountStatus) {
