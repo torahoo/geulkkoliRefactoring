@@ -1,6 +1,6 @@
 package com.geulkkoli.web.post.dto;
 
-import com.geulkkoli.domain.post.entity.Post;
+import com.geulkkoli.domain.post.Post;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -24,11 +24,14 @@ public class EditDTO {
     @Length(min = 10, max = 10000)
     private String postBody;
 
+    private final String nickName;
+
     @Builder
-    public EditDTO(Long postId, String title, String postBody) {
+    public EditDTO(Long postId, String title, String postBody, String nickName) {
         this.postId = postId;
         this.title = title;
         this.postBody = postBody;
+        this.nickName = nickName;
     }
 
     public Post toEntity () {

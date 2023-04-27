@@ -1,6 +1,6 @@
 package com.geulkkoli.web.post.dto;
 
-import com.geulkkoli.domain.post.entity.Post;
+import com.geulkkoli.domain.post.Post;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
