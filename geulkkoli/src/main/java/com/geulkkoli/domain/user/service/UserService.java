@@ -2,9 +2,8 @@ package com.geulkkoli.domain.user.service;
 
 import com.geulkkoli.domain.user.User;
 import com.geulkkoli.domain.user.UserRepository;
-import com.geulkkoli.web.user.JoinFormDto;
-import com.geulkkoli.web.user.edit.EditFormDto;
-import com.geulkkoli.web.user.edit.EditPasswordFormDto;
+import com.geulkkoli.web.user.dto.UserInfoEditDto;
+import com.geulkkoli.web.user.dto.PasswordEditDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -12,7 +11,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.NoSuchElementException;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -35,37 +33,23 @@ public class UserService {
         return userRepository.findByPhoneNo(phoneNo).isPresent();
     }
 
-    public void join(JoinFormDto form) {
-        userRepository.save(form.toEntity(passwordEncoder));
+    public void edit(Long id, UserInfoEditDto userInfoEditDto) {
+        userRepository.edit(id, userInfoEditDto);
     }
 
-//    @Transactional(readOnly = true)
-//    public Optional<User> login(String email, String password) {
-//        return userRepository.findByEmail(email)
-//                .filter(m -> m.matchPassword(password));
-//    }
-
-    public Optional<User> update(Long id, EditFormDto editFormDto) {
-        userRepository.update(id, editFormDto);
-        return userRepository.findById(id);
-    }
-
-    // 현재 비밀번호 입력 시 기존 비밀번호와 일치하는지 확인
-    public boolean isPasswordVerification(Long id, EditPasswordFormDto editPasswordFormDto) {
-        return passwordEncoder.matches(findById(id).getPassword(), editPasswordFormDto.getPassword());
-    }
-
-    public void updatePassword(Long id, EditPasswordFormDto editPasswordFormDto) {
-        userRepository.updatePassword(id, passwordEncoder.encode(editPasswordFormDto.getNewPassword()));
-    }
+    // password Encoder를 사용하는 곳을 usersecurityservice로 옮겼기 때문에 이 메서드는 필요 없어져 지웁니다.
 
     public void delete(User user) {
-        userRepository.delete(user.getUserId());
+        userRepository.deleteById(user.getUserId());
     }
 
     public User findById(Long id) {
         return userRepository.findById(id)
                 .orElseThrow(() -> new NoSuchElementException("No user found id matches:" + id));
+    }
 
+    public User findByNickName(String nickName) {
+        return userRepository.findByNickName(nickName)
+                .orElseThrow(() -> new NoSuchElementException("No user found nickname matches:" + nickName));
     }
 }

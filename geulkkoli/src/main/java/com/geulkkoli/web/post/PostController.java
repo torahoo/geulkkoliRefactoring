@@ -1,31 +1,25 @@
 package com.geulkkoli.web.post;
 
 import com.geulkkoli.application.user.AuthUser;
-import com.geulkkoli.domain.post.entity.Post;
 import com.geulkkoli.domain.post.service.PostService;
 import com.geulkkoli.domain.user.User;
 import com.geulkkoli.domain.user.service.UserService;
 import com.geulkkoli.web.post.dto.AddDTO;
 import com.geulkkoli.web.post.dto.EditDTO;
 import com.geulkkoli.web.post.dto.PageDTO;
-import com.geulkkoli.web.user.SessionConst;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
-import java.util.Objects;
 
 @Slf4j
 @Controller
@@ -58,7 +52,7 @@ public class PostController {
 
         User user = userService.findById(post.getAuthorId());
 
-        long postId = postService.savePost(post, user);
+        long postId = postService.savePost(post, user).getPostId();
         redirectAttributes.addAttribute("postId",postId);
 
         response.addCookie(new Cookie(URLEncoder.encode(post.getNickName(), "UTF-8"), "done"));
@@ -91,7 +85,8 @@ public class PostController {
     @PostMapping("/update/{postId}")
     public String postUpdate(@ModelAttribute EditDTO updateParam, @PathVariable Long postId, RedirectAttributes redirectAttributes) {
         log.info("updateParam={}, postId={}", updateParam.getPostBody(), postId);
-        postService.updatePost(postId, updateParam.toEntity());
+        User user = userService.findByNickName(updateParam.getNickName());
+        postService.updatePost(postId, updateParam, user);
         redirectAttributes.addAttribute("updateStatus", true);
 
         return "redirect:/post/read/{postId}";

@@ -1,10 +1,13 @@
 package com.geulkkoli.domain.post.repository;
 
-import com.geulkkoli.domain.post.entity.Comments;
-import com.geulkkoli.domain.post.entity.Post;
+import com.geulkkoli.domain.comment.ImplCommentsRepository;
+import com.geulkkoli.domain.post.PostRepository;
+import com.geulkkoli.domain.comment.Comments;
+import com.geulkkoli.domain.post.Post;
 import com.geulkkoli.domain.user.User;
 import com.geulkkoli.domain.user.UserRepository;
 import lombok.extern.slf4j.Slf4j;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -29,7 +32,7 @@ class ImplCommentsRepositoryTest {
      * 단위 테스트 구현을 위한 구현체
      */
     @Autowired
-    private ImplPostRepository implPostRepository;
+    private PostRepository implPostRepository;
     @Autowired
     private UserRepository userRepository;
     @Autowired
