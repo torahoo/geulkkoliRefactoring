@@ -28,7 +28,10 @@ public class Calendar extends ConfigDate {
 
     // boolean?? int?? 하....
     @Column(nullable = false)
-    private int postActive;
+    private boolean postActive;
+
+    @Column(nullable = false)
+    private int posts;
 
 
     @Override
@@ -56,11 +59,12 @@ public class Calendar extends ConfigDate {
     }
 
     //출석체크를 한다.
-    public void CheckActive (int postActive) {
+    public void CheckActive (boolean postActive) {
         this.postActive = postActive;
     }
 
     //날짜체크를 한다.
-    public void CheckDate(String createDate) {
+    public void CheckDate(int posts) {
+        this.posts = posts;
     }
 }

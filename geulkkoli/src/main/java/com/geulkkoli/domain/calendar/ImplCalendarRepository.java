@@ -35,5 +35,11 @@ public class ImplCalendarRepository implements CalendarRepository{
                 .getResultList();
     }
 
+    @Override
+    public void update(Long calendarId, Calendar updateParam) {
+        Calendar calendar = em.find(Calendar.class, calendarId);
+        calendar.CheckDate(updateParam.getPosts());
+    }
+
     public void clear () { em.close();}
 }

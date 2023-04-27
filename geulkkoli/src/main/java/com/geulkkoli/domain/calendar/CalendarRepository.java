@@ -11,4 +11,6 @@ public interface CalendarRepository {
 
     List<Calendar> findAll();
 
+    void update(Long calendarId, Calendar updateParam);
+
 }
