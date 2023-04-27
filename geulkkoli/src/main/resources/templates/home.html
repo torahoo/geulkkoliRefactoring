@@ -9,6 +9,8 @@
           integrity="sha384-aFq/bzH65dt+w6FI2ooMVUpc+21e0SRygnTpmBvdBgSdnuTN7QbdgL+OapgHtvPp" crossorigin="anonymous">
     <link href="/css/search-bar.css" rel="stylesheet">
     <link href="/css/articles/table-header.css" rel="stylesheet">
+    <link href="/css/bootstrap.min.css"
+          th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
 </head>
 <body>
 <div th:include="header"></div>
@@ -58,40 +60,34 @@
                 </div>
             </div>
 
-            <table class="table">
-                <thead>
-                <tr>
-                    <th class="col-6">제목</th>
-                    <th class="col-2">
-                        주제 해시태그
-                    </th>
-                    <th class="col-2">
-                        작성자
-                    </th>
-                    <th class="col-2">작성일</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr>
-                    <td>첫글</td>
-                    <td>#java</td>
-                    <td>Una</td>
-                    <td>2022-01-01</td>
-                </tr>
-                <tr>
-                    <td>두번째글</td>
-                    <td>#음식</td>
-                    <td>Unaa</td>
-                    <td>2022-03-01</td>
-                </tr>
-                <tr>
-                    <td>세번째글</td>
-                    <td>#junit</td>
-                    <td>Una1</td>
-                    <td>2022-04-01</td>
-                </tr>
-                </tbody>
-            </table>
+            <hr class="my-4">
+            <div class="header">
+                <div class="col">
+                    <Button class="btn btn-primary btn-lg" style="float: right"
+                            th:onclick="|location.href='@{/post/list}'|"
+                            th:text="'목록으로'" type="button">목록으로</Button>
+                </div>
+            </div>
+
+            <div>
+                <table class="table table-striped">
+                    <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">제목</th>
+                        <th scope="col">닉네임</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="post : ${list}">
+                        <th scope="row"> <a th:href="@{|/post/read/${post.postId}|}" th:text="${post.postId}"></a></th>
+                        <td> <a th:href="@{|/post/read/${post.postId}|}" th:text="${post.title}"></a></td>
+                        <td th:text="${post.nickName}"></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+
             <nav aria-label="Page navigation example">
                 <ul class="pagination justify-content-center">
                     <li class="page-item"><a class="page-link" href="#">Previous</a></li>
