@@ -1,5 +1,6 @@
 package com.geulkkoli.application.user;
 
+import com.geulkkoli.application.security.AccountStatus;
 import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.User;
@@ -9,45 +10,34 @@ import java.util.Collection;
 @Getter
 public class AuthUser extends User {
     private final Long userId;
-    private final String userName;
-    private final String nickName;
-    private final String phoneNo;
-    private final String gender;
-    private boolean isEnabled;
-    private boolean isAccountNonExpired;
-    private boolean isAccountNonLocked;
-    private boolean isCredentialsNonExpired;
-    private Collection<GrantedAuthority> authorities;
+    private String userRealName;
+    private String nickName;
+    private String phoneNo;
+    private String gender;
+    private final boolean isEnabled;
+    private final boolean isAccountNonExpired;
+    private final boolean isAccountNonLocked;
+    private final boolean isCredentialsNonExpired;
+    private final Collection<GrantedAuthority> authorities;
 
-    public AuthUser(UserModelDto userModel, Collection<GrantedAuthority> authorities) {
+    private AuthUser(UserModelDto userModel, Collection<GrantedAuthority> authorities, AccountStatus accountStatus) {
         super(userModel.getEmail(), userModel.getPassword(), authorities);
         this.authorities = authorities;
         this.nickName = userModel.getNickName();
         this.userId = userModel.getUserId();
         this.gender = userModel.getGender();
         this.phoneNo = userModel.getPhoneNo();
-        this.userName = userModel.getUserName();
+        this.userRealName = userModel.getUserName();
+        this.isAccountNonExpired = accountStatus.isAccountNonExpired();
+        this.isAccountNonLocked = accountStatus.isAccountNonLocked();
+        this.isCredentialsNonExpired = accountStatus.isCredentialsNonExpired();
+        this.isEnabled = accountStatus.isEnabled();
     }
 
-    public String getEmail(UserModelDto userModelDto) {
-        return userModelDto.getEmail();
+    public static AuthUser from(UserModelDto userModel, Collection<GrantedAuthority> authorities, AccountStatus accountStatus) {
+        return new AuthUser(userModel, authorities, accountStatus);
     }
 
-    public void setEnabled(boolean enabled) {
-        isEnabled = enabled;
-    }
-
-    public void setAccountNonExpired(boolean accountNonExpired) {
-        isAccountNonExpired = accountNonExpired;
-    }
-
-    public void setAccountNonLocked(boolean accountNonLocked) {
-        isAccountNonLocked = accountNonLocked;
-    }
-
-    public void setCredentialsNonExpired(boolean credentialsNonExpired) {
-        isCredentialsNonExpired = credentialsNonExpired;
-    }
 
     //사용자 계정이 만료되었는지 여부를 나타냅니다. 만료된 계정은 인증할 수 없습니다.
     @Override
@@ -71,5 +61,33 @@ public class AuthUser extends User {
     @Override
     public boolean isEnabled() {
         return isEnabled;
+    }
+
+    public String getNickName() {
+        return nickName;
+    }
+
+    public String getPhoneNo() {
+        return phoneNo;
+    }
+
+    public String getGender() {
+        return gender;
+    }
+
+    public void modifyNickName(String nickName) {
+        this.nickName = nickName;
+    }
+
+    public void modifyPhoneNo(String phoneNo) {
+        this.phoneNo = phoneNo;
+    }
+
+    public void modifyGender(String gender) {
+        this.gender = gender;
+    }
+
+    public void modifyUserRealName(String userRealName) {
+        this.userRealName = userRealName;
     }
 }
