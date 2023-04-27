@@ -57,7 +57,7 @@ public class AdminController {
     @ResponseBody
     @PostMapping("/lockUser")
     public String lockUser(@RequestBody userLockDto userLockDto){
-        log.info("userId : {}, reason : {}, date : {}", userLockDto.getUserId(), userLockDto.getLockReason(), userLockDto.getLockDate());
+        log.info("userId : {}, reason : {}, date : {}", userLockDto.getPostId(), userLockDto.getLockReason(), userLockDto.getLockDate());
         return "정지 완료";
     }
 }

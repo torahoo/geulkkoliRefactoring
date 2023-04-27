@@ -59,14 +59,19 @@
             </tr>
             </thead>
             <tbody>
-            <tr th:each="post : ${list}">
-                <th scope="row"><a th:href="@{|/post/read/${post.postId}|}" th:text="${post.postId}"></a></th>
-                <td><a th:href="@{|/post/read/${post.postId}|}" th:text="${post.title}"></a></td>
-                <td th:text="${post.nickName}"></td>
-                <td th:text="${post.reports}"></td>
+            <tr th:each="reportedPost : ${list}">
+                <th scope="row"><a th:href="@{|/post/read/${reportedPost.postId}|}" th:text="${reportedPost.postId}"></a></th>
+                <td><a th:href="@{|/post/read/${reportedPost.postId}|}" th:text="${reportedPost.title}"></a></td>
+                <td th:text="${reportedPost.nickName}"></td>
+                <td th:text="${reportedPost.reports}"></td>
                 <td>
                     <details>
                         <summary class="memberSummary">회원 정지</summary>
+                        <form>
+                            <input type="button" th:onclick="lockUser([[${reportedPost.postId}]], '1', '1')">
+                            <button th:onclick="lockUser([[${reportedPost.postId}]], '1', '1')">정지</button>
+                        </form>
+
                         <div>
                             <p>정지일</p>
                             <label>
@@ -74,7 +79,7 @@
                             </label>
                             <label for="lockReason"></label>
                             <input id="lockReason">
-                            <button onclick="lockUser()">정지</button>
+                            <button th:onclick="lockUser([[${reportedPost.postId}]], '1', '1')">정지</button>
                         </div>
                     </details>
                 </td>
@@ -133,44 +138,27 @@
             </div>
         </div>
     </div>
-
 </div>
-
 
 <footer id="footer" th:include="footer"></footer>
 
-<script>
-    function openLockUser() {
-        document.getElementById("lockUser").style.display = "block";
-    }
+<script th:inline="javascript">
+    let formdata = new FormData(document.querySelector('#lockform'));
 
-    function confirmLockUser() {
-        // 여기에 정지 처리 로직 추가
-        alert("회원이 ~일까지 ~일 정지되었습니다.");
-        document.getElementById("popup").style.display = "none";
-    }
-
-    function cancel() {
-        document.getElementById("popup").style.display = "none";
-    }
-
-    function lockUser() {
+    function lockUser(reason, date) {
         const xhr = new XMLHttpRequest();
         const url = "/admin/lockUser";
 
-        const lockDate = document.getElementById('lockDate').value;
-        const lockReason = document.getElementById('lockReason').value;
-
         xhr.open("POST", url);
         xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
-        xhr.send(JSON.stringify({userId: 1, lockReason: lockReason, lockDate: lockDate}));
+        xhr.send(JSON.stringify({postId: reportedPostId, lockReason: reason, lockDate: date}));
         xhr.onload = function () {
             if (xhr.status === 200) {
                 console.log('lock successfully.');
-                console.error('error with : ' + lockDate + " and " + lockReason);
+                console.error('error with : ' + reason + " and " + date);
             } else {
                 console.error('An error occurred: ' + xhr.status);
-                console.error('error with : ' + lockDate + " and " + lockReason);
+                console.error('error with : ' + reason + " and " + date);
             }
         };
     }

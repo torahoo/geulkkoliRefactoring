@@ -28,7 +28,6 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 
-
 /*
     MockMvc는 가상의 클라이언트를 생성해주는 것과 비슷하게 사용 가능한데,
     파라미터를 맵으로 선언해 넣어주는 방법과 일일이 .params로 지정해주는 방법이 있다.
@@ -56,6 +55,7 @@ class UserControllerTest {
 
     @MockBean
     private UserService userService;
+
     @MockBean
     private UserSecurityService userSecurityService;
 
