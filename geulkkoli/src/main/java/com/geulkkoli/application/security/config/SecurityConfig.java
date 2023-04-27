@@ -2,23 +2,21 @@ package com.geulkkoli.application.security.config;
 
 import com.geulkkoli.application.security.UserSecurityService;
 import com.geulkkoli.application.security.handler.LoginFailureHandler;
+import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.util.matcher.AndRequestMatcher;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 /**
  * 시큐리티 설정파일
  */
 @Configuration
-public class  SecurityConfig {
+public class SecurityConfig {
 
     private final LoginFailureHandler loginFailureHandler;
     private final UserSecurityService userSecurityService;
@@ -42,13 +40,20 @@ public class  SecurityConfig {
      * 로그아웃 진입 경로를 뜻한다
      * 로그아웃 성공시 경로를 뜻한다
      * 로그아웃 버튼을 누르면 세션에서 값이 사라지는 설정이다.
+     * 로그아웃 성공시 세션을 무효화 시킨다.
+     * auth mvcMatchers는 특정 경로에 대한 권한을 설정합니다.
+     * permitAll()은 누구나 겁근 가능하다는 뜻입니다.
      */
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.userDetailsService(userSecurityService)
                 .authorizeRequests((auth) -> {
-                    auth.antMatchers( "/", "/loginPage", "/css/**", "/js/**")
+                    auth.mvcMatchers("/admin/**").hasRole("ADMIN");
+                    auth.mvcMatchers("/user/edit/**").hasRole("USER");
+                    auth.mvcMatchers("/post/add/**", "/post/update/**", "/post/delete/**").hasAnyRole("USER", "ADMIN");
+                    auth.mvcMatchers(HttpMethod.GET, "/", "/loginPage", "/post/read/**", "/post/list/**", "/post/search/**", "/post/category/*")
                             .permitAll();
+                    auth.requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll(); // 정적 리소스들(css,js)등을 권장 방식에 맞게 인증 체크에서 제외 시켰다
                 }).csrf().disable()
                 .formLogin()
                 .loginPage("/loginPage")
@@ -73,8 +78,6 @@ public class  SecurityConfig {
     PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
-
-
 
 }
 
