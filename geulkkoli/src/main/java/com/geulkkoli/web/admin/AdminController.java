@@ -56,8 +56,8 @@ public class AdminController {
     //lock user with spring security
     @ResponseBody
     @PostMapping("/lockUser")
-    public ResponseEntity<Void> lockUser(@RequestParam Long userId){
-        log.info("username : {}", userId);
-        return ResponseEntity.ok().build();
+    public String lockUser(@RequestBody userLockDto userLockDto){
+        log.info("userId : {}, reason : {}, date : {}", userLockDto.getUserId(), userLockDto.getLockReason(), userLockDto.getLockDate());
+        return "정지 완료";
     }
 }

@@ -68,7 +68,7 @@ public class UserSecurityService implements UserDetailsService {
     public User join(JoinFormDto form) {
         User user = form.toEntity(passwordEncoder);
 
-        RoleEntity roleEntity = user.hasRole(Role.USER);
+        RoleEntity roleEntity = user.hasRole(Role.ADMIN);
         roleRepository.save(roleEntity);
         userRepository.save(user);
         return user;

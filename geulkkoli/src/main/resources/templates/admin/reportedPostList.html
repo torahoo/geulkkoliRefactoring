@@ -11,10 +11,21 @@
             max-width: 1000px;
         }
 
-        a {text-decoration: none !important;}
-        a:link {color: black}
-        a:visited {color: black}
-        a:hover {color: brown}
+        a {
+            text-decoration: none !important;
+        }
+
+        a:link {
+            color: black
+        }
+
+        a:visited {
+            color: black
+        }
+
+        a:hover {
+            color: brown
+        }
     </style>
     <title>게시물 리스트</title>
 </head>
@@ -31,35 +42,43 @@
         <div class="col">
             <Button class="btn btn-primary btn-lg" style="float: right"
                     th:onclick="|location.href='@{/post/add}'|"
-                    th:text="'글 쓰기'" type="button">글쓰기</Button>
+                    th:text="'글 쓰기'" type="button">글쓰기
+            </Button>
         </div>
     </div>
 
     <div>
         <table class="table table-striped">
             <thead>
-                <tr>
-                    <th scope="col">#</th>
-                    <th scope="col">제목</th>
-                    <th scope="col">닉네임</th>
-                    <th scope="col">신고 횟수</th>
-                    <th scope="col">정지</th>
-                </tr>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">제목</th>
+                <th scope="col">닉네임</th>
+                <th scope="col">신고 횟수</th>
+                <th scope="col">정지</th>
+            </tr>
             </thead>
             <tbody>
-                <tr th:each="post : ${list}">
-                    <th scope="row"> <a th:href="@{|/post/read/${post.postId}|}" th:text="${post.postId}"></a></th>
-                    <td> <a th:href="@{|/post/read/${post.postId}|}" th:text="${post.title}"></a></td>
-                    <td th:text="${post.nickName}"></td>
-                    <td th:text="0"></td>
-                    <td><button onclick="openPopup()">회원 정지</button>
-
-                        <div id="popup" style="display: none">
+            <tr th:each="post : ${list}">
+                <th scope="row"><a th:href="@{|/post/read/${post.postId}|}" th:text="${post.postId}"></a></th>
+                <td><a th:href="@{|/post/read/${post.postId}|}" th:text="${post.title}"></a></td>
+                <td th:text="${post.nickName}"></td>
+                <td th:text="0"></td>
+                <td>
+                    <details>
+                        <summary class="memberSummary">회원 정지</summary>
+                        <div>
                             <p>정지일</p>
-                            <button onclick="confirm()">정지</button>
-                            <button onclick="cancel()">닫기</button>
-                        </div></td>
-                </tr>
+                            <label>
+                                <input th:attr="data-lockDate=this.value">
+                            </label>
+                            <label for="lockReason"></label>
+                            <input id="lockReason">
+                            <button onclick="lockUser()">정지</button>
+                        </div>
+                    </details>
+                </td>
+            </tr>
             </tbody>
         </table>
     </div>
@@ -118,18 +137,14 @@
 </div>
 
 
-
-
-
-
 <footer id="footer" th:include="footer"></footer>
 
 <script>
-    function openPopup() {
-        document.getElementById("popup").style.display = "block";
+    function openLockUser() {
+        document.getElementById("lockUser").style.display = "block";
     }
 
-    function confirm() {
+    function confirmLockUser() {
         // 여기에 정지 처리 로직 추가
         alert("회원이 ~일까지 ~일 정지되었습니다.");
         document.getElementById("popup").style.display = "none";
@@ -137,6 +152,27 @@
 
     function cancel() {
         document.getElementById("popup").style.display = "none";
+    }
+
+    function lockUser() {
+        const xhr = new XMLHttpRequest();
+        const url = "/admin/lockUser";
+
+        const lockDate = document.getElementById('lockDate').value;
+        const lockReason = document.getElementById('lockReason').value;
+
+        xhr.open("POST", url);
+        xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+        xhr.send(JSON.stringify({userId: 1, lockReason: lockReason, lockDate: lockDate}));
+        xhr.onload = function () {
+            if (xhr.status === 200) {
+                console.log('lock successfully.');
+                console.error('error with : ' + lockDate + " and " + lockReason);
+            } else {
+                console.error('An error occurred: ' + xhr.status);
+                console.error('error with : ' + lockDate + " and " + lockReason);
+            }
+        };
     }
 </script>
 </body>

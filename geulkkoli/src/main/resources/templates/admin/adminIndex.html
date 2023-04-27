@@ -36,7 +36,7 @@
         <td th:text="${item.getDate()}"></td>
         <td th:text="${item.theme}" contenteditable="true"
             th:attr="data-id=${item.date}"
-            id="themeInput">
+            th:onblur="updateTheme([[${item.getDate}]],this.innerText)">
         </td>
     </tr>
     </tbody>
@@ -44,14 +44,10 @@
 
 <footer id="footer"></footer>
 <div th:include="footer"></div>
-<script>
-    const themeCell = document.getElementById('themeInput');
-    themeCell.addEventListener('blur', function() {
-        const date = this.getAttribute('data-id');
-        const theme = this.innerText;
-        updateTheme(date, theme);
-    });
 
+</body>
+
+<script th:inline="javascript">
     function updateTheme(date, theme) {
         var xhr = new XMLHttpRequest();
         xhr.open("POST", "/admin/calendar/update");
@@ -68,5 +64,4 @@
 
     }
 </script>
-</body>
 </html>
