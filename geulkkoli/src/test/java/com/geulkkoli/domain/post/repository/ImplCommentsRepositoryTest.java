@@ -6,6 +6,7 @@ import com.geulkkoli.domain.comment.Comments;
 import com.geulkkoli.domain.post.Post;
 import com.geulkkoli.domain.user.User;
 import com.geulkkoli.domain.user.UserRepository;
+import com.geulkkoli.web.post.dto.AddDTO;
 import lombok.extern.slf4j.Slf4j;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.AfterEach;
@@ -32,14 +33,14 @@ class ImplCommentsRepositoryTest {
      * 단위 테스트 구현을 위한 구현체
      */
     @Autowired
-    private PostRepository implPostRepository;
+    private PostRepository postRepository;
     @Autowired
     private UserRepository userRepository;
     @Autowired
     private ImplCommentsRepository implCommentsRepository;
 
     private User user;
-    private Post post01, post02, post03, post04;
+    private Post post01, post02;
 
     @AfterEach
     void afterEach () {
@@ -61,41 +62,28 @@ class ImplCommentsRepositoryTest {
 
     @BeforeEach
     void beforeEach () {
-
-        post01 = implPostRepository.save(Post.builder()
-                .nickName("바나나")
-                .postBody("나는 멋지고 섹시한 개발자")//채&훈
-                .title("여러분").build()
-        );
-        post02 = implPostRepository.save(Post.builder()
+        AddDTO addDTO01 = AddDTO.builder()
                 .title("testTitle01")
                 .postBody("test postbody 01")
-                .nickName("점심뭐먹지").build()
-        );
-        post03 = implPostRepository.save(Post.builder()
+                .nickName(user.getNickName())
+                .build();
+        post01 = user.writePost(addDTO01);
+        postRepository.save(post01);
+
+        AddDTO addDTO02 = AddDTO.builder()
                 .title("testTitle02")
                 .postBody("test postbody 02")
-                .nickName("점심뭐먹지").build()
-        );
-        post04 = implPostRepository.save(Post.builder()
-                .title("testTitle03")
-                .postBody("test postbody 03")
-                .nickName("점심뭐먹지").build()
-        );
-
-        post01.addAuthor(user);
-        post02.addAuthor(user);
-        post03.addAuthor(user);
-        post04.addAuthor(user);
+                .nickName(user.getNickName())
+                .build();
+        post02 = user.writePost(addDTO02);
+        postRepository.save(post02);
     }
 
     @Test
     void 댓글_저장 () {
-        Comments comment = Comments.builder()
+        Comments comment = user.writeComment(Comments.builder()
                 .commentBody("test댓글")
-                .build();
-        comment.addPost(post01);
-        comment.addAuthor(user);
+                .build(), post01);
 
         Comments save = implCommentsRepository.save(comment);
 
@@ -105,21 +93,15 @@ class ImplCommentsRepositoryTest {
 
     @Test
     void 게시물_댓글_저장 () {
-        Comments comment = Comments.builder()
+        Comments comment = user.writeComment(Comments.builder()
                 .commentBody("test댓글")
-                .build();
-        user.writeComment(comment);
-        post01.addComment(comment);
-
-        Comments comment2 = Comments.builder()
-                .commentBody("test댓글2")
-                .build();
-        user.writeComment(comment2);
-        post01.addComment(comment2);
-
+                .build(), post01);
         Comments save = implCommentsRepository.save(comment);
-        Comments save2 = implCommentsRepository.save(comment2);
 
+        Comments comment2 = user.writeComment(Comments.builder()
+                .commentBody("test댓글2")
+                .build(), post01);
+        Comments save2 = implCommentsRepository.save(comment2);
 
         ArrayList<Comments> postComment = new ArrayList<>(post01.getComments());
         assertThat(comment.getCommentBody()).isEqualTo(save.getCommentBody());
@@ -130,11 +112,9 @@ class ImplCommentsRepositoryTest {
 
     @Test
     void findById () {
-        Comments comment = Comments.builder()
+        Comments comment = user.writeComment(Comments.builder()
                 .commentBody("test댓글")
-                .build();
-        user.writeComment(comment);
-        post01.addComment(comment);
+                .build(), post01);
         Comments save = implCommentsRepository.save(comment);
         Comments find = implCommentsRepository.findById(save.getCommentId())
                 .orElseThrow(() -> new NoSuchElementException("no comment id found : " + save.getCommentId()));
@@ -148,11 +128,9 @@ class ImplCommentsRepositoryTest {
 
     @Test
     void 전체_리스트_조회() {
-        Comments comment = Comments.builder()
+        Comments comment = user.writeComment(Comments.builder()
                 .commentBody("test댓글")
-                .build();
-        user.writeComment(comment);
-        post01.addComment(comment);
+                .build(), post01);
         Comments save = implCommentsRepository.save(comment);
         List<Comments> all = implCommentsRepository.findAll();
         assertThat(1).isEqualTo(all.size());
@@ -161,41 +139,46 @@ class ImplCommentsRepositoryTest {
 
     @Test
     void 수정() {
-        Comments comment = Comments.builder()
+        Comments comment = user.writeComment(Comments.builder()
                 .commentBody("test댓글")
-                .build();
-        user.writeComment(comment);
-        post01.addComment(comment);
+                .build(), post01);
         Comments save = implCommentsRepository.save(comment);
-        Comments update = new Comments();
-        update.changeComments("수정바디");
-        implCommentsRepository.update(save.getCommentId(), update);
+        Comments updateParam = new Comments("수정바디");
+        Comments updateComment = user.editComment(save.getCommentId(), updateParam);
+        implCommentsRepository.save(updateComment);
 
         Comments find = implCommentsRepository.findById(save.getCommentId())
                 .orElseThrow(() -> new NoSuchElementException("no comment id found : " + save.getCommentId()));
 
-        assertThat(find.getCommentBody()).isEqualTo(update.getCommentBody());
+        assertThat(find.getCommentBody()).isEqualTo(save.getCommentBody());
         assertThat(find.getCommentBody()).isEqualTo("수정바디");
     }
 
     @Test
     void 삭제() {
-        Comments comment = Comments.builder()
+        Comments comment = user.writeComment(Comments.builder()
                 .commentBody("test댓글")
-                .build();
-        user.writeComment(comment);
-        post01.addComment(comment);
+                .build(), post01);
         Comments save = implCommentsRepository.save(comment);
 
-        Comments comment2 = Comments.builder()
-                .commentBody("test댓글2")
-                .build();
-        user.writeComment(comment2);
-        post02.addComment(comment2);
-        Comments save2 = implCommentsRepository.save(comment2);
+        log.info("saveBody={}", save.getCommentBody());
+        log.info("saveId={}", save.getCommentId());
 
-        implCommentsRepository.delete(save.getCommentId());
+
+        Comments comment2 = user.writeComment(Comments.builder()
+                .commentBody("test댓글2")
+                .build(), post02);
+        Comments save2 = implCommentsRepository.save(comment2);
+        log.info("save2Body={}", save2.getCommentBody());
+        log.info("save2Id={}", save2.getCommentId());
+
+        log.info("userComment={}", user.getComments().size());
+
+        Comments delete = user.deleteComment(save.getCommentId());
+
+        implCommentsRepository.delete(delete);
         List<Comments> all = implCommentsRepository.findAll();
         assertThat(all.size()).isEqualTo(1);
+        assertThat(all.get(0).getCommentBody()).isEqualTo("test댓글2");
     }
 }

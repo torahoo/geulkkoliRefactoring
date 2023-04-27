@@ -99,20 +99,6 @@ public class Post extends ConfigDate {
         this.nickName = nickName;
     }
 
-    /**
-     * TODO: 이제 회원쪽에서 작성하면서 동시에 post 객체를 만들 수 있다. 그렇다면 이 메서드는 필요할까?
-     *
-     */
-    public void addAuthor (User user) {
-        this.user = user;
-    }
-
-    //해당 게시글에 댓글 넣기
-    public void addComment (Comments comment) {
-        comment.addPost(this);
-        comments.add(comment);
-    }
-
     //해당 게시글에 좋아요 넣기
     public void addFavorite (Favorites favorite) {
         favorite.addPost(this);

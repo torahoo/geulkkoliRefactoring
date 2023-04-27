@@ -8,5 +8,5 @@ public interface CommentsRepository {
     Optional<Comments> findById (Long commentId);
     List<Comments> findAll();
     void update (Long commentId, Comments updateParam);
-    void delete (Long commentId);
+    void delete (Comments deleteComment);
 }
