@@ -15,6 +15,7 @@ public interface ReportRepository extends JpaRepository<Report, Long> {
 
     Long countByReportedPost(Post post);
 
+    //distinct: 중복 제거 (distinct를 사용하지 않으면 중복된 값이 나옴)
     @Query("select distinct r.reportedPost from Report r")
     List<Post> findDistinctByReportedPost();
 }

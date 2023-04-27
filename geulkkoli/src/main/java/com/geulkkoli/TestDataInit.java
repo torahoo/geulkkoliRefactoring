@@ -1,14 +1,13 @@
 
 package com.geulkkoli;
 
+import com.geulkkoli.application.security.UserSecurityService;
+import com.geulkkoli.domain.admin.Report;
+import com.geulkkoli.domain.admin.ReportRepository;
+import com.geulkkoli.domain.admin.service.AdminServiceImpl;
 import com.geulkkoli.domain.post.Post;
 import com.geulkkoli.domain.post.PostRepository;
 import com.geulkkoli.domain.user.User;
-import com.geulkkoli.application.security.UserSecurityService;
-import com.geulkkoli.domain.admin.ReportRepository;
-import com.geulkkoli.domain.admin.service.AdminServiceImpl;
-import com.geulkkoli.domain.admin.Report;
-import com.geulkkoli.domain.user.UserRepository;
 import com.geulkkoli.domain.user.service.UserService;
 import com.geulkkoli.web.post.dto.AddDTO;
 import com.geulkkoli.web.user.dto.JoinFormDto;
@@ -19,8 +18,6 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.time.LocalDateTime;
 
 @Slf4j
 @RequiredArgsConstructor

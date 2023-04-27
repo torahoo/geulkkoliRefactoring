@@ -38,6 +38,7 @@ public class AdminServiceImpl implements AdminService {
         return userRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("해당 유저가 존재하지 않습니다."));
     }
 
+    //신고받은 게시글 조회
     public List<ReportDto> findAllReportedPost() {
         List<Post> allPost = reportRepository.findDistinctByReportedPost();
         List<ReportDto> reportDtoList = new ArrayList<>();
