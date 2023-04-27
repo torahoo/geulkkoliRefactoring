@@ -63,7 +63,7 @@
                 <th scope="row"><a th:href="@{|/post/read/${post.postId}|}" th:text="${post.postId}"></a></th>
                 <td><a th:href="@{|/post/read/${post.postId}|}" th:text="${post.title}"></a></td>
                 <td th:text="${post.nickName}"></td>
-                <td th:text="0"></td>
+                <td th:text="${post.reports}"></td>
                 <td>
                     <details>
                         <summary class="memberSummary">회원 정지</summary>

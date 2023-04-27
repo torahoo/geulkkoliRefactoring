@@ -42,14 +42,6 @@ public class TestDataInit {
     public void initData() {
         log.info("test data init");
 
-        /*
-         * 신고받은 게시물 더미 데이터*/
-
-        /*
-         * 시큐리티가 제공하는 비밀번호 암호화를 userService에서 쓰기 때문에
-         * userService로 테스트 데이터를 저정한다.
-         * */
-
         JoinFormDto joinForm = new JoinFormDto();
         joinForm.setEmail("tako99@naver.com");
         joinForm.setUserName("김");
@@ -67,7 +59,7 @@ public class TestDataInit {
         joinForm2.setPhoneNo("01012345678");
         joinForm2.setGender("male");
         joinForm2.setPassword("123");
-        userSecurityService.join(joinForm2);
+        User user2 = userSecurityService.join(joinForm2);
 
         joinForm.setEmail("admin");
         joinForm.setUserName("타코다치");
@@ -118,9 +110,11 @@ public class TestDataInit {
         Report report = user.writeReport(postRepository.findById(2L).get(), "욕설");
         Report report1 = user.writeReport(postRepository.findById(1L).get(), "비 협조적");
         Report report2 = user.writeReport(postRepository.findById(4L).get(), "점심을 안먹음");
+        Report report3 = user2.writeReport(postRepository.findById(4L).get(), "욕먹음");
         reportRepository.save(report);
         reportRepository.save(report1);
         reportRepository.save(report2);
+        reportRepository.save(report3);
     }
 
 }

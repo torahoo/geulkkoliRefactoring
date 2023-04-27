@@ -1,20 +1,17 @@
 package com.geulkkoli.domain.admin.service;
 
-import com.geulkkoli.domain.admin.AccountLock;
 import com.geulkkoli.domain.admin.AccountLockRepository;
-import com.geulkkoli.domain.admin.Report;
 import com.geulkkoli.domain.admin.ReportRepository;
 import com.geulkkoli.domain.post.Post;
 import com.geulkkoli.domain.user.User;
 import com.geulkkoli.domain.user.UserRepository;
-import com.geulkkoli.web.post.dto.ListDTO;
+import com.geulkkoli.web.admin.ReportDto;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-
-import java.time.LocalDateTime;
 
 @Service
 @Transactional
@@ -41,15 +38,14 @@ public class AdminServiceImpl implements AdminService {
         return userRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("해당 유저가 존재하지 않습니다."));
     }
 
-    public List<ListDTO> findAllReportedPost() {
-        List<Report> allPost = reportRepository.findAll();
-        List<ListDTO> listDTOs = new ArrayList<>();
+    public List<ReportDto> findAllReportedPost() {
+        List<Post> allPost = reportRepository.findDistinctByReportedPost();
+        List<ReportDto> reportDtoList = new ArrayList<>();
 
-        for (Report report : allPost) {
-            Post post = report.getReportedPost();
-            listDTOs.add(ListDTO.toDTO(post));
+        for (Post post : allPost) {
+            reportDtoList.add(ReportDto.toDto(post,reportRepository.countByReportedPost(post)));
         }
 
-        return listDTOs;
+        return reportDtoList;
     }
 }
