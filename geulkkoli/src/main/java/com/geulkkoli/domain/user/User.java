@@ -5,6 +5,7 @@ import com.geulkkoli.application.security.Role;
 import com.geulkkoli.application.security.RoleEntity;
 import com.geulkkoli.domain.admin.AccountLock;
 import com.geulkkoli.domain.admin.Report;
+import com.geulkkoli.domain.follow.Follow;
 import com.geulkkoli.domain.post.Post;
 import com.geulkkoli.domain.comment.Comments;
 import com.geulkkoli.domain.favorites.Favorites;
@@ -73,9 +74,10 @@ public class User {
     @OneToMany(mappedBy = "user")
     private Set<Favorites> favorites = new LinkedHashSet<>();
 
-    //출석체크의 유저 매핑
-//    @OneToMany(mappedBy = "user")
-//    private Set<Calendar> calendar = new LinkedHashSet<>();
+    // 팔로우의 유저 매핑
+    @OneToMany(mappedBy = "user")
+    private Set<Follow> follow = new LinkedHashSet<>();
+
 
     @Builder
     public User(String userName, String password, String nickName, String email, String phoneNo, String gender) {
