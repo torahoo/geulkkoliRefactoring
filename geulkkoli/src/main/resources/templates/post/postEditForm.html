@@ -30,6 +30,7 @@
   <div class="container">
     <div>
       <form id="edit" th:action="@{/post/update/{postId}(postId=*{postId})}" th:object="${post}" method="post">
+        <input type="hidden" th:field="*{nickName}" form="edit">
         <div class="mb-3">
           <label th:text="제목">제목</label>
           <input class="form-control"
@@ -43,9 +44,6 @@
                     th:field="*{postBody}" form="edit"
                     rows="8">내용</textarea>
         </div>
-
-        <span hidden="hidden" th:field="*{nickName}" form="edit">
-        </span>
 
         <hr class="my-4">
         <div class="row">

@@ -76,7 +76,7 @@ public class PostController {
     public String postUpdateForm(Model model, @PathVariable Long postId) {
         log.info("updateParam={}, postId={}", model.getAttribute("post"), postId);
         PageDTO postPage = PageDTO.toDTO(postService.findById(postId));
-        log.info("findPost={}", postPage.getPostBody());
+        log.info("findPostBody={}, findPostNickName={}", postPage.getPostBody(), postPage.getNickName());
         model.addAttribute("post", postPage);
         return "/post/postEditForm";
     }
@@ -84,7 +84,7 @@ public class PostController {
     //게시글 수정
     @PostMapping("/update/{postId}")
     public String postUpdate(@ModelAttribute EditDTO updateParam, @PathVariable Long postId, RedirectAttributes redirectAttributes) {
-        log.info("updateParam={}, postId={}", updateParam.getPostBody(), postId);
+        log.info("updateParam={}, postId={}, postNickName={}", updateParam.getPostBody(), postId, updateParam.getNickName());
         User user = userService.findByNickName(updateParam.getNickName());
         postService.updatePost(postId, updateParam, user);
         redirectAttributes.addAttribute("updateStatus", true);
