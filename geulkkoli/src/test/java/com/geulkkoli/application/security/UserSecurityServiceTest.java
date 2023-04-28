@@ -4,7 +4,7 @@ import com.geulkkoli.application.user.AuthUser;
 import com.geulkkoli.domain.user.User;
 import com.geulkkoli.domain.user.service.UserService;
 import com.geulkkoli.web.user.dto.JoinFormDto;
-import com.geulkkoli.web.user.dto.PasswordEditDto;
+import com.geulkkoli.web.user.dto.edit.PasswordEditDto;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
@@ -147,7 +147,7 @@ class UserSecurityServiceTest {
         joinForm.setPhoneNo("01012345671");
         joinForm.setGender("male");
         joinForm.setPassword("123qwe!@#");
-        User saveUser = userSecurityService.join(joinForm);
+        userSecurityService.join(joinForm);
 
         assertThrows(AuthenticationException.class, () -> userSecurityService.loadUserByUsername("tako1@naver.com"));
     }
