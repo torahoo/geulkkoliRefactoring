@@ -43,7 +43,7 @@ public class PageDTO {
     public static PageDTO toDTO (Post post) {
         return PageDTO.builder()
                 .postId(post.getPostId())
-                .authorId(post.getAuthorId())
+                .authorId(post.getUser().getUserId())
                 .title(post.getTitle())
                 .postBody(post.getPostBody())
                 .nickName(post.getNickName())

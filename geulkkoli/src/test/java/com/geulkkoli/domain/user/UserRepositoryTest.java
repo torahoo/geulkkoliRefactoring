@@ -1,21 +1,25 @@
-package com.geulkkoli.infrastructure;
+package com.geulkkoli.domain.user;
 
 import com.geulkkoli.domain.user.User;
 import com.geulkkoli.domain.user.UserRepository;
 import com.geulkkoli.exception.EmptyDataException;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.transaction.annotation.Transactional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@SpringBootTest
-@Transactional
+
+@DataJpaTest
 class UserRepositoryTest {
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    TestEntityManager entityManager;
 
     @Test
     void save() {
@@ -45,7 +49,11 @@ class UserRepositoryTest {
                 .build();
 
         userRepository.save(user);
-        User findUser = userRepository.findById(2L)
+
+        entityManager.flush();
+        entityManager.clear();
+
+        User findUser = userRepository.findById(1L)
                 .orElseThrow(() -> new EmptyDataException("해당 데이터가 존제하지 않습니다."));
 
         assertThat(findUser).isEqualTo(user);
@@ -81,7 +89,7 @@ class UserRepositoryTest {
                 .phoneNo("01012345679")
                 .build();
 
-         userRepository.save(user);
+        userRepository.save(user);
         User findByEmailUser = userRepository.findByEmail("tako@naver.com")
                 .orElseThrow(() -> new EmptyDataException("해당 데이터가 존재하지 않습니다."));
 
@@ -101,10 +109,26 @@ class UserRepositoryTest {
                 .build();
 
         userRepository.save(user);
-         User findByNickNameUser = userRepository.findByNickName("바나나1")
+        User findByNickNameUser = userRepository.findByNickName("바나나1")
                 .orElseThrow(() -> new EmptyDataException("해당 데이터가 존재하지 않습니다."));
 
         assertThat(findByNickNameUser.getEmail()).isEqualTo("tako1@naver.com");
     }
 
-}
+    @Test
+    @DisplayName("전화번호로 회원 조회")
+    void findByPhoneNo() {
+            User user = User.builder()
+                    .email("tako1@naver.com")
+                    .userName("김1")
+                    .nickName("바나나1")
+                    .password("12341")
+                    .gender("male1")
+                    .phoneNo("01012345679")
+                    .build();
+
+        User saveUser = userRepository.save(user);
+
+        assertThat(userRepository.findByPhoneNo(("01012345679"))).hasValue(saveUser);
+        }
+    }

@@ -1,4 +1,4 @@
-package com.geulkkoli.web.user;
+package com.geulkkoli.web.user.dto;
 
 import com.geulkkoli.domain.user.User;
 import lombok.*;
