@@ -2,15 +2,14 @@ package com.geulkkoli.domain.user.service;
 
 import com.geulkkoli.domain.user.User;
 import com.geulkkoli.domain.user.UserRepository;
-import com.geulkkoli.web.user.dto.UserInfoEditDto;
-import com.geulkkoli.web.user.dto.PasswordEditDto;
+import com.geulkkoli.web.user.dto.edit.UserInfoEditDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.NoSuchElementException;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -19,7 +18,6 @@ import java.util.NoSuchElementException;
 public class UserService {
 
     private final UserRepository userRepository;
-    private final PasswordEncoder passwordEncoder;
 
     public boolean isEmailDuplicate(String email) {
         return userRepository.findByEmail(email).isPresent();
@@ -46,6 +44,18 @@ public class UserService {
     public User findById(Long id) {
         return userRepository.findById(id)
                 .orElseThrow(() -> new NoSuchElementException("No user found id matches:" + id));
+    }
+
+    public Optional<User> findByEmail(String email) {
+        return userRepository.findByEmail(email);
+    }
+
+    public Optional<User> findByEmail(String userName, String phoneNo) {
+        return userRepository.findByEmail(userName, phoneNo);
+    }
+
+    public Optional<User> findByEmail(String email, String userName, String phoneNo) {
+        return userRepository.findByEmail(email, userName, phoneNo);
     }
 
     public User findByNickName(String nickName) {

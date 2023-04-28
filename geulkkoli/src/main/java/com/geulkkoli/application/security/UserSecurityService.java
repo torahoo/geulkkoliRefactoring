@@ -1,11 +1,12 @@
 package com.geulkkoli.application.security;
 
-import com.geulkkoli.application.user.*;
+import com.geulkkoli.application.user.AuthUser;
+import com.geulkkoli.application.user.UserModelDto;
 import com.geulkkoli.domain.admin.AccountLockRepository;
 import com.geulkkoli.domain.user.User;
 import com.geulkkoli.domain.user.UserRepository;
 import com.geulkkoli.web.user.dto.JoinFormDto;
-import com.geulkkoli.web.user.dto.PasswordEditDto;
+import com.geulkkoli.web.user.dto.edit.PasswordEditDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -17,6 +18,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -76,7 +78,7 @@ public class UserSecurityService implements UserDetailsService {
 
 
     /*
-    * 관리자 실험을 위한 임시 관리자 계정 추가용 메서드*/
+     * 관리자 실험을 위한 임시 관리자 계정 추가용 메서드*/
     public void joinAdmin(JoinFormDto form) {
         User user = form.toEntity(passwordEncoder);
         RoleEntity roleEntity = user.hasRole(Role.ADMIN);
@@ -91,4 +93,40 @@ public class UserSecurityService implements UserDetailsService {
     public void updatePassword(Long id, PasswordEditDto passwordEditDto) {
         userRepository.editPassword(id, passwordEncoder.encode(passwordEditDto.getNewPassword()));
     }
+
+    public void updatePassword(Long id, String tempPassword) {
+        userRepository.editPassword(id, passwordEncoder.encode(tempPassword));
+    }
+
+    public String tempPassword() {
+
+        final String CHAR_LOWER = "abcdefghijklmnopqrstuvwxyz";
+        final String CHAR_UPPER = CHAR_LOWER.toUpperCase();
+        final String NUMBER = "0123456789";
+        final String OTHER_CHAR = "!@#$%&*()_+-=[]?";
+
+        final String ALL_CHAR = CHAR_LOWER + CHAR_UPPER + NUMBER + OTHER_CHAR;
+
+        final SecureRandom random = new SecureRandom();
+
+        // 8~20까지 비밀번호 길이 지정 (bound는 0~n-1까지만 리턴해줌)
+        int length = 0;
+        while (length < 8)
+            length = random.nextInt(21);
+
+        StringBuilder password = new StringBuilder(length);
+
+        // 비밀번호에 영문/숫자/특문 각 하나씩 추가
+        password.append(CHAR_LOWER.charAt(random.nextInt(CHAR_LOWER.length())))
+                .append(CHAR_UPPER.charAt(random.nextInt(CHAR_UPPER.length())))
+                .append(NUMBER.charAt(random.nextInt(NUMBER.length())));
+
+        // 이제 나머지 비밀번호 자릿수 채워줄 랜덤값
+        for (int i = 3; i < length; i++) {
+            password.append(ALL_CHAR.charAt(random.nextInt(ALL_CHAR.length())));
+        }
+        return password.toString();
+    }
+
+
 }
