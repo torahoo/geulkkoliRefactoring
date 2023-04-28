@@ -64,7 +64,7 @@ public class PostController {
     @GetMapping("/read/{postId}")
     public String postRead(Model model, @PathVariable Long postId) {
         log.info("postId={}", postId);
-        PageDTO postPage = PageDTO.toDTO(postService.findById(postId));
+        PageDTO postPage = PageDTO.toDTO(postService.showDetailPost(postId));
         User authorUser = userService.findById(postPage.getAuthorId());
         model.addAttribute("post", postPage);
         model.addAttribute("authorUser", authorUser);

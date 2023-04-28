@@ -33,6 +33,12 @@ public class PostService {
                 .orElseThrow(() -> new NoSuchElementException("No post found id matches:" + postId));
     }
 
+    public Post showDetailPost (Long postId) {
+        postRepository.updateHits(postId);
+        return postRepository.findById(postId)
+                .orElseThrow(() -> new NoSuchElementException("No post found id matches:" + postId));
+    }
+
     public List<ListDTO> findAll() {
         List<Post> allPost = postRepository.findAll();
         List<ListDTO> listDTOs = new ArrayList<>();
