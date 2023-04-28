@@ -113,6 +113,7 @@ class PostRepositoryTest {
                 .orElseThrow(() -> new NoSuchElementException("No post found id matches : " + save.getPostId()));
 
         assertThat(save).isEqualTo(find);
+        log.info("findDate={}",find.getUpdatedAt());
     }
 
     @Test

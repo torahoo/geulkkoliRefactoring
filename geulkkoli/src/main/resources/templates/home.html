@@ -11,6 +11,23 @@
     <link href="/css/articles/table-header.css" rel="stylesheet">
     <link href="/css/bootstrap.min.css"
           th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
+
+    <style>
+
+        .container {
+            max-width: 1200px;
+        }
+
+        a {text-decoration: none !important;}
+        a:link {color: black}
+        a:visited {color: black}
+        a:hover {color: brown}
+
+        thead {
+            text-align: center;
+        }
+    </style>
+
 </head>
 <body>
 <div th:include="header"></div>
@@ -62,10 +79,13 @@
 
             <hr class="my-4">
             <div class="header">
+                <div class="col" style="float: left">
+                    <h4>메인 게시판</h4>
+                </div>
                 <div class="col">
-                    <Button class="btn btn-primary btn-lg" style="float: right"
+                    <Button class="btn btn-outline-secondary" style="float: right"
                             th:onclick="|location.href='@{/post/list}'|"
-                            th:text="'목록으로'" type="button">목록으로</Button>
+                            th:text="'+더보기'" type="button">더보기</Button>
                 </div>
             </div>
 
@@ -76,13 +96,17 @@
                         <th scope="col">#</th>
                         <th scope="col">제목</th>
                         <th scope="col">닉네임</th>
+                        <th scope="col">날짜</th>
+                        <th scope="col">조회수</th>
                     </tr>
                     </thead>
                     <tbody>
                     <tr th:each="post : ${list}">
                         <th scope="row"> <a th:href="@{|/post/read/${post.postId}|}" th:text="${post.postId}"></a></th>
                         <td> <a th:href="@{|/post/read/${post.postId}|}" th:text="${post.title}"></a></td>
-                        <td th:text="${post.nickName}"></td>
+                        <td th:align="center" text-aligns th:text="${post.nickName}"></td>
+                        <td th:align="center" th:text="${post.date}"></td>
+                        <td th:align="center" th:text="${post.postHits}">기능구현 전</td>
                     </tr>
                     </tbody>
                 </table>
