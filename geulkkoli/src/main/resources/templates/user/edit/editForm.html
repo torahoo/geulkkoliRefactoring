@@ -17,7 +17,7 @@
 <br>
 <br>
 
-<form action="" th:action th:object="${editForm}" method="post">
+<form action th:action="@{/user/edit}" th:object="${editForm}" method="post">
   <div class="mb-3">
     <label for="userName">
       <h4>이름</h4>
@@ -28,6 +28,8 @@
            placeholder="홍길동" class="form-control form-control-lg">
     <p class="field-error" th:errors="*{userName}"></p>
   </div>
+
+  <br>
 
   <div class="mb-3">
     <label for="nickName">
@@ -40,6 +42,7 @@
            class="form-control form-control-lg nickNameInline">
     <p class="field-error" th:errors="*{nickName}"></p>
   </div>
+  <br>
 
   <div class="mb-3">
     <label for="email">
@@ -50,17 +53,19 @@
            th:value="${#request.getUserPrincipal().getName()}"
            class="form-control form-control-lg" readonly>
   </div>
+  <br>
 
   <div class="mb-3">
     <label for="password">
       <h4>비밀번호</h4>
     </label>
-    <br th:if="${param.status}">
-    <h5 th:if="${param.status}" th:text="'비밀번호 변경 완료'" class="pwChangeMessage"></h5>
     <br>
-    <input type="button" name="password" id="password" value="비밀번호 재설정"
-           class="btn btn-primary form-control-lg" onclick="location.href='/editPassword'">
+    <h5 th:if="${param.status}" th:text="'비밀번호 변경 완료'" class="bold"> </h5>
+    <br>
+      <input type="button" name="password" id="password" value="비밀번호 재설정"
+             class="btn btn-primary form-control-lg" onclick="location.href='/user/edit/editPassword'">
   </div>
+  <br>
 
   <div class="mb-3">
     <label for="phoneNo">
@@ -73,6 +78,8 @@
            class="form-control form-control-lg">
     <p class="field-error" th:errors="*{phoneNo}"></p>
   </div>
+
+  <br>
 
   <div class="mb-3">
     <h4>성별</h4>
@@ -95,11 +102,11 @@
 
   <div class="mb-3 sub-div">
     <input type="submit" value="수정하기" class="btn btn-primary form-control-lg">
-    <input type="button" value="취소하기" class="btn btn-outline-primary form-control-lg" onclick="location.href='/index'">
+    <input type="button" value="취소하기" class="btn btn-outline-primary form-control-lg" onclick="location.href='/'">
   </div>
 
 </form>
-<div id="footer" th:include="footer"></div>
+
 </body>
 
 </html>

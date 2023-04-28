@@ -2,11 +2,9 @@ package com.geulkkoli.domain.user.service;
 
 import com.geulkkoli.domain.user.User;
 import com.geulkkoli.domain.user.UserRepository;
-import com.geulkkoli.web.user.JoinFormDto;
-import com.geulkkoli.web.user.edit.EditFormDto;
+import com.geulkkoli.web.user.dto.edit.UserInfoEditDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,7 +18,6 @@ import java.util.Optional;
 public class UserService {
 
     private final UserRepository userRepository;
-    private final PasswordEncoder passwordEncoder;
 
     public boolean isEmailDuplicate(String email) {
         return userRepository.findByEmail(email).isPresent();
@@ -34,36 +31,23 @@ public class UserService {
         return userRepository.findByPhoneNo(phoneNo).isPresent();
     }
 
-    public void join(JoinFormDto form) {
-        userRepository.save(form.toEntity(passwordEncoder));
+    public void edit(Long id, UserInfoEditDto userInfoEditDto) {
+        userRepository.edit(id, userInfoEditDto);
     }
 
-//    @Transactional(readOnly = true)
-//    public Optional<User> login(String email, String password) {
-//        return userRepository.findByEmail(email)
-//                .filter(m -> m.matchPassword(password));
-//    }
-
-    public Optional<User> update(Long id, EditFormDto form) {
-        userRepository.update(id, form);
-        return userRepository.findById(id);
-    }
-
-    public boolean isPasswordVerification(Long id, String password) {
-        return passwordEncoder.matches(password, findById(id).getPassword());
-    }
-
-    public void updatePassword(Long id, String password) {
-        userRepository.updatePassword(id, passwordEncoder.encode(password));
-    }
+    // password Encoder를 사용하는 곳을 usersecurityservice로 옮겼기 때문에 이 메서드는 필요 없어져 지웁니다.
 
     public void delete(User user) {
-        userRepository.delete(user.getUserId());
+        userRepository.deleteById(user.getUserId());
     }
 
     public User findById(Long id) {
         return userRepository.findById(id)
                 .orElseThrow(() -> new NoSuchElementException("No user found id matches:" + id));
+    }
+
+    public Optional<User> findByEmail(String email) {
+        return userRepository.findByEmail(email);
     }
 
     public Optional<User> findByEmail(String userName, String phoneNo) {
@@ -74,4 +58,8 @@ public class UserService {
         return userRepository.findByEmail(email, userName, phoneNo);
     }
 
+    public User findByNickName(String nickName) {
+        return userRepository.findByNickName(nickName)
+                .orElseThrow(() -> new NoSuchElementException("No user found nickname matches:" + nickName));
+    }
 }

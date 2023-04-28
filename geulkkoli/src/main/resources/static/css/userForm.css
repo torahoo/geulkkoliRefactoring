@@ -77,3 +77,8 @@ input[type=submit], input[type=button]{
     border: none;
     color: gray;
 }
+
+.pwChangeMessage{
+    background-color: #f2ff00;
+    display: inline;
+}

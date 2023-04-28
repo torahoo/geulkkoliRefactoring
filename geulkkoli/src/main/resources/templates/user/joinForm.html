@@ -28,29 +28,30 @@
            th:errorclass="field-error"
            placeholder="홍길동" class="form-control form-control-lg">
     <p class="field-error" th:errors="*{userName}"></p>
+  </div>
 
-    <br>
+  <div class="mb-3">
+  <label for="nickName">
+    <h4>닉네임</h4>
+  </label>
+  <input type="text" name="nickName" id="nickName" placeholder="2~8자리 / 한글, 영문, 숫자 사용 가능"
+         th:field="*{nickName}"
+         th:errorclass="field-error"
+         class="form-control form-control-lg nickNameInline">
+  <p class="field-error" th:errors="*{nickName}"></p>
+</div>
 
-    <label for="nickName">
-      <h4>닉네임</h4>
-    </label>
-    <input type="text" name="nickName" id="nickName" placeholder="2~8자리 / 한글, 영문, 숫자 사용 가능"
-           th:field="*{nickName}"
-           th:errorclass="field-error"
-           class="form-control form-control-lg nickNameInline">
-    <p class="field-error" th:errors="*{nickName}"></p>
-
-    <br>
-
-    <label for="email">
-      <h4>E-mail</h4>
-    </label>
-    <input type="email" name="email" id="email" placeholder="geulkkoli@welcome.com"
-           th:field="*{email}"
-           th:errorclass="field-error"
-           class="form-control form-control-lg">
-    <p class="field-error" th:errors="*{email}">
-    </p>
+  <div class="mb-3">
+  <label for="email">
+    <h4>이메일</h4>
+  </label>
+  <input type="email" name="email" id="email" placeholder="geulkkoli@welcome.com"
+         th:field="*{email}"
+         th:errorclass="field-error"
+         class="form-control form-control-lg">
+  <p class="field-error" th:errors="*{email}">
+  </p>
+    </div>
 
   <div class="mb-3">
   <label for="password">
@@ -64,29 +65,28 @@
   </p>
     </div>
 
-    <label for="verify-password">
-      <h4>비밀번호 확인</h4>
-    </label>
-    <input type="password" name="verifyPassword" id="verify-password"
-           th:errorclass="field-error"
-           placeholder="위 비밀번호와 동일하게 기입"
-           class="form-control form-control-lg">
-    <p class="field-error" th:errors="*{verifyPassword}"></p>
+  <div class="mb-3">
+  <label for="verify-password">
+    <h4>비밀번호 확인</h4>
+  </label>
+  <input type="password" name="verifyPassword" id="verify-password"
+         th:errorclass="field-error"
+         placeholder="위 비밀번호와 동일하게 기입"
+         class="form-control form-control-lg">
+  <p class="field-error" th:errors="*{verifyPassword}"></p>
+</div>
 
-    <br>
-
-    <label for="phoneNo">
-      <h4>전화번호</h4>
-    </label>
-    <input type="tel" name="phoneNo" id="phoneNo"
-           th:field="*{phoneNo}"
-           th:errorclass="field-error"
-           placeholder="숫자만 입력 (01012345678)"
-           class="form-control form-control-lg">
-    <p class="field-error" th:errors="*{phoneNo}"></p>
+  <div class="mb-3">
+  <label for="phoneNo">
+    <h4>전화번호</h4>
+  </label>
+  <input type="tel" name="phoneNo" id="phoneNo"
+         th:field="*{phoneNo}"
+         th:errorclass="field-error"
+         placeholder="숫자만 입력 (01012345678)"
+         class="form-control form-control-lg">
+  <p class="field-error" th:errors="*{phoneNo}"></p>
   </div>
-
-  <br>
 
   <div class="mb-3">
     <h4>성별</h4>
@@ -111,11 +111,8 @@
     <input type="submit" value="가입하기" class="btn btn-primary form-control-lg">
   </div>
 
-  <br>
-  <br>
-
 </form>
-
+<div id="footer" th:include="footer"></div>
 </body>
 
 </html>
