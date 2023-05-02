@@ -1,0 +1,20 @@
+spring:
+  jpa:
+    properties:
+      active: test
+  messages:
+    basename: errors
+
+logging:
+  level:
+    org:
+      springframework:
+        jdbc: debug
+    hibernate:
+      SQL: debug
+      type:
+        descriptor:
+          sql:
+            BasicBinder: trace
+
+
