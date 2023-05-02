@@ -4,9 +4,11 @@ import com.geulkkoli.domain.user.User;
 
 public interface AdminService {
 
-    void rockUser(Long userId, String reason);
+    void rockUser(Long userId, String reason, Long lockDate);
 
     User findUser(Long id);
 
     Object findAllReportedPost();
+
+    User findUserByPostId(Long postId);
 }

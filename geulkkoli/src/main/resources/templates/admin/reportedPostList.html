@@ -73,10 +73,12 @@
                                 <input hidden="hidden" th:value="${reportedPost.postId}" name="postId">
                             </label>
                             <label>
-                                <input name="date">
+                                <input name="date"
+                                placeholder="정지할 일수, 0은 영구정지">
                             </label>
                             <label>
-                                <input name="reason">
+                                <input name="reason"
+                                placeholder="정지 사유">
                             </label>
                             <button type="button" onclick="lockUserFetch(this.form)">정지</button>
                         </form>

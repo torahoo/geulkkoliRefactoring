@@ -1,6 +1,7 @@
 package com.geulkkoli.web.admin;
 
 import com.geulkkoli.domain.admin.service.AdminService;
+import com.geulkkoli.domain.user.User;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -58,6 +59,9 @@ public class AdminController {
     @PostMapping("/lockUser")
     public String lockUser(@RequestBody UserLockDto UserLockDto){
         log.info("postId : {}, reason : {}, date : {}", UserLockDto.getPostId(), UserLockDto.getLockReason(), UserLockDto.getLockDate());
+        User user= adminService.findUserByPostId(UserLockDto.getPostId());
+        adminService.rockUser(user.getUserId(), UserLockDto.getLockReason(), UserLockDto.getLockDate());
+
         return "정지 완료";
     }
 }

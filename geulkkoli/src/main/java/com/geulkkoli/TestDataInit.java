@@ -47,7 +47,7 @@ public class TestDataInit {
         joinForm.setGender("male");
         joinForm.setPassword("qwe123!!!");
         User user = userSecurityService.join(joinForm);
-        adminServiceImpl.rockUser(user.getUserId(), "비밀번호가 너무 길어요");
+//        adminServiceImpl.rockUser(user.getUserId(), "비밀번호가 너무 길어요", 7L);
 
         JoinFormDto joinForm2 = new JoinFormDto();
         joinForm2.setEmail("test01@naver.com");

@@ -87,3 +87,13 @@ create table if not exists permissions
     is_credentials_non_expired boolean not null,
     constraint fk_permission_user foreign key (user_id) references users (user_id)
 );
+
+create table if not exists account_lock
+(
+    account_lock_id bigint primary key auto_increment,
+    user_id bigint not null,
+    reason varchar(200) not null,
+    lock_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    lock_until TIMESTAMP NOT NULL,
+    constraint fk_account_lock_user foreign key (user_id) references users (user_id)
+);
