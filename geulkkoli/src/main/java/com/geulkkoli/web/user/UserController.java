@@ -2,7 +2,6 @@ package com.geulkkoli.web.user;
 
 import com.geulkkoli.application.security.UserSecurityService;
 import com.geulkkoli.application.user.AuthUser;
-import com.geulkkoli.application.user.UserModelDto;
 import com.geulkkoli.domain.user.User;
 import com.geulkkoli.domain.user.service.UserService;
 import com.geulkkoli.web.user.dto.JoinFormDto;
@@ -32,6 +31,8 @@ public class UserController {
     public static final String EDIT_FORM = "user/edit/editForm";
     public static final String EDIT_PASSWORD_FORM = "user/edit/editPassword";
     public static final String MY_PAGE_FORM = "user/myPage";
+    public static final String FOLLOWER_FORM = "user/follow/follower";
+    public static final String FOLLOWEE_FORM = "user/follow/followee";
     public static final String REDIRECT_INDEX = "redirect:/";
     private final UserService userService;
     private final UserSecurityService userSecurityService;
@@ -164,11 +165,25 @@ public class UserController {
 
 
 
-    @GetMapping("user/myPage")
+    @GetMapping("/user/myPage")
     public String myPage(@ModelAttribute("myPageForm") MyPageFormDto myPageFormDto, @AuthenticationPrincipal AuthUser authUser , Model model) {
         myPageFormDto.myPageFormDto(authUser.getUserRealName(), authUser.getUsername());
         model.addAttribute("myPageForm", myPageFormDto);
         return MY_PAGE_FORM;
     }
+
+
+    @GetMapping("/user/follow/follower")
+    public String followerList(Model model) {
+        model.addAttribute("followerForm", userService.findAllFollowedUser());
+        return FOLLOWER_FORM;
+    }
+
+    @GetMapping("/user/follow/followee")
+    public String followeeList(Model model) {
+        model.addAttribute("followeeForm", userService.findAllFolloweeUser());
+        return FOLLOWEE_FORM;
+    }
+
 
 }

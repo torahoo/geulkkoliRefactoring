@@ -50,6 +50,7 @@ create table if not exists comments
     CONSTRAINT fk_comment_author FOREIGN KEY (author_id) REFERENCES users (user_id) ON DELETE CASCADE,
     CONSTRAINT fk_comment_post FOREIGN KEY (post_id) REFERENCES post (post_id) ON DELETE CASCADE
 );
+
 create table if not exists favorites
 (
     favorites_id      BIGINT primary key AUTO_INCREMENT,
@@ -58,6 +59,7 @@ create table if not exists favorites
     constraint fk_like_user FOREIGN KEY (favorites_user_id) REFERENCES users (user_id) ON DELETE cascade,
     constraint fk_like_post FOREIGN KEY (post_id) REFERENCES post (post_id) ON DELETE CASCADE
 );
+
 CREATE TABLE IF NOT EXISTS user_followings
 (
     followings_id bigint primary key AUTO_INCREMENT,
@@ -66,6 +68,7 @@ CREATE TABLE IF NOT EXISTS user_followings
     CONSTRAINT fk_follower FOREIGN KEY (follower_id) REFERENCES users (user_id) ON DELETE CASCADE,
     CONSTRAINT fk_followee FOREIGN KEY (followee_id) REFERENCES users (user_id) ON DELETE CASCADE
 );
+
 
 create table if not exists report
 (
@@ -89,16 +92,8 @@ create table if not exists permissions
     constraint fk_permission_user foreign key (user_id) references users (user_id)
 );
 
-drop table if exists calendar;
 
-create table if not exists calendar
-(
-    calendar_id BIGINT PRIMARY KEY AUTO_INCREMENT,
-    post_active  int       NOT NULL,
-    post_id    BIGINT       NOT NULL,
-    calendar_user_id BIGINT    NOT NULL,
-    created_at TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    CONSTRAINT fk_calendar_author FOREIGN KEY (calendar_user_id) REFERENCES users (user_id) ON DELETE CASCADE,
-    CONSTRAINT fk_calendar_post FOREIGN KEY (post_id) REFERENCES post (post_id) ON DELETE CASCADE
-);
+
+
+
+

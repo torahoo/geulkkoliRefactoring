@@ -1,12 +1,13 @@
 package com.geulkkoli.domain.follow;
 
-import java.util.List;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+
 import java.util.Optional;
 
-public interface FollowRepository {
+public interface FollowRepository extends JpaRepository<Follow, Long> {
 
-    Follow save (Follow follow);
-    Optional<Follow> findById (Long followId);
-    List<Follow> findAll();
-    void delete (Long followId);
+    @Query("select f from Follow f where f.followeeId.userId = :userId")
+    Optional<Follow> findByUserId(Long userId);
+
 }

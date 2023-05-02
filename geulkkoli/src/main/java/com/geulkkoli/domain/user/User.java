@@ -75,8 +75,8 @@ public class User {
     private Set<Favorites> favorites = new LinkedHashSet<>();
 
     // 팔로우의 유저 매핑
-    @OneToMany(mappedBy = "user")
-    private Set<Follow> follow = new LinkedHashSet<>();
+    @OneToMany(mappedBy = "followeeId", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<Follow> follows = new LinkedHashSet<>();
 
 
     @Builder
@@ -119,7 +119,6 @@ public class User {
                 throw new NoSuchPostException("게시글 아이디가 null 이거나 일치하는 게시글이 없습니다.");
             }
         }
-
 
     }
 
@@ -207,6 +206,24 @@ public class User {
         return role;
     }
 
+    public Follow writeFollow(User user) {
+        Follow follow = Follow.of(user, this);
+        this.follows.add(follow);
+        return follow;
+    }
+
+    public Follow deleteFollow(Long followingsId) {
+        Follow deletFollow = findFollow(followingsId);
+        follows.remove(deletFollow);
+        return deletFollow;
+    }
+
+    public Follow findFollow(Long followingsId) {
+        return this.follows.stream()
+                .filter(follow -> follow.getFollowingsId().equals(followingsId))
+                .findFirst()
+                .orElseThrow(() -> new NoSuchReportException("팔로워가 없어요."));
+    }
 
     @Override
     public boolean equals(Object o) {
