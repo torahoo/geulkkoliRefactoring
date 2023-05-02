@@ -3,6 +3,7 @@ package com.geulkkoli.web.user;
 import com.geulkkoli.application.security.UserSecurityService;
 import com.geulkkoli.application.user.AuthUser;
 import com.geulkkoli.application.user.EmailService;
+import com.geulkkoli.application.user.PasswordService;
 import com.geulkkoli.domain.user.User;
 import com.geulkkoli.domain.user.service.UserService;
 import com.geulkkoli.web.user.dto.JoinFormDto;
@@ -45,6 +46,7 @@ public class UserController {
     public static final String REDIRECT_EDIT_INDEX = "redirect:/user/edit";
     private final UserService userService;
     private final UserSecurityService userSecurityService;
+    private final PasswordService passwordService;
     private final EmailService emailService;
 
     @RequestMapping("/loginPage")
@@ -60,7 +62,7 @@ public class UserController {
     @PostMapping("/findEmail")
     public String userFindEmail(@Validated @ModelAttribute("findEmailForm") FindEmailFormDto form, BindingResult bindingResult, Model model) {
 
-        Optional<User> user = userService.findByEmail(form.getUserName(), form.getPhoneNo());
+        Optional<User> user = userService.findByUserNameAndPhoneNo(form.getUserName(), form.getPhoneNo());
 
         if (user.isEmpty()) {
             bindingResult.addError(new ObjectError("empty", "Check.findContent"));
@@ -89,7 +91,7 @@ public class UserController {
     @PostMapping("/findPassword")
     public String userFindPassword(@Validated @ModelAttribute("findPasswordForm") FindPasswordFormDto form, BindingResult bindingResult, HttpServletRequest request) {
 
-        Optional<User> user = userService.findByEmail(form.getEmail(), form.getUserName(), form.getPhoneNo());
+        Optional<User> user = userService.findByEmailAndUserNameAndPhoneNo(form.getEmail(), form.getUserName(), form.getPhoneNo());
 
         if (user.isEmpty()) {
             bindingResult.addError(new ObjectError("empty", "Check.findContent"));
@@ -113,10 +115,10 @@ public class UserController {
         String email = (String) request.getSession().getAttribute("email");
         Optional<User> user = userService.findByEmail(email);
 
-        // 임시 비밀번호 생성
-        String tempPassword = userSecurityService.tempPassword();
+        int length = passwordService.setTempPasswordLength(8, 20);
+        String tempPassword = passwordService.createTempPassword(length);
 
-        userSecurityService.updatePassword(user.get().getUserId(), tempPassword);
+        passwordService.updatePassword(user.get().getUserId(), tempPassword);
         emailService.sendTempPasswordEmail(email, tempPassword);
 
         model.addAttribute("waitMailMessage", true);
@@ -209,7 +211,7 @@ public class UserController {
     @PostMapping("user/edit/editPassword")
     public String editPassword(@Validated @ModelAttribute("editPasswordForm") PasswordEditDto form, BindingResult bindingResult, @AuthenticationPrincipal AuthUser authUser, RedirectAttributes redirectAttributes) {
         User user = userService.findById(authUser.getUserId());
-        if (!userSecurityService.isPasswordVerification(user, form)) {
+        if (!passwordService.isPasswordVerification(user, form)) {
             bindingResult.rejectValue("password", "Check.password");
         }
 
@@ -220,7 +222,7 @@ public class UserController {
         if (bindingResult.hasErrors()) {
             return EDIT_PASSWORD_FORM;
         } else {
-            userSecurityService.updatePassword(authUser.getUserId(), form);
+            passwordService.updatePassword(authUser.getUserId(), form.getNewPassword());
             redirectAttributes.addAttribute("status", true);
             log.info("editPasswordForm = {}", form);
         }

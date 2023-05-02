@@ -50,12 +50,12 @@ public class UserService {
         return userRepository.findByEmail(email);
     }
 
-    public Optional<User> findByEmail(String userName, String phoneNo) {
-        return userRepository.findByEmail(userName, phoneNo);
+    public Optional<User> findByUserNameAndPhoneNo(String userName, String phoneNo) {
+        return userRepository.findByUserNameAndPhoneNo(userName, phoneNo);
     }
 
-    public Optional<User> findByEmail(String email, String userName, String phoneNo) {
-        return userRepository.findByEmail(email, userName, phoneNo);
+    public Optional<User> findByEmailAndUserNameAndPhoneNo(String email, String userName, String phoneNo) {
+        return userRepository.findByEmailAndUserNameAndPhoneNo(email, userName, phoneNo);
     }
 
     public User findByNickName(String nickName) {

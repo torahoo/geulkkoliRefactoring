@@ -13,10 +13,10 @@ public interface UserRepository extends JpaRepository<User, Long>, UserRepositor
     Optional<User> findByEmail(@Param("email") String email);
 
     @Query("select u from User u where u.userName = :userName and u.phoneNo = :phoneNo")
-    Optional<User> findByEmail(@Param("userName") String userName, @Param("phoneNo") String phoneNo);
+    Optional<User> findByUserNameAndPhoneNo(@Param("userName") String userName, @Param("phoneNo") String phoneNo);
 
     @Query("select u from User u where u.email = :email and u.userName = :userName and u.phoneNo = :phoneNo")
-    Optional<User> findByEmail(@Param("email") String email, @Param("userName") String userName, @Param("phoneNo") String phoneNo);
+    Optional<User> findByEmailAndUserNameAndPhoneNo(@Param("email") String email, @Param("userName") String userName, @Param("phoneNo") String phoneNo);
 
     @Query("select u from User u where u.nickName = :nickName")
     Optional<User> findByNickName(@Param("nickName") String nickName);
