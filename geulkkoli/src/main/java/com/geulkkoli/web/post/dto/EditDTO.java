@@ -7,11 +7,12 @@ import lombok.Setter;
 import org.hibernate.validator.constraints.Length;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 @Getter
 public class EditDTO {
 
-    @NotBlank
+    @NotNull
     private Long postId;
 
     @Setter
@@ -24,6 +25,7 @@ public class EditDTO {
     @Length(min = 10, max = 10000)
     private String postBody;
 
+    @Setter
     private final String nickName;
 
     @Builder

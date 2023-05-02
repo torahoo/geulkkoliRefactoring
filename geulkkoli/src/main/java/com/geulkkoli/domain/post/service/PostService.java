@@ -8,6 +8,8 @@ import com.geulkkoli.web.post.dto.AddDTO;
 import com.geulkkoli.web.post.dto.EditDTO;
 import com.geulkkoli.web.post.dto.ListDTO;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -33,15 +35,15 @@ public class PostService {
                 .orElseThrow(() -> new NoSuchElementException("No post found id matches:" + postId));
     }
 
-    public List<ListDTO> findAll() {
-        List<Post> allPost = postRepository.findAll();
+    public Page<Post> findAll(Pageable pageable) {
+        List<Post> allPost = postRepository.findAll(pageable).toList();
         List<ListDTO> listDTOs = new ArrayList<>();
 
         for (Post post : allPost) {
             listDTOs.add(ListDTO.toDTO(post));
         }
 
-        return listDTOs;
+        return postRepository.findAll(pageable);
     }
 
     public Post savePost(AddDTO post, User user) {

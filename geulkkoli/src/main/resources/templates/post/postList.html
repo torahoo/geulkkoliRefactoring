@@ -107,8 +107,27 @@
     </div>
 
 </div>
+<div class="d-flex justify-content-center">
+    <nav class="" aria-label="Page navigation example">
+        <ul class="pagination" id="pagination">
+            <li class="page-item"><a href="#" class="page-link" aria-label="Previous"><span aria-hidden="true"><i class="fa fa-fw fa-angle-left"></i></span><span class="sr-only"><</span></a></li>
+<!--            <li class="page-item active"><a href="#" class="page-link"></a></li>-->
+            <li class="page-item"><a href="#" class="page-link" aria-label="Next"><span aria-hidden="true"><i class="fa fa-fw fa-angle-right"></i></span><span class="sr-only">></span></a></li>
+        </ul>
+    </nav>
+</div>
 
 <footer id="footer"></footer>
 <div th:include="footer" ></div>
+<script type="text/javascript">
+
+    const currentPage = [[${currentPage}]];
+    const isFirst = [[${isFirst}]];
+    const isLast = [[${isLast}]];
+    const lastPage = [[${endPage}]];
+    const size = [[${size}]];
+
+</script>
+<script src="/js/pagination.js"></script>
 </body>
 </html>
