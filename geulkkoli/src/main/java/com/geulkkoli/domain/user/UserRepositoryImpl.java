@@ -1,6 +1,6 @@
 package com.geulkkoli.domain.user;
 
-import com.geulkkoli.web.user.dto.UserInfoEditDto;
+import com.geulkkoli.web.user.dto.edit.UserInfoEditDto;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.transaction.annotation.Transactional;
 

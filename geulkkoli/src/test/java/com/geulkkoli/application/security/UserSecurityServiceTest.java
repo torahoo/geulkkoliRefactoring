@@ -1,10 +1,11 @@
 package com.geulkkoli.application.security;
 
 import com.geulkkoli.application.user.AuthUser;
+import com.geulkkoli.application.user.PasswordService;
 import com.geulkkoli.domain.user.User;
 import com.geulkkoli.domain.user.service.UserService;
 import com.geulkkoli.web.user.dto.JoinFormDto;
-import com.geulkkoli.web.user.dto.PasswordEditDto;
+import com.geulkkoli.web.user.dto.edit.PasswordEditDto;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
@@ -13,7 +14,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -34,7 +34,7 @@ class UserSecurityServiceTest {
     @Autowired
     UserService userService;
     @Autowired
-    PasswordEncoder passwordEncoder;
+    PasswordService passwordService;
 
 
 
@@ -70,7 +70,7 @@ class UserSecurityServiceTest {
         passwordEditDto.setNewPassword("abc123!@#");
         passwordEditDto.setVerifyPassword("abc123!@#");
 
-        assertThat(userSecurityService.isPasswordVerification(saveUser, passwordEditDto)).isTrue();
+        assertThat(passwordService.isPasswordVerification(saveUser, passwordEditDto)).isTrue();
     }
 
     @Test
@@ -94,12 +94,12 @@ class UserSecurityServiceTest {
         passwordEditDto.setVerifyPassword("abc123!@#");
 
         //when
-        userSecurityService.updatePassword(1L, passwordEditDto);
+        passwordService.updatePassword(1L, passwordEditDto.getNewPassword());
 
         //then
         User updatePasswordUser = userService.findById(1L);
 
-        assertThat(passwordEncoder.matches("abc123!@#", updatePasswordUser.getPassword())).isTrue();
+        assertThat(passwordService.passwordEncoder.matches("abc123!@#", updatePasswordUser.getPassword())).isTrue();
     }
 
     @Test
@@ -147,7 +147,7 @@ class UserSecurityServiceTest {
         joinForm.setPhoneNo("01012345671");
         joinForm.setGender("male");
         joinForm.setPassword("123qwe!@#");
-        User saveUser = userSecurityService.join(joinForm);
+        userSecurityService.join(joinForm);
 
         assertThrows(AuthenticationException.class, () -> userSecurityService.loadUserByUsername("tako1@naver.com"));
     }
