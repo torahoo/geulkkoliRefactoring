@@ -36,6 +36,15 @@ public class EditDTO {
         this.nickName = nickName;
     }
 
+    public static EditDTO toDTO (Post post) {
+        return EditDTO.builder()
+                .postId(post.getPostId())
+                .title(post.getTitle())
+                .postBody(post.getPostBody())
+                .nickName(post.getNickName())
+                .build();
+    }
+
     public Post toEntity () {
         return Post.builder()
                 .title(title)

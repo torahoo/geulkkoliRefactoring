@@ -47,24 +47,15 @@ public class Comments extends ConfigDate{
         this.commentBody = commentBody;
     }
 
+    public Comments (User user, Post post, Comments comment) {
+        this.user = user;
+        this.post = post;
+        this.commentBody = comment.getCommentBody();
+    }
+
     //==연관관계 메서드==//
 
-    /**
-     * 유저 세팅
-     */
-    public void addAuthor (User user) {
-        this.user = user;
-        user.getComments().add(this);
-    }
-
-    /**
-     * 게시글 세팅
-     */
-    public void addPost (Post post) {
-        this.post = post;
-        post.getComments().add(this);
-    }
-
+    //댓글 수정
     public void changeComments (String commentBody) {
         this.commentBody = commentBody;
     }

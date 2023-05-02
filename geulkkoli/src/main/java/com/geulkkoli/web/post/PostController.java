@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -53,14 +54,15 @@ public class PostController {
     public String postList(@PageableDefault(size = 5, sort = "postId", direction = Sort.Direction.DESC) Pageable pageable,
                            Model model) {
 
-        Page<Post> page = postService.findAll(pageable);
+        Page<ListDTO> page = postService.findAll(pageable);
 
         model.addAttribute("list", page.toList());
-        model.addAttribute("currentPage", page.getNumber());
+        model.addAttribute("page", page.getNumber());
         model.addAttribute("isFirst", page.isFirst());
         model.addAttribute("isLast", page.isLast());
         model.addAttribute("endPage", page.getTotalPages());
         model.addAttribute("size", page.getSize());
+
         return "/post/postList";
     }
 
@@ -94,10 +96,11 @@ public class PostController {
 
     //게시글 읽기 Page로 이동
     @GetMapping("/read/{postId}")
-    public String postRead(Model model, @PathVariable Long postId) {
+    public String postRead(Model model, @PathVariable Long postId, HttpServletRequest request) {
 
-        PageDTO postPage = PageDTO.toDTO(postService.findById(postId));
+        PageDTO postPage = PageDTO.toDTO(postService.showDetailPost(postId));
         User authorUser = userService.findById(postPage.getAuthorId());
+        request.getSession().setAttribute("pageNumber", request.getParameter("page"));
 
         model.addAttribute("post", postPage);
         model.addAttribute("authorUser", authorUser);
@@ -108,28 +111,28 @@ public class PostController {
     //게시글 수정 html로 이동
     @GetMapping("/update/{postId}")
     public String postUpdateForm(Model model, @PathVariable Long postId) {
-        log.info("updateParam={}, postId={}", model.getAttribute("post"), postId);
-        PageDTO postPage = PageDTO.toDTO(postService.findById(postId));
-        log.info("findPost={}", postPage.getPostBody());
+
+        EditDTO postPage = EditDTO.toDTO(postService.findById(postId));
         model.addAttribute("editDTO", postPage);
+
         return "/post/postEditForm";
     }
 
     //게시글 수정
     @PostMapping("/update/{postId}")
     public String postUpdate(@Validated @ModelAttribute EditDTO updateParam, BindingResult bindingResult,
-                             @PathVariable Long postId, RedirectAttributes redirectAttributes) {
+                             @PathVariable Long postId, RedirectAttributes redirectAttributes, HttpServletRequest request) {
 
         if (bindingResult.hasErrors()) {
             return "/post/postEditForm";
         }
 
-        log.info("updateParam={}, postId={}", updateParam.getPostBody(), postId);
         User user = userService.findByNickName(updateParam.getNickName());
         postService.updatePost(postId, updateParam, user);
         redirectAttributes.addAttribute("updateStatus", true);
+        redirectAttributes.addAttribute("page", request.getSession().getAttribute("pageNumber"));
 
-        return "redirect:/post/read/{postId}";
+        return "redirect:/post/read/{postId}?page={page}";
     }
 
     //게시글 삭제
@@ -143,7 +146,7 @@ public class PostController {
     @GetMapping("/savedone")
     public void testBlanc(@AuthenticationPrincipal AuthUser authUser,
                             HttpServletResponse response){
-        log.info("쿠키 삭제");
+
         Cookie cookie = new Cookie(URLEncoder.encode(authUser.getNickName()), null);
         cookie.setMaxAge(0);
         response.addCookie(cookie);

@@ -7,7 +7,7 @@
   <link rel="stylesheet" href="/css/post.css">
   <title>게시글 수정 폼</title>
 </head>
-<body>
+<body>git
 
 <header id="header"></header>
 <div th:include="header" ></div>
@@ -21,6 +21,7 @@
   <div class="container">
     <div>
       <form id="edit" th:action="@{/post/update/{postId}(postId=*{postId})}" th:object="${editDTO}" method="post">
+        <input type="hidden" th:field="*{nickName}" form="edit">
         <div class="mb-3">
           <label th:text="제목">제목</label>
           <input class="form-control"
@@ -38,9 +39,6 @@
         </div>
 
         <input type="hidden" th:field="*{postId}">
-        <input type="hidden" th:field="*{nickName}">
-<!--        <span hidden="hidden" th:field="*{nickName}" form="edit">-->
-<!--        </span>-->
 
         <hr class="my-4">
         <div class="row">

@@ -13,9 +13,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.NoSuchElementException;
+import java.util.*;
 
 @Slf4j
 @Service
@@ -35,15 +33,16 @@ public class PostService {
                 .orElseThrow(() -> new NoSuchElementException("No post found id matches:" + postId));
     }
 
-    public Page<Post> findAll(Pageable pageable) {
-        List<Post> allPost = postRepository.findAll(pageable).toList();
-        List<ListDTO> listDTOs = new ArrayList<>();
+    public Post showDetailPost (Long postId) {
+        postRepository.updateHits(postId);
+        return postRepository.findById(postId)
+                .orElseThrow(() -> new NoSuchElementException("No post found id matches:" + postId));
+    }
 
-        for (Post post : allPost) {
-            listDTOs.add(ListDTO.toDTO(post));
-        }
+    public Page<ListDTO> findAll(Pageable pageable) {
 
-        return postRepository.findAll(pageable);
+        return postRepository.findAll(pageable).map(post -> new ListDTO(
+                post.getPostId(), post.getTitle(), post.getNickName(), post.getUpdatedAt(), post.getPostHits()));
     }
 
     public Post savePost(AddDTO post, User user) {

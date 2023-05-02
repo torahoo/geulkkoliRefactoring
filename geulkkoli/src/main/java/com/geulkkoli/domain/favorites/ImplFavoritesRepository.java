@@ -40,6 +40,8 @@ public class ImplFavoritesRepository implements FavoritesRepository {
     @Override
     public void delete(Long favoriteId) {
         Favorites findFavorite = em.find(Favorites.class, favoriteId);
+        findFavorite.getPost().getFavorites().remove(findFavorite);
+        findFavorite.getUser().getFavorites().remove(findFavorite);
         em.remove(findFavorite);
     }
 

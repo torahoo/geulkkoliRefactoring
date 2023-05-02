@@ -42,6 +42,5 @@ public class HashTags {
      */
     public void addPost (Post post) {
         this.post = post;
-        post.getHashTags().add(this);
     }
 }
