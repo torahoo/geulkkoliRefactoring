@@ -68,7 +68,7 @@
                 <td>
                     <details>
                         <summary class="memberSummary">회원 정지</summary>
-                        <form >
+                        <form>
                             <label>
                                 <input hidden="hidden" th:value="${reportedPost.postId}" name="postId">
                             </label>
@@ -81,6 +81,7 @@
                                 placeholder="정지 사유">
                             </label>
                             <button type="button" onclick="lockUserFetch(this.form)">정지</button>
+                            <div></div>
                         </form>
                     </details>
                 </td>
@@ -158,9 +159,10 @@
             },
             body: JSON.stringify({postId: reportedPostId, lockReason: reason, lockDate: date}),
         }).then(function (response) {
-            // return response.text();
+            return response.text();
         }).then(function (text) {
             console.log('Request successful', text);
+            alert(text); // 비동기 통신 체인메소드로 text값을 리턴받아 출력
         }).catch(function (error) {
             console.log('Request failed', error)
         });
