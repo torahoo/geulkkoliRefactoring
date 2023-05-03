@@ -8,12 +8,12 @@ import com.geulkkoli.web.post.dto.AddDTO;
 import com.geulkkoli.web.post.dto.EditDTO;
 import com.geulkkoli.web.post.dto.ListDTO;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.NoSuchElementException;
+import java.util.*;
 
 @Slf4j
 @Service
@@ -33,15 +33,23 @@ public class PostService {
                 .orElseThrow(() -> new NoSuchElementException("No post found id matches:" + postId));
     }
 
-    public List<ListDTO> findAll() {
-        List<Post> allPost = postRepository.findAll();
-        List<ListDTO> listDTOs = new ArrayList<>();
+    //게시글 상세보기만을 담당하는 메서드
+    public Post showDetailPost (Long postId) {
+        postRepository.updateHits(postId);
+        return postRepository.findById(postId)
+                .orElseThrow(() -> new NoSuchElementException("No post found id matches:" + postId));
+    }
 
-        for (Post post : allPost) {
-            listDTOs.add(ListDTO.toDTO(post));
-        }
+    public Page<ListDTO> findAll(Pageable pageable) {
 
-        return listDTOs;
+        return postRepository.findAll(pageable)
+                .map(post -> new ListDTO(
+                        post.getPostId(),
+                        post.getTitle(),
+                        post.getNickName(),
+                        post.getUpdatedAt(),
+                        post.getPostHits()
+                ));
     }
 
     public Post savePost(AddDTO post, User user) {

@@ -27,6 +27,11 @@ public class Favorites {
     @JoinColumn(name = "user_id")
     private User user;
 
+    public Favorites (User user, Post post) {
+        this.user = user;
+        this.post = post;
+    }
+
     @Override
     public boolean equals(Object obj) {
         Favorites favorites = (Favorites) obj;
@@ -38,21 +43,4 @@ public class Favorites {
         return getClass().hashCode();
     }
 
-    //==연관관계 메서드==//
-
-    /**
-     * 유저 세팅
-     */
-    public void addAuthor (User user) {
-        this.user = user;
-        user.getFavorites().add(this);
-    }
-
-    /**
-     * 게시글 세팅
-     */
-    public void addPost (Post post) {
-        this.post = post;
-        post.getFavorites().add(this);
-    }
 }

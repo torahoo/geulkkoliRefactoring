@@ -1,13 +1,9 @@
 package com.geulkkoli.domain.favorites;
 
-import com.geulkkoli.domain.favorites.Favorites;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
-import java.util.List;
-import java.util.Optional;
+@Repository
+public interface FavoritesRepository extends JpaRepository<Favorites, Long> {
 
-public interface FavoritesRepository {
-    Favorites save (Favorites favorite);
-    Optional<Favorites> findById (Long favoriteId);
-    List<Favorites> findAll();
-    void delete (Long favoriteId);
 }

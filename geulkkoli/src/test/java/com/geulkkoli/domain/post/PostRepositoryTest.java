@@ -13,6 +13,7 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.ActiveProfiles;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -112,6 +113,7 @@ class PostRepositoryTest {
                 .orElseThrow(() -> new NoSuchElementException("No post found id matches : " + save.getPostId()));
 
         assertThat(save).isEqualTo(find);
+        log.info("findDate={}",find.getUpdatedAt());
     }
 
     @Test

@@ -1,11 +1,9 @@
 package com.geulkkoli.domain.hashtag;
 
-import java.util.List;
-import java.util.Optional;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
-public interface HashTagsRepository {
-    HashTags save (HashTags hashTag);
-    Optional<HashTags> findById (Long hashTagId);
-    List<HashTags> findAll ();
-    void delete (Long hashTagId);
+@Repository
+public interface HashTagsRepository extends JpaRepository<HashTags, Long> {
+
 }
