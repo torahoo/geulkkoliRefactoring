@@ -63,7 +63,7 @@ public class TestDataInit {
         joinForm2.setPhoneNo("01012345678");
         joinForm2.setGender("male");
         joinForm2.setPassword("123");
-        userSecurityService.join(joinForm2);
+        User user2 = userSecurityService.join(joinForm2);
 
         // 이메일 테스트하느라 실제 이메일 사용 중
         JoinFormDto joinForm3 = new JoinFormDto();
@@ -85,39 +85,41 @@ public class TestDataInit {
 
         User user01 = userService.findById(1L);
 
-        AddDTO addDTO = AddDTO.builder()
-                .title("여러분")
-                .postBody("나는 멋지고 섹시한 개발자")
-                .nickName(user01.getNickName())
-                .build();
-        Post post = user01.writePost(addDTO);
-        postRepository.save(post);
+        for (int i = 0; i < 100; ++i) {
+
+            AddDTO addDTO = AddDTO.builder()
+                    .title("여러분")
+                    .postBody("나는 멋지고 섹시한 개발자")
+                    .nickName(user01.getNickName())
+                    .build();
+            Post post = user01.writePost(addDTO);
+            postRepository.save(post);
 
 
-        AddDTO addDTO1 = AddDTO.builder()
-                .title("testTitle01")
-                .postBody("test postbody 01")
-                .nickName(user01.getNickName())
-                .build();
-        Post post1 = user01.writePost(addDTO1);
-        postRepository.save(post1);
+            AddDTO addDTO1 = AddDTO.builder()
+                    .title("testTitle01")
+                    .postBody("test postbody 01")
+                    .nickName(user01.getNickName())
+                    .build();
+            Post post1 = user01.writePost(addDTO1);
+            postRepository.save(post1);
 
+            AddDTO addDTO2 = AddDTO.builder()
+                    .title("testTitle02")
+                    .postBody("test postbody 02")
+                    .nickName(user2.getNickName())
+                    .build();
+            Post post2 = user2.writePost(addDTO2);
+            postRepository.save(post2);
 
-        AddDTO addDTO2 = AddDTO.builder()
-                .title("testTitle02")
-                .postBody("test postbody 02")
-                .nickName(user01.getNickName())
-                .build();
-        Post post2 = user01.writePost(addDTO2);
-        postRepository.save(post2);
-
-        AddDTO addDTO3 = AddDTO.builder()
-                .title("testTitle03")
-                .postBody("test postbody 03")//채&훈
-                .nickName(user01.getNickName())
-                .build();
-        Post post3 = user01.writePost(addDTO3);
-        postRepository.save(post3);
+            AddDTO addDTO3 = AddDTO.builder()
+                    .title("testTitle03")
+                    .postBody("test postbody 03")//채&훈
+                    .nickName(user2.getNickName())
+                    .build();
+            Post post3 = user2.writePost(addDTO3);
+            postRepository.save(post3);
+        }
         /**
          * 신고받은 게시물 더미 데이터를 리팩토링한 방식으로 다시 작성해봤습니다.
          */
