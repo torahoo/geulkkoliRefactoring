@@ -1,29 +1,24 @@
-package com.geulkkoli.web.user.dto;
+package com.geulkkoli.web.user.dto.find;
 
 import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
 import org.hibernate.validator.constraints.Length;
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Pattern;
 
 @Getter
-@Setter
-@ToString
-public class PasswordEditDto {
+public class ResetPasswordFormDto {
 
     @NotEmpty
     @Length(min = 8, max = 20)
     @Pattern(regexp = "(?=.*[0-9])(?=.*[a-zA-Z])(?=.*[*\\W])(?=\\S+$).{8,20}")
-    private String oldPassword;
-
-    @NotEmpty
-    @Length(min = 8, max = 20)
-    @Pattern(regexp = "(?=.*[0-9])(?=.*[a-zA-Z])(?=.*[*\\W])(?=\\S+$).{8,20}")
-    private String newPassword;
+    private String password;
 
     @NotEmpty
     private String verifyPassword;
 
+    public ResetPasswordFormDto(String password, String verifyPassword) {
+        this.password = password;
+        this.verifyPassword = verifyPassword;
+    }
 }

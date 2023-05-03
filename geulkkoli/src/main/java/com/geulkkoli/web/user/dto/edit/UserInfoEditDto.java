@@ -1,4 +1,4 @@
-package com.geulkkoli.web.user.dto;
+package com.geulkkoli.web.user.dto.edit;
 
 import lombok.Builder;
 import lombok.Getter;
