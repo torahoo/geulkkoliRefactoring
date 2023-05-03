@@ -33,6 +33,7 @@ public class PostService {
                 .orElseThrow(() -> new NoSuchElementException("No post found id matches:" + postId));
     }
 
+    //게시글 상세보기만을 담당하는 메서드
     public Post showDetailPost (Long postId) {
         postRepository.updateHits(postId);
         return postRepository.findById(postId)
@@ -41,8 +42,14 @@ public class PostService {
 
     public Page<ListDTO> findAll(Pageable pageable) {
 
-        return postRepository.findAll(pageable).map(post -> new ListDTO(
-                post.getPostId(), post.getTitle(), post.getNickName(), post.getUpdatedAt(), post.getPostHits()));
+        return postRepository.findAll(pageable)
+                .map(post -> new ListDTO(
+                        post.getPostId(),
+                        post.getTitle(),
+                        post.getNickName(),
+                        post.getUpdatedAt(),
+                        post.getPostHits()
+                ));
     }
 
     public Post savePost(AddDTO post, User user) {
