@@ -15,6 +15,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import javax.servlet.http.HttpServletRequest;
+
 @Controller
 @RequiredArgsConstructor
 @Slf4j
@@ -25,9 +27,12 @@ public class HomeController {
     private final UserService userService;
 
     @GetMapping
-    public String home(@PageableDefault(size = 5, sort = "postId", direction = Sort.Direction.DESC) Pageable pageable, Model model) {
+    public String home(@PageableDefault(size = 5, sort = "postId", direction = Sort.Direction.DESC) Pageable pageable,
+                       Model model, HttpServletRequest request) {
 
-        model.addAttribute("list", postService.findAll(pageable).toList());
+        String searchType = request.getParameter("searchType");
+        String searchWords = request.getParameter("searchWords");
+        model.addAttribute("list", postService.findAll(pageable, searchType, searchWords).toList());
 
         return "/home";
     }

@@ -52,9 +52,12 @@ public class PostController {
     // 게시판 리스트 html로 이동
     @GetMapping("/list")
     public String postList(@PageableDefault(size = 5, sort = "postId", direction = Sort.Direction.DESC) Pageable pageable,
-                           Model model) {
+                           Model model, HttpServletRequest request) {
 
-        Page<ListDTO> page = postService.findAll(pageable);
+        String searchType = request.getParameter("searchType");
+        String searchWords = request.getParameter("searchWords");
+
+        Page<ListDTO> page = postService.findAll(pageable, searchType, searchWords);
 
         model.addAttribute("list", page.toList());
         model.addAttribute("currentPage", page.getNumber());
@@ -62,6 +65,13 @@ public class PostController {
         model.addAttribute("isLast", page.isLast());
         model.addAttribute("endPage", page.getTotalPages());
         model.addAttribute("size", page.getSize());
+        if(searchType!=null&&searchWords!=null){
+            model.addAttribute("searchType", searchType);
+            model.addAttribute("searchWords", searchWords);
+        } else {
+            model.addAttribute("searchType", "");
+            model.addAttribute("searchWords", "");
+        }
 
         return "/post/postList";
     }

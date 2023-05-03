@@ -40,16 +40,48 @@ public class PostService {
                 .orElseThrow(() -> new NoSuchElementException("No post found id matches:" + postId));
     }
 
-    public Page<ListDTO> findAll(Pageable pageable) {
+    //전체 게시글 리스트 & 조회 기능 포함
+    public Page<ListDTO> findAll(Pageable pageable, String searchType, String searchWords) {
 
-        return postRepository.findAll(pageable)
-                .map(post -> new ListDTO(
-                        post.getPostId(),
-                        post.getTitle(),
-                        post.getNickName(),
-                        post.getUpdatedAt(),
-                        post.getPostHits()
-                ));
+        if(searchType==null){
+            return postRepository.findAll(pageable)
+                    .map(post -> new ListDTO(
+                            post.getPostId(),
+                            post.getTitle(),
+                            post.getNickName(),
+                            post.getUpdatedAt(),
+                            post.getPostHits()
+                    ));
+        } else {
+            if(searchType.equals("제목")){
+                return postRepository.findPostsByTitleContaining(pageable, searchWords)
+                        .map(post -> new ListDTO(
+                                post.getPostId(),
+                                post.getTitle(),
+                                post.getNickName(),
+                                post.getUpdatedAt(),
+                                post.getPostHits()
+                        ));
+            } else if(searchType.equals("본문")) {
+                return postRepository.findPostsByPostBodyContaining(pageable, searchWords)
+                        .map(post -> new ListDTO(
+                                post.getPostId(),
+                                post.getTitle(),
+                                post.getNickName(),
+                                post.getUpdatedAt(),
+                                post.getPostHits()
+                        ));
+            } else {
+                return postRepository.findPostsByNickNameContaining(pageable, searchWords)
+                        .map(post -> new ListDTO(
+                                post.getPostId(),
+                                post.getTitle(),
+                                post.getNickName(),
+                                post.getUpdatedAt(),
+                                post.getPostHits()
+                        ));
+            }
+        }
     }
 
     public Post savePost(AddDTO post, User user) {
