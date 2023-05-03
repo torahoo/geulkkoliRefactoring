@@ -53,8 +53,6 @@ public class Comments extends ConfigDate{
         this.commentBody = comment.getCommentBody();
     }
 
-    //==연관관계 메서드==//
-
     //댓글 수정
     public void changeComments (String commentBody) {
         this.commentBody = commentBody;

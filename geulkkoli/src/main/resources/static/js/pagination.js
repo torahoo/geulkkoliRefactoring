@@ -5,12 +5,12 @@ const ul = document.getElementById('pagination');
 const li = document.getElementsByClassName('page-item');
 
 let nextPage = block + blockCount;
-if(nextPage >= lastPage) {
-    nextPage = lastPage-1;
+if(nextPage >= endPage) {
+    nextPage = endPage-1;
 }
 
 for (let page = block, index = 0;
-     page < (block + blockCount) & page < lastPage;
+     page < (block + blockCount) & page < endPage;
      ++page, ++index) {
 
     const liPage = document.createElement('li');
@@ -38,7 +38,7 @@ isVisible(isLast, li[2]);
 li[2].querySelector('a').href = makeURI(nextPage, size);
 
 isVisible(isLast, li[3]);
-li[3].querySelector('a').href = makeURI(lastPage-1, size);
+li[3].querySelector('a').href = makeURI(endPage-1, size);
 
 ul.appendChild(li[2]);
 ul.appendChild(li[2]);

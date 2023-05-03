@@ -57,7 +57,7 @@ public class PostController {
         Page<ListDTO> page = postService.findAll(pageable);
 
         model.addAttribute("list", page.toList());
-        model.addAttribute("page", page.getNumber());
+        model.addAttribute("currentPage", page.getNumber());
         model.addAttribute("isFirst", page.isFirst());
         model.addAttribute("isLast", page.isLast());
         model.addAttribute("endPage", page.getTotalPages());

@@ -166,6 +166,33 @@ public class User {
     }
 
     /**
+     * 좋아요 관련 CRUD
+     */
+    // 유저가 누른 좋아요
+    public Favorites pressFavorite (Post post) {
+        Favorites favorite = new Favorites(this, post);
+        post.getFavorites().add(favorite);
+        this.favorites.add(favorite);
+        return favorite;
+    }
+
+    // 해당 유저가 쓴 좋아요 찾기
+    private Favorites findFavorite (Long favoriteId) {
+        return this.favorites.stream()
+                .filter(favorite -> favorite.getFavoritesId().equals(favoriteId))
+                .findFirst()
+                .orElseThrow(()->new NoSuchCommnetException("해당 좋아요가 없습니다."));
+    }
+
+    // 유저가 취소한 좋아요
+    public Favorites cancelFavorite (Long favoriteId) {
+        Favorites deleteFavorite = findFavorite(favoriteId);
+        favorites.remove(deleteFavorite);
+        deleteFavorite.getPost().getFavorites().remove(deleteFavorite);
+        return deleteFavorite;
+    }
+
+    /**
      * 신고 관련 CRUD
      */
     public Report writeReport(Post post, String reason) {

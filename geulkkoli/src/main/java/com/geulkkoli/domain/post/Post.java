@@ -3,6 +3,7 @@ package com.geulkkoli.domain.post;
 import com.geulkkoli.domain.comment.Comments;
 import com.geulkkoli.domain.favorites.Favorites;
 import com.geulkkoli.domain.hashtag.HashTags;
+import com.geulkkoli.domain.user.NoSuchCommnetException;
 import com.geulkkoli.domain.user.User;
 import com.geulkkoli.web.post.dto.AddDTO;
 import lombok.*;
@@ -99,12 +100,6 @@ public class Post extends ConfigDate {
         this.nickName = nickName;
     }
 
-    //해당 게시글에 좋아요 넣기
-    public void addFavorite (Favorites favorite) {
-        favorite.addPost(this);
-        favorites.add(favorite);
-    }
-
     //해당 게시글에 들어가 있는 해시태그
     public void addHashTag (HashTags hashTag) {
         hashTag.addPost(this);
@@ -114,6 +109,28 @@ public class Post extends ConfigDate {
     //조회수를 바꾼다.
     public void changeHits (int postHits) {
         this.postHits = postHits;
+    }
+
+    /**
+     *  게시글로 부터 댓글
+     */
+    // 게시글에서 댓글 찾기
+    private Comments bringComment (Long commentId) {
+        return this.comments.stream()
+                .filter(comment -> comment.getCommentId().equals(commentId))
+                .findFirst()
+                .orElseThrow(()->new NoSuchCommnetException("해당 댓글이 없습니다."));
+    }
+
+    /**
+     *  게시글로 부터 좋아요
+     */
+    // 게시글에서 누른 좋아요 찾기
+    private Favorites bringFavorite (Long favoriteId) {
+        return this.favorites.stream()
+                .filter(favorite -> favorite.getFavoritesId().equals(favoriteId))
+                .findFirst()
+                .orElseThrow(()->new NoSuchCommnetException("해당 좋아요가 없습니다."));
     }
 
 }

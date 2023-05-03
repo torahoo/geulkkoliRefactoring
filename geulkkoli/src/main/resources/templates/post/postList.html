@@ -53,11 +53,11 @@
             </thead>
             <tbody>
                 <tr th:each="post : ${list}">
-                    <th scope="row"> <a th:href="@{|/post/read/${post.postId}|}" th:text="${post.postId}"></a></th>
-                    <td> <a th:href="@{|/post/read/${post.postId}?page=${page}|}" th:text="${post.title}"></a></td>
-                    <td th:align="center" text-aligns th:text="${post.nickName}"></td>
+                    <th scope="row"> <a th:href="@{|/post/read/${post.postId}|(page=${currentPage})}" th:text="${post.postId}"></a></th>
+                    <td> <a th:href="@{|/post/read/${post.postId}|(page=${currentPage})}" th:text="${post.title}"></a></td>
+                    <td th:align="center" th:text="${post.nickName}"></td>
                     <td th:align="center" th:text="${post.date}"></td>
-                    <td th:align="center" th:text="${post.postHits}">기능구현 전</td>
+                    <td th:align="center" th:text="${post.postHits}"></td>
                 </tr>
             </tbody>
         </table>
@@ -130,10 +130,10 @@
 <div th:include="footer" ></div>
 <script type="text/javascript">
 
-    const currentPage = [[${page}]];
+    const currentPage = [[${currentPage}]];
     const isFirst = [[${isFirst}]];
     const isLast = [[${isLast}]];
-    const lastPage = [[${endPage}]];
+    const endPage = [[${endPage}]];
     const size = [[${size}]];
 
 </script>
