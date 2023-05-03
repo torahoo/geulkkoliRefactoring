@@ -1,4 +1,4 @@
-package com.geulkkoli.web.user;
+package com.geulkkoli.exception.web.user;
 
 import com.geulkkoli.application.security.UserSecurityService;
 import com.geulkkoli.application.security.config.SecurityConfig;
@@ -6,6 +6,7 @@ import com.geulkkoli.application.security.handler.LoginFailureHandler;
 import com.geulkkoli.domain.user.User;
 import com.geulkkoli.domain.user.UserRepository;
 import com.geulkkoli.domain.user.service.UserService;
+import com.geulkkoli.web.user.UserController;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -56,8 +57,8 @@ class UserControllerTest {
 
     @MockBean
     private UserService userService;
-    @MockBean
-    private UserSecurityService userSecurityService;
+//    @MockBean
+//    private UserSecurityService userSecurityService;
 
     User user;
 

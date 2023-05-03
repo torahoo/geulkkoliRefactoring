@@ -115,7 +115,7 @@ public class UserController {
         String email = (String) request.getSession().getAttribute("email");
         Optional<User> user = userService.findByEmail(email);
 
-        int length = passwordService.setTempPasswordLength(8, 20);
+        int length = passwordService.setLength(8, 20);
         String tempPassword = passwordService.createTempPassword(length);
 
         passwordService.updatePassword(user.get().getUserId(), tempPassword);
@@ -135,10 +135,6 @@ public class UserController {
     public String userJoin(@Validated @ModelAttribute("joinForm") JoinFormDto form, BindingResult bindingResult, Model model) {
         log.info("join Method={}", this);
 
-        if (userService.isEmailDuplicate(form.getEmail())) {
-            bindingResult.rejectValue("email", "Duple.joinForm.email");
-        }
-
         if (userService.isNickNameDuplicate(form.getNickName())) {
             bindingResult.rejectValue("nickName", "Duple.nickName");
         }
@@ -147,7 +143,6 @@ public class UserController {
             bindingResult.rejectValue("phoneNo", "Duple.phoneNo");
         }
 
-        // 중복 검사라기보다는 비밀번호 확인에 가까운 것 같아서 에러코드명 변경
         if (!form.getPassword().equals(form.getVerifyPassword())) {
             bindingResult.rejectValue("verifyPassword", "Check.verifyPassword");
         }
@@ -162,6 +157,24 @@ public class UserController {
         } else {
             return JOIN_FORM;
         }
+    }
+
+    @PostMapping("/checkEmail")
+    @ResponseBody
+    public String checkEmail(@RequestBody JoinFormDto form) {
+
+        String responseMessage;
+
+        if (userService.isEmailDuplicate(form.getEmail())) {
+            responseMessage = "emailDuplicated";
+        } else {
+            int length = 6;
+            String authenticationNumber = passwordService.authenticationNumber(length);
+            emailService.sendAuthenticationNumberEmail(form.getEmail(), authenticationNumber);
+            responseMessage = "sendAuthenticationNumberEmail";
+        }
+
+        return responseMessage;
     }
 
     @GetMapping("user/edit")

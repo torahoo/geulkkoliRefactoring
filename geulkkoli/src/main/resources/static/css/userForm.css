@@ -41,9 +41,6 @@ h4 {
     text-align: center;
 }
 
-.field-error{
-}
-
 #idTwoBox,
 #nickNameTwoBox {
     margin: 0%;
@@ -81,4 +78,14 @@ input[type=submit], input[type=button]{
 .pwChangeMessage{
     background-color: #f2ff00;
     display: inline;
+}
+
+.emailBox{
+    width: 605px;
+    position: relative;
+}
+
+.emailButton{
+   position: absolute;
+    margin-left: 20px;
 }

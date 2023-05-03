@@ -113,7 +113,7 @@ public class TestDataInit {
 
         AddDTO addDTO3 = AddDTO.builder()
                 .title("testTitle03")
-                .postBody("test postbody 03")//채&훈
+                .postBody("test postbody 03")
                 .nickName(user01.getNickName())
                 .build();
         Post post3 = user01.writePost(addDTO3);
