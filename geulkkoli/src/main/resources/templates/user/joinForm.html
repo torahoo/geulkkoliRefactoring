@@ -46,14 +46,28 @@
       <h4>이메일</h4>
     </label>
     <br>
-    <input type="email" name="email" id="email" placeholder="geulkkoli@welcome.com"
-           th:field="*{email}"
-           th:errorclass="field-error"
-           class="form-control form-control-lg emailBox">
-    <input type="button" value="인증하기" class="btn btn-primary form-control-lg emailButton"
-           onclick="checkEmail()">
+    <div class="email">
+      <input type="email" name="email" id="email" placeholder="geulkkoli@welcome.com"
+             th:field="*{email}"
+             th:errorclass="field-error"
+             class="form-control form-control-lg emailBox">
+      <input type="button" value="인증" class="btn btn-primary form-control-lg emailButton"
+             onclick="checkEmail()">
+    </div>
     <p class="field-error" th:errors="*{email}"></p>
     <p id="emailDuplicated"></p>
+    <p id="nullOrBlank"></p>
+
+    <div class="email">
+      <input type="text" placeholder="이메일로 전송된 인증 번호 6자리 입력" id="authenticationNumber"
+             class="form-control form-control-lg authenticationNumberBox" style="display: none">
+      <input type="button" value="확인" id="authenticationButton"
+             class="btn btn-primary form-control-lg authenticationNumberButton"
+             style="display: none"
+             onclick="checkAuthenticationNumber()">
+    </div>
+    <p id="timer"></p>
+    <p id="rightOrWrongMessage"></p>
   </div>
 
   <div class="mb-3">
@@ -119,10 +133,12 @@
 </body>
 
 <script>
-
+    let timer;
     // 이메일 중복 체크 & 인증 번호 수신 가능한 이메일인지 체크
+    // 2분 이내에 인증하도록 timer (인증할 동안 이메일 바꾸지 못하도록 input과 button 잠시 비활성화)
     function checkEmail() {
         let email = document.getElementById('email').value;
+        document.getElementById('emailDuplicated').innerHTML = "";
         fetch('/checkEmail', {
             method: 'POST',
             headers: {
@@ -132,18 +148,90 @@
         })
             .then(function (response) {
                 if (response.ok) {
+                    document.getElementById('emailDuplicated').innerHTML = "";
+                    document.getElementById('timer').innerHTML = "";
+                    document.getElementById('authenticationNumber').readOnly = false;
+                    document.getElementById('authenticationButton').disabled = false;
+                    document.getElementById('rightOrWrongMessage').innerHTML = "";
                     return response.text();
                 } else {
-                    throw new Error('Network response was not ok.');
+                    throw new Error('네트워크 문제');
                 }
             })
             .then(function (result) {
-                document.getElementById('emailDuplicated').innerHTML = "";
+                if (result === "nullOrBlank") {
+                    document.getElementById('nullOrBlank').innerHTML = "공백이거나 입력하지 않은 이메일을 인증할 수 없습니다.";
+                }
                 if (result === "emailDuplicated") {
+                    document.getElementById('timer').innerHTML = "";
                     document.getElementById('emailDuplicated').innerHTML = "이미 존재하는 이메일입니다.";
                 }
                 if (result === "sendAuthenticationNumberEmail") {
-                    alert("인증하기disabled처리하기");
+                    document.getElementById('authenticationNumber').style.display = "block";
+                    document.getElementById('authenticationButton').style.display = "block";
+
+                    document.getElementById('authenticationNumber').value = "";
+                    document.getElementById('authenticationNumber').placeholder = "이메일로 전송된 숫자 6자리 입력";
+
+                    document.getElementById('email').readOnly = true;
+                    document.getElementsByClassName('emailButton').item(0).disabled = true;
+
+                    let time = 120;
+                    let min, sec;
+                    timer = setInterval(function () {
+                        // 숫자 두 자리씩 유지
+                        min = String(parseInt(time / 60)).padStart(2, '0');
+                        sec = String(time % 60).padStart(2, '0');
+                        document.getElementById('timer').innerHTML = "발송된 인증 번호를 2분 이내에 입력해주세요. " + min + ":" + sec;
+                        time--;
+
+                        if (time < 0) {
+                            clearInterval(timer);
+                            document.getElementsByClassName('emailButton').item(0).disabled = false;
+                            document.getElementById('email').readOnly = false;
+                            document.getElementById('timer').innerHTML = "시간이 만료되었습니다. 다시 인증해주세요.";
+                        }
+                    }, 1000);
+                }
+            })
+            .catch(function (error) {
+                alert(error.message);
+            });
+    }
+
+
+    function checkAuthenticationNumber() {
+        let email = document.getElementById('email').value;
+        let authenticationNumber = document.getElementById('authenticationNumber').value;
+        fetch('/checkAuthenticationNumber', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({email: email, authenticationNumber: authenticationNumber})
+        })
+            .then(function (response) {
+                if (response.ok) {
+                    document.getElementById('rightOrWrongMessage').innerHTML = "";
+                    return response.text();
+                } else {
+                    throw new Error('네트워크 문제');
+                }
+            })
+            .then(function (result) {
+                if (result === "wrong") {
+                    document.getElementById('rightOrWrongMessage').innerHTML = "인증 번호를 다시 확인해주세요.";
+                }
+                if (result === "right") {
+                    clearInterval(timer);
+                    document.getElementById('timer').innerHTML = "";
+
+                    document.getElementById('authenticationNumber').readOnly = true;
+                    document.getElementById('authenticationButton').disabled = true;
+                    document.getElementById('rightOrWrongMessage').innerHTML = "인증되었습니다.";
+
+                    document.getElementsByClassName('emailButton').item(0).disabled = false;
+                    document.getElementById('email').readOnly = false;
                 }
             })
             .catch(function (error) {

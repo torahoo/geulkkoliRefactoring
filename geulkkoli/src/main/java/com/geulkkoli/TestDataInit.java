@@ -114,14 +114,14 @@ public class TestDataInit {
 
             AddDTO addDTO3 = AddDTO.builder()
                     .title("testTitle03")
-                    .postBody("test postbody 03")//채&훈
+                    .postBody("test postbody 03")
                     .nickName(user2.getNickName())
                     .build();
             Post post3 = user2.writePost(addDTO3);
             postRepository.save(post3);
         }
         /**
-         * 신고받은 게시물 더미 데이터를 리팩토링한 방식으로 다시 작성해봤습니다.
+          신고받은 게시물 더미 데이터를 리팩토링한 방식으로 다시 작성해봤습니다.
          */
         Report report = user.writeReport(postRepository.findById(2L).get(), "욕설");
         Report report1 = user.writeReport(postRepository.findById(1L).get(), "비 협조적");

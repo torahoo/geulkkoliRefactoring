@@ -6,6 +6,7 @@ import com.geulkkoli.application.user.EmailService;
 import com.geulkkoli.application.user.PasswordService;
 import com.geulkkoli.domain.user.User;
 import com.geulkkoli.domain.user.service.UserService;
+import com.geulkkoli.web.user.dto.EmailCheckForJoinDto;
 import com.geulkkoli.web.user.dto.JoinFormDto;
 import com.geulkkoli.web.user.dto.LoginFormDto;
 import com.geulkkoli.web.user.dto.edit.PasswordEditDto;
@@ -99,13 +100,13 @@ public class UserController {
 
         if (!bindingResult.hasErrors()) {
             request.getSession().setAttribute("email", user.get().getEmail());
-            return "forward:/postFindPasswordInfo";
+            return "forward:/tempPassword"; // post로 감
         } else {
             return FIND_PASSWORD_FORM;
         }
     }
 
-    @PostMapping("/postFindPasswordInfo")
+    @PostMapping("/tempPassword")
     public String tempPasswordForm() {
         return TEMP_PASSWORD_FORM;
     }
@@ -120,6 +121,7 @@ public class UserController {
 
         passwordService.updatePassword(user.get().getUserId(), tempPassword);
         emailService.sendTempPasswordEmail(email, tempPassword);
+        log.info("email 발송");
 
         model.addAttribute("waitMailMessage", true);
         return TEMP_PASSWORD_FORM;
@@ -132,7 +134,7 @@ public class UserController {
     }
 
     @PostMapping("/join")
-    public String userJoin(@Validated @ModelAttribute("joinForm") JoinFormDto form, BindingResult bindingResult, Model model) {
+    public String userJoin(@Validated @ModelAttribute("joinForm") JoinFormDto form, BindingResult bindingResult, Model model, HttpServletRequest request) {
         log.info("join Method={}", this);
 
         if (userService.isNickNameDuplicate(form.getNickName())) {
@@ -141,6 +143,17 @@ public class UserController {
 
         if (userService.isPhoneNoDuplicate(form.getPhoneNo())) {
             bindingResult.rejectValue("phoneNo", "Duple.phoneNo");
+        }
+
+        String authenticationEmail = (String) request.getSession().getAttribute("authenticationEmail");
+        String authenticationNumber = (String) request.getSession().getAttribute("authenticationNumber");
+        if (authenticationEmail.isEmpty() || authenticationNumber.isEmpty()) {
+            bindingResult.rejectValue("email", "Authentication.email");
+        }
+
+        // 인증된 이메일 수정 후 인증 안 된 상태로 가입 시도할 경우
+        if (!form.getEmail().equals(authenticationEmail)) {
+            bindingResult.rejectValue("email", "Authentication.email");
         }
 
         if (!form.getPassword().equals(form.getVerifyPassword())) {
@@ -161,17 +174,38 @@ public class UserController {
 
     @PostMapping("/checkEmail")
     @ResponseBody
-    public String checkEmail(@RequestBody JoinFormDto form) {
+    public String checkEmail(@RequestBody EmailCheckForJoinDto form, HttpServletRequest request) {
 
         String responseMessage;
 
-        if (userService.isEmailDuplicate(form.getEmail())) {
+        if (form.getEmail().isEmpty()) {
+            responseMessage = "nullOrBlank";
+        } else if (userService.isEmailDuplicate(form.getEmail())) {
             responseMessage = "emailDuplicated";
         } else {
             int length = 6;
             String authenticationNumber = passwordService.authenticationNumber(length);
+            request.getSession().setAttribute("authenticationNumber", authenticationNumber);
             emailService.sendAuthenticationNumberEmail(form.getEmail(), authenticationNumber);
+            log.info("email 발송");
             responseMessage = "sendAuthenticationNumberEmail";
+        }
+
+        return responseMessage;
+    }
+
+    @PostMapping("/checkAuthenticationNumber")
+    @ResponseBody
+    public String checkAuthenticationNumber(@RequestBody EmailCheckForJoinDto form, HttpServletRequest request) {
+
+        String authenticationNumber = (String) request.getSession().getAttribute("authenticationNumber");
+        String responseMessage;
+
+        if (!form.getAuthenticationNumber().trim().equals(authenticationNumber)) {
+            responseMessage = "wrong";
+        } else {
+            request.getSession().setAttribute("authenticationEmail", form.getEmail());
+            responseMessage = "right";
         }
 
         return responseMessage;

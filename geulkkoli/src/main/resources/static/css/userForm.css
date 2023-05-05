@@ -3,7 +3,7 @@
     padding: 0px;
 }
 
-.mb-3{
+.mb-3 {
     margin: auto;
     width: 50%;
 }
@@ -29,7 +29,8 @@ h4 {
 }
 
 #email,
-#nickName {
+#nickName,
+#authenticationNumber {
     display: inline;
 }
 
@@ -53,39 +54,38 @@ h4 {
     margin: 0%;
 }
 
-input[type=submit], input[type=button]{
+input[type=submit], input[type=button] {
     font-size: 20px;
     padding-inline: 20px;
 }
 
-.bold{
-    font-weight: bold;
-    background: 100%, lightgoldenrodyellow;
-    display: inline;
-}
-
-.contentBox{
+.contentBox {
     max-width: 560px;
     margin: auto;
 }
 
-.noBack{
+.noBack {
     background: none;
     border: none;
     color: gray;
 }
 
-.pwChangeMessage{
-    background-color: #f2ff00;
+.pwChangeMessage {
+    font-weight: bold;
+    background: 100%, lightgoldenrodyellow;
     display: inline;
 }
 
-.emailBox{
-    width: 605px;
-    position: relative;
+.email{
+    display: flex;
 }
 
-.emailButton{
-   position: absolute;
-    margin-left: 20px;
+.emailBox, .authenticationNumberBox {
+    width: 90%;
+    display: inline-block;
+}
+
+.emailButton, .authenticationNumberButton {
+    margin-left: 2%;
+    display: inline-block;
 }
