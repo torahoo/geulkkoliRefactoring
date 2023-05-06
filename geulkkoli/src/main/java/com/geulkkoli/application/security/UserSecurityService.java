@@ -29,7 +29,6 @@ public class UserSecurityService implements UserDetailsService {
 
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
-    private final AccountLockRepository accountLockRepository;
     private final PasswordService passwordService;
 
     @Override
