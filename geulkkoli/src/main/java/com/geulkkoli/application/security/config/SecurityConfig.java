@@ -2,11 +2,13 @@ package com.geulkkoli.application.security.config;
 
 import com.geulkkoli.application.security.UserSecurityService;
 import com.geulkkoli.application.security.handler.LoginFailureHandler;
+import com.geulkkoli.application.user.CustomOauth2UserService;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -16,14 +18,17 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
  * 시큐리티 설정파일
  */
 @Configuration
+@EnableWebSecurity
 public class SecurityConfig {
 
     private final LoginFailureHandler loginFailureHandler;
     private final UserSecurityService userSecurityService;
+    private final CustomOauth2UserService customOauth2UserService;
 
-    public SecurityConfig(LoginFailureHandler loginFailureHandler, UserSecurityService userSecurityService) {
+    public SecurityConfig(LoginFailureHandler loginFailureHandler, UserSecurityService userSecurityService, CustomOauth2UserService customOauth2UserService) {
         this.loginFailureHandler = loginFailureHandler;
         this.userSecurityService = userSecurityService;
+        this.customOauth2UserService = customOauth2UserService;
     }
 
     /**
@@ -44,15 +49,22 @@ public class SecurityConfig {
      * auth mvcMatchers는 특정 경로에 대한 권한을 설정합니다.
      * permitAll()은 누구나 겁근 가능하다는 뜻입니다.
      */
+
+    /**
+     * how to integration with spring security and oauth2 login and form login
+     * https://www.baeldung.com/spring-security-5-oauth2-login
+     * https://www.baeldung.com/spring-security-5-form-login
+     *
+     */
     @Bean
+
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http.userDetailsService(userSecurityService)
-                .authorizeRequests((auth) -> {
+        http.authorizeRequests((auth) -> {
                     auth.mvcMatchers("/admin/**").hasRole("ADMIN");
                     auth.mvcMatchers("/user/edit/**").hasRole("USER");
                     auth.mvcMatchers("/post/add/**", "/post/update/**", "/post/delete/**").hasAnyRole("USER", "ADMIN");
                     auth.mvcMatchers(HttpMethod.GET, "/", "/loginPage", "/post/read/**", "/post/list/**", "/post/search/**", "/post/category/*")
-                             .permitAll();
+                            .permitAll();
                     auth.requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll(); // 정적 리소스들(css,js)등을 권장 방식에 맞게 인증 체크에서 제외 시켰다
                 }).csrf().disable()
                 .formLogin()
@@ -62,7 +74,15 @@ public class SecurityConfig {
                 .usernameParameter("email")
                 .passwordParameter("password")
                 .failureHandler(loginFailureHandler)
-                .and()
+                .permitAll();
+
+                http.oauth2Login(oauth -> {
+                    oauth.userInfoEndpoint(
+                            userInfoEndpointConfig -> {
+                                userInfoEndpointConfig.userService(customOauth2UserService);
+                            }
+                    ).loginPage("/loginPage");
+                }).userDetailsService(userSecurityService)
                 .logout()
                 .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
                 .logoutSuccessUrl("/")

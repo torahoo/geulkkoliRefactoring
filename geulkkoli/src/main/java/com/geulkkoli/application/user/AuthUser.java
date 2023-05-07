@@ -4,24 +4,32 @@ import com.geulkkoli.application.security.AccountStatus;
 import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 
 import java.util.Collection;
+import java.util.Map;
+import java.util.Objects;
 
 @Getter
-public class AuthUser extends User {
+public class AuthUser implements UserDetails, OAuth2User {
     private final Long userId;
-    private String userRealName;
-    private String nickName;
-    private String phoneNo;
-    private String gender;
+    private final String userName;
+    private final String password;
     private final boolean isEnabled;
     private final boolean isAccountNonExpired;
     private final boolean isAccountNonLocked;
     private final boolean isCredentialsNonExpired;
     private final Collection<GrantedAuthority> authorities;
+    private final Map<String, Object> attributes;
+    private String userRealName;
+    private String nickName;
+    private String phoneNo;
+    private String gender;
 
-    private AuthUser(UserModelDto userModel, Collection<GrantedAuthority> authorities, AccountStatus accountStatus) {
-        super(userModel.getEmail(), userModel.getPassword(), authorities);
+    private AuthUser(UserModelDto userModel, Collection<GrantedAuthority> authorities, AccountStatus accountStatus, Map<String, Object> attributes) {
+        this.userName = userModel.getEmail();
+        this.password = userModel.getPassword();
         this.authorities = authorities;
         this.nickName = userModel.getNickName();
         this.userId = userModel.getUserId();
@@ -32,12 +40,27 @@ public class AuthUser extends User {
         this.isAccountNonLocked = accountStatus.isAccountNonLocked();
         this.isCredentialsNonExpired = accountStatus.isCredentialsNonExpired();
         this.isEnabled = accountStatus.isEnabled();
+        this.attributes = attributes;
     }
 
     public static AuthUser from(UserModelDto userModel, Collection<GrantedAuthority> authorities, AccountStatus accountStatus) {
-        return new AuthUser(userModel, authorities, accountStatus);
+        return new AuthUser(userModel, authorities, accountStatus, Map.of());
     }
 
+    public static AuthUser from(UserModelDto userModel, Collection<GrantedAuthority> authorities, AccountStatus accountStatus, Map<String, Object> attributes) {
+        return new AuthUser(userModel, authorities, accountStatus, attributes);
+    }
+
+
+    @Override
+    public String getPassword() {
+        return this.password;
+    }
+
+    @Override
+    public String getUsername() {
+        return this.userName;
+    }
 
     //사용자 계정이 만료되었는지 여부를 나타냅니다. 만료된 계정은 인증할 수 없습니다.
     @Override
@@ -89,5 +112,28 @@ public class AuthUser extends User {
 
     public void modifyUserRealName(String userRealName) {
         this.userRealName = userRealName;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof AuthUser)) return false;
+        AuthUser authUser = (AuthUser) o;
+        return Objects.equals(userName, authUser.userName);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(userName);
+    }
+
+    @Override
+    public Map<String, Object> getAttributes() {
+        return attributes;
+    }
+
+    @Override
+    public String getName() {
+        return userName;
     }
 }

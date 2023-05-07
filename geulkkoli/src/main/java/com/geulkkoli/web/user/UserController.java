@@ -165,10 +165,9 @@ public class UserController {
     }
 
     @GetMapping("user/edit")
-    public String editForm(@ModelAttribute("editForm") UserInfoEditDto userInfoEditDto, @AuthenticationPrincipal AuthUser authUser, Model model) {
-        log.info("editForm : {}", userInfoEditDto.toString());
-        log.info("authUser : {}", authUser.toString());
-        userInfoEditDto.editFormDto(authUser.getUserRealName(), authUser.getNickName(), authUser.getPhoneNo(), authUser.getGender());
+    public String editForm( @AuthenticationPrincipal AuthUser authUser, Model model) {
+        log.info("authUser : {}", authUser.getNickName());
+        UserInfoEditDto userInfoEditDto = UserInfoEditDto.from(authUser.getUserRealName(), authUser.getNickName(), authUser.getPhoneNo(), authUser.getGender());
         model.addAttribute("editForm", userInfoEditDto);
         return EDIT_FORM;
     }
@@ -195,6 +194,7 @@ public class UserController {
             // 세션에 저장된 authUser의 정보를 수정한다.
             Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
             AuthUser newAuth = (AuthUser) principal;
+            log.info("nickName : {}", userInfoEditDto.getNickName());
             newAuth.modifyNickName(userInfoEditDto.getNickName());
             newAuth.modifyPhoneNo(userInfoEditDto.getPhoneNo());
             newAuth.modifyGender(userInfoEditDto.getGender());
@@ -235,7 +235,7 @@ public class UserController {
      * 또한 사용자 입장에서는 자신의 정보를 삭제하는 게 아니라 탈퇴하는 서비스를 쓰고 있으므로 uri를 의미에 더 가깝게 고쳤다.
      */
     @DeleteMapping("user/edit/unsubscribe/{userId}")
-    public String unsubscribe(@PathParam("userId") Long userId, @AuthenticationPrincipal AuthUser authUser) {
+    public String unsubscribe(@PathVariable("userId") Long userId) {
         try {
             User findUser = userService.findById(userId);
             userService.delete(findUser);

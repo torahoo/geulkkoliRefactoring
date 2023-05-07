@@ -3,11 +3,11 @@ package com.geulkkoli.application.security;
 import com.geulkkoli.application.user.AuthUser;
 import com.geulkkoli.application.user.PasswordService;
 import com.geulkkoli.application.user.UserModelDto;
-import com.geulkkoli.domain.admin.AccountLockRepository;
 import com.geulkkoli.domain.user.User;
 import com.geulkkoli.domain.user.UserRepository;
 import com.geulkkoli.web.user.dto.JoinFormDto;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -22,6 +22,7 @@ import java.util.Optional;
 
 import static java.lang.Boolean.TRUE;
 
+@Slf4j
 @Service
 @Transactional
 @RequiredArgsConstructor
@@ -33,6 +34,7 @@ public class UserSecurityService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+        log.info("loadUserByUsername : {}", email);
         Optional<User> findByEmailUser = userRepository.findByEmail(email);
         if (findByEmailUser.isEmpty()) {
             throw new UsernameNotFoundException("사용자를 찾을 수 없습니다.");
