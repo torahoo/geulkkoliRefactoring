@@ -84,11 +84,7 @@ class UserControllerSecurityEndPointTest {
     @DisplayName("인증된 사용자가 /user/edit post로 정보를 올바르게 수정하면 user/edit으로 리다렉트한다.")
     void userinfoModifySuccess() throws Exception {
         UserInfoEditDto userInfoEditDto =
-                UserInfoEditDto.builder().userName("tako99@naver.com")
-                        .nickName("바나나11")
-                        .phoneNo("9190232333")
-                        .gender("male")
-                        .build();
+                UserInfoEditDto.from("tako99@naver.com","바나나11","9190232333","male");
 
         JoinFormDto joinForm = new JoinFormDto();
         joinForm.setEmail("tako99@naver.com");

@@ -11,6 +11,8 @@ spring:
       client:
         registration:
           kakao:
+            client-id: ${kakao.client-id}
+            client-secret: ${kakao.client-secret}
             redirect-uri: "{baseUrl}/login/oauth2/code/kakao"
             authorization-grant-type: authorization_code
             client-authentication-method: POST
@@ -24,15 +26,7 @@ spring:
   h2:
     console:
       path: /h2-console
-      #개인적을 h2-console을 사용하기 위한 설정입니다. 이는 지우거나 무시해주세요.
-      #spring.datasource.url= jdbc:h2:tcp://localhost/~/testgg
-      #spring.datasource.username= sa
-      #spring.datasource.password=
-      #spring.datasource.driver-class-name= org.h2.Driver
-      #
-      #
-      #spring.jpa.hibernate.ddl-auto= create-drop
-
+     
   mail:
     host: smtp.gmail.com # 서버 호스트
     port: 587 # 서버 포트
@@ -45,6 +39,17 @@ spring:
           timeout: 5000 # Socket Read Timeout 시간(ms) (기본값 : 무한대)
           starttls:
             enable: true # StartTLS 활성화 여부 (기본값 : false)
+
+  application:
+    name: geulkkoli
+  cloud:
+    vault:
+      scheme: http
+      authentication: TOKEN
+      token: ${vault.token}
+
+  config:
+    import: vault://
 
 #JPA log
 logging:
