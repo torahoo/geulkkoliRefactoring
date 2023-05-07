@@ -28,15 +28,10 @@ public class AdminServiceImpl implements AdminService {
 
     private final AccountLockRepository accountLockRepository;
 
-    public void rockUser(Long userId, String reason, Long lockDate){
+    public void lockUser(Long userId, String reason, Long lockDate){
         User user = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("해당 유저가 존재하지 않습니다."));
         LocalDateTime lockUntil = LocalDateTime.now().plusDays(lockDate);
         accountLockRepository.save(user.rock(reason, lockUntil));
-
-    }
-
-    public User findUser(Long id) {
-        return userRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("해당 유저가 존재하지 않습니다."));
     }
 
     //신고받은 게시글 조회

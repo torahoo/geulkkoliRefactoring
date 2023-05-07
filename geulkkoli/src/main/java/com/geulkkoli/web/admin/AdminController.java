@@ -62,7 +62,7 @@ public class AdminController {
     public String lockUser(@RequestBody UserLockDto UserLockDto){
         log.info("postId : {}, reason : {}, date : {}", UserLockDto.getPostId(), UserLockDto.getLockReason(), UserLockDto.getLockDate());
         User user= adminService.findUserByPostId(UserLockDto.getPostId());
-        adminService.rockUser(user.getUserId(), UserLockDto.getLockReason(), UserLockDto.getLockDate());
+        adminService.lockUser(user.getUserId(), UserLockDto.getLockReason(), UserLockDto.getLockDate());
 
         String lockDate = (LocalDateTime.now().plusDays(UserLockDto.getLockDate()).format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
 

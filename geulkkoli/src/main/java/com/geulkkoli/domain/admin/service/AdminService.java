@@ -1,14 +1,17 @@
 package com.geulkkoli.domain.admin.service;
 
 import com.geulkkoli.domain.user.User;
+import com.geulkkoli.web.admin.ReportDto;
+
+import java.util.List;
 
 public interface AdminService {
 
-    void rockUser(Long userId, String reason, Long lockDate);
+    void lockUser(Long userId, String reason, Long lockDate);
 
-    User findUser(Long id);
-
-    Object findAllReportedPost();
+    List<ReportDto> findAllReportedPost();
 
     User findUserByPostId(Long postId);
+
+
 }
