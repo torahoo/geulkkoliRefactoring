@@ -1,4 +1,4 @@
-package com.geulkkoli.web.user;
+package com.geulkkoli.web.myPage.dto.follow;
 
 import com.geulkkoli.domain.user.User;
 import lombok.Builder;
@@ -11,7 +11,7 @@ import javax.validation.constraints.NotBlank;
 @Getter
 @Setter
 @ToString
-public class FollowerFormDto {
+public class FolloweeFormDto {
 
     @NotBlank
     private Long userId;
@@ -23,18 +23,19 @@ public class FollowerFormDto {
     private String nickName;
 
     @Builder
-    public FollowerFormDto(Long userId, String userName, String nickName) {
+    public FolloweeFormDto(Long userId, String userName, String nickName) {
         this.userId = userId;
         this.userName = userName;
         this.nickName = nickName;
     }
 
-    public static FollowerFormDto toDTO (User user) {
-        return FollowerFormDto.builder()
+    public static FolloweeFormDto toDto (User user) {
+        return FolloweeFormDto.builder()
                 .userId(user.getUserId())
                 .userName(user.getUserName())
                 .nickName(user.getNickName())
                 .build();
     }
+
 
 }

@@ -1,7 +1,7 @@
 package com.geulkkoli.application.security;
 
 import com.geulkkoli.application.user.AuthUser;
-import com.geulkkoli.application.user.PasswordService;
+import com.geulkkoli.application.user.service.PasswordService;
 import com.geulkkoli.application.user.UserModelDto;
 import com.geulkkoli.domain.admin.AccountLockRepository;
 import com.geulkkoli.domain.user.User;

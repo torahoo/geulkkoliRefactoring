@@ -1,9 +1,8 @@
 package com.geulkkoli.domain.user.service;
 
-import com.geulkkoli.domain.follow.FollowRepository;
 import com.geulkkoli.domain.user.User;
 import com.geulkkoli.domain.user.UserRepository;
-import com.geulkkoli.web.user.dto.edit.UserInfoEditDto;
+import com.geulkkoli.web.myPage.dto.edit.UserInfoEditFormDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -19,7 +18,6 @@ import java.util.Optional;
 public class UserService {
 
     private final UserRepository userRepository;
-    private final FollowRepository followRepository;
 
     public boolean isEmailDuplicate(String email) {
         return userRepository.findByEmail(email).isPresent();
@@ -33,8 +31,8 @@ public class UserService {
         return userRepository.findByPhoneNo(phoneNo).isPresent();
     }
 
-    public void edit(Long id, UserInfoEditDto userInfoEditDto) {
-        userRepository.edit(id, userInfoEditDto);
+    public void edit(Long id, UserInfoEditFormDto userInfoEditFormDto) {
+        userRepository.edit(id, userInfoEditFormDto);
     }
 
     // password Encoder를 사용하는 곳을 usersecurityservice로 옮겼기 때문에 이 메서드는 필요 없어져 지웁니다.

@@ -40,7 +40,7 @@
         <tbody>
         <tr th:each="user : ${followerForm}">
           <th scope="row"> <a th:href="@{|/user/read/${user.userId}|}" th:text="${user.userId}"></a> </th>
-          <td> <a th:href="@{|/templates/user/mypage/${user.userId}|}" th:text="${user.username}"></a> </td>
+          <td> <a th:href="@{|/templates/mypage/${user.userId}|}" th:text="${user.username}"></a> </td>
           <td th:text="${user.nickName}"></td>
           <td><button onclick="">팔로우</button> </td>
         </tr>

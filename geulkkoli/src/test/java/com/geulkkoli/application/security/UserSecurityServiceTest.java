@@ -1,11 +1,11 @@
 package com.geulkkoli.application.security;
 
 import com.geulkkoli.application.user.AuthUser;
-import com.geulkkoli.application.user.PasswordService;
+import com.geulkkoli.application.user.service.PasswordService;
 import com.geulkkoli.domain.user.User;
 import com.geulkkoli.domain.user.service.UserService;
 import com.geulkkoli.web.user.dto.JoinFormDto;
-import com.geulkkoli.web.user.dto.edit.PasswordEditDto;
+import com.geulkkoli.web.myPage.dto.edit.PasswordEditFormDto;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
@@ -65,12 +65,12 @@ class UserSecurityServiceTest {
         User saveUser = userSecurityService.join(joinForm);
 
 
-        PasswordEditDto passwordEditDto = new PasswordEditDto();
-        passwordEditDto.setOldPassword("123qwe!@#");
-        passwordEditDto.setNewPassword("abc123!@#");
-        passwordEditDto.setVerifyPassword("abc123!@#");
+        PasswordEditFormDto passwordEditFormDto = new PasswordEditFormDto();
+        passwordEditFormDto.setOldPassword("123qwe!@#");
+        passwordEditFormDto.setNewPassword("abc123!@#");
+        passwordEditFormDto.setVerifyPassword("abc123!@#");
 
-        assertThat(passwordService.isPasswordVerification(saveUser, passwordEditDto)).isTrue();
+        assertThat(passwordService.isPasswordVerification(saveUser, passwordEditFormDto)).isTrue();
     }
 
     @Test
@@ -88,13 +88,13 @@ class UserSecurityServiceTest {
         userSecurityService.join(joinForm);
 
 
-        PasswordEditDto passwordEditDto = new PasswordEditDto();
-        passwordEditDto.setOldPassword("123qwe!@#");
-        passwordEditDto.setNewPassword("abc123!@#");
-        passwordEditDto.setVerifyPassword("abc123!@#");
+        PasswordEditFormDto passwordEditFormDto = new PasswordEditFormDto();
+        passwordEditFormDto.setOldPassword("123qwe!@#");
+        passwordEditFormDto.setNewPassword("abc123!@#");
+        passwordEditFormDto.setVerifyPassword("abc123!@#");
 
         //when
-        passwordService.updatePassword(1L, passwordEditDto.getNewPassword());
+        passwordService.updatePassword(1L, passwordEditFormDto.getNewPassword());
 
         //then
         User updatePasswordUser = userService.findById(1L);

@@ -41,13 +41,7 @@
             </button>
 
             <button type="button"
-                    onclick="location.href='/user/edit'"
-                    sec:authorize="hasRole('USER')"
-                    class="btn btn-primary">modify
-            </button>
-
-            <button type="button"
-                    onclick="location.href='/user/mypage/myPage'"
+                    onclick="location.href='/myPage'"
                     sec:authorize="hasRole('USER')"
                     class="btn btn-primary">myPage
             </button>
