@@ -65,16 +65,6 @@ public class TestDataInit {
         joinForm2.setPassword("123");
         User user2 = userSecurityService.join(joinForm2);
 
-        // 이메일 테스트하느라 실제 이메일 사용 중
-        JoinFormDto joinForm3 = new JoinFormDto();
-        joinForm3.setEmail("plaz7@naver.com");
-        joinForm3.setUserName("신채안");
-        joinForm3.setNickName("이메일테스트해봄");
-        joinForm3.setPhoneNo("01089188913");
-        joinForm3.setGender("female");
-        joinForm3.setPassword("123");
-        userSecurityService.join(joinForm3);
-
         joinForm.setEmail("admin");
         joinForm.setUserName("타코다치");
         joinForm.setNickName("우무문어");
