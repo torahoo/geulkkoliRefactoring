@@ -9,6 +9,8 @@ import com.geulkkoli.web.post.dto.ListDTO;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -54,6 +56,8 @@ class PostServiceTest {
     @Test
     @Transactional
     void findAll() {
+
+
         User user1 = User.builder()
                 .email("email@email.com")
                 .userName("userName")
@@ -71,7 +75,7 @@ class PostServiceTest {
         postService.savePost(new AddDTO(1L, "title", "body", "nick"), user1);
 
 
-        assertThat(postService.findAll().size()).isEqualTo(4);
+        assertThat(postService.findAll(PageRequest.of(5, 5)).toList().size()).isEqualTo(4);
     }
 
     @Test
@@ -116,7 +120,7 @@ class PostServiceTest {
 
         postService.deletePost(1L);
 
-        List<ListDTO> all = postService.findAll();
+        List<ListDTO> all = postService.findAll(PageRequest.of(5, 5)).toList();
         assertThat(all.size()).isEqualTo(0);
     }
 }

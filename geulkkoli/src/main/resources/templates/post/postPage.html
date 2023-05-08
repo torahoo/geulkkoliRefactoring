@@ -1,8 +1,9 @@
 <!DOCTYPE HTML>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
   <meta charset="utf-8">
-  <link href="/css/bootstrap.min.css"
+  <link href="../css/bootstrap.min.css"
         th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
   <link href="../js/bootstrap.js"
         th:href="@{/js/bootstrap.min.css}" rel="stylesheet">
@@ -18,7 +19,7 @@
 <body>
 
 <header id="header"></header>
-<div th:include="header" ></div>
+<div th:include="header"></div>
 
 <div class="container">
   <div class="py-5 text-center">
@@ -50,55 +51,67 @@
 
   <hr class="my-4">
   <div class="row">
-    <div class="col">
-      <button class="w-100 btn btn-primary btn-lg"
-              onclick="location.href='postUpdateForm.html'"
-              th:onclick="|location.href='@{/post/update/{postId}(postId=${post.postId})}'|"
-              type="button">게시글 수정</button>
-    </div>
+    <div sec:authorize="hasRole('USER')"
+         th:with="userNickName=${#authentication.principal.nickName}">
+      <div class="col">
 
-    <!-- Button trigger modal -->
-    <div class="col">
-      <button type="button" class="w-100 btn btn-primary btn-lg" data-bs-toggle="modal" data-bs-target="#deletePost">
-        삭제
-      </button>
-    </div>
+        <button class="w-100 btn btn-primary"
+                onclick="location.href='postUpdateForm.html'"
+                th:onclick="|location.href='@{/post/update/{postId}(postId=${post.postId})}'|"
+                th:if="${#strings.equals(authorUser.nickName, userNickName)}"
+                type="button">게시글 수정
+        </button>
 
-    <!-- Modal -->
-    <div class="modal fade" id="deletePost" tabindex="-1" aria-labelledby="deletePostLabel" aria-hidden="true">
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="deletePostLabel">삭제하시려면 밑의 글을 따라 치세요.</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-          </div>
-          <div class="modal-body">
-            <div>
-              <label for="post-Title">제목</label>
-              <input type="text" id="post-Title" name="post-Title" class="form-control"
-                     value="제목1" th:value="${post.title}" readonly>
-              <input type="text" id="post-Compare" name="post-Compare" class="form-control">
+      </div>
+
+      <!-- Button trigger modal -->
+      <div class="col">
+        <button type="button"
+                class="w-100 btn btn-primary"
+                data-bs-toggle="modal"
+                data-bs-target="#deletePost"
+                th:if="${#strings.equals(authorUser.nickName, userNickName)}">삭제
+        </button>
+      </div>
+
+      <!-- Modal -->
+      <div class="modal fade" id="deletePost" tabindex="-1" aria-labelledby="deletePostLabel" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="deletePostLabel">삭제하시려면 밑의 글을 따라 치세요.</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
-            <button type="button" class="btn btn-primary" onclick="deletePost()">삭제</button>
+            <div class="modal-body">
+              <div>
+                <label for="post-Title">제목</label>
+                <input type="text" id="post-Title" name="post-Title" class="form-control"
+                       value="제목1" th:value="${post.title}" readonly>
+                <input type="text" id="post-Compare" name="post-Compare" class="form-control">
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
+              <button type="button" class="btn btn-primary" onclick="deletePost()">삭제</button>
+            </div>
           </div>
         </div>
       </div>
     </div>
-
-    <div class="col">
-      <button class="w-100 btn btn-secondary btn-lg"
-              onclick="location.href='postList.html'"
-              th:onclick="|location.href='@{/post/list}'|"
-              type="button">목록으로</button>
-    </div>
   </div>
+
+  <div class="col">
+    <button class="w-100 btn btn-secondary"
+            onclick="location.href='postList.html'"
+            th:onclick="|location.href='@{/post/list(page=${session.pageNumber})}'|"
+            type="button">목록으로
+    </button>
+  </div>
+
 </div> <!-- /container -->
 
 <footer id="footer"></footer>
-<div th:include="footer" ></div>
+<div th:include="footer"></div>
 
 <script type="text/javascript">
 
@@ -106,13 +119,13 @@
   const deleteTitle = '[[${post.title}]]'
   const postId = [[${post.postId}]]
 
-  function deletePost () {
+  function deletePost() {
     console.log("deleteTitle=" + deleteTitle);
     console.log("CompareTitle=" + document.getElementById("post-Compare").value);
     console.log("postId=" + postId);
 
     if (document.getElementById("post-Compare").value == deleteTitle) {
-      fetch('/post/delete/'+postId, {method: 'DELETE'})
+      fetch('/post/delete/' + postId, {method: 'DELETE'})
               .then(response => {
                 window.location = response.url
               });
@@ -121,6 +134,7 @@
       window.alert("삭제 실패")
     }
   }
+
   <!-- end 게시글 삭제 -->
 
 </script>

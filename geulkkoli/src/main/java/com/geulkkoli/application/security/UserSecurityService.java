@@ -1,19 +1,18 @@
 package com.geulkkoli.application.security;
 
-import com.geulkkoli.application.user.*;
+import com.geulkkoli.application.user.AuthUser;
+import com.geulkkoli.application.user.PasswordService;
+import com.geulkkoli.application.user.UserModelDto;
 import com.geulkkoli.domain.admin.AccountLockRepository;
 import com.geulkkoli.domain.user.User;
 import com.geulkkoli.domain.user.UserRepository;
 import com.geulkkoli.web.user.dto.JoinFormDto;
-import com.geulkkoli.web.user.dto.PasswordEditDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,9 +29,8 @@ public class UserSecurityService implements UserDetailsService {
 
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
-
     private final AccountLockRepository accountLockRepository;
-    private final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+    private final PasswordService passwordService;
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
@@ -66,7 +64,7 @@ public class UserSecurityService implements UserDetailsService {
     }
 
     public User join(JoinFormDto form) {
-        User user = form.toEntity(passwordEncoder);
+        User user = form.toEntity(passwordService.passwordEncoder);
 
         RoleEntity roleEntity = user.hasRole(Role.USER);
         roleRepository.save(roleEntity);
@@ -76,19 +74,12 @@ public class UserSecurityService implements UserDetailsService {
 
 
     /*
-    * 관리자 실험을 위한 임시 관리자 계정 추가용 메서드*/
+     * 관리자 실험을 위한 임시 관리자 계정 추가용 메서드*/
     public void joinAdmin(JoinFormDto form) {
-        User user = form.toEntity(passwordEncoder);
+        User user = form.toEntity(passwordService.passwordEncoder);
         RoleEntity roleEntity = user.hasRole(Role.ADMIN);
         roleRepository.save(roleEntity);
         userRepository.save(user);
     }
 
-    public boolean isPasswordVerification(User user, PasswordEditDto passwordEditDto) {
-        return passwordEncoder.matches(passwordEditDto.getOldPassword(), user.getPassword());
-    }
-
-    public void updatePassword(Long id, PasswordEditDto passwordEditDto) {
-        userRepository.editPassword(id, passwordEncoder.encode(passwordEditDto.getNewPassword()));
-    }
 }
