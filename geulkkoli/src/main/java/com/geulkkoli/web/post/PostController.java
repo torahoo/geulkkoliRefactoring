@@ -52,7 +52,7 @@ public class PostController {
                            Model model, HttpServletRequest request) {
         String searchType = request.getParameter("searchType");
         String searchWords = request.getParameter("searchWords");
-        PagingDTO pagingDTO = PagingDTO.listDTOToPagingDTO(postService.findAll(pageable, searchType, searchWords));
+        PagingDTO pagingDTO = PagingDTO.listDTOtoPagingDTO(postService.findAll(pageable, searchType, searchWords));
         model.addAttribute("page", pagingDTO);
         searchDefault(model, request);
         return "/post/postList";

@@ -33,7 +33,7 @@ public class PagingDTO {
         this.size = size;
     }
 
-    public static PagingDTO listDTOToPagingDTO (Page<ListDTO> page) {
+    public static PagingDTO listDTOtoPagingDTO (Page<ListDTO> page) {
         return new PagingDTO(
                 page.toList(),
                 page.getNumber(),
