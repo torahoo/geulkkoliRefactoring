@@ -1,6 +1,7 @@
 package com.geulkkoli.application.user.social;
 
 import com.geulkkoli.application.user.ProviderUser;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.client.registration.ClientRegistration;
@@ -12,12 +13,13 @@ import java.util.Objects;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+@Slf4j
 public abstract class OAuth2ProviderUser implements ProviderUser {
     private Map<String, Object> attributes;
     private OAuth2User oAuth2User;
     private ClientRegistration clientRegistration;
 
-    public OAuth2ProviderUser(Map<String, Object> attributes, OAuth2User oAuth2User, ClientRegistration clientRegistration) {
+    protected OAuth2ProviderUser(Map<String, Object> attributes, OAuth2User oAuth2User, ClientRegistration clientRegistration) {
         this.attributes = attributes;
         this.oAuth2User = oAuth2User;
         this.clientRegistration = clientRegistration;
@@ -30,7 +32,8 @@ public abstract class OAuth2ProviderUser implements ProviderUser {
 
     @Override
     public String getEmail() {
-        return attributes.get("email").toString();
+        log.info("Email: {}", attributes.get("email"));
+        return (String)attributes.get("email");
     }
 
     @Override

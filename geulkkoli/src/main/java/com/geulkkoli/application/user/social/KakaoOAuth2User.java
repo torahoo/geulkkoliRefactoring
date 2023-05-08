@@ -25,5 +25,5 @@ public class KakaoOAuth2User extends OAuth2ProviderUser{
         return profile.get("nickname").toString();
     }
 
-    
+
 }

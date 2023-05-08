@@ -26,10 +26,8 @@ import java.util.stream.Collectors;
 @Transactional
 @Service
 @Slf4j
-public class CustomOauth2UserService implements OAuth2UserService<OAuth2UserRequest, OAuth2User> {
-    @Autowired
-    private UserRepository userRepository;
-    PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+public class CustomOauth2UserService extends AbstractOauth2UserService implements OAuth2UserService<OAuth2UserRequest, OAuth2User> {
+
 
     @Override
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
@@ -38,29 +36,19 @@ public class CustomOauth2UserService implements OAuth2UserService<OAuth2UserRequ
         ProviderUserRequest providerUserRequest = new ProviderUserRequest(userRequest.getClientRegistration(), oAuth2User);
         KaKaoRequestConverter kaKaoRequestConverter = new KaKaoRequestConverter();
         ProviderUser kakaoUser = kaKaoRequestConverter.convert(providerUserRequest);
-        Optional<User> singUpUser = userRepository.findByEmail(kakaoUser.getEmail());
-        if (singUpUser.isEmpty()) {
-            log.info("회원가입");
-            User user = User.builder()
-                    .userName((kakaoUser.getUsername()))
-                    .email(kakaoUser.getEmail())
-                    .nickName("kakao" + kakaoUser.getUsername())
-                    .password(passwordEncoder.encode("1234"))
-                    .gender(kakaoUser.getGender())
-                    .phoneNo("010-0000-0000")
-                    .build();
-            userRepository.save(user);
-        }
-        Optional<User> byEmail = userRepository.findByEmail(kakaoUser.getEmail());
+        String email = kakaoUser.getEmail();
+        System.out.println(email);
+        log.info("kakaoUser : {}", kakaoUser);
+        User user = join(kakaoUser);
 
         UserModelDto build = UserModelDto.builder()
-                .userId(byEmail.get().getUserId())
-                .gender(byEmail.get().getGender())
-                .userName(byEmail.get().getUserName())
-                .email(byEmail.get().getEmail())
-                .nickName(byEmail.get().getNickName())
-                .password("1234")
-                .phoneNo("010-0000-0000").build();
+                .userId(user.getUserId())
+                .gender(user.getGender())
+                .userName(user.getUserName())
+                .email(user.getEmail())
+                .nickName(user.getNickName())
+                .password(user.getPassword())
+                .phoneNo(user.getPhoneNo()).build();
 
         List<GrantedAuthority> authorities = (List<GrantedAuthority>) kakaoUser.getAuthorities();
         return AuthUser.from(build, authorities, AccountStatus.ACTIVE, kakaoUser.getAttributes());

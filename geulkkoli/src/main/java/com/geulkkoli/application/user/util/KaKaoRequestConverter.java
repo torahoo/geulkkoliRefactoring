@@ -1,7 +1,6 @@
 package com.geulkkoli.application.user.util;
 
 import com.geulkkoli.application.user.ProviderUser;
-import com.geulkkoli.application.user.UserRequestConverter;
 import com.geulkkoli.application.user.social.KakaoOAuth2User;
 
 import java.util.Map;
