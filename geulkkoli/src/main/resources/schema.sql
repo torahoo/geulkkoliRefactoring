@@ -72,8 +72,8 @@ create table if not exists report
     report_post_id bigint not null,
     reporter_id bigint not null,
     reported_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    constraint fk_reported_post foreign key (report_post_id) references post (post_id),
-    constraint fk_reporter foreign key (reporter_id) references users (user_id)
+    constraint fk_reported_post foreign key (report_post_id) references post (post_id) ON DELETE CASCADE,
+    constraint fk_reporter foreign key (reporter_id) references users (user_id) ON DELETE CASCADE
 );
 
 create table if not exists permissions

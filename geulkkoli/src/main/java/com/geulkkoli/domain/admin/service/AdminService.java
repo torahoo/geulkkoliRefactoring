@@ -13,5 +13,7 @@ public interface AdminService {
 
     User findUserByPostId(Long postId);
 
+    void deletePost(Long postId);
+
 
 }

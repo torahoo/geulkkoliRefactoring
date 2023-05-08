@@ -51,4 +51,8 @@ public class AdminServiceImpl implements AdminService {
         Post post = postRepository.findById(postId).orElseThrow(() -> new IllegalArgumentException("해당 게시글이 존재하지 않습니다."));
         return post.getUser();
     }
+
+    public void deletePost(Long postId) {
+        postRepository.delete(postId);
+    }
 }

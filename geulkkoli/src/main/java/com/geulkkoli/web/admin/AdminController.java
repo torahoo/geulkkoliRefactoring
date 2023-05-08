@@ -68,4 +68,11 @@ public class AdminController {
 
         return "회원이 \""+UserLockDto.getLockReason()+"\" 의 사유로"+lockDate+"까지 정지되었습니다.";
     }
+
+    @ResponseBody
+    @DeleteMapping("/delete/{postId}")
+    public String postDelete(@PathVariable Long postId) {
+        adminService.deletePost(postId);
+        return postId+"번 게시글이 삭제되었습니다.";
+    }
 }

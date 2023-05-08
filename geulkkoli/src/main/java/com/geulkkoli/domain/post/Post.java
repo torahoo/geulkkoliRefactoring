@@ -1,5 +1,6 @@
 package com.geulkkoli.domain.post;
 
+import com.geulkkoli.domain.admin.Report;
 import com.geulkkoli.domain.comment.Comments;
 import com.geulkkoli.domain.favorites.Favorites;
 import com.geulkkoli.domain.hashtag.HashTags;
@@ -57,6 +58,9 @@ public class Post extends ConfigDate {
     //해시태그의 게시글 매핑
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
     private Set<HashTags> hashTags = new LinkedHashSet<>();
+
+    @OneToMany(mappedBy = "reportedPost", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<Report> report = new LinkedHashSet<>();
 
     @Builder
     public Post(String title, String postBody, String nickName) {
