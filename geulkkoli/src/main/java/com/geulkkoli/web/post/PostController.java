@@ -112,18 +112,40 @@ public class PostController {
         User authorUser = userService.findById(postPage.getAuthorId());
         request.getSession().setAttribute("pageNumber", request.getParameter("page"));
 
+        String searchType = request.getParameter("searchType");
+        String searchWords = request.getParameter("searchWords");
+
         model.addAttribute("post", postPage);
         model.addAttribute("authorUser", authorUser);
+
+        if(searchType!=null&&searchWords!=null){
+            model.addAttribute("searchType", searchType);
+            model.addAttribute("searchWords", searchWords);
+        } else {
+            model.addAttribute("searchType", "");
+            model.addAttribute("searchWords", "");
+        }
 
         return "/post/postPage";
     }
 
     //게시글 수정 html로 이동
     @GetMapping("/update/{postId}")
-    public String postUpdateForm(Model model, @PathVariable Long postId) {
+    public String postUpdateForm(Model model, @PathVariable Long postId, HttpServletRequest request) {
+
+        String searchType = request.getParameter("searchType");
+        String searchWords = request.getParameter("searchWords");
 
         EditDTO postPage = EditDTO.toDTO(postService.findById(postId));
         model.addAttribute("editDTO", postPage);
+
+        if(searchType!=null&&searchWords!=null){
+            model.addAttribute("searchType", searchType);
+            model.addAttribute("searchWords", searchWords);
+        } else {
+            model.addAttribute("searchType", "");
+            model.addAttribute("searchWords", "");
+        }
 
         return "/post/postEditForm";
     }
@@ -137,12 +159,24 @@ public class PostController {
             return "/post/postEditForm";
         }
 
+        String searchType = request.getParameter("searchType");
+        String searchWords = request.getParameter("searchWords");
+
         User user = userService.findByNickName(updateParam.getNickName());
         postService.updatePost(postId, updateParam, user);
         redirectAttributes.addAttribute("updateStatus", true);
         redirectAttributes.addAttribute("page", request.getSession().getAttribute("pageNumber"));
 
-        return "redirect:/post/read/{postId}?page={page}";
+        if(searchType!=null&&searchWords!=null){
+            redirectAttributes.addAttribute("searchType", searchType);
+            redirectAttributes.addAttribute("searchWords", searchWords);
+        } else {
+            redirectAttributes.addAttribute("searchType", "");
+            redirectAttributes.addAttribute("searchWords", "");
+        }
+        log.info("searchType={}, searchWords={}", searchType, searchWords);
+
+        return "redirect:/post/read/{postId}?page={page}&searchType={searchType}&searchWords={searchWords}";
     }
 
     //게시글 삭제
