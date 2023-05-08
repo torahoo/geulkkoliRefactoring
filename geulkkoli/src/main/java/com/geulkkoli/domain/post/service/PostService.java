@@ -40,16 +40,41 @@ public class PostService {
                 .orElseThrow(() -> new NoSuchElementException("No post found id matches:" + postId));
     }
 
-    public Page<ListDTO> findAll(Pageable pageable) {
+    public Page<ListDTO> findAll (Pageable pageable) {
+        Page<Post> posts = postRepository.findAll(pageable);
+        return posts.map(post -> new ListDTO(
+                post.getPostId(),
+                post.getTitle(),
+                post.getNickName(),
+                post.getUpdatedAt(),
+                post.getPostHits()
+        ));
+    }
 
-        return postRepository.findAll(pageable)
-                .map(post -> new ListDTO(
-                        post.getPostId(),
-                        post.getTitle(),
-                        post.getNickName(),
-                        post.getUpdatedAt(),
-                        post.getPostHits()
-                ));
+    //전체 게시글 리스트 & 조회 기능 포함
+    public Page<ListDTO> searchPostFindAll(Pageable pageable, String searchType, String searchWords) {
+        Page<Post> posts;
+        switch (searchType) {
+            case "제목":
+                posts=postRepository.findPostsByTitleContaining(pageable, searchWords);
+                break;
+            case "본문":
+                posts=postRepository.findPostsByPostBodyContaining(pageable, searchWords);
+                break;
+            case "닉네임":
+                posts=postRepository.findPostsByNickNameContaining(pageable, searchWords);
+                break;
+            default:
+                posts=postRepository.findAll(pageable);
+                break;
+        }
+        return posts.map(post -> new ListDTO(
+                post.getPostId(),
+                post.getTitle(),
+                post.getNickName(),
+                post.getUpdatedAt(),
+                post.getPostHits()
+        ));
     }
 
     public Post savePost(AddDTO post, User user) {
