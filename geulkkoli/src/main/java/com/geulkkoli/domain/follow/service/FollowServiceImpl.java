@@ -4,6 +4,7 @@ import com.geulkkoli.domain.follow.Follow;
 import com.geulkkoli.domain.follow.FollowRepository;
 import com.geulkkoli.domain.user.User;
 import com.geulkkoli.domain.user.UserRepository;
+import com.geulkkoli.web.user.FolloweeDto;
 import com.geulkkoli.web.user.FollowerFormDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -34,14 +35,14 @@ public class FollowServiceImpl implements FollowService{
         return followerFormDtos;
     }
 
-    public List<FollowerFormDto> findAllFolloweeUser() {
+    public List<FolloweeDto> findAllFolloweeUser() {
         List<Follow> allUser = followRepository.findAll();
-        List<FollowerFormDto> followerFormDtos = new ArrayList<>();
+        List<FolloweeDto> followeeDtos = new ArrayList<>();
 
         for( Follow follow : allUser) {
             User user = follow.getFolloweeId();
-            followerFormDtos.remove(FollowerFormDto.toDTO(user));
+            followeeDtos.remove(FollowerFormDto.toDTO(user));
         }
-        return followerFormDtos;
+        return followeeDtos;
     }
 }

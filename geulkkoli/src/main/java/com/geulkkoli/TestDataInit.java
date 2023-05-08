@@ -4,6 +4,7 @@ import com.geulkkoli.application.security.UserSecurityService;
 import com.geulkkoli.domain.admin.Report;
 import com.geulkkoli.domain.admin.ReportRepository;
 import com.geulkkoli.domain.admin.service.AdminServiceImpl;
+import com.geulkkoli.domain.follow.FollowRepository;
 import com.geulkkoli.domain.post.Post;
 import com.geulkkoli.domain.post.PostRepository;
 import com.geulkkoli.domain.user.User;
@@ -128,6 +129,13 @@ public class TestDataInit {
         reportRepository.save(report);
         reportRepository.save(report1);
         reportRepository.save(report2);
+
+
+//        Follow follow1 = user.writeFollow(followRepository.findBySelectUserId(1L).get().getFolloweeId());
+//        followRepository.save(follow1);
     }
+
+
+
 
 }

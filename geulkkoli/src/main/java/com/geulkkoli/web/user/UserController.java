@@ -43,9 +43,9 @@ public class UserController {
     public static final String TEMP_PASSWORD_FORM = "user/find/tempPasswordForm";
     public static final String JOIN_FORM = "user/joinForm";
     public static final String EDIT_FORM = "user/edit/editForm";
-    public static final String MY_PAGE_FORM = "user/myPage";
-    public static final String FOLLOWER_FORM = "user/follow/follower";
-    public static final String FOLLOWEE_FORM = "user/follow/followee";
+    public static final String MY_PAGE_FORM = "user/mypage/myPage";
+    public static final String FOLLOWER_FORM = "user/mypage/follower";
+    public static final String FOLLOWEE_FORM = "user/mypage/followee";
     public static final String EDIT_PASSWORD_FORM = "user/edit/editPasswordForm";
     public static final String REDIRECT_INDEX = "redirect:/";
     public static final String REDIRECT_EDIT_INDEX = "redirect:/user/edit";
@@ -301,7 +301,7 @@ public class UserController {
 
 
 
-    @GetMapping("/user/myPage/{userId}")
+    @GetMapping("/user/mypage/myPage")
     public String myPage(@ModelAttribute("myPageForm") MyPageFormDto myPageFormDto, @AuthenticationPrincipal AuthUser authUser , Model model) {
         myPageFormDto.myPageFormDto(authUser.getUserRealName(), authUser.getUsername());
         model.addAttribute("myPageForm", myPageFormDto);
@@ -309,14 +309,14 @@ public class UserController {
     }
 
     // 팔로워 유저 링크
-    @GetMapping("/user/follow/follower/{userId}")
+    @GetMapping("/user/mypage/follower")
     public String followerList(Model model) {
         model.addAttribute("followerForm", followService.findAllFollowedUser());
         return FOLLOWER_FORM;
     }
 
 
-    @GetMapping("/user/follow/followee{userId}")
+    @GetMapping("/user/mypage/followee")
     public String followeeList(Model model) {
         model.addAttribute("followeeForm", followService.findAllFolloweeUser());
         return FOLLOWEE_FORM;
