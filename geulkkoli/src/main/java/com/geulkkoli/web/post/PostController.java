@@ -1,7 +1,6 @@
 package com.geulkkoli.web.post;
 
 import com.geulkkoli.application.user.AuthUser;
-import com.geulkkoli.domain.post.Post;
 import com.geulkkoli.domain.post.service.PostService;
 import com.geulkkoli.domain.user.User;
 import com.geulkkoli.domain.user.service.UserService;
@@ -28,8 +27,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
-import java.util.ArrayList;
-import java.util.List;
 
 @Slf4j
 @Controller
@@ -89,7 +86,7 @@ public class PostController {
         long postId = postService.savePost(post, user).getPostId();
         redirectAttributes.addAttribute("postId",postId);
 
-        response.addCookie(new Cookie(URLEncoder.encode(post.getNickName(), "UTF-8"), "done"));
+        response.addCookie(new Cookie(URLEncoder.encode(post.getNickName(),"UTF-8"), "done"));
 
         return "redirect:/post/read/{postId}";
     }
