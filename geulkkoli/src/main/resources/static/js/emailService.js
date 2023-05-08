@@ -2,6 +2,7 @@ document.getElementsByClassName('emailButton').item(0).addEventListener('click',
 document.getElementsByClassName('authenticationNumberButton').item(0).addEventListener('click', checkAuthenticationNumber);
 
 let timer;
+
 // 이메일 중복 체크 & 인증 번호 수신 가능한 이메일인지 체크
 // 2분 이내에 인증하도록 timer (인증할 동안 이메일 바꾸지 못하도록 input과 button 잠시 비활성화)
 function checkEmail() {
