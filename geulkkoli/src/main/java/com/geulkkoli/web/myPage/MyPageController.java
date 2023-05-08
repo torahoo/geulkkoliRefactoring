@@ -16,11 +16,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import javax.websocket.server.PathParam;
 
 @Controller
 @RequestMapping("/myPage")
@@ -34,6 +33,7 @@ public class MyPageController {
     public static final String REDIRECT_EDIT_USER_INFO = "redirect:/myPage/editUserInfo";
     public static final String FOLLOWER_FORM = "mypage/follow/followerForm";
     public static final String FOLLOWEE_FORM = "mypage/follow/followeeForm";
+    public static final String REDIRECT_INDEX = "redirect:/";
 
     private final UserService userService;
     private final PasswordService passwordService;
@@ -56,6 +56,7 @@ public class MyPageController {
     /*
      * authUser가 기존의 세션 저장 방식을 대체한다
      * */
+    //회원 정보 수정
     @PostMapping("/editUserInfo")
     public String editForm(@Validated @ModelAttribute("userInfoEditForm") UserInfoEditFormDto userInfoEditFormDto, BindingResult bindingResult, @AuthenticationPrincipal AuthUser authUser) {
         // 닉네임 중복 검사 && 본인의 기존 닉네임과 일치해도 중복이라고 안 뜨게
@@ -106,6 +107,22 @@ public class MyPageController {
         }
 
         return REDIRECT_EDIT_USER_INFO;
+    }
+
+    /**
+     * 서비스에서 쓰는 객체의 이름은 User인데 memberDelete라는 이름으로 되어 있어서 통일성을 위해 이름을 고친다.
+     * 또한 사용자 입장에서는 자신의 정보를 삭제하는 게 아니라 탈퇴하는 서비스를 쓰고 있으므로 uri를 의미에 더 가깝게 고쳤다.
+     */
+    @DeleteMapping("unsubscribe/{userId}")
+    public String unsubscribe(@PathParam("userId") Long userId, @AuthenticationPrincipal AuthUser authUser) {
+        try {
+            User findUser = userService.findById(userId);
+            userService.delete(findUser);
+        } catch (Exception e) {
+            //만약 findUser가 null이라면? 다른 에러페이지를 보여줘야하지 않을까?
+            return REDIRECT_INDEX;
+        }
+        return REDIRECT_INDEX;
     }
 
     // 팔로워 유저 링크
