@@ -39,8 +39,11 @@
                class="form-control form-control-lg" readonly>
     </div>
 
+
+
     <br>
     <br>
+
 
     <div class="mb-3">
     <button type="button"
@@ -64,8 +67,23 @@
         </button>
     </div>
 
-
 </form>
+
+
+<footer id="footer" th:include="footer"></footer>
+
+<script>
+    function openWritePopup() {
+        document.getElementById("popup").style.display = "block";
+    }
+
+    function openLikePopup() {
+        document.getElementById("popup").style.display = "block";
+    }
+    function openSavedPopup() {
+        document.getElementById("popup").style.display = "block";
+    }
+</script>
 
 </body>
 

@@ -28,6 +28,8 @@
     </div>
 
 
+
+
     <div>
       <table class="table table-striped">
         <thead>
@@ -42,7 +44,7 @@
             <th scope="row"> <a th:href="@{|/user/read/${user.userId}|}" th:text="${user.userId}"></a> </th>
             <td> <a th:href="@{|/templates/user/follow/${user.userId}|}" th:text="${user.username}"></a> </td>
             <td th:text="${user.nickName}"></td>
-            <td><button onclick="">팔로우</button> </td>
+            <td><button onclick="follow()">팔로우</button> </td>
           </tr>
         </tbody>
       </table>
@@ -58,5 +60,17 @@
 
 <footer id="footer" th:include="footer"></footer>
 
+
+<script>
+  function follow() {
+    alert("팔로우 되었습니다.");
+    document.getElementById("popup").style.display = "none";
+  }
+
+  function followee() {
+    alert("팔로우가 취소되었습니다.");
+    document.getElementById("popup").style.display = "none";
+  }
+</script>
 </body>
 </html>
