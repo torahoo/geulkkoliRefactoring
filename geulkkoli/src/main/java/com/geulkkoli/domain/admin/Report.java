@@ -25,7 +25,7 @@ public class Report {
     private Long reportId;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "reported_post_id")
+    @JoinColumn(name = "reported_post_id", nullable = false)
     private Post reportedPost;
 
     @ManyToOne(fetch = FetchType.LAZY)

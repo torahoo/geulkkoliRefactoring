@@ -31,7 +31,7 @@ public class AdminServiceImpl implements AdminService {
     public void lockUser(Long userId, String reason, Long lockDate){
         User user = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("해당 유저가 존재하지 않습니다."));
         LocalDateTime lockUntil = LocalDateTime.now().plusDays(lockDate);
-        accountLockRepository.save(user.rock(reason, lockUntil));
+        accountLockRepository.save(user.lock(reason, lockUntil));
     }
 
     //신고받은 게시글 조회

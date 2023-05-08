@@ -45,7 +45,7 @@ class UserTest {
                 .gender("male")
                 .build();
 
-        user.rock("reason", LocalDateTime.now().plusDays(7));
+        user.lock("reason", LocalDateTime.now().plusDays(7));
 
         assertTrue(user.isLock());
     }
@@ -62,7 +62,7 @@ class UserTest {
                 .phoneNo("0102221111")
                 .gender("male")
                 .build();
-        user.rock("reason", null);
+        user.lock("reason", null);
 
         assertThrows(LockExpiredTimeException.class, user::isLock);
     }

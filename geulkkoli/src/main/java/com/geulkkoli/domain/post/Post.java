@@ -8,6 +8,8 @@ import com.geulkkoli.domain.user.NoSuchCommnetException;
 import com.geulkkoli.domain.user.User;
 import com.geulkkoli.web.post.dto.AddDTO;
 import lombok.*;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 import java.util.LinkedHashSet;
@@ -59,7 +61,8 @@ public class Post extends ConfigDate {
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
     private Set<HashTags> hashTags = new LinkedHashSet<>();
 
-    @OneToMany(mappedBy = "reportedPost", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "reportedPost", orphanRemoval = true)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Set<Report> report = new LinkedHashSet<>();
 
     @Builder

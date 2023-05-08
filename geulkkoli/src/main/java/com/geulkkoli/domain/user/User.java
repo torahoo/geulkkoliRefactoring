@@ -51,7 +51,7 @@ public class User {
      * casacde = CascadeType.AlL:: addReport할때 report.reporter()에 값을 넣으면 같이 영속성에 저장되게 하는 설정
      * report가 단일 소유가 아니기에 설정을 취소한다 추후에 post,like,comment일 때 적용하자
      */
-    @OneToMany(mappedBy = "reporter", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "reporter")
     private Set<Report> reports = new LinkedHashSet<>();
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -219,7 +219,7 @@ public class User {
      * @param reason             잠김 이유가 들어옵니다.
      * @param lockExpirationDate 만료 날짜가 들어옵니다.
      */
-    public AccountLock rock(String reason, LocalDateTime lockExpirationDate) {
+    public AccountLock lock(String reason, LocalDateTime lockExpirationDate) {
         AccountLock accountLock = AccountLock.of(this, reason, lockExpirationDate);
         this.accountLocks.add(accountLock);
         return accountLock;
@@ -274,6 +274,3 @@ public class User {
     }
 
 }
-
-
-
