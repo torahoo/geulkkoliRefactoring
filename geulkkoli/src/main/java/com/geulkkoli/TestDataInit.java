@@ -65,16 +65,6 @@ public class TestDataInit {
         joinForm2.setPassword("123");
         User user2 = userSecurityService.join(joinForm2);
 
-        // 이메일 테스트하느라 실제 이메일 사용 중
-        JoinFormDto joinForm3 = new JoinFormDto();
-        joinForm3.setEmail("plaz7@naver.com");
-        joinForm3.setUserName("신채안");
-        joinForm3.setNickName("이메일테스트해봄");
-        joinForm3.setPhoneNo("01089188913");
-        joinForm3.setGender("female");
-        joinForm3.setPassword("123");
-        userSecurityService.join(joinForm3);
-
         joinForm.setEmail("admin");
         joinForm.setUserName("타코다치");
         joinForm.setNickName("우무문어");
@@ -114,14 +104,14 @@ public class TestDataInit {
 
             AddDTO addDTO3 = AddDTO.builder()
                     .title("testTitle03")
-                    .postBody("test postbody 03")//채&훈
+                    .postBody("test postbody 03")
                     .nickName(user2.getNickName())
                     .build();
             Post post3 = user2.writePost(addDTO3);
             postRepository.save(post3);
         }
         /**
-         * 신고받은 게시물 더미 데이터를 리팩토링한 방식으로 다시 작성해봤습니다.
+          신고받은 게시물 더미 데이터를 리팩토링한 방식으로 다시 작성해봤습니다.
          */
         Report report = user.writeReport(postRepository.findById(2L).get(), "욕설");
         Report report1 = user.writeReport(postRepository.findById(1L).get(), "비 협조적");

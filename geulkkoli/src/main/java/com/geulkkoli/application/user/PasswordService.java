@@ -17,8 +17,10 @@ public interface PasswordService {
 
     void updatePassword(Long id, String tempPassword);
 
-    int setTempPasswordLength(int startLength, int endLength);
+    int setLength(int startLength, int endLength);
 
     String createTempPassword(int length);
+
+    String authenticationNumber(int length);
 
 }

@@ -29,8 +29,6 @@
     <p class="field-error" th:errors="*{userName}"></p>
   </div>
 
-  <br>
-
   <div class="mb-3">
     <label for="nickName">
       <h4>닉네임</h4>
@@ -42,7 +40,6 @@
            class="form-control form-control-lg nickNameInline">
     <p class="field-error" th:errors="*{nickName}"></p>
   </div>
-  <br>
 
   <div class="mb-3">
     <label for="email">
@@ -53,19 +50,17 @@
            th:value="${#request.getUserPrincipal().getName()}"
            class="form-control form-control-lg" readonly>
   </div>
-  <br>
 
   <div class="mb-3">
     <label for="password">
       <h4>비밀번호</h4>
     </label>
-    <br>
-    <h5 th:if="${param.status}" th:text="'비밀번호 변경 완료'" class="bold"> </h5>
+    <br th:if="${param.status}">
+    <h5 th:if="${param.status}" th:text="'비밀번호 변경 완료'" class="pwChangeMessage"></h5>
     <br>
       <input type="button" name="password" id="password" value="비밀번호 재설정"
              class="btn btn-primary form-control-lg" onclick="location.href='/user/edit/editPassword'">
   </div>
-  <br>
 
   <div class="mb-3">
     <label for="phoneNo">
@@ -78,8 +73,6 @@
            class="form-control form-control-lg">
     <p class="field-error" th:errors="*{phoneNo}"></p>
   </div>
-
-  <br>
 
   <div class="mb-3">
     <h4>성별</h4>
@@ -106,7 +99,7 @@
   </div>
 
 </form>
-
+<div id="footer" th:include="footer"></div>
 </body>
 
 </html>
