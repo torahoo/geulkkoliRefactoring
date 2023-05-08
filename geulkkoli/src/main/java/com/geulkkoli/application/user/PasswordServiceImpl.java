@@ -35,7 +35,7 @@ public class PasswordServiceImpl implements PasswordService {
     }
 
     @Override
-    public int setTempPasswordLength(int startLength, int endLength) {
+    public int setLength(int startLength, int endLength) {
         int length = 0;
         while (length < startLength)
             length = random.nextInt(endLength + 1); // nextInt 메소드 범위: 0 ~ n-1
@@ -53,11 +53,20 @@ public class PasswordServiceImpl implements PasswordService {
                 .append(OTHER_CHAR.charAt(random.nextInt(OTHER_CHAR.length())));
 
         // 이제 나머지 비밀번호 자릿수 채워줄 랜덤값
-        for (int i = 3; i < length; i++) {
+        for (int i = 3; i < length; i++)
             tempPassword.append(ALL_CHAR.charAt(random.nextInt(ALL_CHAR.length())));
-        }
 
         return tempPassword.toString();
+    }
+
+    @Override
+    public String authenticationNumber(int length) {
+        StringBuilder authenticationNumber = new StringBuilder(length);
+
+        for (int i = 1; i <= length; i++)
+            authenticationNumber.append(NUMBER.charAt(random.nextInt(NUMBER.length())));
+
+        return authenticationNumber.toString();
     }
 
 }
