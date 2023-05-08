@@ -2,13 +2,19 @@ package com.geulkkoli.web.user;
 
 import com.geulkkoli.application.security.UserSecurityService;
 import com.geulkkoli.application.user.AuthUser;
+import com.geulkkoli.application.user.EmailService;
+import com.geulkkoli.application.user.PasswordService;
 import com.geulkkoli.domain.follow.service.FollowService;
 import com.geulkkoli.domain.user.User;
 import com.geulkkoli.domain.user.service.UserService;
+import com.geulkkoli.web.user.dto.EmailCheckForJoinDto;
 import com.geulkkoli.web.user.dto.JoinFormDto;
 import com.geulkkoli.web.user.dto.LoginFormDto;
-import com.geulkkoli.web.user.dto.PasswordEditDto;
-import com.geulkkoli.web.user.dto.UserInfoEditDto;
+import com.geulkkoli.web.user.dto.edit.PasswordEditDto;
+import com.geulkkoli.web.user.dto.edit.UserInfoEditDto;
+import com.geulkkoli.web.user.dto.find.FindEmailFormDto;
+import com.geulkkoli.web.user.dto.find.FindPasswordFormDto;
+import com.geulkkoli.web.user.dto.find.FoundEmailFormDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -16,11 +22,14 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.ObjectError;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.websocket.server.PathParam;
+import java.util.Optional;
 
 @Controller
 @RequiredArgsConstructor
@@ -28,21 +37,100 @@ import javax.websocket.server.PathParam;
 public class UserController {
 
     public static final String LOGIN_FORM = "user/loginForm";
+    public static final String FIND_EMAIL_FORM = "user/find/findEmailForm";
+    public static final String FOUND_EMAIL_FORM = "user/find/foundEmailForm";
+    public static final String FIND_PASSWORD_FORM = "user/find/findPasswordForm";
+    public static final String TEMP_PASSWORD_FORM = "user/find/tempPasswordForm";
     public static final String JOIN_FORM = "user/joinForm";
     public static final String EDIT_FORM = "user/edit/editForm";
-    public static final String EDIT_PASSWORD_FORM = "user/edit/editPassword";
     public static final String MY_PAGE_FORM = "user/myPage";
     public static final String FOLLOWER_FORM = "user/follow/follower";
     public static final String FOLLOWEE_FORM = "user/follow/followee";
+    public static final String EDIT_PASSWORD_FORM = "user/edit/editPasswordForm";
     public static final String REDIRECT_INDEX = "redirect:/";
+    public static final String REDIRECT_EDIT_INDEX = "redirect:/user/edit";
     private final UserService userService;
     private final UserSecurityService userSecurityService;
+    private final PasswordService passwordService;
+    private final EmailService emailService;
 
     private final FollowService followService;
 
     @RequestMapping("/loginPage")
     public String loginForm(@ModelAttribute("loginForm") LoginFormDto form) {
         return LOGIN_FORM;
+    }
+
+    @GetMapping("/findEmail")
+    public String findEmailForm(@ModelAttribute("findEmailForm") FindEmailFormDto form) {
+        return FIND_EMAIL_FORM;
+    }
+
+    @PostMapping("/findEmail")
+    public String userFindEmail(@Validated @ModelAttribute("findEmailForm") FindEmailFormDto form, BindingResult bindingResult, Model model) {
+
+        Optional<User> user = userService.findByUserNameAndPhoneNo(form.getUserName(), form.getPhoneNo());
+
+        if (user.isEmpty()) {
+            bindingResult.addError(new ObjectError("empty", "Check.findContent"));
+        }
+
+        if (!bindingResult.hasErrors()) {
+            FoundEmailFormDto foundEmail = new FoundEmailFormDto(user.get().getEmail());
+            model.addAttribute("email", foundEmail.getEmail());
+            return FOUND_EMAIL_FORM;
+
+        } else {
+            return FIND_EMAIL_FORM;
+        }
+    }
+
+    @GetMapping("/foundEmail")
+    public String foundEmailForm(@ModelAttribute("foundEmailForm") FoundEmailFormDto form) {
+        return FOUND_EMAIL_FORM;
+    }
+
+    @GetMapping("/findPassword")
+    public String findPasswordForm(@ModelAttribute("findPasswordForm") FindPasswordFormDto form) {
+        return FIND_PASSWORD_FORM;
+    }
+
+    @PostMapping("/findPassword")
+    public String userFindPassword(@Validated @ModelAttribute("findPasswordForm") FindPasswordFormDto form, BindingResult bindingResult, HttpServletRequest request) {
+
+        Optional<User> user = userService.findByEmailAndUserNameAndPhoneNo(form.getEmail(), form.getUserName(), form.getPhoneNo());
+
+        if (user.isEmpty()) {
+            bindingResult.addError(new ObjectError("empty", "Check.findContent"));
+        }
+
+        if (!bindingResult.hasErrors()) {
+            request.getSession().setAttribute("email", user.get().getEmail());
+            return "forward:/tempPassword"; // post로 감
+        } else {
+            return FIND_PASSWORD_FORM;
+        }
+    }
+
+    @PostMapping("/tempPassword")
+    public String tempPasswordForm() {
+        return TEMP_PASSWORD_FORM;
+    }
+
+    @GetMapping("/tempPassword")
+    public String userTempPassword(HttpServletRequest request, Model model) {
+        String email = (String) request.getSession().getAttribute("email");
+        Optional<User> user = userService.findByEmail(email);
+
+        int length = passwordService.setLength(8, 20);
+        String tempPassword = passwordService.createTempPassword(length);
+
+        passwordService.updatePassword(user.get().getUserId(), tempPassword);
+        emailService.sendTempPasswordEmail(email, tempPassword);
+        log.info("email 발송");
+
+        model.addAttribute("waitMailMessage", true);
+        return TEMP_PASSWORD_FORM;
     }
 
     //join
@@ -52,12 +140,8 @@ public class UserController {
     }
 
     @PostMapping("/join")
-    public String userJoin(@Validated @ModelAttribute("joinForm") JoinFormDto form, BindingResult bindingResult, Model model) {
+    public String userJoin(@Validated @ModelAttribute("joinForm") JoinFormDto form, BindingResult bindingResult, Model model, HttpServletRequest request) {
         log.info("join Method={}", this);
-
-        if (userService.isEmailDuplicate(form.getEmail())) {
-            bindingResult.rejectValue("email", "Duple.joinForm.email");
-        }
 
         if (userService.isNickNameDuplicate(form.getNickName())) {
             bindingResult.rejectValue("nickName", "Duple.nickName");
@@ -67,7 +151,17 @@ public class UserController {
             bindingResult.rejectValue("phoneNo", "Duple.phoneNo");
         }
 
-        // 중복 검사라기보다는 비밀번호 확인에 가까운 것 같아서 에러코드명 변경
+        String authenticationEmail = (String) request.getSession().getAttribute("authenticationEmail");
+        String authenticationNumber = (String) request.getSession().getAttribute("authenticationNumber");
+        if (authenticationEmail.isEmpty() || authenticationNumber.isEmpty()) {
+            bindingResult.rejectValue("email", "Authentication.email");
+        }
+
+        // 인증된 이메일 수정 후 인증 안 된 상태로 가입 시도할 경우
+        if (!form.getEmail().equals(authenticationEmail)) {
+            bindingResult.rejectValue("email", "Authentication.email");
+        }
+
         if (!form.getPassword().equals(form.getVerifyPassword())) {
             bindingResult.rejectValue("verifyPassword", "Check.verifyPassword");
         }
@@ -82,6 +176,45 @@ public class UserController {
         } else {
             return JOIN_FORM;
         }
+    }
+
+    @PostMapping("/checkEmail")
+    @ResponseBody
+    public String checkEmail(@RequestBody EmailCheckForJoinDto form, HttpServletRequest request) {
+
+        String responseMessage;
+
+        if (form.getEmail().isEmpty()) {
+            responseMessage = "nullOrBlank";
+        } else if (userService.isEmailDuplicate(form.getEmail())) {
+            responseMessage = "emailDuplicated";
+        } else {
+            int length = 6;
+            String authenticationNumber = passwordService.authenticationNumber(length);
+            request.getSession().setAttribute("authenticationNumber", authenticationNumber);
+            emailService.sendAuthenticationNumberEmail(form.getEmail(), authenticationNumber);
+            log.info("email 발송");
+            responseMessage = "sendAuthenticationNumberEmail";
+        }
+
+        return responseMessage;
+    }
+
+    @PostMapping("/checkAuthenticationNumber")
+    @ResponseBody
+    public String checkAuthenticationNumber(@RequestBody EmailCheckForJoinDto form, HttpServletRequest request) {
+
+        String authenticationNumber = (String) request.getSession().getAttribute("authenticationNumber");
+        String responseMessage;
+
+        if (!form.getAuthenticationNumber().trim().equals(authenticationNumber)) {
+            responseMessage = "wrong";
+        } else {
+            request.getSession().setAttribute("authenticationEmail", form.getEmail());
+            responseMessage = "right";
+        }
+
+        return responseMessage;
     }
 
     @GetMapping("user/edit")
@@ -120,7 +253,7 @@ public class UserController {
             newAuth.modifyGender(userInfoEditDto.getGender());
             newAuth.modifyUserRealName(userInfoEditDto.getUserName());
         }
-        return "redirect:/user/edit";
+        return REDIRECT_EDIT_INDEX;
     }
 
     @GetMapping("user/edit/editPassword")
@@ -131,7 +264,7 @@ public class UserController {
     @PostMapping("user/edit/editPassword")
     public String editPassword(@Validated @ModelAttribute("editPasswordForm") PasswordEditDto form, BindingResult bindingResult, @AuthenticationPrincipal AuthUser authUser, RedirectAttributes redirectAttributes) {
         User user = userService.findById(authUser.getUserId());
-        if (!userSecurityService.isPasswordVerification(user, form)) {
+        if (!passwordService.isPasswordVerification(user, form)) {
             bindingResult.rejectValue("password", "Check.password");
         }
 
@@ -142,12 +275,12 @@ public class UserController {
         if (bindingResult.hasErrors()) {
             return EDIT_PASSWORD_FORM;
         } else {
-            userSecurityService.updatePassword(authUser.getUserId(), form);
+            passwordService.updatePassword(authUser.getUserId(), form.getNewPassword());
             redirectAttributes.addAttribute("status", true);
             log.info("editPasswordForm = {}", form);
         }
 
-        return "redirect:/user/edit";
+        return REDIRECT_EDIT_INDEX;
     }
 
     /**
@@ -161,9 +294,9 @@ public class UserController {
             userService.delete(findUser);
         } catch (Exception e) {
             //만약 findUser가 null이라면? 다른 에러페이지를 보여줘야하지 않을까?
-            return "redirect:/";
+            return REDIRECT_INDEX;
         }
-        return "redirect:/";
+        return REDIRECT_INDEX;
     }
 
 

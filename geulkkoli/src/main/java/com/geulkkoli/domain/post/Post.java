@@ -4,6 +4,7 @@ import com.geulkkoli.domain.calendar.Calendar;
 import com.geulkkoli.domain.comment.Comments;
 import com.geulkkoli.domain.favorites.Favorites;
 import com.geulkkoli.domain.hashtag.HashTags;
+import com.geulkkoli.domain.user.NoSuchCommnetException;
 import com.geulkkoli.domain.user.User;
 import com.geulkkoli.web.post.dto.AddDTO;
 import lombok.*;
@@ -47,15 +48,15 @@ public class Post extends ConfigDate {
     private String imageUploadName;
 
     //댓글의 게시글 매핑
-    @OneToMany(mappedBy = "post")
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
     private Set<Comments> comments = new LinkedHashSet<>();
 
     //좋아요의 게시글 매핑
-    @OneToMany(mappedBy = "post")
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
     private Set<Favorites> favorites = new LinkedHashSet<>();
 
     //해시태그의 게시글 매핑
-    @OneToMany(mappedBy = "post")
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
     private Set<HashTags> hashTags = new LinkedHashSet<>();
 
     // 캘린더의 게시글 매핑
@@ -104,18 +105,37 @@ public class Post extends ConfigDate {
         this.nickName = nickName;
     }
 
-    /**
-     * TODO: 이제 회원쪽에서 작성하면서 동시에 post 객체를 만들 수 있다. 그렇다면 이 메서드는 필요할까?
-     *
-     */
-    public void addAuthor (User user) {
-        this.user = user;
-        user.getPosts().add(this);
+    //해당 게시글에 들어가 있는 해시태그
+    public void addHashTag (HashTags hashTag) {
+        hashTag.addPost(this);
+        hashTags.add(hashTag);
     }
 
     //조회수를 바꾼다.
     public void changeHits (int postHits) {
         this.postHits = postHits;
+    }
+
+    /**
+     *  게시글로 부터 댓글
+     */
+    // 게시글에서 댓글 찾기
+    private Comments bringComment (Long commentId) {
+        return this.comments.stream()
+                .filter(comment -> comment.getCommentId().equals(commentId))
+                .findFirst()
+                .orElseThrow(()->new NoSuchCommnetException("해당 댓글이 없습니다."));
+    }
+
+    /**
+     *  게시글로 부터 좋아요
+     */
+    // 게시글에서 누른 좋아요 찾기
+    private Favorites bringFavorite (Long favoriteId) {
+        return this.favorites.stream()
+                .filter(favorite -> favorite.getFavoritesId().equals(favoriteId))
+                .findFirst()
+                .orElseThrow(()->new NoSuchCommnetException("해당 좋아요가 없습니다."));
     }
 
 }

@@ -3,7 +3,7 @@
     padding: 0px;
 }
 
-.mb-3{
+.mb-3 {
     margin: auto;
     width: 50%;
 }
@@ -29,7 +29,8 @@ h4 {
 }
 
 #email,
-#nickName {
+#nickName,
+#authenticationNumber {
     display: inline;
 }
 
@@ -39,9 +40,6 @@ h4 {
 
 .sub-div {
     text-align: center;
-}
-
-.field-error{
 }
 
 #idTwoBox,
@@ -56,13 +54,38 @@ h4 {
     margin: 0%;
 }
 
-input[type=submit], input[type=button]{
+input[type=submit], input[type=button] {
     font-size: 20px;
     padding-inline: 20px;
 }
 
-.bold{
+.contentBox {
+    max-width: 560px;
+    margin: auto;
+}
+
+.noBack {
+    background: none;
+    border: none;
+    color: gray;
+}
+
+.pwChangeMessage {
     font-weight: bold;
     background: 100%, lightgoldenrodyellow;
     display: inline;
+}
+
+.email{
+    display: flex;
+}
+
+.emailBox, .authenticationNumberBox {
+    width: 90%;
+    display: inline-block;
+}
+
+.emailButton, .authenticationNumberButton {
+    margin-left: 2%;
+    display: inline-block;
 }

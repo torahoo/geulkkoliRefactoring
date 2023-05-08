@@ -3,14 +3,14 @@ package com.geulkkoli.domain.user.service;
 import com.geulkkoli.domain.follow.FollowRepository;
 import com.geulkkoli.domain.user.User;
 import com.geulkkoli.domain.user.UserRepository;
-import com.geulkkoli.web.user.dto.UserInfoEditDto;
+import com.geulkkoli.web.user.dto.edit.UserInfoEditDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.NoSuchElementException;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -19,7 +19,6 @@ import java.util.NoSuchElementException;
 public class UserService {
 
     private final UserRepository userRepository;
-    private final PasswordEncoder passwordEncoder;
     private final FollowRepository followRepository;
 
     public boolean isEmailDuplicate(String email) {
@@ -33,7 +32,6 @@ public class UserService {
     public boolean isPhoneNoDuplicate(String phoneNo) {
         return userRepository.findByPhoneNo(phoneNo).isPresent();
     }
-
 
     public void edit(Long id, UserInfoEditDto userInfoEditDto) {
         userRepository.edit(id, userInfoEditDto);
@@ -50,13 +48,20 @@ public class UserService {
                 .orElseThrow(() -> new NoSuchElementException("No user found id matches:" + id));
     }
 
+    public Optional<User> findByEmail(String email) {
+        return userRepository.findByEmail(email);
+    }
+
+    public Optional<User> findByUserNameAndPhoneNo(String userName, String phoneNo) {
+        return userRepository.findByUserNameAndPhoneNo(userName, phoneNo);
+    }
+
+    public Optional<User> findByEmailAndUserNameAndPhoneNo(String email, String userName, String phoneNo) {
+        return userRepository.findByEmailAndUserNameAndPhoneNo(email, userName, phoneNo);
+    }
+
     public User findByNickName(String nickName) {
         return userRepository.findByNickName(nickName)
                 .orElseThrow(() -> new NoSuchElementException("No user found nickname matches:" + nickName));
     }
-
-    public User findeUser(Long id) {
-        return userRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("팔로잉 유저가 존재하지 않는다."));
-    }
-
 }
