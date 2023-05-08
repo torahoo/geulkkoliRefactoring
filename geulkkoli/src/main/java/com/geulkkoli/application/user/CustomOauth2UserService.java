@@ -36,9 +36,7 @@ public class CustomOauth2UserService extends AbstractOauth2UserService implement
         ProviderUserRequest providerUserRequest = new ProviderUserRequest(userRequest.getClientRegistration(), oAuth2User);
         KaKaoRequestConverter kaKaoRequestConverter = new KaKaoRequestConverter();
         ProviderUser kakaoUser = kaKaoRequestConverter.convert(providerUserRequest);
-        String email = kakaoUser.getEmail();
-        System.out.println(email);
-        log.info("kakaoUser : {}", kakaoUser);
+
         User user = join(kakaoUser);
 
         UserModelDto build = UserModelDto.builder()
