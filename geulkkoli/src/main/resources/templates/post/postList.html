@@ -103,8 +103,8 @@
                 </tr>
             </thead>
             <tbody>
-                <tr th:each="post : ${list}">
-                    <td> <a th:href="@{|/post/read/${post.postId}|(page=${currentPage},searchType=${searchType},searchWords=${searchWords})}" th:text="${post.title}"></a></td>
+                <tr th:each="post : ${page.list}">
+                    <td> <a th:href="@{|/post/read/${post.postId}|(page=${page.number},searchType=${searchType},searchWords=${searchWords})}" th:text="${post.title}"></a></td>
                     <td th:align="center" th:text="${post.nickName}"></td>
                     <td th:align="center" th:text="${post.date}"></td>
                     <td th:align="center" th:text="${post.postHits}"></td>
@@ -129,11 +129,11 @@
 <div th:include="footer" ></div>
 <script type="text/javascript">
 
-    const currentPage = [[${currentPage}]];
-    const isFirst = [[${isFirst}]];
-    const isLast = [[${isLast}]];
-    const endPage = [[${endPage}]];
-    const size = [[${size}]];
+    const currentPage = [[${page.number}]];
+    const isFirst = [[${page.first}]];
+    const isLast = [[${page.last}]];
+    const endPage = [[${page.totalPages}]];
+    const size = [[${page.size}]];
 
 </script>
 <script src="/js/pagination.js"></script>

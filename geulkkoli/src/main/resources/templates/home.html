@@ -48,10 +48,10 @@
                 <div class="row no-gutters">
                     <div class="col-lg-3 col-md-3 col-sm-12 p-0">
                         <label for="search-type" hidden>검색 유형</label>
-                        <select class="form-select" id="search-type" name="searchType" th:selected="${searchType}">
-                            <option>제목</option>
-                            <option>본문</option>
-                            <option>닉네임</option>
+                        <select class="form-select" id="search-type" name="searchType">
+                            <option th:selected="${searchType}=='제목'">제목</option>
+                            <option th:selected="${searchType}=='본문'">본문</option>
+                            <option th:selected="${searchType}=='닉네임'">닉네임</option>
                         </select>
                     </div>
                     <div class="col-lg-8 col-md-6 col-sm-12 p-0">

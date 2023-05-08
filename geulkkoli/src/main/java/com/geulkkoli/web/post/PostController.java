@@ -5,10 +5,7 @@ import com.geulkkoli.domain.post.Post;
 import com.geulkkoli.domain.post.service.PostService;
 import com.geulkkoli.domain.user.User;
 import com.geulkkoli.domain.user.service.UserService;
-import com.geulkkoli.web.post.dto.AddDTO;
-import com.geulkkoli.web.post.dto.EditDTO;
-import com.geulkkoli.web.post.dto.ListDTO;
-import com.geulkkoli.web.post.dto.PageDTO;
+import com.geulkkoli.web.post.dto.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -53,35 +50,18 @@ public class PostController {
     @GetMapping("/list")
     public String postList(@PageableDefault(size = 5, sort = "postId", direction = Sort.Direction.DESC) Pageable pageable,
                            Model model, HttpServletRequest request) {
-
         String searchType = request.getParameter("searchType");
         String searchWords = request.getParameter("searchWords");
-
-        Page<ListDTO> page = postService.findAll(pageable, searchType, searchWords);
-
-        model.addAttribute("list", page.toList());
-        model.addAttribute("currentPage", page.getNumber());
-        model.addAttribute("isFirst", page.isFirst());
-        model.addAttribute("isLast", page.isLast());
-        model.addAttribute("endPage", page.getTotalPages());
-        model.addAttribute("size", page.getSize());
-        if(searchType!=null&&searchWords!=null){
-            model.addAttribute("searchType", searchType);
-            model.addAttribute("searchWords", searchWords);
-        } else {
-            model.addAttribute("searchType", "");
-            model.addAttribute("searchWords", "");
-        }
-
+        PagingDTO pagingDTO = PagingDTO.listDTOToPagingDTO(postService.findAll(pageable, searchType, searchWords));
+        model.addAttribute("page", pagingDTO);
+        searchDefault(model, request);
         return "/post/postList";
     }
 
     //게시글 addForm html 로 이동
     @GetMapping("/add")
     public String postAddForm(Model model){
-
         model.addAttribute("addDTO", new AddDTO());
-
         return "/post/postAddForm";
     }
 
@@ -90,63 +70,34 @@ public class PostController {
     public String postAdd(@Validated @ModelAttribute AddDTO post, BindingResult bindingResult,
                           RedirectAttributes redirectAttributes, HttpServletResponse response)
             throws UnsupportedEncodingException {
-
         if (bindingResult.hasErrors()) {
             return "/post/postAddForm";
         }
-
         User user = userService.findById(post.getAuthorId());
         long postId = postService.savePost(post, user).getPostId();
         redirectAttributes.addAttribute("postId",postId);
-
         response.addCookie(new Cookie(URLEncoder.encode(post.getNickName(), "UTF-8"), "done"));
-
         return "redirect:/post/read/{postId}";
     }
 
     //게시글 읽기 Page로 이동
     @GetMapping("/read/{postId}")
     public String postRead(Model model, @PathVariable Long postId, HttpServletRequest request) {
-
         PageDTO postPage = PageDTO.toDTO(postService.showDetailPost(postId));
         User authorUser = userService.findById(postPage.getAuthorId());
         request.getSession().setAttribute("pageNumber", request.getParameter("page"));
-
-        String searchType = request.getParameter("searchType");
-        String searchWords = request.getParameter("searchWords");
-
         model.addAttribute("post", postPage);
         model.addAttribute("authorUser", authorUser);
-
-        if(searchType!=null&&searchWords!=null){
-            model.addAttribute("searchType", searchType);
-            model.addAttribute("searchWords", searchWords);
-        } else {
-            model.addAttribute("searchType", "");
-            model.addAttribute("searchWords", "");
-        }
-
+        searchDefault(model, request);
         return "/post/postPage";
     }
 
     //게시글 수정 html로 이동
     @GetMapping("/update/{postId}")
     public String postUpdateForm(Model model, @PathVariable Long postId, HttpServletRequest request) {
-
-        String searchType = request.getParameter("searchType");
-        String searchWords = request.getParameter("searchWords");
-
         EditDTO postPage = EditDTO.toDTO(postService.findById(postId));
         model.addAttribute("editDTO", postPage);
-
-        if(searchType!=null&&searchWords!=null){
-            model.addAttribute("searchType", searchType);
-            model.addAttribute("searchWords", searchWords);
-        } else {
-            model.addAttribute("searchType", "");
-            model.addAttribute("searchWords", "");
-        }
-
+        searchDefault(model, request);
         return "/post/postEditForm";
     }
 
@@ -154,19 +105,16 @@ public class PostController {
     @PostMapping("/update/{postId}")
     public String postUpdate(@Validated @ModelAttribute EditDTO updateParam, BindingResult bindingResult,
                              @PathVariable Long postId, RedirectAttributes redirectAttributes, HttpServletRequest request) {
-
         if (bindingResult.hasErrors()) {
             return "/post/postEditForm";
         }
-
-        String searchType = request.getParameter("searchType");
-        String searchWords = request.getParameter("searchWords");
-
         User user = userService.findByNickName(updateParam.getNickName());
         postService.updatePost(postId, updateParam, user);
         redirectAttributes.addAttribute("updateStatus", true);
         redirectAttributes.addAttribute("page", request.getSession().getAttribute("pageNumber"));
 
+        String searchType = request.getParameter("searchType");
+        String searchWords = request.getParameter("searchWords");
         if(searchType!=null&&searchWords!=null){
             redirectAttributes.addAttribute("searchType", searchType);
             redirectAttributes.addAttribute("searchWords", searchWords);
@@ -174,8 +122,6 @@ public class PostController {
             redirectAttributes.addAttribute("searchType", "");
             redirectAttributes.addAttribute("searchWords", "");
         }
-        log.info("searchType={}, searchWords={}", searchType, searchWords);
-
         return "redirect:/post/read/{postId}?page={page}&searchType={searchType}&searchWords={searchWords}";
     }
 
@@ -194,5 +140,17 @@ public class PostController {
         Cookie cookie = new Cookie(URLEncoder.encode(authUser.getNickName()), null);
         cookie.setMaxAge(0);
         response.addCookie(cookie);
+    }
+
+    private static void searchDefault(Model model, HttpServletRequest request) {
+        String searchType = request.getParameter("searchType");
+        String searchWords = request.getParameter("searchWords");
+        if(searchType!=null&&searchWords!=null){
+            model.addAttribute("searchType", searchType);
+            model.addAttribute("searchWords", searchWords);
+        } else {
+            model.addAttribute("searchType", "");
+            model.addAttribute("searchWords", "");
+        }
     }
 }
