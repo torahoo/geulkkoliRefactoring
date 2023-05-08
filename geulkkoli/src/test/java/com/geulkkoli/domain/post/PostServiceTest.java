@@ -10,7 +10,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -77,7 +76,7 @@ class PostServiceTest {
         String searchType = "";
         String searchWords = "";
 
-        assertThat(postService.findAll(PageRequest.of(5, 5), searchType, searchWords).toList().size()).isEqualTo(4);
+        assertThat(postService.searchPostFindAll(PageRequest.of(5, 5), searchType, searchWords).toList().size()).isEqualTo(4);
     }
 
     @Test
@@ -125,7 +124,7 @@ class PostServiceTest {
         String searchType = "";
         String searchWords = "";
 
-        List<ListDTO> all = postService.findAll(PageRequest.of(5, 5), searchType, searchWords).toList();
+        List<ListDTO> all = postService.searchPostFindAll(PageRequest.of(5, 5), searchType, searchWords).toList();
         assertThat(all.size()).isEqualTo(0);
     }
 }

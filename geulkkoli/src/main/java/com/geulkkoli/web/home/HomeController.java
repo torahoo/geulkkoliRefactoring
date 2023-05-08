@@ -1,12 +1,9 @@
 package com.geulkkoli.web.home;
 
-import com.geulkkoli.domain.post.Post;
 import com.geulkkoli.domain.post.service.PostService;
 import com.geulkkoli.domain.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
@@ -14,6 +11,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -28,11 +26,11 @@ public class HomeController {
 
     @GetMapping
     public String home(@PageableDefault(size = 5, sort = "postId", direction = Sort.Direction.DESC) Pageable pageable,
-                       Model model, HttpServletRequest request) {
+                       Model model,
+                       @RequestParam(defaultValue = "7") String searchType,
+                       @RequestParam(defaultValue = "7") String searchWords) {
 
-        String searchType = request.getParameter("searchType");
-        String searchWords = request.getParameter("searchWords");
-        model.addAttribute("list", postService.findAll(pageable, searchType, searchWords).toList());
+        model.addAttribute("list", postService.searchPostFindAll(pageable, searchType, searchWords).toList());
 
         return "/home";
     }
