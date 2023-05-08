@@ -14,8 +14,5 @@ public class GeulkkoliApplication {
         SpringApplication.run(GeulkkoliApplication.class, args);
     }
 
-    @Bean
-    public JavaMailSenderImpl mailSender() {
-        return new JavaMailSenderImpl();
-    }
+
 }

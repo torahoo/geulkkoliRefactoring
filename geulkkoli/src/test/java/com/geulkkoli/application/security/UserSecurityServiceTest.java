@@ -2,6 +2,7 @@ package com.geulkkoli.application.security;
 
 import com.geulkkoli.application.user.AuthUser;
 import com.geulkkoli.application.user.PasswordService;
+import com.geulkkoli.application.user.UserSecurityService;
 import com.geulkkoli.domain.user.User;
 import com.geulkkoli.domain.user.service.UserService;
 import com.geulkkoli.web.user.dto.JoinFormDto;

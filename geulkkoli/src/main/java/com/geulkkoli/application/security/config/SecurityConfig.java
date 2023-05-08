@@ -1,6 +1,6 @@
 package com.geulkkoli.application.security.config;
 
-import com.geulkkoli.application.security.UserSecurityService;
+import com.geulkkoli.application.user.UserSecurityService;
 import com.geulkkoli.application.security.handler.LoginFailureHandler;
 import com.geulkkoli.application.user.CustomOauth2UserService;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;

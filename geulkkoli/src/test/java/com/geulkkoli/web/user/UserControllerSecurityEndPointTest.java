@@ -1,6 +1,6 @@
 package com.geulkkoli.web.user;
 
-import com.geulkkoli.application.security.UserSecurityService;
+import com.geulkkoli.application.user.UserSecurityService;
 import com.geulkkoli.web.user.dto.JoinFormDto;
 import com.geulkkoli.web.user.dto.edit.UserInfoEditDto;
 import org.junit.jupiter.api.DisplayName;

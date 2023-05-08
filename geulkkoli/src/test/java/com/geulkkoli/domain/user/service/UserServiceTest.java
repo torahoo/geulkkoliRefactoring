@@ -66,7 +66,7 @@ class UserServiceTest {
         Optional<User> one = userRepository.findById(saveUser.getUserId());
 
         // then
-        assertThat("바나나155").isEqualTo(one.get().getNickName());
+        assertThat(one).get().extracting("userName", "nickName", "phoneNo", "gender").containsExactly("김2", "바나나155", "01055554646", "female");
     }
 
 }

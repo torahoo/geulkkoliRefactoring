@@ -1,6 +1,6 @@
 package com.geulkkoli.web.user;
 
-import com.geulkkoli.application.security.UserSecurityService;
+import com.geulkkoli.application.user.UserSecurityService;
 import com.geulkkoli.application.user.AuthUser;
 import com.geulkkoli.application.user.EmailService;
 import com.geulkkoli.application.user.PasswordService;
@@ -26,7 +26,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.websocket.server.PathParam;
 import java.util.Optional;
 
 @Controller
@@ -114,7 +113,7 @@ public class UserController {
     public String userTempPassword(HttpServletRequest request, Model model) {
         String email = (String) request.getSession().getAttribute("email");
         Optional<User> user = userService.findByEmail(email);
-
+        log.info("email = {}", email);
         int length = passwordService.setTempPasswordLength(8, 20);
         String tempPassword = passwordService.createTempPassword(length);
 
