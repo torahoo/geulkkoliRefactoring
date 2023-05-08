@@ -156,4 +156,22 @@ class PostRepositoryTest {
         assertThat(all.size()).isEqualTo(4);
     }
 
+    @Test
+    public void 유저_삭제 () throws Exception {
+        //given
+        userRepository.delete(user);
+
+        //when
+        List<Post> all = postRepository.findAll();
+        List<User> userAll = userRepository.findAll();
+
+        //then
+        log.info("allSize={}", all.size());
+        log.info("userAll={}", userAll.size());
+        for(Post post:all) {
+            log.info("post={}", post);
+        }
+        assertThat(all.size()).isEqualTo(0);
+    }
+
 }

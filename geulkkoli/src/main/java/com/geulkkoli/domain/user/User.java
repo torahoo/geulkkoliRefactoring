@@ -66,11 +66,11 @@ public class User {
     private Set<Post> posts = new LinkedHashSet<>();
 
     //댓글의 유저 매핑
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "user", orphanRemoval = true)
     private Set<Comments> comments = new LinkedHashSet<>();
 
     //좋아요의 유저 매핑
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "user", orphanRemoval = true)
     private Set<Favorites> favorites = new LinkedHashSet<>();
 
     @Builder
