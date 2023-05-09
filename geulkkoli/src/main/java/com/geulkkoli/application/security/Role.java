@@ -2,6 +2,8 @@ package com.geulkkoli.application.security;
 
 import lombok.Getter;
 
+import java.util.Arrays;
+
 /**
  * 역할을 나타내는 enum 입니다.
  * role code는 실제 db에 저장되는 값입니다.
@@ -10,7 +12,8 @@ import lombok.Getter;
 @Getter
 public enum Role {
     ADMIN("ROLE_ADMIN", 1),
-    USER("ROLE_USER", 2);
+    USER("ROLE_USER", 2),
+    GUEST("ROLE_GUEST", 3);
 
     private final String roleName;
     private final int roleCode;
@@ -20,4 +23,11 @@ public enum Role {
         this.roleCode = roleCode;
     }
 
+    public static Role findByRoldeName(String role) {
+        return Arrays.stream(Role.values()).filter(r -> r.getRoleName().equals(role)).findAny().orElse(GUEST);
+    }
+
+    public static boolean isUser(String role) {
+        return USER.getRoleName().equals(role);
+    }
 }

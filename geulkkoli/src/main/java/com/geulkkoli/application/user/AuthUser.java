@@ -12,7 +12,7 @@ import java.util.Map;
 import java.util.Objects;
 
 @Getter
-public class AuthUser implements UserDetails, OAuth2User {
+public class AuthUser implements UserDetails, OAuth2User  {
     private final Long userId;
     private final String userName;
     private final String password;

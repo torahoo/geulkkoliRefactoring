@@ -25,13 +25,14 @@ public class SecurityConfig {
     private final UserSecurityService userSecurityService;
     private final CustomOauth2UserService customOauth2UserService;
 
+
     public SecurityConfig(LoginFailureHandler loginFailureHandler, UserSecurityService userSecurityService, CustomOauth2UserService customOauth2UserService) {
         this.loginFailureHandler = loginFailureHandler;
         this.userSecurityService = userSecurityService;
         this.customOauth2UserService = customOauth2UserService;
     }
 
-    /**
+/**
      * 시큐리티 필터 설정
      * 루트 페이지, 로그인 페이지, css,js 경론는 인증 없이 접속 가능
      * csrf 공격 방지를 위한 설정을 끈다

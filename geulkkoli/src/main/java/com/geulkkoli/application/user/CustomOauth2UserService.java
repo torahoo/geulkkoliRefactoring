@@ -1,7 +1,7 @@
 package com.geulkkoli.application.user;
 
 import com.geulkkoli.application.security.AccountStatus;
-import com.geulkkoli.application.user.util.KaKaoRequestConverter;
+import com.geulkkoli.application.user.util.DelegateOAuth2RequestConverter;
 import com.geulkkoli.application.user.util.ProviderUserRequest;
 import com.geulkkoli.domain.user.User;
 import lombok.extern.slf4j.Slf4j;
@@ -26,13 +26,20 @@ public class CustomOauth2UserService extends AbstractOauth2UserService implement
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
         OAuth2UserService<OAuth2UserRequest, OAuth2User> oAuth2UserService = new DefaultOAuth2UserService();
         OAuth2User oAuth2User = oAuth2UserService.loadUser(userRequest);
+
         ProviderUserRequest providerUserRequest = new ProviderUserRequest(userRequest.getClientRegistration(), oAuth2User);
-        KaKaoRequestConverter kaKaoRequestConverter = new KaKaoRequestConverter();
-        ProviderUser kakaoUser = kaKaoRequestConverter.convert(providerUserRequest);
+        DelegateOAuth2RequestConverter delegateOAuth2RequestConverter = new DelegateOAuth2RequestConverter();
+        ProviderUser providerUser = delegateOAuth2RequestConverter.convert(providerUserRequest);
 
-        User user = join(kakaoUser);
+        User user = join(providerUser);
 
-        UserModelDto build = UserModelDto.builder()
+        UserModelDto model = convertModel(user);
+        List<GrantedAuthority> authorities = (List<GrantedAuthority>) providerUser.getAuthorities();
+        return AuthUser.from(model, authorities, AccountStatus.ACTIVE, providerUser.getAttributes());
+    }
+
+    private  UserModelDto convertModel(User user) {
+        return UserModelDto.builder()
                 .userId(user.getUserId())
                 .gender(user.getGender())
                 .userName(user.getUserName())
@@ -40,8 +47,5 @@ public class CustomOauth2UserService extends AbstractOauth2UserService implement
                 .nickName(user.getNickName())
                 .password(user.getPassword())
                 .phoneNo(user.getPhoneNo()).build();
-
-        List<GrantedAuthority> authorities = (List<GrantedAuthority>) kakaoUser.getAuthorities();
-        return AuthUser.from(build, authorities, AccountStatus.ACTIVE, kakaoUser.getAttributes());
     }
 }

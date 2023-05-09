@@ -25,5 +25,10 @@ public class KakaoOAuth2User extends OAuth2ProviderUser{
         return profile.get("nickname").toString();
     }
 
+    @Override
+    public String getNickName() {
+        Map<String, Object> profile = (Map<String, Object>)attributes.get("profile");
+        return profile.get("nickname").toString() + "Kakao";    }
+
 
 }
