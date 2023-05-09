@@ -1,6 +1,6 @@
 package com.geulkkoli.domain.user;
 
-import com.geulkkoli.web.user.dto.edit.UserInfoEditDto;
+import com.geulkkoli.web.myPage.dto.edit.UserInfoEditFormDto;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,7 +17,7 @@ public class UserRepositoryImpl implements UserRepositoryCustom {
 
     // User 정보 업데이트 (이메일은 변경 불가 / 비밀번호는 따로 변경 처리)
     @Override
-    public void edit(Long id, UserInfoEditDto form) {
+    public void edit(Long id, UserInfoEditFormDto form) {
         QUser user = QUser.user;
         queryFactory.update(user)
                 .set(user.userName, form.getUserName())

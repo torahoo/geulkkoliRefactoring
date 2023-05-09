@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="/css/bootstrap.min.css"
+        th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
+  <style>
+
+    .container {
+      max-width: 1000px;
+    }
+
+    a {text-decoration: none !important;}
+    a:link {color: black}
+    a:visited {color: black}
+    a:hover {color: brown}
+  </style>
+  <title>팔로워</title>
+</head>
+<body>
+<header id="header" th:include="header"></header>
+
+<div class="container">
+  <div class="container">
+    <div class="py-5 text-center">
+      <h2>팔로워</h2>
+    </div>
+
+
+
+
+    <div>
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th scope="col">#</th>
+            <th scope="col">이름</th>
+            <th scope="col">닉네임</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr th:each="user : ${followerForm}">
+            <th scope="row"> <a th:href="@{|/user/read/${user.userId}|}" th:text="${user.userId}"></a> </th>
+            <td> <a th:href="@{|/templates/mypage/${user.userId}|}" th:text="${user.username}"></a> </td>
+            <td th:text="${user.nickName}"></td>
+            <td><button onclick="follow()">팔로우</button> </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+
+  </div>
+
+
+</div>
+
+
+
+<footer id="footer" th:include="footer"></footer>
+
+
+<script>
+  function follow() {
+    alert("팔로우 되었습니다.");
+    document.getElementById("popup").style.display = "none";
+  }
+
+  function followee() {
+    alert("팔로우가 취소되었습니다.");
+    document.getElementById("popup").style.display = "none";
+  }
+</script>
+</body>
+</html>

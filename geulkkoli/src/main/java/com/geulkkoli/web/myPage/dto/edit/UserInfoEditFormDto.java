@@ -1,4 +1,4 @@
-package com.geulkkoli.web.user.dto.edit;
+package com.geulkkoli.web.myPage.dto.edit;
 
 import lombok.Builder;
 import lombok.Getter;
@@ -10,7 +10,7 @@ import javax.validation.constraints.Pattern;
 
 @Getter
 @ToString
-public class UserInfoEditDto {
+public class UserInfoEditFormDto {
 
     @NotEmpty
     private String userName;
@@ -29,14 +29,14 @@ public class UserInfoEditDto {
     private String gender;
 
     @Builder
-    public UserInfoEditDto(String userName, String nickName, String phoneNo, String gender) {
+    public UserInfoEditFormDto(String userName, String nickName, String phoneNo, String gender) {
         this.userName = userName;
         this.nickName = nickName;
         this.phoneNo = phoneNo;
         this.gender = gender;
     }
 
-    public UserInfoEditDto editFormDto(String userName, String nickName, String phoneNo, String gender) {
+    public UserInfoEditFormDto editFormDto(String userName, String nickName, String phoneNo, String gender) {
         this.userName = userName;
         this.nickName = nickName;
         this.phoneNo = phoneNo;

@@ -1,8 +1,8 @@
-package com.geulkkoli.application.user;
+package com.geulkkoli.application.user.service;
 
 import com.geulkkoli.domain.user.User;
 import com.geulkkoli.domain.user.UserRepository;
-import com.geulkkoli.web.user.dto.edit.PasswordEditDto;
+import com.geulkkoli.web.myPage.dto.edit.PasswordEditFormDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,8 +25,8 @@ public class PasswordServiceImpl implements PasswordService {
 
 
     @Override
-    public boolean isPasswordVerification(User user, PasswordEditDto passwordEditDto) {
-        return passwordEncoder.matches(passwordEditDto.getOldPassword(), user.getPassword());
+    public boolean isPasswordVerification(User user, PasswordEditFormDto passwordEditFormDto) {
+        return passwordEncoder.matches(passwordEditFormDto.getOldPassword(), user.getPassword());
     }
 
     @Override

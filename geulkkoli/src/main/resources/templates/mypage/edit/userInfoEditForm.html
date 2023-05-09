@@ -17,7 +17,7 @@
 <br>
 <br>
 
-<form action th:action="@{/user/edit}" th:object="${editForm}" method="post">
+<form action th:action th:object="${userInfoEditForm}" method="post">
   <div class="mb-3">
     <label for="userName">
       <h4>이름</h4>
@@ -59,7 +59,7 @@
     <h5 th:if="${param.status}" th:text="'비밀번호 변경 완료'" class="pwChangeMessage"></h5>
     <br>
       <input type="button" name="password" id="password" value="비밀번호 재설정"
-             class="btn btn-primary form-control-lg" onclick="location.href='/user/edit/editPassword'">
+             class="btn btn-primary form-control-lg" onclick="location.href='/myPage/editPassword'">
   </div>
 
   <div class="mb-3">

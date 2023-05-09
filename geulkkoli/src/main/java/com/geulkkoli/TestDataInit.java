@@ -65,6 +65,15 @@ public class TestDataInit {
         joinForm2.setPassword("123");
         User user2 = userSecurityService.join(joinForm2);
 
+        JoinFormDto joinForm3 = new JoinFormDto();
+        joinForm3.setEmail("cheese@naver.com");
+        joinForm3.setUserName("비밀");
+        joinForm3.setNickName("김륜환만세");
+        joinForm3.setPhoneNo("01099995555");
+        joinForm3.setGender("female");
+        joinForm3.setPassword("123");
+        userSecurityService.join(joinForm3);
+
         joinForm.setEmail("admin");
         joinForm.setUserName("타코다치");
         joinForm.setNickName("우무문어");
@@ -111,7 +120,7 @@ public class TestDataInit {
             postRepository.save(post3);
         }
         /**
-          신고받은 게시물 더미 데이터를 리팩토링한 방식으로 다시 작성해봤습니다.
+         * 신고받은 게시물 더미 데이터를 리팩토링한 방식으로 다시 작성해봤습니다.
          */
         Report report = user.writeReport(postRepository.findById(2L).get(), "욕설");
         Report report1 = user.writeReport(postRepository.findById(1L).get(), "비 협조적");
@@ -119,6 +128,13 @@ public class TestDataInit {
         reportRepository.save(report);
         reportRepository.save(report1);
         reportRepository.save(report2);
+
+
+//        Follow follow1 = user.writeFollow(followRepository.findBySelectUserId(1L).get().getFolloweeId());
+//        followRepository.save(follow1);
     }
+
+
+
 
 }

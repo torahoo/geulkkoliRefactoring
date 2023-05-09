@@ -2,7 +2,7 @@ package com.geulkkoli.exception.web.user;
 
 import com.geulkkoli.application.security.UserSecurityService;
 import com.geulkkoli.web.user.dto.JoinFormDto;
-import com.geulkkoli.web.user.dto.edit.UserInfoEditDto;
+import com.geulkkoli.web.myPage.dto.edit.UserInfoEditFormDto;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -83,8 +83,8 @@ class UserControllerSecurityEndPointTest {
     @Test
     @DisplayName("인증된 사용자가 /user/edit post로 정보를 올바르게 수정하면 user/edit으로 리다렉트한다.")
     void userinfoModifySuccess() throws Exception {
-        UserInfoEditDto userInfoEditDto =
-                UserInfoEditDto.builder().userName("tako99@naver.com")
+        UserInfoEditFormDto userInfoEditFormDto =
+                UserInfoEditFormDto.builder().userName("tako99@naver.com")
                         .nickName("바나나11")
                         .phoneNo("9190232333")
                         .gender("male")
@@ -106,11 +106,11 @@ class UserControllerSecurityEndPointTest {
                 .build().perform(
                         post("/user/edit")
                                 .with(user(user))
-                                .param("userName", userInfoEditDto.getUserName())
-                                .param("nickName", userInfoEditDto.getNickName())
-                                .param("phoneNo", userInfoEditDto.getPhoneNo())
-                                .param("gender", userInfoEditDto.getGender())
-                                .content(userInfoEditDto.toString()));
+                                .param("userName", userInfoEditFormDto.getUserName())
+                                .param("nickName", userInfoEditFormDto.getNickName())
+                                .param("phoneNo", userInfoEditFormDto.getPhoneNo())
+                                .param("gender", userInfoEditFormDto.getGender())
+                                .content(userInfoEditFormDto.toString()));
 
 
         resultActions.andExpect(status().is(302))

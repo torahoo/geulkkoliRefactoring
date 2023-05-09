@@ -57,7 +57,7 @@ public class Post extends ConfigDate {
     //해시태그의 게시글 매핑
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
     private Set<HashTags> hashTags = new LinkedHashSet<>();
-
+    
     @Builder
     public Post(String title, String postBody, String nickName) {
         this.title = title;

@@ -5,6 +5,7 @@ drop table if exists favorites;
 drop table if exists post;
 drop table if exists users;
 drop table if exists topic_tags;
+
 CREATE table if not exists users
 (
     user_id   BIGINT PRIMARY KEY AUTO_INCREMENT,
@@ -49,6 +50,7 @@ create table if not exists comments
     CONSTRAINT fk_comment_author FOREIGN KEY (author_id) REFERENCES users (user_id) ON DELETE CASCADE,
     CONSTRAINT fk_comment_post FOREIGN KEY (post_id) REFERENCES post (post_id) ON DELETE CASCADE
 );
+
 create table if not exists favorites
 (
     favorites_id      BIGINT primary key AUTO_INCREMENT,
@@ -57,6 +59,7 @@ create table if not exists favorites
     constraint fk_like_user FOREIGN KEY (favorites_user_id) REFERENCES users (user_id) ON DELETE cascade,
     constraint fk_like_post FOREIGN KEY (post_id) REFERENCES post (post_id) ON DELETE CASCADE
 );
+
 CREATE TABLE IF NOT EXISTS user_followings
 (
     followings_id bigint primary key AUTO_INCREMENT,
@@ -65,6 +68,7 @@ CREATE TABLE IF NOT EXISTS user_followings
     CONSTRAINT fk_follower FOREIGN KEY (follower_id) REFERENCES users (user_id) ON DELETE CASCADE,
     CONSTRAINT fk_followee FOREIGN KEY (followee_id) REFERENCES users (user_id) ON DELETE CASCADE
 );
+
 
 create table if not exists report
 (
@@ -87,3 +91,9 @@ create table if not exists permissions
     is_credentials_non_expired boolean not null,
     constraint fk_permission_user foreign key (user_id) references users (user_id)
 );
+
+
+
+
+
+

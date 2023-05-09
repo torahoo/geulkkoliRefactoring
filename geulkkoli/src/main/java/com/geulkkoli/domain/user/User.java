@@ -5,6 +5,7 @@ import com.geulkkoli.application.security.Role;
 import com.geulkkoli.application.security.RoleEntity;
 import com.geulkkoli.domain.admin.AccountLock;
 import com.geulkkoli.domain.admin.Report;
+import com.geulkkoli.domain.follow.Follow;
 import com.geulkkoli.domain.post.Post;
 import com.geulkkoli.domain.comment.Comments;
 import com.geulkkoli.domain.favorites.Favorites;
@@ -72,6 +73,11 @@ public class User {
     //좋아요의 유저 매핑
     @OneToMany(mappedBy = "user", orphanRemoval = true)
     private Set<Favorites> favorites = new LinkedHashSet<>();
+
+    // 팔로우의 유저 매핑
+    @OneToMany(mappedBy = "followeeId", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<Follow> follows = new LinkedHashSet<>();
+
 
     @Builder
     public User(String userName, String password, String nickName, String email, String phoneNo, String gender) {
@@ -259,6 +265,24 @@ public class User {
         return role;
     }
 
+    public Follow writeFollow(User user) {
+        Follow follow = Follow.of(user, this);
+        this.follows.add(follow);
+        return follow;
+    }
+
+    public Follow deleteFollow(Long followingsId) {
+        Follow deletFollow = findFollow(followingsId);
+        follows.remove(deletFollow);
+        return deletFollow;
+    }
+
+    public Follow findFollow(Long followingsId) {
+        return this.follows.stream()
+                .filter(follow -> follow.getFollowingsId().equals(followingsId))
+                .findFirst()
+                .orElseThrow(() -> new NoSuchReportException("팔로워가 없어요."));
+    }
 
     @Override
     public boolean equals(Object o) {
