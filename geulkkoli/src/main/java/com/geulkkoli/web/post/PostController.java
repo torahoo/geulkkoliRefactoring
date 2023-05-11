@@ -110,8 +110,8 @@ public class PostController {
         if (bindingResult.hasErrors()) {
             return "/post/postEditForm";
         }
-        User user = userService.findByNickName(updateParam.getNickName());
-        postService.updatePost(postId, updateParam, user);
+
+        postService.updatePost(postId, updateParam);
         redirectAttributes.addAttribute("updateStatus", true);
         redirectAttributes.addAttribute("page", request.getSession().getAttribute("pageNumber"));
 

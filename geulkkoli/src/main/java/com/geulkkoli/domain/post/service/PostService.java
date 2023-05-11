@@ -82,8 +82,10 @@ public class PostService {
         return postRepository.save(writePost);
     }
 
-    public void updatePost(Long postId, EditDTO updateParam, User user) {
-        Post post = user.editPost(postId, updateParam);
+    public void updatePost(Long postId, EditDTO updateParam) {
+        Post post = findById(postId)
+                .getUser()
+                .editPost(postId, updateParam);
         postRepository.save(post);
     }
 
