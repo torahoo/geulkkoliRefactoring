@@ -8,6 +8,7 @@ import com.geulkkoli.domain.post.Post;
 import com.geulkkoli.domain.post.service.PostService;
 import com.geulkkoli.domain.user.User;
 import com.geulkkoli.domain.user.service.UserService;
+import com.geulkkoli.web.comment.dto.CommentListDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -33,22 +34,16 @@ public class CommentController {
     private final UserService userService;
 
     @PostMapping("/writePostComment/{postId}")
-    public void writePostComment(@PathVariable("postId") String postId,
-                                 @RequestBody Comments commentBody,
-                                 @AuthenticationPrincipal AuthUser user) throws Exception {
-
-//        log.info("postId={}", postId);
-//        log.info("commentBody={}", commentBody);
-//        log.info("user={}", user.getNickName());
+    public List<CommentListDTO> writePostComment(@PathVariable("postId") String postId,
+                                                 @RequestBody Comments commentBody,
+                                                 @AuthenticationPrincipal AuthUser user) throws Exception {
 
         Post post = postService.findById(Long.valueOf(postId));
 
         commentsService.writeComment(
                 commentBody, post, userService.findById(user.getUserId()));
 
-        log.info("json = {}", new ObjectMapper().writeValueAsString(post.getComments()));
-
-//        return new ObjectMapper().writeValueAsString(post.getComments());
+        return CommentsService.getCommentsList(post.getComments());
     }
 
     @PutMapping("/editPostComment")

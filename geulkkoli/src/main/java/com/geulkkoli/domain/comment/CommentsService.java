@@ -2,10 +2,13 @@ package com.geulkkoli.domain.comment;
 
 import com.geulkkoli.domain.post.Post;
 import com.geulkkoli.domain.user.User;
+import com.geulkkoli.web.comment.dto.CommentListDTO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 @Slf4j
@@ -20,6 +23,14 @@ public class CommentsService {
 
     public void writeComment(Comments commentBody, Post post, User user) {
         commentsRepository.save(user.writeComment(commentBody, post));
+    }
+
+    public static List<CommentListDTO> getCommentsList(Set<Comments> comments) {
+        List<CommentListDTO> listDTO = new ArrayList<>();
+        for (Comments comment : comments) {
+            listDTO.add(CommentListDTO.toDTO(comment));
+        }
+        return listDTO;
     }
 
     public void editComment(Long commentId, Comments editCommentBody, User user) {

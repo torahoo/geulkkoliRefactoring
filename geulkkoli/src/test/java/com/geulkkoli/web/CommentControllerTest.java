@@ -25,6 +25,8 @@ import org.springframework.util.MultiValueMap;
 
 import java.nio.charset.Charset;
 
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+
 @Slf4j
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -89,7 +91,10 @@ public class CommentControllerTest {
                         .contentType(mediaType).content(objJson))
 
         //than
-                .andExpect(MockMvcResultMatchers.status().is(201));
+                .andExpect(status().is(200))
+                .andExpect(jsonPath("$[0].commentId", "1").exists())
+                .andExpect(jsonPath("$[0].nickName", "바나나").exists())
+                .andExpect(jsonPath("$[0].commentBody", "test..ing").exists());
 //                .andExpect(MockMvcResultMatchers.);
 
     }

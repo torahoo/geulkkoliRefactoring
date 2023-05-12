@@ -1,6 +1,8 @@
 package com.geulkkoli.web.post;
 
 import com.geulkkoli.application.user.AuthUser;
+import com.geulkkoli.domain.comment.Comments;
+import com.geulkkoli.domain.comment.CommentsService;
 import com.geulkkoli.domain.post.service.PostService;
 import com.geulkkoli.domain.user.User;
 import com.geulkkoli.domain.user.service.UserService;
@@ -32,6 +34,7 @@ public class PostController {
 
     private final PostService postService;
     private final UserService userService;
+    private final CommentsService commentsService;
 
     /**
      * @PageableDefault - get 파라미터가 없을 때 기본설정 변경(기본값: page=0, size=20)
@@ -86,6 +89,7 @@ public class PostController {
         request.getSession().setAttribute("pageNumber", request.getParameter("page"));
         model.addAttribute("post", postPage);
         model.addAttribute("authorUser", authorUser);
+        model.addAttribute("comments", new Comments());
         searchDefault(model, searchType, searchWords);
         return "/post/postPage";
     }
