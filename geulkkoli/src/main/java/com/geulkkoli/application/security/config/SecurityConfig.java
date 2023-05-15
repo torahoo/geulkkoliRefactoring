@@ -1,8 +1,12 @@
 package com.geulkkoli.application.security.config;
 
-import com.geulkkoli.application.user.UserSecurityService;
 import com.geulkkoli.application.security.handler.LoginFailureHandler;
+import com.geulkkoli.application.security.handler.LoginSuccessHandler;
+import com.geulkkoli.application.user.UserSecurityService;
 import com.geulkkoli.application.user.CustomOauth2UserService;
+import com.geulkkoli.domain.user.service.UserService;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -19,50 +23,58 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
  */
 @Configuration
 @EnableWebSecurity
+@Slf4j
 public class SecurityConfig {
 
-    private final LoginFailureHandler loginFailureHandler;
     private final UserSecurityService userSecurityService;
     private final CustomOauth2UserService customOauth2UserService;
 
+    private final UserService  userService;
 
-    public SecurityConfig(LoginFailureHandler loginFailureHandler, UserSecurityService userSecurityService, CustomOauth2UserService customOauth2UserService) {
-        this.loginFailureHandler = loginFailureHandler;
+
+    @Autowired
+    LoginFailureHandler loginFailureHandler;
+
+    @Autowired
+    LoginSuccessHandler loginSuccessHandler;
+
+    public SecurityConfig(UserSecurityService userSecurityService, CustomOauth2UserService customOauth2UserService, UserService userService) {
         this.userSecurityService = userSecurityService;
         this.customOauth2UserService = customOauth2UserService;
+        this.userService = userService;
     }
 
-/**
-     * 시큐리티 필터 설정
-     * 루트 페이지, 로그인 페이지, css,js 경론는 인증 없이 접속 가능
-     * csrf 공격 방지를 위한 설정을 끈다
-     * 인증방식이 form방식인 걸 알려준다
-     * 로그인 폼 페이즈가 어디인지 알려준다
-     * 로그인 정보 URI가 어디인지 알려준다
-     * 실패시 URL 정보
-     * userName 키 이름을 email로 바꿔준다.
-     * password의 키 이름을 password로 바꿔준다
-     * 로그아웃에 관련된 처리이다
-     * 로그아웃 진입 경로를 뜻한다
-     * 로그아웃 성공시 경로를 뜻한다
-     * 로그아웃 버튼을 누르면 세션에서 값이 사라지는 설정이다.
-     * 로그아웃 성공시 세션을 무효화 시킨다.
-     * auth mvcMatchers는 특정 경로에 대한 권한을 설정합니다.
-     * permitAll()은 누구나 겁근 가능하다는 뜻입니다.
-     */
+
+    /**
+ * 시큐리티 필터 설정
+ * 루트 페이지, 로그인 페이지, css,js 경론는 인증 없이 접속 가능
+ * csrf 공격 방지를 위한 설정을 끈다
+ * 인증방식이 form방식인 걸 알려준다
+ * 로그인 폼 페이즈가 어디인지 알려준다
+ * 로그인 정보 URI가 어디인지 알려준다
+ * 실패시 URL 정보
+ * userName 키 이름을 email로 바꿔준다.
+ * password의 키 이름을 password로 바꿔준다
+ * 로그아웃에 관련된 처리이다
+ * 로그아웃 진입 경로를 뜻한다
+ * 로그아웃 성공시 경로를 뜻한다
+ * 로그아웃 버튼을 누르면 세션에서 값이 사라지는 설정이다.
+ * 로그아웃 성공시 세션을 무효화 시킨다.
+ * auth mvcMatchers는 특정 경로에 대한 권한을 설정합니다.
+ * permitAll()은 누구나 겁근 가능하다는 뜻입니다.
+ */
 
     /**
      * how to integration with spring security and oauth2 login and form login
      * https://www.baeldung.com/spring-security-5-oauth2-login
      * https://www.baeldung.com/spring-security-5-form-login
-     *
      */
     @Bean
 
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.authorizeRequests((auth) -> {
                     auth.mvcMatchers("/admin/**").hasRole("ADMIN");
-                    auth.mvcMatchers("/user/edit/**").hasRole("USER");
+                    auth.mvcMatchers("/user/edit/**").hasAnyRole("USER","GUEST");
                     auth.mvcMatchers("/post/add/**", "/post/update/**", "/post/delete/**").hasAnyRole("USER", "ADMIN");
                     auth.mvcMatchers(HttpMethod.GET, "/", "/loginPage", "/post/read/**", "/post/list/**", "/post/search/**", "/post/category/*")
                             .permitAll();
@@ -74,14 +86,16 @@ public class SecurityConfig {
                 .defaultSuccessUrl("/")
                 .usernameParameter("email")
                 .passwordParameter("password")
-                .failureHandler(loginFailureHandler)
-                .permitAll();
-
-                http.oauth2Login(oauth -> {
+                .and()
+                .oauth2Login(oauth -> {
                     oauth.userInfoEndpoint(
                             userInfoEndpointConfig -> {
-                                userInfoEndpointConfig.userService(customOauth2UserService);
-                            }
+                                userInfoEndpointConfig
+                                        .userService(customOauth2UserService)
+                                        .and()
+                                        .successHandler(new LoginSuccessHandler())
+                                        .failureHandler(loginFailureHandler)
+                                        ;}
                     ).loginPage("/loginPage");
                 }).userDetailsService(userSecurityService)
                 .logout()
@@ -101,5 +115,6 @@ public class SecurityConfig {
     }
 
 }
+
 
 

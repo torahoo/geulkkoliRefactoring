@@ -54,6 +54,10 @@ public class RoleEntity {
         return role.equals(Role.ADMIN);
     }
 
+    public Boolean isGuest() {
+        return role.equals(Role.GUEST);
+    }
+
     public Set<User> getUsers() {
         return users;
     }

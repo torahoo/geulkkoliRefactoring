@@ -3,7 +3,6 @@ package com.geulkkoli.application.user;
 import com.geulkkoli.application.security.AccountStatus;
 import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 
@@ -13,8 +12,8 @@ import java.util.Objects;
 
 @Getter
 public class AuthUser implements UserDetails, OAuth2User  {
-    private final Long userId;
-    private final String userName;
+    private final String userId;
+    private final String userName; //로그인 시 아이디에 해당한다. 우리 서비스의 경우 email
     private final String password;
     private final boolean isEnabled;
     private final boolean isAccountNonExpired;

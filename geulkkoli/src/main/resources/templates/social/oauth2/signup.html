@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <title>Social Signup</title>
+    <link rel="stylesheet" type="text/css" href="/css/style.css">
+</head>
+
+<body>
+<h2>Social Signup</h2>
+<form>
+    <label for="nickname">Nickname</label>
+    <input type="text" id="nickname" name="nickname" placeholder="Enter your nickname" required>
+
+    <label for="phone">Phone Number</label>
+    <input type="tel" id="phone" name="phone" placeholder="Enter your phone number" required>
+
+    <label for="password">Password</label>
+    <input type="password" id="password" name="password" placeholder="Enter your password" required>
+
+    <input type="submit" value="Signup">
+    <div id="modal-bg"></div>
+</form>
+
+<script type="text/javascript" src="script.js"></script>
+</body>
+
+</html>

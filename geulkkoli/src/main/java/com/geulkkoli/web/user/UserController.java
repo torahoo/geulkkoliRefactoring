@@ -152,7 +152,7 @@ public class UserController {
         }
 
         if (!bindingResult.hasErrors()) {
-            userSecurityService.join(form);
+            userService.signUp(form);
 
             log.info("joinModel = {}", model);
             log.info("joinForm = {}", form);
@@ -164,7 +164,7 @@ public class UserController {
     }
 
     @GetMapping("user/edit")
-    public String editForm( @AuthenticationPrincipal AuthUser authUser, Model model) {
+    public String editForm(@AuthenticationPrincipal AuthUser authUser, Model model) {
         log.info("authUser : {}", authUser.getNickName());
         UserInfoEditDto userInfoEditDto = UserInfoEditDto.from(authUser.getUserRealName(), authUser.getNickName(), authUser.getPhoneNo(), authUser.getGender());
         model.addAttribute("editForm", userInfoEditDto);
@@ -189,7 +189,7 @@ public class UserController {
         if (bindingResult.hasErrors()) {
             return EDIT_FORM;
         } else {
-            userService.edit(authUser.getUserId(), userInfoEditDto);
+            userService.edit(parseLong(authUser), userInfoEditDto);
             // 세션에 저장된 authUser의 정보를 수정한다.
             Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
             AuthUser newAuth = (AuthUser) principal;
@@ -209,7 +209,7 @@ public class UserController {
 
     @PostMapping("user/edit/editPassword")
     public String editPassword(@Validated @ModelAttribute("editPasswordForm") PasswordEditDto form, BindingResult bindingResult, @AuthenticationPrincipal AuthUser authUser, RedirectAttributes redirectAttributes) {
-        User user = userService.findById(authUser.getUserId());
+        User user = userService.findById(parseLong(authUser));
         if (!passwordService.isPasswordVerification(user, form)) {
             bindingResult.rejectValue("password", "Check.password");
         }
@@ -221,7 +221,7 @@ public class UserController {
         if (bindingResult.hasErrors()) {
             return EDIT_PASSWORD_FORM;
         } else {
-            passwordService.updatePassword(authUser.getUserId(), form.getNewPassword());
+            passwordService.updatePassword(parseLong(authUser), form.getNewPassword());
             redirectAttributes.addAttribute("status", true);
             log.info("editPasswordForm = {}", form);
         }
@@ -243,5 +243,9 @@ public class UserController {
             return REDIRECT_INDEX;
         }
         return REDIRECT_INDEX;
+    }
+
+    private Long parseLong(AuthUser authUser) {
+        return Long.valueOf(authUser.getUserId());
     }
 }

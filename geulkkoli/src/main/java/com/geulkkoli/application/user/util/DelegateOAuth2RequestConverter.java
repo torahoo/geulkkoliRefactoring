@@ -2,11 +2,9 @@ package com.geulkkoli.application.user.util;
 
 import com.geulkkoli.application.user.ProviderUser;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class DelegateOAuth2RequestConverter {
-
     private List<UserRequestConverter> userRequestConverters;
 
     public DelegateOAuth2RequestConverter() {
@@ -17,7 +15,7 @@ public class DelegateOAuth2RequestConverter {
 
         for (UserRequestConverter userRequestConverter : userRequestConverters) {
             if (userRequestConverter.supports(providerUserRequest.getClientRegistration().getRegistrationId())) {
-                return (ProviderUser) userRequestConverter.convert(providerUserRequest);
+                return userRequestConverter.convert(providerUserRequest);
             }
         }
         throw new IllegalArgumentException("지원하지 않는 OAuth2 공급자입니다.");

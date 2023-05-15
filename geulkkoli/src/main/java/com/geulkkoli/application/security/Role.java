@@ -23,11 +23,19 @@ public enum Role {
         this.roleCode = roleCode;
     }
 
-    public static Role findByRoldeName(String role) {
+    public static Role findByRoleName(String role) {
         return Arrays.stream(Role.values()).filter(r -> r.getRoleName().equals(role)).findAny().orElse(GUEST);
     }
 
     public static boolean isUser(String role) {
         return USER.getRoleName().equals(role);
+    }
+
+    public static boolean isAdmin(String role) {
+        return ADMIN.getRoleName().equals(role);
+    }
+
+    public static boolean isGuest(String role) {
+        return GUEST.getRoleName().equals(role);
     }
 }

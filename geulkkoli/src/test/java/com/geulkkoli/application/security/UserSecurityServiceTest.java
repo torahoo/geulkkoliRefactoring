@@ -38,7 +38,6 @@ class UserSecurityServiceTest {
     PasswordService passwordService;
 
 
-
     @Test
     void join() {
         JoinFormDto joinForm = new JoinFormDto();
@@ -48,7 +47,7 @@ class UserSecurityServiceTest {
         joinForm.setPhoneNo("01012345631");
         joinForm.setGender("male");
         joinForm.setPassword("123qwe!@#");
-        User user = userSecurityService.join(joinForm);
+        User user = userService.signUp(joinForm);
 
         assertThat(user.getRole()).isEqualTo(RoleEntity.of(Role.USER, user));
     }
@@ -63,7 +62,7 @@ class UserSecurityServiceTest {
         joinForm.setPhoneNo("01012345671");
         joinForm.setGender("male");
         joinForm.setPassword("123qwe!@#");
-        User saveUser = userSecurityService.join(joinForm);
+        User saveUser = userService.signUp(joinForm);
 
 
         PasswordEditDto passwordEditDto = new PasswordEditDto();
@@ -86,7 +85,7 @@ class UserSecurityServiceTest {
         joinForm.setPhoneNo("01012345671");
         joinForm.setGender("male");
         joinForm.setPassword("123qwe!@#");
-        userSecurityService.join(joinForm);
+        userService.signUp(joinForm);
 
 
         PasswordEditDto passwordEditDto = new PasswordEditDto();
@@ -113,7 +112,7 @@ class UserSecurityServiceTest {
         joinForm.setPhoneNo("01012345671");
         joinForm.setGender("male");
         joinForm.setPassword("123qwe!@#");
-        User saveUser = userSecurityService.join(joinForm);
+        User saveUser = userService.signUp(joinForm);
 
         //when
         UserDetails user = userSecurityService.loadUserByUsername("tako1@naver.com");
@@ -148,7 +147,7 @@ class UserSecurityServiceTest {
         joinForm.setPhoneNo("01012345671");
         joinForm.setGender("male");
         joinForm.setPassword("123qwe!@#");
-        userSecurityService.join(joinForm);
+        userService.signUp(joinForm);
 
         assertThrows(AuthenticationException.class, () -> userSecurityService.loadUserByUsername("tako1@naver.com"));
     }

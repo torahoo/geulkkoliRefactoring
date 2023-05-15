@@ -1,9 +1,6 @@
 package com.geulkkoli.application.user;
 
 import com.geulkkoli.application.security.*;
-import com.geulkkoli.application.user.AuthUser;
-import com.geulkkoli.application.user.PasswordService;
-import com.geulkkoli.application.user.UserModelDto;
 import com.geulkkoli.domain.user.User;
 import com.geulkkoli.domain.user.UserRepository;
 import com.geulkkoli.web.user.dto.JoinFormDto;
@@ -25,7 +22,6 @@ import static java.lang.Boolean.TRUE;
 
 @Slf4j
 @Service
-@Transactional
 @RequiredArgsConstructor
 public class UserSecurityService implements UserDetailsService {
 
@@ -34,6 +30,7 @@ public class UserSecurityService implements UserDetailsService {
     private final PasswordService passwordService;
 
     @Override
+    @Transactional(readOnly = true)
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         log.info("loadUserByUsername : {}", email);
         Optional<User> findByEmailUser = userRepository.findByEmail(email);
@@ -57,6 +54,7 @@ public class UserSecurityService implements UserDetailsService {
         return AuthUser.from(userModel, authorities, AccountStatus.ACTIVE);
     }
 
+
     private void authorizeRole(List<GrantedAuthority> authorities, User user) {
         if (user.getRole().getRole().equals(Role.ADMIN)) {
             authorities.add(new SimpleGrantedAuthority(Role.ADMIN.getRoleName()));
@@ -65,10 +63,11 @@ public class UserSecurityService implements UserDetailsService {
         }
     }
 
-    public User join(JoinFormDto form) {
+    @Transactional
+    public User signUp(JoinFormDto form) {
         User user = form.toEntity(PasswordService.passwordEncoder);
 
-        RoleEntity roleEntity = user.hasRole(Role.USER);
+        RoleEntity roleEntity = user.Role(Role.USER);
         roleRepository.save(roleEntity);
         userRepository.save(user);
         return user;
@@ -77,9 +76,10 @@ public class UserSecurityService implements UserDetailsService {
 
     /*
      * 관리자 실험을 위한 임시 관리자 계정 추가용 메서드*/
-    public void joinAdmin(JoinFormDto form) {
+    @Transactional
+    public void signUpAdmin(JoinFormDto form) {
         User user = form.toEntity(passwordService.passwordEncoder);
-        RoleEntity roleEntity = user.hasRole(Role.ADMIN);
+        RoleEntity roleEntity = user.Role(Role.ADMIN);
         roleRepository.save(roleEntity);
         userRepository.save(user);
     }
