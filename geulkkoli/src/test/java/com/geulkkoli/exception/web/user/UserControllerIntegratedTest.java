@@ -1,4 +1,4 @@
-package com.geulkkoli.web.user;
+package com.geulkkoli.exception.web.user;
 
 import com.geulkkoli.application.user.UserSecurityService;
 import com.geulkkoli.domain.user.User;

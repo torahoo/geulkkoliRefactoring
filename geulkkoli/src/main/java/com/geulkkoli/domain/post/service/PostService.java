@@ -8,12 +8,12 @@ import com.geulkkoli.web.post.dto.AddDTO;
 import com.geulkkoli.web.post.dto.EditDTO;
 import com.geulkkoli.web.post.dto.ListDTO;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.NoSuchElementException;
+import java.util.*;
 
 @Slf4j
 @Service
@@ -33,15 +33,48 @@ public class PostService {
                 .orElseThrow(() -> new NoSuchElementException("No post found id matches:" + postId));
     }
 
-    public List<ListDTO> findAll() {
-        List<Post> allPost = postRepository.findAll();
-        List<ListDTO> listDTOs = new ArrayList<>();
+    //게시글 상세보기만을 담당하는 메서드
+    public Post showDetailPost (Long postId) {
+        postRepository.updateHits(postId);
+        return postRepository.findById(postId)
+                .orElseThrow(() -> new NoSuchElementException("No post found id matches:" + postId));
+    }
 
-        for (Post post : allPost) {
-            listDTOs.add(ListDTO.toDTO(post));
+    public Page<ListDTO> findAll (Pageable pageable) {
+        Page<Post> posts = postRepository.findAll(pageable);
+        return posts.map(post -> new ListDTO(
+                post.getPostId(),
+                post.getTitle(),
+                post.getNickName(),
+                post.getUpdatedAt(),
+                post.getPostHits()
+        ));
+    }
+
+    //전체 게시글 리스트 & 조회 기능 포함
+    public Page<ListDTO> searchPostFindAll(Pageable pageable, String searchType, String searchWords) {
+        Page<Post> posts;
+        switch (searchType) {
+            case "제목":
+                posts=postRepository.findPostsByTitleContaining(pageable, searchWords);
+                break;
+            case "본문":
+                posts=postRepository.findPostsByPostBodyContaining(pageable, searchWords);
+                break;
+            case "닉네임":
+                posts=postRepository.findPostsByNickNameContaining(pageable, searchWords);
+                break;
+            default:
+                posts=postRepository.findAll(pageable);
+                break;
         }
-
-        return listDTOs;
+        return posts.map(post -> new ListDTO(
+                post.getPostId(),
+                post.getTitle(),
+                post.getNickName(),
+                post.getUpdatedAt(),
+                post.getPostHits()
+        ));
     }
 
     public Post savePost(AddDTO post, User user) {
