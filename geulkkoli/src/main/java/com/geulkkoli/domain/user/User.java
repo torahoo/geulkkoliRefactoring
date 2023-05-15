@@ -66,11 +66,11 @@ public class User {
     private Set<Post> posts = new LinkedHashSet<>();
 
     //댓글의 유저 매핑
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user", orphanRemoval = true)
     private Set<Comments> comments = new LinkedHashSet<>();
 
     //좋아요의 유저 매핑
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user", orphanRemoval = true)
     private Set<Favorites> favorites = new LinkedHashSet<>();
 
     @Builder
@@ -94,32 +94,24 @@ public class User {
         this.password = password;
     }
 
+    /**
+     * 게시글 관련 CRUD
+     */
+    //유저가 쓴 게시글
     public Post writePost(AddDTO addDTO) {
         Post post = new Post(addDTO, this);
         this.posts.add(post);
         return post;
     }
 
+    //유저가 지운 게시글
     public Post deletePost(Long postId) {
         Post deltePost = findPost(postId);
         posts.remove(deltePost);
         return deltePost;
     }
 
-    private void postIdIsNullThrow(Long postId) {
-        for (Post post : posts) {
-            if (!Objects.isNull(post.getPostId())) {
-                if (!post.getPostId().equals(postId)) {
-                    throw new NoSuchPostException("해당 게시글이 없습니다.");
-                }
-            }
-            if (Objects.isNull(post.getPostId())) {
-                throw new NoSuchPostException("해당 게시글이 없습니다.");
-            }
-        }
-
-    }
-
+    // 해당 유저가 쓴 게시글 찾기
     private Post findPost(Long postId) {
         return this.posts.stream()
                 .filter(post -> post.getPostId().equals(postId))
@@ -127,6 +119,7 @@ public class User {
                 .orElseThrow(() -> new NoSuchPostException("해당 게시글이 없습니다."));
     }
 
+    // 유저가 쓴 게시글 수정하기
     public Post editPost(Long postId, EditDTO editDTO) {
         Post post = this.posts.stream()
                 .filter(p -> p.getPostId().equals(postId))
@@ -138,6 +131,70 @@ public class User {
         return post;
     }
 
+    /**
+     * 댓글 관련 CRUD
+     */
+    //유저가 쓴 댓글
+    public Comments writeComment (Comments commentBody, Post post) {
+        Comments comment = new Comments(this, post, commentBody);
+        post.getComments().add(comment);
+        this.comments.add(comment);
+        return comment;
+    }
+
+    // 해당 유저가 쓴 댓글 찾기
+    private Comments findComment(Long commentId) {
+        return this.comments.stream()
+                .filter(comment -> comment.getCommentId().equals(commentId))
+                .findFirst()
+                .orElseThrow(()->new NoSuchCommnetException("해당 댓글이 없습니다."));
+    }
+
+    // 유저가 쓴 댓글 수정하기
+    public Comments editComment(Long commentId, Comments editCommentBody) {
+        Comments comment = findComment(commentId);
+        comment.changeComments(editCommentBody.getCommentBody());
+        return comment;
+    }
+
+    //유저가 지운 댓글
+    public Comments deleteComment(Long commentId) {
+        Comments deleteComment = findComment(commentId);
+        comments.remove(deleteComment);
+        deleteComment.getPost().getComments().remove(deleteComment);
+        return deleteComment;
+    }
+
+    /**
+     * 좋아요 관련 CRUD
+     */
+    // 유저가 누른 좋아요
+    public Favorites pressFavorite (Post post) {
+        Favorites favorite = new Favorites(this, post);
+        post.getFavorites().add(favorite);
+        this.favorites.add(favorite);
+        return favorite;
+    }
+
+    // 해당 유저가 쓴 좋아요 찾기
+    private Favorites findFavorite (Long favoriteId) {
+        return this.favorites.stream()
+                .filter(favorite -> favorite.getFavoritesId().equals(favoriteId))
+                .findFirst()
+                .orElseThrow(()->new NoSuchCommnetException("해당 좋아요가 없습니다."));
+    }
+
+    // 유저가 취소한 좋아요
+    public Favorites cancelFavorite (Long favoriteId) {
+        Favorites deleteFavorite = findFavorite(favoriteId);
+        favorites.remove(deleteFavorite);
+        deleteFavorite.getPost().getFavorites().remove(deleteFavorite);
+        return deleteFavorite;
+    }
+
+    /**
+     * 신고 관련 CRUD
+     */
     public Report writeReport(Post post, String reason) {
         Report report = Report.of(post, this, LocalDateTime.now(), reason);
         this.reports.add(report);

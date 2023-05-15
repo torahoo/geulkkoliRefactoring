@@ -35,13 +35,12 @@ public class HashTags {
         return getHashTagsId() != null && Objects.equals(getHashTagsId(), hashTag.getHashTagsId());
     }
 
-    //==연관관계 메서드==//
+    //==연관관계 메서드==(추후 수정 요망)//
 
     /**
      * 게시글 세팅
      */
     public void addPost (Post post) {
         this.post = post;
-        post.getHashTags().add(this);
     }
 }

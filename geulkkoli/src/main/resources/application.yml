@@ -46,12 +46,25 @@ spring:
   h2:
     console:
       path: /h2-console
-     
+      #개인적을 h2-console을 사용하기 위한 설정입니다. 이는 지우거나 무시해주세요.
+      #spring.datasource.url= jdbc:h2:tcp://localhost/~/testgg
+      #spring.datasource.username= sa
+      #spring.datasource.password=
+      #spring.datasource.driver-class-name= org.h2.Driver
+      #
+      #
+      #spring.jpa.hibernate.ddl-auto= create-drop
+
+
+#587 포트가 이메일 전송에 유용한 보안 포트입니다.
+#구글 계정으로 앱 서비스를 설정하여 전송할 수 있게 했습니다.
+#username은 우리가 이메일 전송 시 사용하는 계정입니다.
+#설정해 둔 계정으로 이메일을 전송하는데, JavaMailSender 클래스를 통해 작동합니다. (이메일 서비스에 불러와져 있는 그거)
   mail:
     host: smtp.gmail.com # 서버 호스트
     port: 587 # 서버 포트
-    username: ${mail.username} # 서버 로그인용 이메일 (보안 문제로 환경설정에 설정)
-    password: ${mail.password} # 서버 로그인용 비밀번호 (보안 문제로 환경설정에 설정)
+    username: daejanggoyangi
+    password: vphabcofycwufewh # 실제 비밀번호가 아니라 앱 서비스용 비밀번호라 구글 로그인은 안 됨
     properties:
       mail:
         smtp:

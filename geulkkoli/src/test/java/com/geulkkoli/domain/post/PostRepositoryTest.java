@@ -13,6 +13,7 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.ActiveProfiles;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -112,6 +113,7 @@ class PostRepositoryTest {
                 .orElseThrow(() -> new NoSuchElementException("No post found id matches : " + save.getPostId()));
 
         assertThat(save).isEqualTo(find);
+        log.info("findDate={}",find.getUpdatedAt());
     }
 
     @Test
@@ -152,6 +154,24 @@ class PostRepositoryTest {
         List<Post> all = postRepository.findAll();
 
         assertThat(all.size()).isEqualTo(4);
+    }
+
+    @Test
+    public void 유저_삭제 () throws Exception {
+        //given
+        userRepository.delete(user);
+
+        //when
+        List<Post> all = postRepository.findAll();
+        List<User> userAll = userRepository.findAll();
+
+        //then
+        log.info("allSize={}", all.size());
+        log.info("userAll={}", userAll.size());
+        for(Post post:all) {
+            log.info("post={}", post);
+        }
+        assertThat(all.size()).isEqualTo(0);
     }
 
 }
