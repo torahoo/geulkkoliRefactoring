@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import static java.lang.Boolean.*;
 import static java.lang.Boolean.TRUE;
 
 @Slf4j
@@ -56,7 +57,7 @@ public class UserSecurityService implements UserDetailsService {
 
 
     private void authorizeRole(List<GrantedAuthority> authorities, User user) {
-        if (user.getRole().getRole().equals(Role.ADMIN)) {
+        if (TRUE.equals(user.getRole().isAdmin())) {
             authorities.add(new SimpleGrantedAuthority(Role.ADMIN.getRoleName()));
         } else {
             authorities.add(new SimpleGrantedAuthority(Role.USER.getRoleName()));

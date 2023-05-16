@@ -1,6 +1,7 @@
 package com.geulkkoli.application.user;
 
 import com.geulkkoli.application.security.AccountStatus;
+import com.geulkkoli.web.social.SocialSignUpDto;
 import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -26,6 +27,22 @@ public class AuthUser implements UserDetails, OAuth2User  {
     private String phoneNo;
     private String gender;
 
+    private AuthUser(String userId, String userName, String password, boolean isEnabled, boolean isAccountNonExpired, boolean isAccountNonLocked, boolean isCredentialsNonExpired, Collection<GrantedAuthority> authorities, Map<String, Object> attributes, String userRealName, String nickName, String phoneNo, String gender) {
+        this.userId = userId;
+        this.userName = userName;
+        this.password = password;
+        this.isEnabled = isEnabled;
+        this.isAccountNonExpired = isAccountNonExpired;
+        this.isAccountNonLocked = isAccountNonLocked;
+        this.isCredentialsNonExpired = isCredentialsNonExpired;
+        this.authorities = authorities;
+        this.attributes = attributes;
+        this.userRealName = userRealName;
+        this.nickName = nickName;
+        this.phoneNo = phoneNo;
+        this.gender = gender;
+    }
+
     private AuthUser(UserModelDto userModel, Collection<GrantedAuthority> authorities, AccountStatus accountStatus, Map<String, Object> attributes) {
         this.userName = userModel.getEmail();
         this.password = userModel.getPassword();
@@ -49,6 +66,7 @@ public class AuthUser implements UserDetails, OAuth2User  {
     public static AuthUser from(UserModelDto userModel, Collection<GrantedAuthority> authorities, AccountStatus accountStatus, Map<String, Object> attributes) {
         return new AuthUser(userModel, authorities, accountStatus, attributes);
     }
+
 
 
     @Override

@@ -259,6 +259,10 @@ public class User {
         return role;
     }
 
+    public String roleName() {
+        return role.getRole().getRoleName();
+    }
+
 
     @Override
     public boolean equals(Object o) {

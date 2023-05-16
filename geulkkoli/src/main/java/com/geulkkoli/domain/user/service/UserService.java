@@ -6,6 +6,7 @@ import com.geulkkoli.application.security.RoleRepository;
 import com.geulkkoli.application.user.PasswordService;
 import com.geulkkoli.domain.user.User;
 import com.geulkkoli.domain.user.UserRepository;
+import com.geulkkoli.web.social.SocialSignUpDto;
 import com.geulkkoli.web.user.dto.JoinFormDto;
 import com.geulkkoli.web.user.dto.edit.UserInfoEditDto;
 import lombok.RequiredArgsConstructor;
@@ -26,17 +27,24 @@ public class UserService {
     private final RoleRepository roleRepository;
     private final PasswordService passwordService;
 
+    @Transactional(readOnly = true)
     public boolean isEmailDuplicate(String email) {
         return userRepository.findByEmail(email).isPresent();
     }
+
+    @Transactional(readOnly = true)
 
     public boolean isNickNameDuplicate(String nickName) {
         return userRepository.findByNickName(nickName).isPresent();
     }
 
+    @Transactional(readOnly = true)
+
     public boolean isPhoneNoDuplicate(String phoneNo) {
         return userRepository.findByPhoneNo(phoneNo).isPresent();
     }
+
+    @Transactional(readOnly = true)
 
     public void edit(Long id, UserInfoEditDto userInfoEditDto) {
         userRepository.edit(id, userInfoEditDto);
@@ -61,6 +69,7 @@ public class UserService {
         roleRepository.save(roleEntity);
         userRepository.save(user);
     }
+
     public void delete(User user) {
         userRepository.deleteById(user.getUserId());
     }
@@ -85,5 +94,13 @@ public class UserService {
     public User findByNickName(String nickName) {
         return userRepository.findByNickName(nickName)
                 .orElseThrow(() -> new NoSuchElementException("No user found nickname matches:" + nickName));
+    }
+
+    @Transactional
+    public User signUp(SocialSignUpDto signUpDto) {
+        User user = userRepository.save(signUpDto.toEntity(PasswordService.passwordEncoder));
+        RoleEntity roleEntity = user.Role(Role.USER);
+        roleRepository.save(roleEntity);
+        return user;
     }
 }

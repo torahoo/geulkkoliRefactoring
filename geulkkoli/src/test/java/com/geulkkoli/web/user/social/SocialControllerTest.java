@@ -32,7 +32,26 @@ class SocialControllerTest {
     @Test
     void if_NonExisting_Member_Go_To_SignUpPage() {
 
-        ModelAndView modelAndView = socialController.signUp();
+        UserModelDto userModelDto = UserModelDto.builder()
+                .userId("test")
+                .email("email")
+                .gender("M")
+                .phoneNo("010-1234-5678")
+                .password("test")
+                .build();
+        List<GrantedAuthority> authorities = new ArrayList<>();
+        authorities.add(new SimpleGrantedAuthority(Role.GUEST.getRoleName()));
+        AuthUser authUser = AuthUser.from(userModelDto, authorities, AccountStatus.ACTIVE);
+
+        SocialSignUpDto socialDto = SocialSignUpDto.builder()
+                .nickName("test")
+                .password("test")
+                .phoneNo("010-1234-5678")
+                .email("test@gmail.com")
+                .gender("M")
+                .verifyPassword("test")
+                .build();
+        ModelAndView modelAndView = socialController.signUp(socialDto, authUser);
 
         assertThat(modelAndView.getViewName()).isEqualTo("social/oauth2/signup");
     }
@@ -40,10 +59,10 @@ class SocialControllerTest {
     @Test
     void non_Existing_Member_SignUp_Success() {
 
-        SocialSignUpDto socialDto = new SocialSignUpDto.Builder()
+        SocialSignUpDto socialDto = SocialSignUpDto.builder()
                 .nickName("test")
                 .password("test")
-                .phoneNumber("010-1234-5678")
+                .phoneNo("010-1234-5678")
                 .build();
         UserModelDto userModelDto = UserModelDto.builder()
                 .userId("test")
@@ -57,8 +76,8 @@ class SocialControllerTest {
         List<GrantedAuthority> authorities = new ArrayList<>();
         authorities.add(new SimpleGrantedAuthority(Role.GUEST.getRoleName()));
         AuthUser authUser = AuthUser.from(userModelDto, authorities, AccountStatus.ACTIVE);
-        ModelAndView modelAndView = socialController.signUp(socialDto, authUser);
+        ModelAndView modelAndView = socialController.signUp(socialDto);
 
-        assertThat(modelAndView.getViewName()).isEqualTo("/index");
+        assertThat(modelAndView.getViewName()).isEqualTo("/home");
     }
 }

@@ -73,16 +73,6 @@ spring:
           starttls:
             enable: true # StartTLS 활성화 여부 (기본값 : false)
 
-  application:
-    name: geulkkoli
-  cloud:
-    vault:
-      scheme: http
-      authentication: TOKEN
-      token: ${vault.token}
-
-  config:
-    import: vault://
 
 #JPA log
 logging:

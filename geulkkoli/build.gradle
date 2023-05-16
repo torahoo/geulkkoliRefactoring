@@ -59,8 +59,6 @@ dependencies {
 
     //oauth2 client 추가
     implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
-    //spring vault config 추가
-    implementation 'org.springframework.cloud:spring-cloud-starter-vault-config'
 }
 dependencyManagement {
     imports {
