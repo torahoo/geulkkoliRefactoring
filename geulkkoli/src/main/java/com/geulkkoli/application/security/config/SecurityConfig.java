@@ -23,14 +23,11 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
  * 시큐리티 설정파일
  */
 @Configuration
-@EnableWebSecurity
 @Slf4j
 public class SecurityConfig {
 
     private final UserSecurityService userSecurityService;
     private final CustomOauth2UserService customOauth2UserService;
-
-
 
 
     @Autowired
@@ -93,7 +90,7 @@ public class SecurityConfig {
                                 userInfoEndpointConfig
                                         .userService(customOauth2UserService)
                                         .and()
-                                        .successHandler(new LoginSuccessHandler())
+                                        .successHandler(loginSuccessHandler)
                                         .failureHandler(loginFailureHandler)
                                 ;
                             }

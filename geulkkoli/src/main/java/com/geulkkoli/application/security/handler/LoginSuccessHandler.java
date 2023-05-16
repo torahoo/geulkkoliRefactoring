@@ -1,9 +1,11 @@
 package com.geulkkoli.application.security.handler;
 
+import com.geulkkoli.application.security.LoginProcessException;
 import com.geulkkoli.application.security.Role;
 import com.geulkkoli.application.user.AuthUser;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,22 +23,34 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler {
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
         AuthUser principal = (AuthUser) authentication.getPrincipal();
-        principal.getAuthorities().stream().map(auth -> auth.getAuthority()).findAny().ifPresent(role -> {
+        principal.getAuthorities().stream().map(GrantedAuthority::getAuthority).findAny().ifPresent(role -> {
             log.info(role);
             if (Role.isGuest(role)) {
                 try {
                     response.sendRedirect("/social/oauth2/signup");
                 } catch (IOException e) {
-                    throw new RuntimeException(e);
+                    throw getLoginProcessException(e);
                 }
-            } else {
+            }
+            if (Role.isUser(role)) {
                 try {
                     response.sendRedirect("/");
                 } catch (IOException e) {
-                    throw new RuntimeException(e);
+                    throw getLoginProcessException(e);
+                }
+            }
+            if (Role.isAdmin(role)) {
+                try {
+                    response.sendRedirect("/admin");
+                } catch (IOException e) {
+                    throw getLoginProcessException(e);
                 }
             }
         });
 
+    }
+
+    private LoginProcessException getLoginProcessException(IOException e) {
+        return new LoginProcessException(e.getMessage());
     }
 }

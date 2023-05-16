@@ -16,6 +16,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -48,10 +49,26 @@ public class SocialController {
     }
 
     @PostMapping("/oauth2/signup")
-    public ModelAndView signUp(@ModelAttribute("signUpDto") SocialSignUpDto signUpDtoUpDto) {
+    public ModelAndView signUp(@ModelAttribute("signUpDto") SocialSignUpDto signUpDtoUpDto, BindingResult bindingResult) {
         log.info("소셜 로그인 회원의 회원 정보 기입");
         User user = userService.signUp(signUpDtoUpDto);
         ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("social/oauth2/signup");
+        if (userService.isNickNameDuplicate(signUpDtoUpDto.getNickName())) {
+            bindingResult.rejectValue("nickName", "Duple.nickName");
+        }
+
+        if (userService.isPhoneNoDuplicate(signUpDtoUpDto.getPhoneNo())) {
+            bindingResult.rejectValue("phoneNo", "Duple.phoneNo");
+
+            return modelAndView;
+        }
+
+        if (bindingResult.hasErrors()) {
+
+            return modelAndView;
+        }
+
         UserModelDto dto = UserModelDto.toDto(user);
         List<GrantedAuthority> authorities = new ArrayList<>();
         authorities.add(new SimpleGrantedAuthority(user.getRole().getRole().getRoleName()));
