@@ -30,7 +30,7 @@ public class SecurityConfig {
     private final UserSecurityService userSecurityService;
     private final CustomOauth2UserService customOauth2UserService;
 
-    private final UserService userService;
+
 
 
     @Autowired
@@ -39,10 +39,9 @@ public class SecurityConfig {
     @Autowired
     LoginSuccessHandler loginSuccessHandler;
 
-    public SecurityConfig(UserSecurityService userSecurityService, CustomOauth2UserService customOauth2UserService, UserService userService) {
+    public SecurityConfig(UserSecurityService userSecurityService, CustomOauth2UserService customOauth2UserService) {
         this.userSecurityService = userSecurityService;
         this.customOauth2UserService = customOauth2UserService;
-        this.userService = userService;
     }
 
 
