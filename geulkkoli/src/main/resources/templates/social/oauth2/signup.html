@@ -12,17 +12,24 @@
     <label for="nickname">Nickname</label>
     <input type="text" id="nickname"
            th:field="*{nickName}"
-           name="nickname" placeholder="Enter your nickname" required>
+           name="nickname" placeholder="Enter your nickname" required
+           th:errorclass="field-error"
+           class="form-control form-control-lg nickNameInline">
+    <p class="field-error" th:errors="*{nickName}"></p>
 
     <label for="phone">Phone Number</label>
     <input type="tel" id="phone"
            th:field="*{phoneNo}"
-           name="phone" placeholder="Enter your phone number" required>
+           name="phone" placeholder="Enter your phone number" required
+           th:errorclass="field-error">
+    <p class="field-error" th:errors="*{phoneNo}"></p>
 
     <label for="password">Password</label>
     <input type="password" id="password" name="password"
            th:field="*{password}"
-           placeholder="Enter your password" required>
+           placeholder="Enter your password" required
+           th:errorclass="field-error" class="form-control form-control-lg">
+    <p class="field-error" th:errors="*{password}"></p>
 
     <input type="hidden" id="email" name="email"
            th:field="*{email}"

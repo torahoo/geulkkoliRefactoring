@@ -51,7 +51,6 @@ public class SocialController {
     @PostMapping("/oauth2/signup")
     public ModelAndView signUp(@ModelAttribute("signUpDto") SocialSignUpDto signUpDtoUpDto, BindingResult bindingResult) {
         log.info("소셜 로그인 회원의 회원 정보 기입");
-        User user = userService.signUp(signUpDtoUpDto);
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("social/oauth2/signup");
         if (userService.isNickNameDuplicate(signUpDtoUpDto.getNickName())) {
@@ -60,15 +59,13 @@ public class SocialController {
 
         if (userService.isPhoneNoDuplicate(signUpDtoUpDto.getPhoneNo())) {
             bindingResult.rejectValue("phoneNo", "Duple.phoneNo");
-
             return modelAndView;
         }
 
         if (bindingResult.hasErrors()) {
-
             return modelAndView;
         }
-
+        User user = userService.signUp(signUpDtoUpDto);
         UserModelDto dto = UserModelDto.toDto(user);
         List<GrantedAuthority> authorities = new ArrayList<>();
         authorities.add(new SimpleGrantedAuthority(user.getRole().getRole().getRoleName()));
