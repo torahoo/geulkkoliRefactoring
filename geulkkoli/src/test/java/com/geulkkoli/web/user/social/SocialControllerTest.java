@@ -4,15 +4,11 @@ import com.geulkkoli.application.security.AccountStatus;
 import com.geulkkoli.application.security.Role;
 import com.geulkkoli.application.user.AuthUser;
 import com.geulkkoli.application.user.UserModelDto;
-import com.geulkkoli.domain.user.UserRepository;
 import com.geulkkoli.web.social.SocialController;
 import com.geulkkoli.web.social.SocialSignUpDto;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.mock.web.MockHttpServletRequest;
-import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.web.servlet.ModelAndView;
@@ -51,7 +47,7 @@ class SocialControllerTest {
                 .gender("M")
                 .verifyPassword("test")
                 .build();
-        ModelAndView modelAndView = socialController.signUp(socialDto, authUser);
+        ModelAndView modelAndView = socialController.moveSignUpPage(socialDto, authUser);
 
         assertThat(modelAndView.getViewName()).isEqualTo("social/oauth2/signup");
     }

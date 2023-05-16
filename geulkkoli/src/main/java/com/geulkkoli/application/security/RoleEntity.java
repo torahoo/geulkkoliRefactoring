@@ -74,4 +74,8 @@ public class RoleEntity {
     public int hashCode() {
         return Objects.hash(role);
     }
+
+    public String authority() {
+        return role.getRoleName();
+    }
 }

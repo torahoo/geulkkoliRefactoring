@@ -290,6 +290,9 @@ public class User {
         return role.isUser();
     }
 
+    public String authority() {
+        return role.authority();
+    }
 }
 
 

@@ -28,7 +28,7 @@ public class SocialController {
     private UserService userService;
 
     @GetMapping("/oauth2/signup")
-    public ModelAndView signUp(@AuthenticationPrincipal AuthUser authUser, ModelAndView modelAndView) {
+    public ModelAndView moveSignUpPage(@AuthenticationPrincipal AuthUser authUser, ModelAndView modelAndView) {
         log.info("소셜 로그인 회원의 회원 정보 기입");
         SocialSignUpDto socialSignUpDto = SocialSignUpDto.builder()
                 .email(authUser.getUsername())
@@ -47,7 +47,7 @@ public class SocialController {
     }
 
     @PostMapping("/oauth2/signup")
-    public ModelAndView signUp(@ModelAttribute("signUpDto") SocialSignUpDto signUpDtoUpDto, BindingResult bindingResult,ModelAndView modelAndView) {
+    public ModelAndView signUp(@ModelAttribute("signUpDto") SocialSignUpDto signUpDtoUpDto, BindingResult bindingResult, ModelAndView modelAndView) {
         log.info("소셜 로그인 회원의 회원 정보 기입");
         modelAndView.setViewName("social/oauth2/signup");
         if (userService.isNickNameDuplicate(signUpDtoUpDto.getNickName())) {
@@ -64,9 +64,11 @@ public class SocialController {
         }
         User user = userService.signUp(signUpDtoUpDto);
         UserModelDto dto = UserModelDto.toDto(user);
+
         List<GrantedAuthority> authorities = new ArrayList<>();
-        authorities.add(new SimpleGrantedAuthority(user.getRole().getRole().getRoleName()));
+        authorities.add(new SimpleGrantedAuthority(user.authority()));
         AuthUser from = AuthUser.from(dto, authorities, AccountStatus.ACTIVE);
+
         UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(from, null, authorities);
         SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
 
