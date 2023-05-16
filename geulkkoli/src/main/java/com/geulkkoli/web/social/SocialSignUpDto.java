@@ -1,5 +1,6 @@
 package com.geulkkoli.web.social;
 
+import com.geulkkoli.application.user.AuthUser;
 import com.geulkkoli.domain.user.User;
 import lombok.Builder;
 import org.hibernate.validator.constraints.Length;
@@ -77,31 +78,31 @@ public class SocialSignUpDto {
         return gender;
     }
 
-    public void setUserName(String userName) {
+    public void changeUserName(String userName) {
         this.userName = userName;
     }
 
-    public void setPassword(String password) {
+    public void changePassword(String password) {
         this.password = password;
     }
 
-    public void setVerifyPassword(String verifyPassword) {
+    public void changeVerifyPassword(String verifyPassword) {
         this.verifyPassword = verifyPassword;
     }
 
-    public void setNickName(String nickName) {
+    public void changeNickName(String nickName) {
         this.nickName = nickName;
     }
 
-    public void setEmail(String email) {
+    public void changeEmail(String email) {
         this.email = email;
     }
 
-    public void setPhoneNo(String phoneNo) {
+    public void changePhoneNo(String phoneNo) {
         this.phoneNo = phoneNo;
     }
 
-    public void setGender(String gender) {
+    public void changeGender(String gender) {
         this.gender = gender;
     }
 
@@ -128,5 +129,6 @@ public class SocialSignUpDto {
                 .gender(gender)
                 .build();
     }
+
 }
 

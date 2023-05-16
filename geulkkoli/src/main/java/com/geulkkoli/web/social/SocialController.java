@@ -4,13 +4,10 @@ import com.geulkkoli.application.security.AccountStatus;
 import com.geulkkoli.application.user.AuthUser;
 import com.geulkkoli.application.user.UserModelDto;
 import com.geulkkoli.domain.user.User;
-import com.geulkkoli.domain.user.UserRepository;
 import com.geulkkoli.domain.user.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -20,7 +17,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
-import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,18 +28,21 @@ public class SocialController {
     private UserService userService;
 
     @GetMapping("/oauth2/signup")
-    public ModelAndView signUp(@ModelAttribute("signUpDto") SocialSignUpDto signUpDtoUpDto, @AuthenticationPrincipal AuthUser authUser) {
+    public ModelAndView signUp(@AuthenticationPrincipal AuthUser authUser) {
         log.info("소셜 로그인 회원의 회원 정보 기입");
-        log.info("authUser : {}", authUser.getUsername());
-        signUpDtoUpDto.setEmail(authUser.getUsername());
-        signUpDtoUpDto.setGender(authUser.getGender());
-        signUpDtoUpDto.setNickName(authUser.getNickName());
-        signUpDtoUpDto.setPassword(authUser.getPassword());
-        signUpDtoUpDto.setPhoneNo(authUser.getPhoneNo());
-        signUpDtoUpDto.setUserName(authUser.getUserRealName());
-        signUpDtoUpDto.setVerifyPassword(authUser.getPassword());
+        SocialSignUpDto socialSignUpDto = SocialSignUpDto.builder()
+                .email(authUser.getUsername())
+                .nickName(authUser.getNickName())
+                .phoneNo(authUser.getPhoneNo())
+                .verifyPassword(authUser.getPassword())
+                .gender(authUser.getGender())
+                .userName(authUser.getName())
+                .password(authUser.getPassword())
+                .build();
         SecurityContextHolder.clearContext();
+
         ModelAndView modelAndView = new ModelAndView();
+        modelAndView.addObject("signUpDto", socialSignUpDto);
         modelAndView.setViewName("social/oauth2/signup");
         return modelAndView;
     }
