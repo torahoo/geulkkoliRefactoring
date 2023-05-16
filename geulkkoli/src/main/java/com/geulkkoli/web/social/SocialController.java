@@ -28,7 +28,7 @@ public class SocialController {
     private UserService userService;
 
     @GetMapping("/oauth2/signup")
-    public ModelAndView signUp(@AuthenticationPrincipal AuthUser authUser) {
+    public ModelAndView signUp(@AuthenticationPrincipal AuthUser authUser, ModelAndView modelAndView) {
         log.info("소셜 로그인 회원의 회원 정보 기입");
         SocialSignUpDto socialSignUpDto = SocialSignUpDto.builder()
                 .email(authUser.getUsername())
@@ -41,16 +41,14 @@ public class SocialController {
                 .build();
         SecurityContextHolder.clearContext();
 
-        ModelAndView modelAndView = new ModelAndView();
         modelAndView.addObject("signUpDto", socialSignUpDto);
         modelAndView.setViewName("social/oauth2/signup");
         return modelAndView;
     }
 
     @PostMapping("/oauth2/signup")
-    public ModelAndView signUp(@ModelAttribute("signUpDto") SocialSignUpDto signUpDtoUpDto, BindingResult bindingResult) {
+    public ModelAndView signUp(@ModelAttribute("signUpDto") SocialSignUpDto signUpDtoUpDto, BindingResult bindingResult,ModelAndView modelAndView) {
         log.info("소셜 로그인 회원의 회원 정보 기입");
-        ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("social/oauth2/signup");
         if (userService.isNickNameDuplicate(signUpDtoUpDto.getNickName())) {
             bindingResult.rejectValue("nickName", "Duple.nickName");
