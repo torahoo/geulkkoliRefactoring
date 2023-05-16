@@ -3,13 +3,8 @@
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
   <meta charset="utf-8">
-  <link href="../css/bootstrap.min.css"
+  <link href="/css/bootstrap.min.css"
         th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
-  <link href="../js/bootstrap.js"
-        th:href="@{/js/bootstrap.min.css}" rel="stylesheet">
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
-          integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4"
-          crossorigin="anonymous"></script>
   <style>
     .container {
       max-width: 1000px;
@@ -109,30 +104,30 @@
   </div>
 
   <div class="col mt-2">
-    <form id="comment" th:field="comment" th:object="${comments}" method="post">
+    <form id="comment" th:action="@{/writePostComment/{postId}(postId=${post.postId})}"
+          th:object="${comments}" method="post">
       <div class="mb-3">
         <label th:text="댓글">댓글</label>
         <textarea class="form-control mt-1"
                   th:field="*{commentBody}" form="comment"
                   rows="3" placeholder="댓글을 남겨보세요">댓글란</textarea>
 <!--        <div class="field-error" th:errors="*{postBody}">댓글 오류</div>-->
-        <input type="submit" th:field="commentSubmit" th:value="등록" class="mt-1">
+        <input type="submit" id="commentSubmit" th:value="등록" class="mt-1">
       </div>
     </form>
   </div>
 
-<!--  <hr class="my-4">-->
-<!--  <div class="row">-->
-<!--    <div sec:authorize="hasRole('USER')"-->
-<!--         th:with="userNickName=${#authentication.principal.nickName}">-->
-<!--      <div class="col" th:each="commentDTO : ${commentListDTO}">-->
-<!--        <textarea class="form-control mt-1"-->
-<!--                  th:field="*{commentBody}" form="comment"-->
-<!--                  rows="3" placeholder="댓글을 남겨보세요">댓글란</textarea>-->
-<!--        <input type="button" th:field="commentEdit" th:value="수정" th:if="${#strings.equals(authorUser.nickName, userNickName)}">-->
-<!--      </div>-->
-<!--    </div>-->
-<!--  </div>-->
+  <div class="mt-3 col" id="postComment">
+    <div th:each="commentDTO : ${commentList}">
+      <div class="card">
+        <div class="col card-body">
+          <h5 class="card-title" th:value="${commentDTO.nickName}"></h5>
+          <h6 class="card-subtitle" th:value="${commentDTO.date}"></h6>
+          <p class="card-text" th:value="${commentDTO.commentBody}"></p>
+        </div>
+      </div>
+    </div>
+  </div>
 
 </div> <!-- /container -->
 
@@ -141,6 +136,63 @@
 
 <script type="text/javascript">
 
+  document.getElementById('commentSubmit').addEventListener('click', function (ev) {
+
+    ev.preventDefault();
+    const commentForm = document.getElementById('comment');
+
+    const str_json = JSON.stringify(
+            Object.fromEntries(
+                    new FormData(commentForm)));
+
+    if(document.getElementById('commentBody')) {
+      fetch(commentForm.getAttribute('action'), {
+        method: 'POST',
+        headers: { 'Content-Type' : 'application/json' },
+        body: str_json
+      })
+              .then((response) => response.json())
+              .then((list) => {
+                const postComment = document.getElementById('postComment');
+                while (postComment.hasChildNodes()) {
+                  postComment.firstChild.remove();
+                }
+                for (let newComment of list) {
+                  let forComment = document.createElement('div');
+                  forComment.setAttribute('class', 'mt-2 card w-100');
+                  forComment.style.width = '18rem';
+                  let forCommentHeader = document.createElement('div');
+                  forCommentHeader.setAttribute('class', 'card-header');
+                  let forCommentBody = document.createElement('div');
+                  forCommentBody.setAttribute('class', 'card-body');
+
+                  let userNickName = document.createElement('h5');
+                  userNickName.setAttribute('class', 'card-title');
+                  userNickName.innerText = newComment.nickName;
+
+                  let writeDate = document.createElement('h6');
+                  writeDate.setAttribute('class', 'card-subtitle mb-2 text-body-secondary');
+                  writeDate.innerText = newComment.date;
+
+                  let newCommentBody = document.createElement('p');
+                  newCommentBody.setAttribute('class', 'card-text commentBody');
+                  newCommentBody.innerText = newComment.commentBody;
+
+                  forComment.appendChild(forCommentHeader);
+                  forCommentHeader.appendChild(userNickName);
+                  forCommentHeader.appendChild(writeDate);
+
+                  forComment.appendChild(forCommentBody);
+                  // forCommentBody.appendChild(userNickName);
+                  // forCommentBody.appendChild(writeDate);
+                  forCommentBody.appendChild(newCommentBody);
+                  postComment.insertBefore(forComment, postComment.firstChild);
+                }
+
+
+              });
+    }
+  });
 
   const deleteTitle = '[[${post.title}]]'
   const postId = [[${post.postId}]]

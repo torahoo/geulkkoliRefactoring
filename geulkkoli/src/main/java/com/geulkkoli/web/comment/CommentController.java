@@ -38,6 +38,11 @@ public class CommentController {
                                                  @RequestBody Comments commentBody,
                                                  @AuthenticationPrincipal AuthUser user) throws Exception {
 
+        log.info("postId={}", postId);
+        log.info("commentBody={}", commentBody.getCommentBody());
+        log.info("authUser={}", user.getNickName());
+
+
         Post post = postService.findById(Long.valueOf(postId));
 
         commentsService.writeComment(

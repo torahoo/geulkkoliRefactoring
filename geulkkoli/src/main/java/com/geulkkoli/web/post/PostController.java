@@ -88,6 +88,7 @@ public class PostController {
         User authorUser = userService.findById(postPage.getAuthorId());
         request.getSession().setAttribute("pageNumber", request.getParameter("page"));
         model.addAttribute("post", postPage);
+        model.addAttribute("commentList", postPage.getCommentList());
         model.addAttribute("authorUser", authorUser);
         model.addAttribute("comments", new Comments());
         searchDefault(model, searchType, searchWords);

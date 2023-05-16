@@ -39,7 +39,7 @@ public class PageDTO {
 
     @NotBlank
     @Setter
-    private List<CommentListDTO> commentList = new ArrayList<>();
+    private List<CommentListDTO> commentList;
 
     @Builder
     public PageDTO(Long postId, Long authorId, String title, String postBody, String nickName, Set<Comments> comments) {
