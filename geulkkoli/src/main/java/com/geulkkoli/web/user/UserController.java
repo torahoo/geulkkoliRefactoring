@@ -258,7 +258,7 @@ public class UserController {
     public String editPassword(@Validated @ModelAttribute("editPasswordForm") PasswordEditDto form, BindingResult bindingResult, @AuthenticationPrincipal CustomAuthenticationPrinciple authUser, RedirectAttributes redirectAttributes) {
         User user = userService.findById(parseLong(authUser));
         if (!passwordService.isPasswordVerification(user, form)) {
-            bindingResult.rejectValue("password", "Check.password");
+            bindingResult.rejectValue("oldPassword", "Check.password");
         }
 
         if (!form.getNewPassword().equals(form.getVerifyPassword())) {
