@@ -24,7 +24,7 @@ public enum Role {
     }
 
     public static Role findByRoleName(String role) {
-        return Arrays.stream(Role.values()).filter(r -> r.getRoleName().equals(role)).findAny().orElse(GUEST);
+        return Arrays.stream(values()).filter(r -> r.getRoleName().equals(role)).findAny().orElse(GUEST);
     }
 
     public static boolean isUser(String role) {

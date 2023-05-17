@@ -18,7 +18,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static java.lang.Boolean.*;
 import static java.lang.Boolean.TRUE;
 
 @Slf4j
@@ -50,9 +49,9 @@ public class UserSecurityService implements UserDetailsService {
         UserModelDto userModel = UserModelDto.toDto(user);
 
         if (TRUE.equals(user.isLock())) {
-            return AuthUser.from(userModel, authorities, AccountStatus.LOCKED);
+            return CustomAuthenticationPrinciple.from(userModel, authorities, AccountStatus.LOCKED);
         }
-        return AuthUser.from(userModel, authorities, AccountStatus.ACTIVE);
+        return CustomAuthenticationPrinciple.from(userModel, authorities, AccountStatus.ACTIVE);
     }
 
 

@@ -1,6 +1,6 @@
 package com.geulkkoli.application.security;
 
-import com.geulkkoli.application.user.AuthUser;
+import com.geulkkoli.application.user.CustomAuthenticationPrinciple;
 import com.geulkkoli.application.user.PasswordService;
 import com.geulkkoli.application.user.UserSecurityService;
 import com.geulkkoli.domain.user.User;
@@ -116,7 +116,7 @@ class UserSecurityServiceTest {
 
         //when
         UserDetails user = userSecurityService.loadUserByUsername("tako1@naver.com");
-        AuthUser authUser = (AuthUser) user;
+        CustomAuthenticationPrinciple authUser = (CustomAuthenticationPrinciple) user;
         //then
 
         assertAll(() -> assertThat(authUser.getAuthorities()).hasSize(1),

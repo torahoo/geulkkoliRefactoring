@@ -1,6 +1,5 @@
 package com.geulkkoli.web.social;
 
-import com.geulkkoli.application.user.AuthUser;
 import com.geulkkoli.domain.user.User;
 import lombok.Builder;
 import org.hibernate.validator.constraints.Length;

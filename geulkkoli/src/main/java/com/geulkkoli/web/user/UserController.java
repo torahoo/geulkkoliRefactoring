@@ -1,7 +1,7 @@
 package com.geulkkoli.web.user;
 
 import com.geulkkoli.application.user.UserSecurityService;
-import com.geulkkoli.application.user.AuthUser;
+import com.geulkkoli.application.user.CustomAuthenticationPrinciple;
 import com.geulkkoli.application.user.EmailService;
 import com.geulkkoli.application.user.PasswordService;
 import com.geulkkoli.domain.user.User;
@@ -211,7 +211,7 @@ public class UserController {
     }
 
     @GetMapping("user/edit")
-    public String editForm(@AuthenticationPrincipal AuthUser authUser, Model model) {
+    public String editForm(@AuthenticationPrincipal CustomAuthenticationPrinciple authUser, Model model) {
         log.info("authUser : {}", authUser.getNickName());
         UserInfoEditDto userInfoEditDto = UserInfoEditDto.from(authUser.getUserRealName(), authUser.getNickName(), authUser.getPhoneNo(), authUser.getGender());
         model.addAttribute("editForm", userInfoEditDto);
@@ -222,7 +222,7 @@ public class UserController {
      * authUser가 기존의 세션 저장 방식을 대체한다
      * */
     @PostMapping("user/edit")
-    public String editForm(@Validated @ModelAttribute("editForm") UserInfoEditDto userInfoEditDto, BindingResult bindingResult, @AuthenticationPrincipal AuthUser authUser) {
+    public String editForm(@Validated @ModelAttribute("editForm") UserInfoEditDto userInfoEditDto, BindingResult bindingResult, @AuthenticationPrincipal CustomAuthenticationPrinciple authUser) {
         log.info("editForm : {}", userInfoEditDto.toString());
         // 닉네임 중복 검사 && 본인의 기존 닉네임과 일치해도 중복이라고 안 뜨게
         if (userService.isNickNameDuplicate(userInfoEditDto.getNickName()) && !userInfoEditDto.getNickName().equals(authUser.getNickName())) {
@@ -239,7 +239,7 @@ public class UserController {
             userService.edit(parseLong(authUser), userInfoEditDto);
             // 세션에 저장된 authUser의 정보를 수정한다.
             Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-            AuthUser newAuth = (AuthUser) principal;
+            CustomAuthenticationPrinciple newAuth = (CustomAuthenticationPrinciple) principal;
             log.info("nickName : {}", userInfoEditDto.getNickName());
             newAuth.modifyNickName(userInfoEditDto.getNickName());
             newAuth.modifyPhoneNo(userInfoEditDto.getPhoneNo());
@@ -255,7 +255,7 @@ public class UserController {
     }
 
     @PostMapping("user/edit/editPassword")
-    public String editPassword(@Validated @ModelAttribute("editPasswordForm") PasswordEditDto form, BindingResult bindingResult, @AuthenticationPrincipal AuthUser authUser, RedirectAttributes redirectAttributes) {
+    public String editPassword(@Validated @ModelAttribute("editPasswordForm") PasswordEditDto form, BindingResult bindingResult, @AuthenticationPrincipal CustomAuthenticationPrinciple authUser, RedirectAttributes redirectAttributes) {
         User user = userService.findById(parseLong(authUser));
         if (!passwordService.isPasswordVerification(user, form)) {
             bindingResult.rejectValue("password", "Check.password");
@@ -292,7 +292,7 @@ public class UserController {
         return REDIRECT_INDEX;
     }
 
-    private Long parseLong(AuthUser authUser) {
+    private Long parseLong(CustomAuthenticationPrinciple authUser) {
         return Long.valueOf(authUser.getUserId());
     }
 }

@@ -16,7 +16,6 @@ import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -43,11 +42,11 @@ public class CustomOauth2UserService extends AbstractOauth2UserService implement
             User user = userInfo(providerUser);
             UserModelDto model = singedUpUserToModel(user);
             authorities.add(new SimpleGrantedAuthority(user.getRole().getRole().getRoleName()));
-            return AuthUser.from(model, authorities, AccountStatus.ACTIVE, providerUser.getAttributes());
+            return CustomAuthenticationPrinciple.from(model, authorities, AccountStatus.ACTIVE, providerUser.getAttributes());
         }
         UserModelDto model = provideUserToModel(providerUser);
         authorities.add(new SimpleGrantedAuthority(Role.GUEST.getRoleName()));
-        return AuthUser.from(model, authorities, AccountStatus.ACTIVE, providerUser.getAttributes());
+        return CustomAuthenticationPrinciple.from(model, authorities, AccountStatus.ACTIVE, providerUser.getAttributes());
     }
 
     private UserModelDto provideUserToModel(ProviderUser providerUser) {

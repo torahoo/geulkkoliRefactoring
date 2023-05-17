@@ -2,7 +2,7 @@ package com.geulkkoli.application.security.handler;
 
 import com.geulkkoli.application.security.LoginProcessException;
 import com.geulkkoli.application.security.Role;
-import com.geulkkoli.application.user.AuthUser;
+import com.geulkkoli.application.user.CustomAuthenticationPrinciple;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -22,7 +22,7 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler {
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
-        AuthUser principal = (AuthUser) authentication.getPrincipal();
+        CustomAuthenticationPrinciple principal = (CustomAuthenticationPrinciple) authentication.getPrincipal();
         principal.getAuthorities().stream().map(GrantedAuthority::getAuthority).findAny().ifPresent(role -> {
             log.info(role);
             if (Role.isGuest(role)) {
