@@ -18,6 +18,8 @@ import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
+
 @Slf4j
 @RequiredArgsConstructor
 @Component
@@ -72,7 +74,8 @@ public class TestDataInit {
         joinForm3.setPhoneNo("01099995555");
         joinForm3.setGender("female");
         joinForm3.setPassword("123");
-        userSecurityService.join(joinForm3);
+        User user3 = userSecurityService.join(joinForm3);
+
 
         joinForm.setEmail("admin");
         joinForm.setUserName("타코다치");
@@ -84,7 +87,7 @@ public class TestDataInit {
 
         User user01 = userService.findById(1L);
 
-        for (int i = 0; i < 100; ++i) {
+        for (int i = 0; i < 10; ++i) {
 
             AddDTO addDTO = AddDTO.builder()
                     .title("여러분")
@@ -93,7 +96,6 @@ public class TestDataInit {
                     .build();
             Post post = user01.writePost(addDTO);
             postRepository.save(post);
-
 
             AddDTO addDTO1 = AddDTO.builder()
                     .title("testTitle01")
@@ -119,6 +121,18 @@ public class TestDataInit {
             Post post3 = user2.writePost(addDTO3);
             postRepository.save(post3);
         }
+
+        for (int i = 1; i <= 12; i++) {
+            AddDTO addDTO = AddDTO.builder()
+                    .title("달력 테스트")
+                    .postBody("햄버거")
+                    .nickName(user3.getNickName())
+                    .build();
+            Post post4 = user3.writePost(addDTO, LocalDateTime.of(2023, i, i, 1, 1));
+            postRepository.save(post4);
+        }
+
+
         /**
          * 신고받은 게시물 더미 데이터를 리팩토링한 방식으로 다시 작성해봤습니다.
          */
@@ -133,8 +147,6 @@ public class TestDataInit {
 //        Follow follow1 = user.writeFollow(followRepository.findBySelectUserId(1L).get().getFolloweeId());
 //        followRepository.save(follow1);
     }
-
-
 
 
 }

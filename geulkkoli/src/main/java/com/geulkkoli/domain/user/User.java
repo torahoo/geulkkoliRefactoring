@@ -110,6 +110,14 @@ public class User {
         return post;
     }
 
+    //달력 잔디 심기용 각 다른 날짜의 게시물들 필요
+    public Post writePost(AddDTO addDTO, LocalDateTime localDateTime) {
+        Post post = new Post(addDTO, this);
+        post.setCreatedAtForCalendarTest(localDateTime);
+        this.posts.add(post);
+        return post;
+    }
+
     //유저가 지운 게시글
     public Post deletePost(Long postId) {
         Post deltePost = findPost(postId);
