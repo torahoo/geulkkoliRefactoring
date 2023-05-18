@@ -7,6 +7,13 @@
   <title>로그인</title>
   <link rel="stylesheet" href="/css/bootstrap.min.css">
   <link rel="stylesheet" href="/css/userForm.css">
+  <style>
+    .btn-block {
+      display: inline-block;
+      font-size: 17px;
+      line-height: 20px;
+    }
+  </style>
 </head>
 <body>
 <header id="header" th:include="header"></header>
@@ -44,7 +51,6 @@
         </div>
       </div>
     </div>
-
     <br>
 
     <div class="row">
@@ -52,6 +58,20 @@
         <button class="w-100 btn btn-primary btn-lg" type="submit">로그인</button>
       </div>
     </div>
+
+
+    <div class="col">
+      <a th:href="@{/oauth2/authorization/kakao} " class="btn btn-block">
+        <i class="fa fa-kakao fa-fw"></i> 카카오 로그인
+      </a>
+      <a th:href="@{/oauth2/authorization/naver}" class="btn btn-block">
+        <i class="fa fa-naver fa-fw"></i> 네이버 로그인
+      </a>
+      <a th:href="@{/oauth2/authorization/google}" class="btn btn-block">
+        <i class="fa fa-google fa-fw"></i> 구글 로그인
+      </a>
+    </div>
+
     <button type="button"
             onclick="location.href='/findEmail'"
             class="noBack">이메일 찾기

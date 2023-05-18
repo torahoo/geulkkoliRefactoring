@@ -19,7 +19,7 @@ public class RoleNameAttributeConverter implements AttributeConverter<Role, Inte
         } else if (Role.ADMIN.equals(attribute)) {
             return 1;
         } else {
-            return 0;
+            return 3;
         }
 
     }
