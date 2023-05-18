@@ -47,7 +47,7 @@ public class PostController {
      */
     // 게시판 리스트 html로 이동
     @GetMapping("/list")
-    public String postList(@PageableDefault(size = 5, sort = "postId", direction = Sort.Direction.DESC) Pageable pageable,
+    public String postList(@PageableDefault(size = 5, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable,
                            Model model,
                            @RequestParam(defaultValue = "") String searchType,
                            @RequestParam(defaultValue = "") String searchWords) {

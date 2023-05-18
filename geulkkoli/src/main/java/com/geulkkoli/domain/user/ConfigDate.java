@@ -1,8 +1,7 @@
-package com.geulkkoli.domain.post;
+package com.geulkkoli.domain.user;
 
 import lombok.Getter;
 import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
@@ -17,11 +16,7 @@ public abstract class ConfigDate {
 
     @Column(name = "created_at", nullable = false, updatable = false)
     @CreatedDate
-    private String createdAt;
-
-    @Column(name = "updated_at")
-    @LastModifiedDate
-    private String updatedAt;
+    private String signUpDate;
 
     @Transient
     private LocalDateTime calendarData;
@@ -29,19 +24,13 @@ public abstract class ConfigDate {
     @PrePersist
     public void onPrePersist() {
         if (calendarData != null) {
-            this.createdAt = calendarData.format(DateTimeFormatter.ofPattern("yyyy. MM. dd a hh:mm:ss"));
+            this.signUpDate = calendarData.format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM));
         } else {
-            this.createdAt = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy. MM. dd a hh:mm:ss"));
+            this.signUpDate= LocalDateTime.now().format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM));
         }
-        this.updatedAt = createdAt;
     }
 
-    @PreUpdate
-    public void onPreUpdate() {
-        this.updatedAt = LocalDateTime.now().format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM));
-    }
-
-    // 달력 잔디 심기용 각 다른 날짜의 게시물들 필요
+    // 달력 잔디 심기용 달력 시작 기준 날짜 필요
     public LocalDateTime setCreatedAtForCalendarTest(LocalDateTime localDateTime) {
         return calendarData = localDateTime;
     }

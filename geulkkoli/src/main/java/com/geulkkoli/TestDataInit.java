@@ -74,8 +74,7 @@ public class TestDataInit {
         joinForm3.setPhoneNo("01099995555");
         joinForm3.setGender("female");
         joinForm3.setPassword("123");
-        User user3 = userSecurityService.join(joinForm3);
-
+        userSecurityService.join(joinForm3);
 
         joinForm.setEmail("admin");
         joinForm.setUserName("타코다치");
@@ -85,9 +84,19 @@ public class TestDataInit {
         joinForm.setPassword("123");
         userSecurityService.joinAdmin(joinForm);
 
+        JoinFormDto joinForm4 = new JoinFormDto();
+        joinForm4.setEmail("calendar@naver.com");
+        joinForm4.setUserName("김캘린");
+        joinForm4.setNickName("캘린더");
+        joinForm4.setPhoneNo("01098765432");
+        joinForm4.setGender("female");
+        joinForm4.setPassword("123");
+        LocalDateTime signUpDate = LocalDateTime.of(2022, 1, 1, 1, 1);
+        User user4 = userSecurityService.join(joinForm4, signUpDate);
+
         User user01 = userService.findById(1L);
 
-        for (int i = 0; i < 10; ++i) {
+        for (int i = 0; i < 4; ++i) {
 
             AddDTO addDTO = AddDTO.builder()
                     .title("여러분")
@@ -122,13 +131,14 @@ public class TestDataInit {
             postRepository.save(post3);
         }
 
-        for (int i = 1; i <= 12; i++) {
+        for (int i = 1; i <= 6; i++) {
             AddDTO addDTO = AddDTO.builder()
                     .title("달력 테스트")
                     .postBody("햄버거")
-                    .nickName(user3.getNickName())
+                    .nickName(user4.getNickName())
                     .build();
-            Post post4 = user3.writePost(addDTO, LocalDateTime.of(2023, i, i, 1, 1));
+            LocalDateTime createAt = LocalDateTime.of(2023, i, i, 1, 1);
+            Post post4 = user4.writePost(addDTO, createAt);
             postRepository.save(post4);
         }
 

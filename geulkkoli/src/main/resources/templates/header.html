@@ -1,13 +1,13 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
-<head th:fragment="header">
+<head>
     <meta charset="UTF-8">
     <title>Root Page</title>
-
 </head>
+
 <body>
-<header class="p-3 bg-white text-white">
+<header th:fragment="header" class="p-3 bg-white text-white">
     <div class="container">
         <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
             <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">

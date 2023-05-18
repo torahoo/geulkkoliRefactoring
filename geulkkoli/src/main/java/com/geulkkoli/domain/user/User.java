@@ -24,7 +24,7 @@ import java.util.*;
 @Entity
 @Getter
 @Table(name = "users")
-public class User {
+public class User extends ConfigDate{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long userId;

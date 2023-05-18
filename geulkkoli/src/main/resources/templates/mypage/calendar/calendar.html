@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>잔디 달력</title>
+  <style>
+      #calendarBox {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+      }
+
+      .calendar {
+          display: flex;
+          flex-direction: row;
+      }
+
+      .calendar-column {
+          display: flex;
+          flex-direction: column;
+          margin: 10%;
+      }
+
+      .calendar-cell {
+          flex-basis: 0;
+          flex-grow: 1;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          width: 20px;
+          height: 20px;
+          margin: 2px;
+      }
+
+      .borderLine {
+          border: gray solid 1px;
+      }
+
+  </style>
+
+</head>
+
+<body th:fragment="calendar">
+<br>
+<br>
+
+<div id="calendarBox">
+  <h4> < 흔적 남긴 날 > </h4>
+  <h6 class="month"></h6>
+  <div class="calendar"></div>
+</div>
+
+<script>
+
+    // 달의 마지막 날짜(며칠까지 있나)
+    function getMonthDates(year, month) {
+        return new Date(year, month + 1, 0).getDate();
+    }
+
+    // 요일
+    function getWeekDay(year, month, date) {
+        return new Date(year, month, date).getDay();
+    }
+
+    function createCalendar(year, month) {
+        let firstDay = getWeekDay(year, month, 1);
+        let dates = getMonthDates(year, month);
+        let columns = Math.ceil((firstDay + dates) / 7);
+
+        let calendar = document.getElementsByClassName('calendar').item(0);
+        calendar.innerHTML = '';
+
+        let date = 1;
+        for (let i = 0; i < columns; i++) {
+            let column = document.createElement('div');
+            column.classList.add('calendar-row');
+            for (let j = 0; j < 7; j++) {
+                let cell = document.createElement('div');
+                cell.classList.add('calendar-cell');
+                if (i === 0 && j < firstDay) {
+                    cell.innerHTML = '';
+                } else if (date > dates) {
+                    cell.innerHTML = '';
+                } else {
+                    cell.innerHTML = '';
+                    cell.classList.add('borderLine');
+                    date++;
+                }
+                column.appendChild(cell);
+            }
+            calendar.appendChild(column);
+        }
+    }
+
+    let now = new Date();
+    let year = now.getFullYear() + "";
+    let month = now.getMonth() + "";
+    createCalendar(year, month);
+
+
+    let monthNames = [
+        "January", "February", "March", "April", "May", "June",
+        "July", "August", "September", "October", "November", "December"
+    ];
+
+    let currentMonth = monthNames[month];
+    document.getElementsByClassName('month').item(0).innerHTML = currentMonth;
+
+
+</script>
+</body>
+
+<br>
+<br>
+</html>
