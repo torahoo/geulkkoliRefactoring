@@ -80,28 +80,30 @@
             let nowYear = now.getFullYear();
             let nowMonth = now.getMonth() + 1;
 
-            let timeDiff = Math.abs(signUpDate.getTime() - now.getTime());
+            let timeDiff = Math.abs(now.getTime() - signUpDate.getTime());
             let diffYears = Math.floor(timeDiff / (1000 * 3600 * 24 * 365));
 
             //현재 월로부터 직전 1년치 월 단위만 보여주기
-            if (diffYears < 1) {
-                for (let year = startYear; year <= nowYear; year++) {
-
-                    for (let month = startMonth; month <= 12; month++) {
-                        createCalendar(year, month - 1);
-                    }
-
-                    for (let month = 1; month <= nowMonth; month++) {
-                        createCalendar(year, month - 1);
+            if (diffYears < 1) { //가입 날짜로부터 현재까지가 1년치 미만일 때 가입 이전 달력 노출되지 않게
+                if (startYear === nowYear)
+                    for (let month = startMonth; month <= nowMonth; month++) {
+                        createCalendar(nowYear, month - 1);
+                    } else {
+                    for (let year = startYear; year <= nowYear; year++) {
+                        for (let month = startMonth; month <= 12; month++) {
+                            createCalendar(year, month - 1);
+                        }
+                        for (let month = 1; month <= nowMonth; month++) {
+                            createCalendar(year, month - 1);
+                        }
                     }
                 }
-
-            } else {
-                if (nowMonth === 12) {
+            } else { //가입 날짜로부터 1년 이상 활동했을 경우
+                if (nowMonth === 12) { //현재가 12월이면 다른 년도 갈 필요 없이 해당 년도 1~12월 노출
                     for (let month = 1; month <= nowMonth; month++) {
                         createCalendar(nowYear, month - 1);
                     }
-                } else {
+                } else { //현재 기준 과거 달력 1년치만 우선으로 보여주기
                     for (let month = nowMonth + 1; month <= 12; month++) {
                         createCalendar(nowYear - 1, month - 1);
                     }
