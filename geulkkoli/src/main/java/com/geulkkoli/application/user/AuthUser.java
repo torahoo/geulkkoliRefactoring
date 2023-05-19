@@ -14,6 +14,7 @@ public class AuthUser extends User {
     private String nickName;
     private String phoneNo;
     private String gender;
+    private final String signUpDate;
     private final boolean isEnabled;
     private final boolean isAccountNonExpired;
     private final boolean isAccountNonLocked;
@@ -28,6 +29,7 @@ public class AuthUser extends User {
         this.gender = userModel.getGender();
         this.phoneNo = userModel.getPhoneNo();
         this.userRealName = userModel.getUserName();
+        this.signUpDate = userModel.getSignUpDate();
         this.isAccountNonExpired = accountStatus.isAccountNonExpired();
         this.isAccountNonLocked = accountStatus.isAccountNonLocked();
         this.isCredentialsNonExpired = accountStatus.isCredentialsNonExpired();

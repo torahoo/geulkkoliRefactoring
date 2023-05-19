@@ -16,7 +16,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -74,9 +74,9 @@ public class UserSecurityService implements UserDetailsService {
     }
 
 
-    public User join(JoinFormDto form, LocalDateTime localDateTime) {
+    public User join(JoinFormDto form, LocalDate localDate) {
         User user = form.toEntity(passwordService.passwordEncoder);
-        user.setCreatedAtForCalendarTest(localDateTime);
+        user.setCreatedAtForCalendarTest(localDate);
 
         RoleEntity roleEntity = user.hasRole(Role.USER);
         roleRepository.save(roleEntity);

@@ -6,10 +6,12 @@ import com.geulkkoli.domain.follow.service.FollowService;
 import com.geulkkoli.domain.user.User;
 import com.geulkkoli.domain.user.service.UserService;
 import com.geulkkoli.web.myPage.dto.MyPageFormDto;
+import com.geulkkoli.web.myPage.dto.calendar.CalendarDto;
 import com.geulkkoli.web.myPage.dto.edit.PasswordEditFormDto;
 import com.geulkkoli.web.myPage.dto.edit.UserInfoEditFormDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -20,6 +22,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.websocket.server.PathParam;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 @Controller
 @RequestMapping("/myPage")
@@ -33,6 +37,7 @@ public class MyPageController {
     public static final String REDIRECT_EDIT_USER_INFO = "redirect:/myPage/editUserInfo";
     public static final String FOLLOWER_FORM = "mypage/follow/followerForm";
     public static final String FOLLOWEE_FORM = "mypage/follow/followeeForm";
+    //    public static final String CALENDAR_FORM = "mypage/calendar/calendarForm";
     public static final String REDIRECT_INDEX = "redirect:/";
 
     private final UserService userService;
@@ -40,7 +45,7 @@ public class MyPageController {
     private final FollowService followService;
 
     @GetMapping()
-    public String myPage(@ModelAttribute("myPageForm") MyPageFormDto myPageFormDto, @AuthenticationPrincipal AuthUser authUser , Model model) {
+    public String myPage(@ModelAttribute("myPageForm") MyPageFormDto myPageFormDto, @AuthenticationPrincipal AuthUser authUser, Model model) {
         myPageFormDto.myPageFormDto(authUser.getUserRealName(), authUser.getUsername());
         model.addAttribute("myPageForm", myPageFormDto);
         return MY_PAGE_FORM;
@@ -136,6 +141,16 @@ public class MyPageController {
     public String followeeList(Model model) {
         model.addAttribute("followeeForm", followService.findAllFolloweeUser());
         return FOLLOWEE_FORM;
+    }
+
+
+    //활동량에 따른 달력 잔디 심기
+    @GetMapping("/calendar")
+    @ResponseBody
+    public ResponseEntity<CalendarDto> calendaring(@AuthenticationPrincipal AuthUser authUser) {
+        LocalDate signUpDate = LocalDate.parse(authUser.getSignUpDate(), DateTimeFormatter.ofPattern("yyyy. MM. dd"));
+        CalendarDto calendarDto = new CalendarDto(authUser.getUserRealName(), signUpDate);
+        return ResponseEntity.ok(calendarDto);
     }
 
 }

@@ -18,6 +18,7 @@ import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Slf4j
@@ -91,7 +92,7 @@ public class TestDataInit {
         joinForm4.setPhoneNo("01098765432");
         joinForm4.setGender("female");
         joinForm4.setPassword("123");
-        LocalDateTime signUpDate = LocalDateTime.of(2022, 1, 1, 1, 1);
+        LocalDate signUpDate = LocalDate.of(2022, 1, 1);
         User user4 = userSecurityService.join(joinForm4, signUpDate);
 
         User user01 = userService.findById(1L);

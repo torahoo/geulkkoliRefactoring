@@ -4,12 +4,11 @@ import com.geulkkoli.domain.user.User;
 import lombok.Builder;
 import lombok.Getter;
 
-import java.io.Serializable;
-
 @Getter
 public class UserModelDto {
 
     private Long userId;
+
     private String userName;
 
     private String password;
@@ -22,8 +21,10 @@ public class UserModelDto {
 
     private String gender;
 
+    private String signUpDate;
+
     @Builder
-    public UserModelDto(Long userId, String userName, String password, String nickName, String email, String phoneNo, String gender) {
+    public UserModelDto(Long userId, String userName, String password, String nickName, String email, String phoneNo, String gender, String signUpDate) {
         this.userId = userId;
         this.userName = userName;
         this.password = password;
@@ -31,6 +32,7 @@ public class UserModelDto {
         this.email = email;
         this.phoneNo = phoneNo;
         this.gender = gender;
+        this.signUpDate = signUpDate;
     }
 
 
@@ -43,6 +45,7 @@ public class UserModelDto {
                 .phoneNo(user.getPhoneNo())
                 .userName(user.getUserName())
                 .gender(user.getGender())
+                .signUpDate(user.getSignUpDate())
                 .build();
     }
 }
