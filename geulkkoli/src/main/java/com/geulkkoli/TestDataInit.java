@@ -26,7 +26,6 @@ public class TestDataInit {
 
     private final PostRepository postRepository;
     private final ReportRepository reportRepository;
-    private final UserSecurityService userSecurityService;
     private final AdminServiceImpl adminServiceImpl;
     private final UserService userService;
 
@@ -54,7 +53,7 @@ public class TestDataInit {
         joinForm.setGender("male");
         joinForm.setPassword("qwe123!!!");
         User user = userService.signUp(joinForm);
-        adminServiceImpl.rockUser(user.getUserId(), "비밀번호가 너무 길어요");
+        adminServiceImpl.lockUser(user.getUserId(), "비밀번호가 너무 길어요", 7L);
 
         JoinFormDto joinForm2 = new JoinFormDto();
         joinForm2.setEmail("test01@naver.com");
@@ -73,7 +72,7 @@ public class TestDataInit {
         joinForm3.setPhoneNo("01089188913");
         joinForm3.setGender("female");
         joinForm3.setPassword("123");
-        userSecurityService.join(joinForm3);
+        userService.signUp(joinForm3);
 
         joinForm.setEmail("admin");
         joinForm.setUserName("타코다치");

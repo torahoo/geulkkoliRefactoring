@@ -13,8 +13,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import javax.servlet.http.HttpServletRequest;
-
 @Controller
 @RequiredArgsConstructor
 @Slf4j
@@ -22,7 +20,6 @@ import javax.servlet.http.HttpServletRequest;
 public class HomeController {
 
     private final PostService postService;
-    private final UserService userService;
 
     @GetMapping
     public String home(@PageableDefault(size = 5, sort = "postId", direction = Sort.Direction.DESC) Pageable pageable,
@@ -31,6 +28,7 @@ public class HomeController {
                        @RequestParam(defaultValue = "7") String searchWords) {
 
         model.addAttribute("list", postService.searchPostFindAll(pageable, searchType, searchWords).toList());
+        model.addAttribute("notificationList", postService.searchPostFindAll(pageable, searchType, searchWords).toList());
 
         return "/home";
     }
