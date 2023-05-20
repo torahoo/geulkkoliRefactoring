@@ -54,6 +54,10 @@ public class RoleEntity {
         return role.equals(Role.ADMIN);
     }
 
+    public Boolean isGuest() {
+        return role.equals(Role.GUEST);
+    }
+
     public Set<User> getUsers() {
         return users;
     }
@@ -69,5 +73,9 @@ public class RoleEntity {
     @Override
     public int hashCode() {
         return Objects.hash(role);
+    }
+
+    public String authority() {
+        return role.getRoleName();
     }
 }

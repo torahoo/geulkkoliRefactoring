@@ -1,11 +1,12 @@
-package com.geulkkoli.web.user;
+package com.geulkkoli.exception.web.user;
 
-import com.geulkkoli.application.security.UserSecurityService;
+import com.geulkkoli.application.user.UserSecurityService;
 import com.geulkkoli.application.security.config.SecurityConfig;
 import com.geulkkoli.application.security.handler.LoginFailureHandler;
 import com.geulkkoli.domain.user.User;
 import com.geulkkoli.domain.user.UserRepository;
 import com.geulkkoli.domain.user.service.UserService;
+import com.geulkkoli.web.user.UserController;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -27,6 +28,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
+
 
 /*
     MockMvc는 가상의 클라이언트를 생성해주는 것과 비슷하게 사용 가능한데,
@@ -55,9 +57,8 @@ class UserControllerTest {
 
     @MockBean
     private UserService userService;
-
-    @MockBean
-    private UserSecurityService userSecurityService;
+//    @MockBean
+//    private UserSecurityService userSecurityService;
 
     User user;
 

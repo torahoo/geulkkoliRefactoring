@@ -20,7 +20,7 @@
   <hr class="my-4">
   <div class="container">
     <div>
-      <form id="edit" th:action="@{/post/update/{postId}(postId=*{postId})}" th:object="${editDTO}" method="post">
+      <form id="edit" th:action="@{/post/update/{postId}(postId=*{postId},searchType=${searchType},searchWords=${searchWords})}" th:object="${editDTO}" method="post">
         <input type="hidden" th:field="*{nickName}" form="edit">
         <div class="mb-3">
           <label th:text="제목">제목</label>
@@ -45,7 +45,7 @@
           <div class="col">
             <button class="w-100 btn btn-primary btn-lg"
                     type="button"
-                    th:onclick="|location.href='@{/post/list}'|"
+                    th:onclick="|location.href='@{/post/list(page=${session.pageNumber},searchType=${searchType},searchWords=${searchWords})}'|"
                     th:value="취소">취소</button>
           </div>
           <div class="col">

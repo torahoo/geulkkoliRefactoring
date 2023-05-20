@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <title>Social Signup</title>
+    <link rel="stylesheet" type="text/css" href="/css/style.css">
+</head>
+<header id="header" th:include="header"></header>
+
+<body>
+<h2>Social Signup</h2>
+<form th:action="@{/social/oauth2/signup}" th:object="${signUpDto}" method="post">
+    <label for="nickname">Nickname</label>
+    <input type="text" id="nickname"
+           th:field="*{nickName}"
+           name="nickname" placeholder="Enter your nickname" required
+           th:errorclass="field-error"
+           class="form-control form-control-lg nickNameInline">
+    <p class="field-error" th:errors="*{nickName}"></p>
+
+    <label for="phone">Phone Number</label>
+    <input type="tel" id="phone"
+           th:field="*{phoneNo}"
+           name="phone" placeholder="Enter your phone number" required
+           th:errorclass="field-error">
+    <p class="field-error" th:errors="*{phoneNo}"></p>
+
+    <label for="password">Password</label>
+    <input type="password" id="password" name="password"
+           th:field="*{password}"
+           placeholder="Enter your password" required
+           th:errorclass="field-error" class="form-control form-control-lg">
+    <p class="field-error" th:errors="*{password}"></p>
+
+    <input type="hidden" id="email" name="email"
+           th:field="*{email}"
+    />
+    <input type="hidden" id="gender" name="gender"
+           th:field="*{gender}"
+    />
+
+    <input type="hidden" id="userName" name="userName"
+           th:field="*{userName}"
+    />
+
+    <input type="hidden">
+
+    <input type="submit" value="Signup">
+    <div id="modal-bg"></div>
+</form>
+
+</body>
+<footer id="footer" th:include="footer"></footer>
+</html>

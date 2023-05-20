@@ -1,7 +1,6 @@
-
 package com.geulkkoli;
 
-import com.geulkkoli.application.security.UserSecurityService;
+import com.geulkkoli.application.user.UserSecurityService;
 import com.geulkkoli.domain.admin.Report;
 import com.geulkkoli.domain.admin.ReportRepository;
 import com.geulkkoli.domain.admin.service.AdminServiceImpl;
@@ -54,8 +53,8 @@ public class TestDataInit {
         joinForm.setPhoneNo("9190232333");
         joinForm.setGender("male");
         joinForm.setPassword("qwe123!!!");
-        User user = userSecurityService.join(joinForm);
-//        adminServiceImpl.rockUser(user.getUserId(), "비밀번호가 너무 길어요", 7L);
+        User user = userService.signUp(joinForm);
+        adminServiceImpl.rockUser(user.getUserId(), "비밀번호가 너무 길어요");
 
         JoinFormDto joinForm2 = new JoinFormDto();
         joinForm2.setEmail("test01@naver.com");
@@ -64,7 +63,7 @@ public class TestDataInit {
         joinForm2.setPhoneNo("01012345678");
         joinForm2.setGender("male");
         joinForm2.setPassword("123");
-        User user2 = userSecurityService.join(joinForm2);
+        User user2 = userService.signUp(joinForm2);
 
         // 이메일 테스트하느라 실제 이메일 사용 중
         JoinFormDto joinForm3 = new JoinFormDto();
@@ -82,7 +81,7 @@ public class TestDataInit {
         joinForm.setPhoneNo("01033132232");
         joinForm.setGender("male");
         joinForm.setPassword("123");
-        userSecurityService.joinAdmin(joinForm);
+        userService.signUpAdmin(joinForm);
 
         User user01 = userService.findById(1L);
 

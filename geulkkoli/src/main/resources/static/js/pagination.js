@@ -48,5 +48,16 @@ function isVisible(bool, obj) {
 }
 
 function makeURI(page, size) {
-    return '/post/list?page=' + page + '&size=' + size;
+    const type =document.getElementById('search-type').value;
+    const words =document.getElementById('search-words').value;
+    let uri = '/post/list?page=' + page + '&size=' + size;
+
+    if (type != null) {
+        uri += '&searchType=' + type;
+        if (words != null) {
+            uri += '&searchWords=' + words;
+        }
+    }
+
+    return uri;
 }

@@ -1,6 +1,7 @@
-package com.geulkkoli.web.user;
+package com.geulkkoli.exception.web.user;
 
-import com.geulkkoli.application.security.UserSecurityService;
+import com.geulkkoli.application.user.UserSecurityService;
+import com.geulkkoli.domain.user.service.UserService;
 import com.geulkkoli.web.user.dto.JoinFormDto;
 import com.geulkkoli.web.user.dto.edit.UserInfoEditDto;
 import org.junit.jupiter.api.DisplayName;
@@ -9,11 +10,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.web.context.WebApplicationContext;
 
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
@@ -32,6 +35,9 @@ class UserControllerSecurityEndPointTest {
     private MockMvc mvc;
     @Autowired
     UserSecurityService userSecurityService;
+    @Autowired
+    UserService userService;
+
 
     @Autowired
     WebApplicationContext context;
@@ -67,7 +73,7 @@ class UserControllerSecurityEndPointTest {
         joinForm.setPhoneNo("9190232333");
         joinForm.setGender("male");
         joinForm.setPassword("qwe123!!!");
-        userSecurityService.join(joinForm);
+        userService.signUp(joinForm);
 
         UserDetails user = userSecurityService.loadUserByUsername("tako99@naver.com");
 
@@ -84,11 +90,7 @@ class UserControllerSecurityEndPointTest {
     @DisplayName("인증된 사용자가 /user/edit post로 정보를 올바르게 수정하면 user/edit으로 리다렉트한다.")
     void userinfoModifySuccess() throws Exception {
         UserInfoEditDto userInfoEditDto =
-                UserInfoEditDto.builder().userName("tako99@naver.com")
-                        .nickName("바나나11")
-                        .phoneNo("9190232333")
-                        .gender("male")
-                        .build();
+                UserInfoEditDto.from("tako99@naver.com","바나나11","9190232333","male");
 
         JoinFormDto joinForm = new JoinFormDto();
         joinForm.setEmail("tako99@naver.com");
@@ -97,7 +99,7 @@ class UserControllerSecurityEndPointTest {
         joinForm.setPhoneNo("9190232333");
         joinForm.setGender("male");
         joinForm.setPassword("qwe123!!!");
-        userSecurityService.join(joinForm);
+        userService.signUp(joinForm);
 
         UserDetails user = userSecurityService.loadUserByUsername("tako99@naver.com");
 
@@ -117,4 +119,21 @@ class UserControllerSecurityEndPointTest {
                 .andExpect(redirectedUrl("/user/edit"));
     }
 
+    /**
+     * 댓글 테스트를 할 수 없는 환경에서 팀원의 문제를 해결해보려고 작성한 테스트 코드
+     */
+    @Test
+    @WithUserDetails(value ="nickName",userDetailsServiceBeanName = "testUserDetailService")
+    @DisplayName("인증된 사용자가 /writePostComment에 접속해서 댓글을 작성하면 리다이렉트")
+
+    void user_writePostComment_redirect() throws Exception {
+        LinkedMultiValueMap<String, String> parma = new LinkedMultiValueMap<>();
+        parma.add("commentBody","test");
+        parma.add("postId","1");
+
+        mvc.perform(post("/writePostComment")
+                        .params(parma))
+                .andExpect(status().is(302))
+                .andExpect(redirectedUrl("/post/read" + parma.get("commentBody")));
+    }
 }

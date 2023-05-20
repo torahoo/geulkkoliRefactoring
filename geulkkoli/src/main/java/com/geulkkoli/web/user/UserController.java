@@ -1,11 +1,12 @@
 package com.geulkkoli.web.user;
 
-import com.geulkkoli.application.security.UserSecurityService;
-import com.geulkkoli.application.user.AuthUser;
+import com.geulkkoli.application.user.UserSecurityService;
+import com.geulkkoli.application.user.CustomAuthenticationPrinciple;
 import com.geulkkoli.application.user.EmailService;
 import com.geulkkoli.application.user.PasswordService;
 import com.geulkkoli.domain.user.User;
 import com.geulkkoli.domain.user.service.UserService;
+import com.geulkkoli.web.user.dto.EmailCheckForJoinDto;
 import com.geulkkoli.web.user.dto.JoinFormDto;
 import com.geulkkoli.web.user.dto.LoginFormDto;
 import com.geulkkoli.web.user.dto.edit.PasswordEditDto;
@@ -26,7 +27,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.websocket.server.PathParam;
 import java.util.Optional;
 
 @Controller
@@ -99,13 +99,13 @@ public class UserController {
 
         if (!bindingResult.hasErrors()) {
             request.getSession().setAttribute("email", user.get().getEmail());
-            return "forward:/postFindPasswordInfo";
+            return "forward:/tempPassword"; // post로 감
         } else {
             return FIND_PASSWORD_FORM;
         }
     }
 
-    @PostMapping("/postFindPasswordInfo")
+    @PostMapping("/tempPassword")
     public String tempPasswordForm() {
         return TEMP_PASSWORD_FORM;
     }
@@ -115,11 +115,12 @@ public class UserController {
         String email = (String) request.getSession().getAttribute("email");
         Optional<User> user = userService.findByEmail(email);
 
-        int length = passwordService.setTempPasswordLength(8, 20);
+        int length = passwordService.setLength(8, 20);
         String tempPassword = passwordService.createTempPassword(length);
 
         passwordService.updatePassword(user.get().getUserId(), tempPassword);
         emailService.sendTempPasswordEmail(email, tempPassword);
+        log.info("email 발송");
 
         model.addAttribute("waitMailMessage", true);
         return TEMP_PASSWORD_FORM;
@@ -132,12 +133,8 @@ public class UserController {
     }
 
     @PostMapping("/join")
-    public String userJoin(@Validated @ModelAttribute("joinForm") JoinFormDto form, BindingResult bindingResult, Model model) {
+    public String userJoin(@Validated @ModelAttribute("joinForm") JoinFormDto form, BindingResult bindingResult, Model model, HttpServletRequest request) {
         log.info("join Method={}", this);
-
-        if (userService.isEmailDuplicate(form.getEmail())) {
-            bindingResult.rejectValue("email", "Duple.joinForm.email");
-        }
 
         if (userService.isNickNameDuplicate(form.getNickName())) {
             bindingResult.rejectValue("nickName", "Duple.nickName");
@@ -147,13 +144,23 @@ public class UserController {
             bindingResult.rejectValue("phoneNo", "Duple.phoneNo");
         }
 
-        // 중복 검사라기보다는 비밀번호 확인에 가까운 것 같아서 에러코드명 변경
+        String authenticationEmail = (String) request.getSession().getAttribute("authenticationEmail");
+        String authenticationNumber = (String) request.getSession().getAttribute("authenticationNumber");
+        if (authenticationEmail.isEmpty() || authenticationNumber.isEmpty()) {
+            bindingResult.rejectValue("email", "Authentication.email");
+        }
+
+        // 인증된 이메일 수정 후 인증 안 된 상태로 가입 시도할 경우
+        if (!form.getEmail().equals(authenticationEmail)) {
+            bindingResult.rejectValue("email", "Authentication.email");
+        }
+
         if (!form.getPassword().equals(form.getVerifyPassword())) {
             bindingResult.rejectValue("verifyPassword", "Check.verifyPassword");
         }
 
         if (!bindingResult.hasErrors()) {
-            userSecurityService.join(form);
+            userService.signUp(form);
 
             log.info("joinModel = {}", model);
             log.info("joinForm = {}", form);
@@ -164,11 +171,49 @@ public class UserController {
         }
     }
 
+    @PostMapping("/checkEmail")
+    @ResponseBody
+    public String checkEmail(@RequestBody EmailCheckForJoinDto form, HttpServletRequest request) {
+
+        String responseMessage;
+
+        if (form.getEmail().isEmpty()) {
+            responseMessage = "nullOrBlank";
+        } else if (userService.isEmailDuplicate(form.getEmail())) {
+            responseMessage = "emailDuplicated";
+        } else {
+            int length = 6;
+            String authenticationNumber = passwordService.authenticationNumber(length);
+            request.getSession().setAttribute("authenticationNumber", authenticationNumber);
+            emailService.sendAuthenticationNumberEmail(form.getEmail(), authenticationNumber);
+            log.info("email 발송");
+            responseMessage = "sendAuthenticationNumberEmail";
+        }
+
+        return responseMessage;
+    }
+
+    @PostMapping("/checkAuthenticationNumber")
+    @ResponseBody
+    public String checkAuthenticationNumber(@RequestBody EmailCheckForJoinDto form, HttpServletRequest request) {
+
+        String authenticationNumber = (String) request.getSession().getAttribute("authenticationNumber");
+        String responseMessage;
+
+        if (!form.getAuthenticationNumber().trim().equals(authenticationNumber)) {
+            responseMessage = "wrong";
+        } else {
+            request.getSession().setAttribute("authenticationEmail", form.getEmail());
+            responseMessage = "right";
+        }
+
+        return responseMessage;
+    }
+
     @GetMapping("user/edit")
-    public String editForm(@ModelAttribute("editForm") UserInfoEditDto userInfoEditDto, @AuthenticationPrincipal AuthUser authUser, Model model) {
-        log.info("editForm : {}", userInfoEditDto.toString());
-        log.info("authUser : {}", authUser.toString());
-        userInfoEditDto.editFormDto(authUser.getUserRealName(), authUser.getNickName(), authUser.getPhoneNo(), authUser.getGender());
+    public String editForm(@AuthenticationPrincipal CustomAuthenticationPrinciple authUser, Model model) {
+        log.info("authUser : {}", authUser.getNickName());
+        UserInfoEditDto userInfoEditDto = UserInfoEditDto.from(authUser.getUserRealName(), authUser.getNickName(), authUser.getPhoneNo(), authUser.getGender());
         model.addAttribute("editForm", userInfoEditDto);
         return EDIT_FORM;
     }
@@ -177,7 +222,7 @@ public class UserController {
      * authUser가 기존의 세션 저장 방식을 대체한다
      * */
     @PostMapping("user/edit")
-    public String editForm(@Validated @ModelAttribute("editForm") UserInfoEditDto userInfoEditDto, BindingResult bindingResult, @AuthenticationPrincipal AuthUser authUser) {
+    public String editForm(@Validated @ModelAttribute("editForm") UserInfoEditDto userInfoEditDto, BindingResult bindingResult, @AuthenticationPrincipal CustomAuthenticationPrinciple authUser) {
         log.info("editForm : {}", userInfoEditDto.toString());
         // 닉네임 중복 검사 && 본인의 기존 닉네임과 일치해도 중복이라고 안 뜨게
         if (userService.isNickNameDuplicate(userInfoEditDto.getNickName()) && !userInfoEditDto.getNickName().equals(authUser.getNickName())) {
@@ -191,10 +236,11 @@ public class UserController {
         if (bindingResult.hasErrors()) {
             return EDIT_FORM;
         } else {
-            userService.edit(authUser.getUserId(), userInfoEditDto);
+            userService.edit(parseLong(authUser), userInfoEditDto);
             // 세션에 저장된 authUser의 정보를 수정한다.
             Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-            AuthUser newAuth = (AuthUser) principal;
+            CustomAuthenticationPrinciple newAuth = (CustomAuthenticationPrinciple) principal;
+            log.info("nickName : {}", userInfoEditDto.getNickName());
             newAuth.modifyNickName(userInfoEditDto.getNickName());
             newAuth.modifyPhoneNo(userInfoEditDto.getPhoneNo());
             newAuth.modifyGender(userInfoEditDto.getGender());
@@ -209,10 +255,10 @@ public class UserController {
     }
 
     @PostMapping("user/edit/editPassword")
-    public String editPassword(@Validated @ModelAttribute("editPasswordForm") PasswordEditDto form, BindingResult bindingResult, @AuthenticationPrincipal AuthUser authUser, RedirectAttributes redirectAttributes) {
-        User user = userService.findById(authUser.getUserId());
+    public String editPassword(@Validated @ModelAttribute("editPasswordForm") PasswordEditDto form, BindingResult bindingResult, @AuthenticationPrincipal CustomAuthenticationPrinciple authUser, RedirectAttributes redirectAttributes) {
+        User user = userService.findById(parseLong(authUser));
         if (!passwordService.isPasswordVerification(user, form)) {
-            bindingResult.rejectValue("password", "Check.password");
+            bindingResult.rejectValue("oldPassword", "Check.password");
         }
 
         if (!form.getNewPassword().equals(form.getVerifyPassword())) {
@@ -222,7 +268,7 @@ public class UserController {
         if (bindingResult.hasErrors()) {
             return EDIT_PASSWORD_FORM;
         } else {
-            passwordService.updatePassword(authUser.getUserId(), form.getNewPassword());
+            passwordService.updatePassword(parseLong(authUser), form.getNewPassword());
             redirectAttributes.addAttribute("status", true);
             log.info("editPasswordForm = {}", form);
         }
@@ -235,7 +281,7 @@ public class UserController {
      * 또한 사용자 입장에서는 자신의 정보를 삭제하는 게 아니라 탈퇴하는 서비스를 쓰고 있으므로 uri를 의미에 더 가깝게 고쳤다.
      */
     @DeleteMapping("user/edit/unsubscribe/{userId}")
-    public String unsubscribe(@PathParam("userId") Long userId, @AuthenticationPrincipal AuthUser authUser) {
+    public String unsubscribe(@PathVariable("userId") Long userId) {
         try {
             User findUser = userService.findById(userId);
             userService.delete(findUser);
@@ -244,5 +290,9 @@ public class UserController {
             return REDIRECT_INDEX;
         }
         return REDIRECT_INDEX;
+    }
+
+    private Long parseLong(CustomAuthenticationPrinciple authUser) {
+        return Long.valueOf(authUser.getUserId());
     }
 }

@@ -40,7 +40,7 @@ public class User {
     @Column(name = "email", nullable = false, unique = true)
     private String email;
 
-    @Column(name = "phone_No", nullable = false, unique = true)
+    @Column(name = "phone_No", unique = true)
     private String phoneNo;
 
     @Column(nullable = false)
@@ -249,7 +249,7 @@ public class User {
     }
 
 
-    public RoleEntity hasRole(Role role) {
+    public RoleEntity Role(Role role) {
         RoleEntity roleEntity = RoleEntity.of(role, this);
         this.role = roleEntity;
         return roleEntity;
@@ -257,6 +257,10 @@ public class User {
 
     public RoleEntity getRole() {
         return role;
+    }
+
+    public String roleName() {
+        return role.getRole().getRoleName();
     }
 
 
@@ -273,4 +277,23 @@ public class User {
         return Objects.hash(userId);
     }
 
+    public Boolean  isGuest() {
+        return role.isGuest();
+    }
+
+    public Boolean isAdmin() {
+        return role.isAdmin();
+    }
+
+
+    public Boolean isUser() {
+        return role.isUser();
+    }
+
+    public String authority() {
+        return role.authority();
+    }
 }
+
+
+
