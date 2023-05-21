@@ -76,14 +76,20 @@ create table if not exists report
     constraint fk_reporter foreign key (reporter_id) references users (user_id)
 );
 
-create table if not exists permissions
+create table if not exists roles
 (
-    permission_id bigint primary key auto_increment,
-    user_id bigint not null,
-    role int not null,
-    is_enabled boolean not null,
-    is_account_non_expired boolean not null,
-    is_account_non_locked boolean not null,
-    is_credentials_non_expired boolean not null,
-    constraint fk_permission_user foreign key (user_id) references users (user_id)
+    role_id bigint primary key auto_increment,
+    role_name varchar(255) not null unique
+);
+
+create table if not exists report
+(
+    report_id bigint primary key auto_increment,
+    reported_post_id bigint not null,
+    reporter_id bigint not null,
+    reported_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    reason varchar(100) not null,
+    constraint fk_reported_post foreign key (reported_post_id) references post (post_id),
+    constraint fk_reporter foreign key (reporter_id) references users (user_id),
+    constraint unique_report unique (reported_post_id, reporter_id)
 );
