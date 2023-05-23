@@ -1,0 +1,29 @@
+.calendar {
+  display: grid;
+  grid-template-columns: repeat(7, 40px);
+  grid-gap: 3px; /* Reduced gap between squares */
+  max-width: 400px;
+  margin: 0 auto;
+  padding: 10px;
+}
+
+.calendar .day {
+  width: 30px;
+  height: 30px;
+  line-height: 30px;
+  text-align: center;
+  cursor: pointer;
+  background-color: #fff; /* Default color */
+  border: 1px solid #ccc; /* Square border */
+  border-radius: 4px; /* Rounded corners */
+}
+
+.calendar .day.active {
+  background-color: #7b145e; /* Purple */
+  color: #fff; /* Text color for active days */
+}
+
+.calendar .day.inactive {
+  background-color: #fff; /* White */
+  color: #ccc; /* Text color for inactive days */
+}

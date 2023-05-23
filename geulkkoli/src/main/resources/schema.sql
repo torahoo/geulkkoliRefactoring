@@ -66,16 +66,6 @@ CREATE TABLE IF NOT EXISTS user_followings
     CONSTRAINT fk_followee FOREIGN KEY (followee_id) REFERENCES users (user_id) ON DELETE CASCADE
 );
 
-create table if not exists report
-(
-    report_id bigint primary key auto_increment,
-    report_post_id bigint not null,
-    reporter_id bigint not null,
-    reported_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    constraint fk_reported_post foreign key (report_post_id) references post (post_id),
-    constraint fk_reporter foreign key (reporter_id) references users (user_id)
-);
-
 create table if not exists roles
 (
     role_id bigint primary key auto_increment,

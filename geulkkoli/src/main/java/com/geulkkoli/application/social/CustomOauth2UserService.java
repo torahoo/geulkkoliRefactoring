@@ -1,9 +1,12 @@
-package com.geulkkoli.application.user;
+package com.geulkkoli.application.social;
 
 import com.geulkkoli.application.security.AccountStatus;
 import com.geulkkoli.application.security.Role;
-import com.geulkkoli.application.user.util.DelegateOAuth2RequestConverter;
-import com.geulkkoli.application.user.util.ProviderUserRequest;
+import com.geulkkoli.application.user.CustomAuthenticationPrinciple;
+import com.geulkkoli.application.user.ProviderUser;
+import com.geulkkoli.application.user.UserModelDto;
+import com.geulkkoli.application.social.util.DelegateOAuth2RequestConverter;
+import com.geulkkoli.application.social.util.ProviderUserRequest;
 import com.geulkkoli.domain.user.User;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.GrantedAuthority;
@@ -41,7 +44,7 @@ public class CustomOauth2UserService extends AbstractOauth2UserService implement
             log.info("providerUser : {}", providerUser.getId());
             User user = userInfo(providerUser);
             UserModelDto model = singedUpUserToModel(user);
-            authorities.add(new SimpleGrantedAuthority(user.getRole().getRole().getRoleName()));
+            authorities.add(new SimpleGrantedAuthority(user.roleName()));
             return CustomAuthenticationPrinciple.from(model, authorities, AccountStatus.ACTIVE, providerUser.getAttributes());
         }
         UserModelDto model = provideUserToModel(providerUser);
@@ -50,7 +53,7 @@ public class CustomOauth2UserService extends AbstractOauth2UserService implement
     }
 
     private UserModelDto provideUserToModel(ProviderUser providerUser) {
-        log.info("providerUser : {}", providerUser.getId());
+
         return UserModelDto.builder()
                 .userId(providerUser.getId())
                 .gender(providerUser.getGender())

@@ -1,5 +1,6 @@
-package com.geulkkoli.application.user;
+package com.geulkkoli.application.social;
 
+import com.geulkkoli.application.user.ProviderUser;
 import com.geulkkoli.domain.user.User;
 import com.geulkkoli.domain.user.service.UserService;
 import lombok.extern.slf4j.Slf4j;
