@@ -15,21 +15,26 @@
           flex-direction: row;
       }
 
-      .calendar-column {
-          display: flex;
-          flex-direction: column;
-          margin: 10%;
-      }
-
       .calendar-cell {
-          flex-basis: 0;
-          flex-grow: 1;
           display: flex;
-          align-items: center;
-          justify-content: center;
           width: 15px;
           height: 15px;
-          margin: 2px;
+          border-collapse: collapse;
+      }
+
+      .first-column {
+          display: flex;
+          flex-direction: column;
+          margin-top: auto;
+          align-items: flex-end;
+      }
+
+      .last-column {
+          display: flex;
+          flex-direction: column;
+          margin-bottom: auto;
+          align-items: flex-start;
+          margin-right: -15px;
       }
 
       .borderLine {
@@ -38,6 +43,10 @@
 
       h6 {
           text-align: center;
+      }
+
+      .last-column.seven-cells{
+          margin-right: 0px;
       }
 
   </style>
@@ -140,20 +149,27 @@
         let date = 1;
         for (let i = 0; i < columns; i++) {
             let column = document.createElement('div');
-            column.classList.add('calendar-row');
+            column.classList.add('calendar-column');
+            let cellCount = 0;
             for (let j = 0; j < 7; j++) {
-                let cell = document.createElement('div');
-                cell.classList.add('calendar-cell');
                 if (i === 0 && j < firstDay) {
-                    cell.innerHTML = '';
+                    // cell.innerHTML = '';
+                    column.classList.add('first-column');
                 } else if (date > dates) {
-                    cell.innerHTML = '';
+                    column.classList.add('last-column');
+                    // cell.innerHTML = '';
                 } else {
+                    let cell = document.createElement('div');
+                    cell.classList.add('calendar-cell');
                     cell.innerHTML = '';
                     cell.classList.add('borderLine');
+                    column.appendChild(cell);
                     date++;
+                    cellCount++;
                 }
-                column.appendChild(cell);
+            }
+            if (cellCount === 7) {
+                column.classList.add('seven-cells');
             }
             calendar.appendChild(column);
         }

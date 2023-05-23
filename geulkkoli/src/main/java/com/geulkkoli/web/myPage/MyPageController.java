@@ -96,6 +96,7 @@ public class MyPageController {
     @PostMapping("/editPassword")
     public String editPassword(@Validated @ModelAttribute("passwordEditForm") PasswordEditFormDto form, BindingResult bindingResult, @AuthenticationPrincipal AuthUser authUser, RedirectAttributes redirectAttributes) {
         User user = userService.findById(authUser.getUserId());
+        //null값 처리
         if (!passwordService.isPasswordVerification(user, form)) {
             bindingResult.rejectValue("password", "Check.password");
         }
