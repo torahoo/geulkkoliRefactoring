@@ -13,7 +13,7 @@ import java.util.Objects;
 @Entity
 @NoArgsConstructor
 @Getter
-public class Comments extends ConfigDate{
+public class Comments extends ConfigDate {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
