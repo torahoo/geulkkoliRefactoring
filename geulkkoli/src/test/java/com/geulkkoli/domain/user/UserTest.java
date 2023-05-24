@@ -24,7 +24,6 @@ import static org.junit.jupiter.api.Assertions.*;
 @DataJpaTest
 class UserTest {
 
-
     @Autowired
     private PostRepository postRepository;
     @Autowired
@@ -116,7 +115,7 @@ class UserTest {
 
     @DisplayName("역할을 추가한다")
     @Test
-    void hasRole() {
+    void addRole() {
         User user = User.builder()
                 .email("email@gmail.com")
                 .userName("userName")

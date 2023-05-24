@@ -1,3 +1,4 @@
+drop table if exists social_info;
 drop table if exists report;
 drop table if exists user_followings;
 drop table if exists comments;
@@ -5,6 +6,7 @@ drop table if exists favorites;
 drop table if exists post;
 drop table if exists users;
 drop table if exists topic_tags;
+
 CREATE table if not exists users
 (
     user_id   BIGINT PRIMARY KEY AUTO_INCREMENT,
@@ -69,7 +71,9 @@ CREATE TABLE IF NOT EXISTS user_followings
 create table if not exists roles
 (
     role_id bigint primary key auto_increment,
-    role_name varchar(255) not null unique
+    role_name varchar(255) not null unique,
+    user_id bigint not null,
+    constraint fk_role_user foreign key (user_id) references users (user_id)
 );
 
 create table if not exists report
@@ -82,4 +86,15 @@ create table if not exists report
     constraint fk_reported_post foreign key (reported_post_id) references post (post_id),
     constraint fk_reporter foreign key (reporter_id) references users (user_id),
     constraint unique_report unique (reported_post_id, reporter_id)
+);
+
+create table if not exists social_info
+(
+    social_info_id bigint primary key auto_increment,
+    user_id bigint not null,
+    social_id varchar(255) not null,
+    social_provider_name varchar(255) not null,
+    social_connect_date TIMESTAMP Null,
+    constraint fk_social_info_user foreign key (user_id) references users (user_id),
+    constraint unique_social_info unique (social_id, social_provider_name)
 );
