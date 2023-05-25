@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>마이페이지</title>
+  <link rel="stylesheet" href="/css/bootstrap.min.css">
+  <link rel="stylesheet" href="/css/userForm.css">
+</head>
+
+<body>
+<header id="header" th:include="header"></header>
+<h1>마이 페이지</h1>
+<div class="col" style="text-align: center" >
+  <a th:href="@{/oauth2/authorization/kakao} " class="btn btn-block">
+    카카오 계정 연결하기
+  </a>
+  <a th:href="@{/oauth2/authorization/naver}" class="btn btn-block">
+     네이버 계정 연결하기
+  </a>
+  <a th:href="@{/oauth2/authorization/google}" class="btn btn-block">
+     구글 계정 연결하기
+  </a>
+</div>
+</body>
+</html>

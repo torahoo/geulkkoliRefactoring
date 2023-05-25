@@ -9,7 +9,6 @@ import com.geulkkoli.application.social.util.DelegateOAuth2RequestConverter;
 import com.geulkkoli.application.social.util.ProviderUserRequest;
 import com.geulkkoli.domain.user.User;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
@@ -25,9 +24,9 @@ import java.util.List;
 
 import static java.lang.Boolean.*;
 
+@Slf4j
 @Transactional
 @Service
-@Slf4j
 public class CustomOauth2UserService extends AbstractOauth2UserService implements OAuth2UserService<OAuth2UserRequest, OAuth2User> {
 
 
@@ -51,15 +50,13 @@ public class CustomOauth2UserService extends AbstractOauth2UserService implement
             return CustomAuthenticationPrinciple.from(model, authorities, AccountStatus.ACTIVE, providerUser.getAttributes());
         }
 
-        if (isSignUp && !isConnected) {
-            log.info("providerUser : {}", providerUser.getId());
-
-            throw new OAuth2AuthenticationException("이미 가입된 이메일입니다.");
+        if (!isSignUp && !isConnected){
+            UserModelDto model = provideUserToModel(providerUser);
+            authorities.add(new SimpleGrantedAuthority(Role.GUEST.getRoleName()));
+            return CustomAuthenticationPrinciple.from(model, authorities, AccountStatus.ACTIVE, providerUser.getAttributes());
         }
 
-        UserModelDto model = provideUserToModel(providerUser);
-        authorities.add(new SimpleGrantedAuthority(Role.GUEST.getRoleName()));
-        return CustomAuthenticationPrinciple.from(model, authorities, AccountStatus.ACTIVE, providerUser.getAttributes());
+        throw new OAuth2AuthenticationException("이미 가입한 이메일입니다. 이메일로 로그인 후 연동해주세요.");
     }
 
     private UserModelDto provideUserToModel(ProviderUser providerUser) {
