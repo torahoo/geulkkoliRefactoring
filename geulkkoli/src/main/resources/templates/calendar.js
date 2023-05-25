@@ -18,7 +18,6 @@ const writtenPosts = [
     createdAt: '2023-05-16T10:30:00'
     
   },
-  // Add more dummy posts if needed
 ];
 
 

@@ -71,8 +71,8 @@ spring:
   mail:
     host: smtp.gmail.com # 서버 호스트
     port: 587 # 서버 포트
-    username: daejanggoyangi
-    password: vphabcofycwufewh # 실제 비밀번호가 아니라 앱 서비스용 비밀번호라 구글 로그인은 안 됨
+    username: yuk pi
+    password: rznmghzlrcbqcrng    # 실제 비밀번호가 아니라 앱 서비스용 비밀번호라 구글 로그인은 안 됨
     properties:
       mail:
         smtp:

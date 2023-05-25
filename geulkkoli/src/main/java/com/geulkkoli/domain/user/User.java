@@ -293,6 +293,10 @@ public class User {
     public String authority() {
         return role.authority();
     }
+
+    void setUserId(Long userId) {
+        this.userId = userId;
+    }
 }
 
 

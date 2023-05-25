@@ -45,7 +45,6 @@ public class UserController {
     public static final String REDIRECT_INDEX = "redirect:/";
     public static final String REDIRECT_EDIT_INDEX = "redirect:/user/edit";
     private final UserService userService;
-    private final UserSecurityService userSecurityService;
     private final PasswordService passwordService;
     private final EmailService emailService;
 

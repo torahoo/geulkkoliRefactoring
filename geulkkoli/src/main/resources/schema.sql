@@ -93,8 +93,8 @@ create table if not exists social_info
     social_info_id bigint primary key auto_increment,
     user_id bigint not null,
     social_id varchar(255) not null,
-    social_provider_name varchar(255) not null,
+    social_type varchar(255) not null,
     social_connect_date TIMESTAMP Null,
     constraint fk_social_info_user foreign key (user_id) references users (user_id),
-    constraint unique_social_info unique (social_id, social_provider_name)
+    constraint unique_social_info unique (social_id, social_type)
 );
