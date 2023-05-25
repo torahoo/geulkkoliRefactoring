@@ -41,6 +41,18 @@
       <small th:text="${authorUser.email}"></small>
     </div>
   </div>
+  <div class="d-flex align-items-center text-50 p-3 my-3 rounded box-shadow">
+    <div class="lh-100">
+      <h6 th:text="${post.getDate()}">날짜</h6>
+    </div>
+    <div>
+      <form th:action="@{/pressFavorite/{postId}(postId=${post.postId})}" method="POST">
+        <input type="image" th:src="@{/images/favorite_dislike.png}" alt="" width="30" height="30">
+<!--        <input type="image" th:src="@{/images/favorite_like.png}" alt="" width="30" height="30">-->
+      </form>
+      <h6 th:text="${post.getFavoriteCount()}">좋아요 갯수</h6>
+    </div>
+  </div>
   <div class="mb-3">
     <label for="postBody">내용</label>
     <textarea id="postBody" name="postBody" class="form-control"
