@@ -133,5 +133,14 @@ public class Post extends ConfigDate {
                 .orElseThrow(()->new NoSuchCommnetException("해당 좋아요가 없습니다."));
     }
 
+//    public Set<String> getCreatedAts() {
+//        Set<String> setCreatedAts = new HashSet<>();
+//        this.user.getPosts().stream()
+//                .findFirst()
+//                .map(Post::getCreatedAt)
+//                .ifPresent(setCreatedAts::add);
+//        return setCreatedAts;
+//    }
+
 }
 

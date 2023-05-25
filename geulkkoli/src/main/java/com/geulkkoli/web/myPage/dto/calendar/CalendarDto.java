@@ -6,10 +6,12 @@ import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotEmpty;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.List;
 
 @Getter
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 public class CalendarDto {
 
     @NotEmpty
@@ -17,5 +19,7 @@ public class CalendarDto {
 
     @NotEmpty
     private LocalDate signUpDate;
+
+    private List<LocalDateTime> allPostDatesByOneUser;
 
 }

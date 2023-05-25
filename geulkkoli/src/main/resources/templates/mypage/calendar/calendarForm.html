@@ -154,6 +154,10 @@
                     }
                 }
             }
+
+            let postingDates = data.allPostDatesByOneUser; //일단 다 오는 거 확인
+            //시작날짜를보내면현재날짜까지만돌아오게수정해보자
+
         } catch (error) {
             console.error(error);
         }
@@ -216,6 +220,11 @@
     }
 
     settingCalendarDaysByUserSignUpDate();
+
+    // 활동날 색칠
+    function coloring() {
+
+    }
 
 </script>
 </body>

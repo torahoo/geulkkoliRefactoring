@@ -13,7 +13,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.*;
+import java.util.HashSet;
+import java.util.NoSuchElementException;
+import java.util.Set;
 
 @Slf4j
 @Service
@@ -34,13 +36,13 @@ public class PostService {
     }
 
     //게시글 상세보기만을 담당하는 메서드
-    public Post showDetailPost (Long postId) {
+    public Post showDetailPost(Long postId) {
         postRepository.updateHits(postId);
         return postRepository.findById(postId)
                 .orElseThrow(() -> new NoSuchElementException("No post found id matches:" + postId));
     }
 
-    public Page<ListDTO> findAll (Pageable pageable) {
+    public Page<ListDTO> findAll(Pageable pageable) {
         Page<Post> posts = postRepository.findAll(pageable);
         return posts.map(post -> new ListDTO(
                 post.getPostId(),
@@ -56,16 +58,16 @@ public class PostService {
         Page<Post> posts;
         switch (searchType) {
             case "제목":
-                posts=postRepository.findPostsByTitleContaining(pageable, searchWords);
+                posts = postRepository.findPostsByTitleContaining(pageable, searchWords);
                 break;
             case "본문":
-                posts=postRepository.findPostsByPostBodyContaining(pageable, searchWords);
+                posts = postRepository.findPostsByPostBodyContaining(pageable, searchWords);
                 break;
             case "닉네임":
-                posts=postRepository.findPostsByNickNameContaining(pageable, searchWords);
+                posts = postRepository.findPostsByNickNameContaining(pageable, searchWords);
                 break;
             default:
-                posts=postRepository.findAll(pageable);
+                posts = postRepository.findAll(pageable);
                 break;
         }
         return posts.map(post -> new ListDTO(
@@ -94,4 +96,13 @@ public class PostService {
     public void deleteAll() {
         postRepository.deleteAll();
     }
+
+    public Set<String> getCreatedAts(User user) {
+        Set<String> setCreatedAts = new HashSet<>();
+        user.getPosts().stream()
+                .map(Post::getCreatedAt)
+                .forEach(setCreatedAts::add);
+        return setCreatedAts;
+    }
+
 }

@@ -3,6 +3,7 @@ package com.geulkkoli.web.myPage;
 import com.geulkkoli.application.user.AuthUser;
 import com.geulkkoli.application.user.service.PasswordService;
 import com.geulkkoli.domain.follow.service.FollowService;
+import com.geulkkoli.domain.post.service.PostService;
 import com.geulkkoli.domain.user.User;
 import com.geulkkoli.domain.user.service.UserService;
 import com.geulkkoli.web.myPage.dto.MyPageFormDto;
@@ -23,7 +24,12 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.websocket.server.PathParam;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
 
 @Controller
 @RequestMapping("/myPage")
@@ -37,10 +43,10 @@ public class MyPageController {
     public static final String REDIRECT_EDIT_USER_INFO = "redirect:/myPage/editUserInfo";
     public static final String FOLLOWER_FORM = "mypage/follow/followerForm";
     public static final String FOLLOWEE_FORM = "mypage/follow/followeeForm";
-    //    public static final String CALENDAR_FORM = "mypage/calendar/calendarForm";
     public static final String REDIRECT_INDEX = "redirect:/";
 
     private final UserService userService;
+    private final PostService postService;
     private final PasswordService passwordService;
     private final FollowService followService;
 
@@ -150,7 +156,20 @@ public class MyPageController {
     @ResponseBody
     public ResponseEntity<CalendarDto> calendaring(@AuthenticationPrincipal AuthUser authUser) {
         LocalDate signUpDate = LocalDate.parse(authUser.getSignUpDate(), DateTimeFormatter.ofPattern("yyyy. MM. dd"));
-        CalendarDto calendarDto = new CalendarDto(authUser.getUserRealName(), signUpDate);
+
+        User user = userService.findById(authUser.getUserId());
+        Set<String> createdAts = postService.getCreatedAts(user);
+        Iterator<String> iterator = createdAts.iterator();
+
+        List<LocalDateTime> allPostDatesByOneUser = new ArrayList<>();
+
+        while (iterator.hasNext()) {
+            LocalDateTime oneDate = LocalDateTime.parse(iterator.next(), DateTimeFormatter.ofPattern("yyyy. MM. dd a hh:mm:ss"));
+            allPostDatesByOneUser.add(oneDate);
+        }
+
+        CalendarDto calendarDto = new CalendarDto(authUser.getUserRealName(), signUpDate, allPostDatesByOneUser);
+
         return ResponseEntity.ok(calendarDto);
     }
 

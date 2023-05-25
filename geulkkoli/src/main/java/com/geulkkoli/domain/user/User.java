@@ -24,7 +24,7 @@ import java.util.*;
 @Entity
 @Getter
 @Table(name = "users")
-public class User extends ConfigDate{
+public class User extends ConfigDate {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long userId;
@@ -125,7 +125,7 @@ public class User extends ConfigDate{
         return deltePost;
     }
 
-    // 해당 유저가 쓴 게시글 찾기
+    // 해당 유저가 쓴 특정 게시글 찾기
     private Post findPost(Long postId) {
         return this.posts.stream()
                 .filter(post -> post.getPostId().equals(postId))
@@ -133,7 +133,14 @@ public class User extends ConfigDate{
                 .orElseThrow(() -> new NoSuchPostException("해당 게시글이 없습니다."));
     }
 
-    // 유저가 쓴 게시글 수정하기
+//    // 해당 유저가 쓴 모든 게시글 찾기
+//    public Post findPost() {
+//        return this.posts.stream()
+//                .findFirst()
+//                .orElseThrow(() -> new NoSuchPostException("해당 게시글이 없습니다."));
+//    }
+
+    // 유저가 쓴 특정 게시글 수정하기
     public Post editPost(Long postId, EditDTO editDTO) {
         Post post = this.posts.stream()
                 .filter(p -> p.getPostId().equals(postId))
@@ -149,7 +156,7 @@ public class User extends ConfigDate{
      * 댓글 관련 CRUD
      */
     //유저가 쓴 댓글
-    public Comments writeComment (Comments commentBody, Post post) {
+    public Comments writeComment(Comments commentBody, Post post) {
         Comments comment = new Comments(this, post, commentBody);
         post.getComments().add(comment);
         this.comments.add(comment);
@@ -161,7 +168,7 @@ public class User extends ConfigDate{
         return this.comments.stream()
                 .filter(comment -> comment.getCommentId().equals(commentId))
                 .findFirst()
-                .orElseThrow(()->new NoSuchCommnetException("해당 댓글이 없습니다."));
+                .orElseThrow(() -> new NoSuchCommnetException("해당 댓글이 없습니다."));
     }
 
     // 유저가 쓴 댓글 수정하기
@@ -183,7 +190,7 @@ public class User extends ConfigDate{
      * 좋아요 관련 CRUD
      */
     // 유저가 누른 좋아요
-    public Favorites pressFavorite (Post post) {
+    public Favorites pressFavorite(Post post) {
         Favorites favorite = new Favorites(this, post);
         post.getFavorites().add(favorite);
         this.favorites.add(favorite);
@@ -191,15 +198,15 @@ public class User extends ConfigDate{
     }
 
     // 해당 유저가 쓴 좋아요 찾기
-    private Favorites findFavorite (Long favoriteId) {
+    private Favorites findFavorite(Long favoriteId) {
         return this.favorites.stream()
                 .filter(favorite -> favorite.getFavoritesId().equals(favoriteId))
                 .findFirst()
-                .orElseThrow(()->new NoSuchCommnetException("해당 좋아요가 없습니다."));
+                .orElseThrow(() -> new NoSuchCommnetException("해당 좋아요가 없습니다."));
     }
 
     // 유저가 취소한 좋아요
-    public Favorites cancelFavorite (Long favoriteId) {
+    public Favorites cancelFavorite(Long favoriteId) {
         Favorites deleteFavorite = findFavorite(favoriteId);
         favorites.remove(deleteFavorite);
         deleteFavorite.getPost().getFavorites().remove(deleteFavorite);
