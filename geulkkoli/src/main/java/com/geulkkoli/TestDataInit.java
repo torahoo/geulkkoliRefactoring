@@ -84,7 +84,6 @@ public class TestDataInit {
             Post post = user01.writePost(addDTO);
             postRepository.save(post);
 
-
             AddDTO addDTO1 = AddDTO.builder()
                     .title("testTitle01")
                     .postBody("test postbody 01")

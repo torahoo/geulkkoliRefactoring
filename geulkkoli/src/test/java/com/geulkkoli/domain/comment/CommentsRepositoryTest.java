@@ -19,7 +19,6 @@ import java.util.List;
 import java.util.NoSuchElementException;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 @Slf4j
 @SpringBootTest
@@ -175,5 +174,23 @@ class CommentsRepositoryTest {
         List<Comments> all = commentsRepository.findAll();
         assertThat(all.size()).isEqualTo(1);
         assertThat(all.get(0).getCommentBody()).isEqualTo("test댓글2");
+    }
+
+    @Test
+    void getUserComment() {
+        //given
+        for (int i = 0; i < 10; ++i) {
+            Comments comment = user.writeComment(Comments.builder()
+                    .commentBody("test댓글")
+                    .build(), post01);
+            commentsRepository.save(comment);
+        }
+        int count = post01.getComments().size();
+
+        //when
+        int size = commentsRepository.findAllByUser_UserId(user.getUserId()).size();
+
+        //then
+        assertThat(size).isEqualTo(count);
     }
 }

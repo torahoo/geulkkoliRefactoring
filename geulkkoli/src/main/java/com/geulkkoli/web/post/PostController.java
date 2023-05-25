@@ -1,6 +1,8 @@
 package com.geulkkoli.web.post;
 
 import com.geulkkoli.application.user.CustomAuthenticationPrinciple;
+import com.geulkkoli.domain.comment.Comments;
+import com.geulkkoli.domain.comment.CommentsService;
 import com.geulkkoli.domain.post.service.PostService;
 import com.geulkkoli.domain.user.User;
 import com.geulkkoli.domain.user.service.UserService;
@@ -32,6 +34,7 @@ public class PostController {
 
     private final PostService postService;
     private final UserService userService;
+    private final CommentsService commentsService;
 
     /**
      * @PageableDefault - get 파라미터가 없을 때 기본설정 변경(기본값: page=0, size=20)
@@ -85,7 +88,9 @@ public class PostController {
         User authorUser = userService.findById(postPage.getAuthorId());
         request.getSession().setAttribute("pageNumber", request.getParameter("page"));
         model.addAttribute("post", postPage);
+        model.addAttribute("commentList", postPage.getCommentList());
         model.addAttribute("authorUser", authorUser);
+        model.addAttribute("comments", new Comments());
         searchDefault(model, searchType, searchWords);
         return "/post/postPage";
     }
@@ -110,8 +115,8 @@ public class PostController {
         if (bindingResult.hasErrors()) {
             return "/post/postEditForm";
         }
-        User user = userService.findByNickName(updateParam.getNickName());
-        postService.updatePost(postId, updateParam, user);
+
+        postService.updatePost(postId, updateParam);
         redirectAttributes.addAttribute("updateStatus", true);
         redirectAttributes.addAttribute("page", request.getSession().getAttribute("pageNumber"));
 
