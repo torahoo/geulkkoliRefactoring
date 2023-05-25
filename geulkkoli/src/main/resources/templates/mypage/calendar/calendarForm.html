@@ -11,8 +11,35 @@
       }
 
       .calendar {
+          display: inline-grid;
+          grid-auto-flow: column;
+          flex-direction: row;
+      }
+
+      .one-month {
+          display: block;
+          margin-right: -7.5px;
+          margin-left: -7.5px;
+      }
+
+      .one-month-columns {
           display: flex;
           flex-direction: row;
+      }
+
+      .month-name {
+          display: block;
+          text-align: center;
+          font-size: 15px;
+      }
+
+      .days {
+          display: flex;
+          flex-direction: column;
+          margin-top: 20px;
+          margin-right: 15px;
+          justify-content: space-evenly;
+          font-size: 15px;
       }
 
       .calendar-cell {
@@ -34,19 +61,14 @@
           flex-direction: column;
           margin-bottom: auto;
           align-items: flex-start;
-          margin-right: -15px;
       }
 
       .borderLine {
           border: gray solid 1px;
       }
 
-      h6 {
-          text-align: center;
-      }
-
-      .last-column.seven-cells{
-          margin-right: 0px;
+      .last-column.seven-cells {
+          margin: 0px;
       }
 
   </style>
@@ -59,8 +81,9 @@
 
 <div id="calendarBox">
   <h4> < 흔적 남긴 날 > </h4>
-  <div class="month"></div>
-  <div class="calendar"></div>
+  <div class="calendar">
+    <div class="days"></div>
+  </div>
 </div>
 
 
@@ -70,16 +93,26 @@
         "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
     ];
 
-    let calendar = document.getElementsByClassName('calendar').item(0);
-    let titleMonth = document.getElementsByClassName('month').item(0);
+    const dayNames = ["Mon", "Wed", "Fri"];
 
-    async function fetchDataAndProcess() {
+    let calendar = document.getElementsByClassName('calendar').item(0);
+    let daysBox = document.getElementsByClassName('days').item(0);
+
+    //맨 왼쪽 월수금 출력
+    function makeDays() {
+        for (let i = 0; i < 3; i++) {
+            let createDay = document.createElement('div');
+            createDay.innerHTML = dayNames[i];
+            daysBox.appendChild(createDay);
+        }
+    }
+
+    async function settingCalendarDaysByUserSignUpDate() {
         try {
             const response = await fetch(`/myPage/calendar`);
             const data = await response.json();
 
-            calendar.innerHTML = '';
-            titleMonth.innerHTML = '';
+            makeDays();
 
             let signUpDate = new Date(data.signUpDate);
             let startYear = signUpDate.getFullYear();
@@ -126,38 +159,45 @@
         }
     }
 
-    // 달의 마지막 날짜(며칠까지 있나)
+    // 달의 마지막 날짜 구하기 (혹은 그 달의 전체 일수로 볼 수도 있는)
     function getMonthDates(year, month) {
         return new Date(year, month + 1, 0).getDate();
     }
 
-    // 요일
+    // 요일 구하기
     function getWeekDay(year, month, date) {
         return new Date(year, month, date).getDay();
     }
 
     function createCalendar(year, month) {
 
-        let makeH6 = document.createElement('h6');
-        let oneMonth = titleMonth.appendChild(makeH6);
-        oneMonth.innerText = monthNames[month];
+        let oneMonth = document.createElement('div'); //하나의 달 묶음
+        oneMonth.classList.add('one-month');
+        calendar.appendChild(oneMonth);
 
-        let firstDay = getWeekDay(year, month, 1);
-        let dates = getMonthDates(year, month);
-        let columns = Math.ceil((firstDay + dates) / 7);
+        let monthName = document.createElement('div'); //그 달이 무슨 달인지
+        oneMonth.appendChild(monthName);
+        monthName.innerText = monthNames[month];
+        monthName.classList.add('month-name');
+
+        let oneMonthColumns = document.createElement('div');
+        oneMonthColumns.classList.add('one-month-columns');
+        oneMonth.appendChild(oneMonthColumns);
+
+        let firstDay = getWeekDay(year, month, 1); //요일
+        let dates = getMonthDates(year, month); //달의 전체 일수
+        let columns = Math.ceil((firstDay + dates) / 7); //주
 
         let date = 1;
         for (let i = 0; i < columns; i++) {
             let column = document.createElement('div');
             column.classList.add('calendar-column');
-            let cellCount = 0;
+            let cellCount = 0; //막주랑 다음 첫주 간격이 벌어지는데 막주에 7일 다 있으면 margin 조절 필요 없어서 조절용 count
             for (let j = 0; j < 7; j++) {
                 if (i === 0 && j < firstDay) {
-                    // cell.innerHTML = '';
                     column.classList.add('first-column');
                 } else if (date > dates) {
                     column.classList.add('last-column');
-                    // cell.innerHTML = '';
                 } else {
                     let cell = document.createElement('div');
                     cell.classList.add('calendar-cell');
@@ -169,13 +209,13 @@
                 }
             }
             if (cellCount === 7) {
-                column.classList.add('seven-cells');
+                oneMonth.classList.add('seven-cells');
             }
-            calendar.appendChild(column);
+            oneMonthColumns.appendChild(column);
         }
     }
 
-    fetchDataAndProcess();
+    settingCalendarDaysByUserSignUpDate();
 
 </script>
 </body>
