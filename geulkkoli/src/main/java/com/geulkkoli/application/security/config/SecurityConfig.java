@@ -69,9 +69,8 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.authorizeRequests((auth) -> {
                     auth.mvcMatchers("/admin/**").hasRole("ADMIN");
-                    auth.mvcMatchers("/user/edit/**").hasAnyRole("USER", "GUEST");
-                    auth.mvcMatchers("/my-page/**").hasAnyRole("USER");
-                    auth.mvcMatchers("social/**").hasAnyRole("GUEST");
+                    auth.mvcMatchers("/user/edit/**").hasAnyRole("USER");
+                    auth.mvcMatchers(HttpMethod.GET,"/social/oauth2/signup").hasAnyRole("GUEST");
                     auth.mvcMatchers("/post/add/**", "/post/update/**", "/post/delete/**").hasAnyRole("USER", "ADMIN");
                     auth.mvcMatchers(HttpMethod.GET, "/", "/loginPage", "/post/read/**", "/post/list/**", "/post/search/**", "/post/category/*")
                             .permitAll();

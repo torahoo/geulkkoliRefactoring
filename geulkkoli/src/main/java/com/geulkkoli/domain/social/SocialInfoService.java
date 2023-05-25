@@ -1,5 +1,6 @@
 package com.geulkkoli.domain.social;
 
+import com.geulkkoli.web.social.SocialInfoDto;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -13,8 +14,8 @@ public class SocialInfoService {
     }
 
     @Transactional
-    public SocialInfo save(SocialInfo socialInfo){
-        return socialInfoRepository.save(socialInfo);
+    public SocialInfo save(SocialInfoDto socialInfo){
+        return socialInfoRepository.save(socialInfo.toEntity());
     }
 
     @Transactional(readOnly = true)

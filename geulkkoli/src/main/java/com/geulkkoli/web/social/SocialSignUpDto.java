@@ -38,8 +38,14 @@ public class SocialSignUpDto {
     @NotEmpty
     private String gender;
 
+    @NotEmpty
+    private String authorizationServerId;
+
+    @NotEmpty
+    private String clientregistrationName;
+
     @Builder
-    public SocialSignUpDto(String userName, String password, String verifyPassword, String nickName, String email, String phoneNo, String gender) {
+    public SocialSignUpDto(String userName, String password, String verifyPassword, String nickName, String email, String phoneNo, String gender, String authorizationServerId, String clientregistrationName) {
         this.userName = userName;
         this.password = password;
         this.verifyPassword = verifyPassword;
@@ -47,6 +53,8 @@ public class SocialSignUpDto {
         this.email = email;
         this.phoneNo = phoneNo;
         this.gender = gender;
+        this.authorizationServerId=authorizationServerId;
+        this.clientregistrationName = clientregistrationName;
     }
 
     public String getUserName() {
@@ -75,6 +83,14 @@ public class SocialSignUpDto {
 
     public String getGender() {
         return gender;
+    }
+
+    public String getAuthorizationServerId() {
+        return authorizationServerId;
+    }
+
+    public String getClientregistrationName() {
+        return clientregistrationName;
     }
 
     public void changeUserName(String userName) {

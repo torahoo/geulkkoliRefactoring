@@ -25,6 +25,7 @@ public class CustomAuthenticationPrinciple implements UserDetails, OAuth2User  {
     private String nickName;
     private String phoneNo;
     private String gender;
+    private String providerName;
 
     private CustomAuthenticationPrinciple(String userId, String userName, String password, boolean isEnabled, boolean isAccountNonExpired, boolean isAccountNonLocked, boolean isCredentialsNonExpired, Collection<GrantedAuthority> authorities, Map<String, Object> attributes, String userRealName, String nickName, String phoneNo, String gender) {
         this.userId = userId;
@@ -58,12 +59,34 @@ public class CustomAuthenticationPrinciple implements UserDetails, OAuth2User  {
         this.attributes = attributes;
     }
 
+    private CustomAuthenticationPrinciple(UserModelDto userModel, Collection<GrantedAuthority> authorities, AccountStatus accountStatus, Map<String, Object> attributes, String providerName) {
+        this.userName = userModel.getEmail();
+        this.password = userModel.getPassword();
+        this.authorities = authorities;
+        this.nickName = userModel.getNickName();
+        this.userId = userModel.getUserId();
+        this.gender = userModel.getGender();
+        this.phoneNo = userModel.getPhoneNo();
+        this.userRealName = userModel.getUserName();
+        this.isAccountNonExpired = accountStatus.isAccountNonExpired();
+        this.isAccountNonLocked = accountStatus.isAccountNonLocked();
+        this.isCredentialsNonExpired = accountStatus.isCredentialsNonExpired();
+        this.isEnabled = accountStatus.isEnabled();
+        this.attributes = attributes;
+        this.providerName = providerName;
+    }
+
+
     public static CustomAuthenticationPrinciple from(UserModelDto userModel, Collection<GrantedAuthority> authorities, AccountStatus accountStatus) {
         return new CustomAuthenticationPrinciple(userModel, authorities, accountStatus, Map.of());
     }
 
     public static CustomAuthenticationPrinciple from(UserModelDto userModel, Collection<GrantedAuthority> authorities, AccountStatus accountStatus, Map<String, Object> attributes) {
         return new CustomAuthenticationPrinciple(userModel, authorities, accountStatus, attributes);
+    }
+
+    public static CustomAuthenticationPrinciple from(UserModelDto userModel, Collection<GrantedAuthority> authorities, AccountStatus accountStatus, Map<String, Object> attributes, String providerName) {
+        return new CustomAuthenticationPrinciple(userModel, authorities, accountStatus, attributes, providerName);
     }
 
 

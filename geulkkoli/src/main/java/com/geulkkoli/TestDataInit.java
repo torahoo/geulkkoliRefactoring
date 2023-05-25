@@ -55,14 +55,14 @@ public class TestDataInit {
         User user = userService.signUp(joinForm);
 
 
-        JoinFormDto joinForm1 = new JoinFormDto();
-        joinForm1.setEmail("kimpjh1@naver.com");
-        joinForm1.setUserName("김");
-        joinForm1.setNickName("바나나121");
-        joinForm1.setPhoneNo("9290232333");
-        joinForm1.setGender("male");
-        joinForm1.setPassword("123");
-        userService.signUp(joinForm1);
+//        JoinFormDto joinForm1 = new JoinFormDto();
+//        joinForm1.setEmail("kimpjh1@naver.com");
+//        joinForm1.setUserName("김");
+//        joinForm1.setNickName("바나나121");
+//        joinForm1.setPhoneNo("9290232333");
+//        joinForm1.setGender("male");
+//        joinForm1.setPassword("123");
+//        userService.signUp(joinForm1);
 
         JoinFormDto joinForm2 = new JoinFormDto();
         joinForm2.setEmail("test01@naver.com");

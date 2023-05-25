@@ -34,7 +34,6 @@ public class CustomOauth2UserService extends AbstractOauth2UserService implement
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
         OAuth2UserService<OAuth2UserRequest, OAuth2User> oAuth2UserService = new DefaultOAuth2UserService();
         OAuth2User oAuth2User = oAuth2UserService.loadUser(userRequest);
-
         ProviderUserRequest providerUserRequest = new ProviderUserRequest(userRequest.getClientRegistration(), oAuth2User);
         DelegateOAuth2RequestConverter delegateOAuth2RequestConverter = new DelegateOAuth2RequestConverter();
         ProviderUser providerUser = delegateOAuth2RequestConverter.convert(providerUserRequest);
@@ -42,6 +41,7 @@ public class CustomOauth2UserService extends AbstractOauth2UserService implement
 
         boolean isSignUp = TRUE.equals(isSignUp(providerUser));
         boolean isConnected = TRUE.equals(isConnected(providerUser));
+        log.info("provider : {}", providerUser.getProvider());
         if (isSignUp && isConnected) {
             log.info("providerUser : {}", providerUser.getId());
             User user = userInfo(providerUser);
@@ -50,10 +50,11 @@ public class CustomOauth2UserService extends AbstractOauth2UserService implement
             return CustomAuthenticationPrinciple.from(model, authorities, AccountStatus.ACTIVE, providerUser.getAttributes());
         }
 
-        if (!isSignUp && !isConnected){
+        if (!isSignUp && !isConnected) {
+            log.info("providerUser : {}", providerUser.getId());
             UserModelDto model = provideUserToModel(providerUser);
             authorities.add(new SimpleGrantedAuthority(Role.GUEST.getRoleName()));
-            return CustomAuthenticationPrinciple.from(model, authorities, AccountStatus.ACTIVE, providerUser.getAttributes());
+            return CustomAuthenticationPrinciple.from(model, authorities, AccountStatus.ACTIVE, providerUser.getAttributes(),providerUser.getProvider());
         }
 
         throw new OAuth2AuthenticationException("이미 가입한 이메일입니다. 이메일로 로그인 후 연동해주세요.");

@@ -42,10 +42,12 @@
            th:field="*{userName}"
     />
 
-    <input type="hidden">
+    <input type="hidden" id="provider" name="clientregistrationName"
+           th:field="*{clientregistrationName}"/>
+    <input type="hidden" id="providerId" name="authorizationServerId"
+           th:field="*{authorizationServerId}"/>
 
     <input type="submit" value="Signup">
-    <div id="modal-bg"></div>
 </form>
 
 </body>

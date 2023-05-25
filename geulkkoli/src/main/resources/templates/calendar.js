@@ -36,16 +36,15 @@ for (let date = new Date(firstDayOfMonth); date <= lastDayOfMonth; date.setDate(
 }
 
 function isWrittenAboutDate(date) {
-  // Assuming you have an array of written posts called `writtenPosts`
   for (let i = 0; i < writtenPosts.length; i++) {
-    const postDate = new Date(writtenPosts[i].createdAt); // Convert the post's created date to a Date object
+    const postDate = new Date(writtenPosts[i].createdAt);
     if (
       postDate.getDate() === date.getDate() &&
       postDate.getMonth() === date.getMonth() &&
       postDate.getFullYear() === date.getFullYear()
     ) {
-      return true; // Found a post written on the given date
+      return true;
     }
   }
-  return false; // No posts found for the given date
+  return false;
 }
