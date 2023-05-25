@@ -2,6 +2,7 @@ package com.geulkkoli.domain.comment;
 
 import com.geulkkoli.domain.post.Post;
 import com.geulkkoli.domain.user.User;
+import com.geulkkoli.web.comment.dto.CommentDto;
 import com.geulkkoli.web.comment.dto.CommentListDTO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +23,7 @@ public class CommentsService {
     }
 
     // 댓글 달기
-    public void writeComment(Comments commentBody, Post post, User user) {
+    public void writeComment(CommentDto commentBody, Post post, User user) {
         commentsRepository.save(user.writeComment(commentBody, post));
     }
 
