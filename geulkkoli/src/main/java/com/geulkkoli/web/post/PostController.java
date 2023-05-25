@@ -1,6 +1,7 @@
 package com.geulkkoli.web.post;
 
 import com.geulkkoli.application.user.CustomAuthenticationPrinciple;
+import com.geulkkoli.domain.favorites.FavoriteService;
 import com.geulkkoli.domain.post.service.PostService;
 import com.geulkkoli.domain.user.User;
 import com.geulkkoli.domain.user.service.UserService;
@@ -32,6 +33,7 @@ public class PostController {
 
     private final PostService postService;
     private final UserService userService;
+    private final FavoriteService favoriteService;
 
     /**
      * @PageableDefault - get 파라미터가 없을 때 기본설정 변경(기본값: page=0, size=20)
@@ -80,12 +82,36 @@ public class PostController {
     @GetMapping("/read/{postId}")
     public String postRead(Model model, @PathVariable Long postId, HttpServletRequest request,
                            @RequestParam(defaultValue = "") String searchType,
-                           @RequestParam(defaultValue = "") String searchWords) {
+                           @RequestParam(defaultValue = "") String searchWords,
+                           @AuthenticationPrincipal CustomAuthenticationPrinciple user) {
         PageDTO postPage = PageDTO.toDTO(postService.showDetailPost(postId));
         User authorUser = userService.findById(postPage.getAuthorId());
         request.getSession().setAttribute("pageNumber", request.getParameter("page"));
+
+        String checkFavorite = "never clicked";
+        try {
+            if(userService.findById(Long.parseLong(user.getUserId()))==null){
+                log.info("해당 UserId로 회원을 찾을 수 없음");
+            }
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+            model.addAttribute("post", postPage);
+            model.addAttribute("authorUser", authorUser);
+            model.addAttribute("checkFavorite", checkFavorite);
+            searchDefault(model, searchType, searchWords);
+            return "/post/postPage";
+        }
+        User loginUser = userService.findById(Long.parseLong(user.getUserId()));
+        if(favoriteService.favoriteCheck(postService.findById(postId), loginUser)==null){
+            checkFavorite = "none";
+        } else {
+            checkFavorite = "exist";
+        }
+        log.info("checkFavorite={}", checkFavorite);
+
         model.addAttribute("post", postPage);
         model.addAttribute("authorUser", authorUser);
+        model.addAttribute("checkFavorite", checkFavorite);
         searchDefault(model, searchType, searchWords);
         return "/post/postPage";
     }

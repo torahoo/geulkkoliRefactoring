@@ -26,12 +26,20 @@ public class FavoriteController {
 
     @PostMapping("pressFavorite/{postId}")
     public String pressFavoriteButton (@PathVariable("postId") Long postId,
-                                       @AuthenticationPrincipal CustomAuthenticationPrinciple user,
-                                       RedirectAttributes redirectAttributes) throws Exception {
+                                       @AuthenticationPrincipal CustomAuthenticationPrinciple user) throws Exception {
         int favoriteResult;
         log.info("==========favoriteController==========");
 
         Post post = postService.findById(postId);
+
+        try {
+            if(userService.findById(Long.parseLong(user.getUserId()))==null){
+                log.info("해당 UserId로 회원을 찾을 수 없음");
+            }
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+            return "해당 UserId로 회원을 찾을 수 없음";
+        }
         User loginUser = userService.findById(Long.parseLong(user.getUserId()));
         if(favoriteService.favoriteCheck(post, loginUser)==null) {
             favoriteService.addFavorite(post, loginUser);
