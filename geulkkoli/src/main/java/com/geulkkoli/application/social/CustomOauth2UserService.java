@@ -61,14 +61,12 @@ public class CustomOauth2UserService extends AbstractOauth2UserService implement
         }
 
         // 회원가입을 아예 하지 않은 경우
-        if (!isSignUp) {
-            log.info("providerUser : {}", providerUser.getId());
-            UserModelDto model = provideUserToModel(providerUser);
-            authorities.add(new SimpleGrantedAuthority(Role.GUEST.getRoleName()));
-            return CustomAuthenticationPrinciple.from(model, authorities, AccountStatus.ACTIVE, providerUser.getAttributes(), providerUser.getProvider());
-        }
+        log.info("providerUser : {}", providerUser.getId());
+        UserModelDto model = provideUserToModel(providerUser);
+        authorities.add(new SimpleGrantedAuthority(Role.GUEST.getRoleName()));
+        return CustomAuthenticationPrinciple.from(model, authorities, AccountStatus.ACTIVE, providerUser.getAttributes(), providerUser.getProvider());
 
-        throw new OAuth2AuthenticationException("이미 가입한 이메일입니다. 이메일로 로그인 후 연동해주세요.");
+
     }
 
     private UserModelDto provideUserToModel(ProviderUser providerUser) {
