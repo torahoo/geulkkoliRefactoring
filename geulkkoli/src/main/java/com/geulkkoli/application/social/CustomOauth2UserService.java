@@ -42,19 +42,30 @@ public class CustomOauth2UserService extends AbstractOauth2UserService implement
         boolean isSignUp = TRUE.equals(isSignUp(providerUser));
         boolean isConnected = TRUE.equals(isConnected(providerUser));
 
+        // 회원가입이 되어 있고 소셜 연동이 되어 있는 경우
         if (isSignUp && isConnected) {
             log.info("providerUser : {}", providerUser.getId());
             User user = userInfo(providerUser);
             UserModelDto model = singedUpUserToModel(user);
             authorities.add(new SimpleGrantedAuthority(user.roleName()));
-            return CustomAuthenticationPrinciple.from(model, authorities, AccountStatus.ACTIVE, providerUser.getAttributes());
+            return CustomAuthenticationPrinciple.from(model, authorities, AccountStatus.ACTIVE, providerUser.getAttributes(), providerUser.getProvider());
         }
 
-        if (!isSignUp && !isConnected) {
+        // 회원가입이 되어 있고 소셜 연동이 되어 있지 않은 경우
+        if (isSignUp && !isConnected) {
+            log.info("소셜 계정 연동");
+            User user = userInfo(providerUser);
+            UserModelDto model = singedUpAndNotConnectedUserToModel(user, providerUser.getId());
+            authorities.add(new SimpleGrantedAuthority(user.roleName()));
+            return CustomAuthenticationPrinciple.from(model, authorities, AccountStatus.ACTIVE, providerUser.getAttributes(), providerUser.getProvider());
+        }
+
+        // 회원가입을 아예 하지 않은 경우
+        if (!isSignUp) {
             log.info("providerUser : {}", providerUser.getId());
             UserModelDto model = provideUserToModel(providerUser);
             authorities.add(new SimpleGrantedAuthority(Role.GUEST.getRoleName()));
-            return CustomAuthenticationPrinciple.from(model, authorities, AccountStatus.ACTIVE, providerUser.getAttributes(),providerUser.getProvider());
+            return CustomAuthenticationPrinciple.from(model, authorities, AccountStatus.ACTIVE, providerUser.getAttributes(), providerUser.getProvider());
         }
 
         throw new OAuth2AuthenticationException("이미 가입한 이메일입니다. 이메일로 로그인 후 연동해주세요.");
@@ -63,7 +74,7 @@ public class CustomOauth2UserService extends AbstractOauth2UserService implement
     private UserModelDto provideUserToModel(ProviderUser providerUser) {
 
         return UserModelDto.builder()
-                .userId(providerUser.getId())
+                .authorizaionServerId(providerUser.getId())
                 .gender(providerUser.getGender())
                 .userName(providerUser.getUsername())
                 .email(providerUser.getEmail())
@@ -76,4 +87,9 @@ public class CustomOauth2UserService extends AbstractOauth2UserService implement
     private UserModelDto singedUpUserToModel(User user) {
         return UserModelDto.toDto(user);
     }
+
+    private UserModelDto singedUpAndNotConnectedUserToModel(User user, String authorizationServerId) {
+        return UserModelDto.toDto(user, authorizationServerId);
+    }
+
 }

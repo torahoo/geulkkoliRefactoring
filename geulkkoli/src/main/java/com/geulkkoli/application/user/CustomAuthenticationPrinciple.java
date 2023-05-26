@@ -11,8 +11,8 @@ import java.util.Map;
 import java.util.Objects;
 
 @Getter
-public class CustomAuthenticationPrinciple implements UserDetails, OAuth2User  {
-    private final String userId;
+public class CustomAuthenticationPrinciple implements UserDetails, OAuth2User {
+    private final String authorizationSeverId; // 권한을 부여한 서버의 아이디
     private final String userName; //로그인 시 아이디에 해당한다. 우리 서비스의 경우 email
     private final String password;
     private final boolean isEnabled;
@@ -32,7 +32,7 @@ public class CustomAuthenticationPrinciple implements UserDetails, OAuth2User  {
         this.password = userModel.getPassword();
         this.authorities = authorities;
         this.nickName = userModel.getNickName();
-        this.userId = userModel.getUserId();
+        this.authorizationSeverId = userModel.getAuthorizaionServerId();
         this.gender = userModel.getGender();
         this.phoneNo = userModel.getPhoneNo();
         this.userRealName = userModel.getUserName();
@@ -48,7 +48,7 @@ public class CustomAuthenticationPrinciple implements UserDetails, OAuth2User  {
         this.password = userModel.getPassword();
         this.authorities = authorities;
         this.nickName = userModel.getNickName();
-        this.userId = userModel.getUserId();
+        this.authorizationSeverId = userModel.getAuthorizaionServerId();
         this.gender = userModel.getGender();
         this.phoneNo = userModel.getPhoneNo();
         this.userRealName = userModel.getUserName();
@@ -73,16 +73,20 @@ public class CustomAuthenticationPrinciple implements UserDetails, OAuth2User  {
         return new CustomAuthenticationPrinciple(userModel, authorities, accountStatus, attributes, providerName);
     }
 
-
-
-    @Override
-    public String getPassword() {
-        return this.password;
+    public void modifyNickName(String nickName) {
+        this.nickName = nickName;
     }
 
-    @Override
-    public String getUsername() {
-        return this.userName;
+    public void modifyPhoneNo(String phoneNo) {
+        this.phoneNo = phoneNo;
+    }
+
+    public void modifyGender(String gender) {
+        this.gender = gender;
+    }
+
+    public void modifyUserRealName(String userRealName) {
+        this.userRealName = userRealName;
     }
 
     //사용자 계정이 만료되었는지 여부를 나타냅니다. 만료된 계정은 인증할 수 없습니다.
@@ -109,6 +113,17 @@ public class CustomAuthenticationPrinciple implements UserDetails, OAuth2User  {
         return isEnabled;
     }
 
+    @Override
+    public String getPassword() {
+        return this.password;
+    }
+
+    @Override
+    public String getUsername() {
+        return this.userName;
+    }
+
+
     public String getNickName() {
         return nickName;
     }
@@ -121,20 +136,18 @@ public class CustomAuthenticationPrinciple implements UserDetails, OAuth2User  {
         return gender;
     }
 
-    public void modifyNickName(String nickName) {
-        this.nickName = nickName;
+    @Override
+    public Map<String, Object> getAttributes() {
+        return attributes;
     }
 
-    public void modifyPhoneNo(String phoneNo) {
-        this.phoneNo = phoneNo;
+    @Override
+    public String getName() {
+        return userName;
     }
 
-    public void modifyGender(String gender) {
-        this.gender = gender;
-    }
-
-    public void modifyUserRealName(String userRealName) {
-        this.userRealName = userRealName;
+    public String getAuthorizationSeverId() {
+        return authorizationSeverId;
     }
 
     @Override
@@ -150,13 +163,5 @@ public class CustomAuthenticationPrinciple implements UserDetails, OAuth2User  {
         return Objects.hash(userName);
     }
 
-    @Override
-    public Map<String, Object> getAttributes() {
-        return attributes;
-    }
 
-    @Override
-    public String getName() {
-        return userName;
-    }
 }

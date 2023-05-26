@@ -4,6 +4,7 @@ import com.geulkkoli.application.user.ProviderUser;
 import com.geulkkoli.domain.social.SocialInfoService;
 import com.geulkkoli.domain.user.User;
 import com.geulkkoli.domain.user.service.UserService;
+import com.geulkkoli.web.social.SocialInfoDto;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -32,6 +33,12 @@ public abstract class AbstractOauth2UserService {
     @Transactional(readOnly = true)
     public User userInfo(ProviderUser providerUser) {
         return userService.findByEmail(providerUser.getEmail()).orElseThrow(() -> new RuntimeException("User not found"));
+    }
+
+    @Transactional
+    public void connect(ProviderUser providerUser, User user) {
+        SocialInfoDto socialInfoDto = new SocialInfoDto(providerUser.getId(), providerUser.getProvider(), user);
+        socialInfoService.save(socialInfoDto);
     }
 
     @Transactional(readOnly = true)

@@ -1,6 +1,5 @@
 package com.geulkkoli.web.user;
 
-import com.geulkkoli.application.user.UserSecurityService;
 import com.geulkkoli.application.user.CustomAuthenticationPrinciple;
 import com.geulkkoli.application.user.EmailService;
 import com.geulkkoli.application.user.PasswordService;
@@ -292,6 +291,6 @@ public class UserController {
     }
 
     private Long parseLong(CustomAuthenticationPrinciple authUser) {
-        return Long.valueOf(authUser.getUserId());
+        return Long.valueOf(authUser.getAuthorizationSeverId());
     }
 }

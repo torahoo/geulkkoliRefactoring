@@ -1,10 +1,8 @@
 package com.geulkkoli.web.social;
 
 import com.geulkkoli.application.security.AccountStatus;
-import com.geulkkoli.application.social.util.SocialType;
 import com.geulkkoli.application.user.CustomAuthenticationPrinciple;
 import com.geulkkoli.application.user.UserModelDto;
-import com.geulkkoli.domain.social.SocialInfo;
 import com.geulkkoli.domain.social.SocialInfoService;
 import com.geulkkoli.domain.user.User;
 import com.geulkkoli.domain.user.service.UserService;
@@ -46,7 +44,7 @@ public class SocialController {
     @GetMapping("/oauth2/signup")
     public ModelAndView moveSignUpPage(@AuthenticationPrincipal CustomAuthenticationPrinciple authUser, ModelAndView modelAndView) {
         log.info("소셜 로그인 회원의 회원 정보 기입");
-        log.info("authUser : {}", authUser.getUserId());
+        log.info("authUser : {}", authUser.getAuthorizationSeverId());
         SocialSignUpDto socialSignUpDto = SocialSignUpDto.builder()
                 .email(authUser.getUsername())
                 .nickName(authUser.getNickName())
@@ -55,7 +53,7 @@ public class SocialController {
                 .gender(authUser.getGender())
                 .userName(authUser.getUserRealName())
                 .password(authUser.getPassword())
-                .authorizationServerId(authUser.getUserId())
+                .authorizationServerId(authUser.getAuthorizationSeverId())
                 .clientregistrationName(authUser.getProviderName())
                 .build();
         SecurityContextHolder.clearContext();
