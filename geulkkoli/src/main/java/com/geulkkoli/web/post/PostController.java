@@ -116,7 +116,6 @@ public class PostController {
         if (bindingResult.hasErrors()) {
             return "/post/postEditForm";
         }
-
         postService.updatePost(postId, updateParam);
         redirectAttributes.addAttribute("updateStatus", true);
         redirectAttributes.addAttribute("page", request.getSession().getAttribute("pageNumber"));

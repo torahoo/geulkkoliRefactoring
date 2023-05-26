@@ -1,6 +1,7 @@
 spring:
-  profiles:
-    active: test
+  jpa:
+    properties:
+      active: test
   messages:
     basename: errors
   datasource:
@@ -71,16 +72,13 @@ spring:
 logging:
   level:
     org:
-      hibernate:
-        SQL: debug
-        type:
-          descriptor:
-            sql:
-              BasicBinder: trace
-server:
-  error:
-    whitelabel:
-      enabled: false
-    path: /error
-    include-exception: false
-    include-message: never
+      springframework:
+        jdbc: debug
+    hibernate:
+      SQL: debug
+      type:
+        descriptor:
+          sql:
+            BasicBinder: trace
+
+

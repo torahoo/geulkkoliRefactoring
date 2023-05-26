@@ -7,15 +7,12 @@ import com.geulkkoli.domain.post.Post;
 import com.geulkkoli.domain.post.service.PostService;
 import com.geulkkoli.domain.user.User;
 import com.geulkkoli.domain.user.service.UserService;
-import com.geulkkoli.web.comment.dto.CommentDto;
 import com.geulkkoli.web.comment.dto.CommentListDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.view.RedirectView;
 
 import java.util.List;
 
@@ -33,21 +30,20 @@ public class CommentController {
 
     /**
      * 댓글 작성
-     *
-     * @param postId      댓글을 작성한 게시물 구분
+     * @param postId 댓글을 작성한 게시물 구분
      * @param commentBody 댓글 본문
-     * @param authUser    작성자
+     * @param authUser 작성자
      * @return 새로운 댓글을 포함하는 댓글리스트 반환
      */
     @PostMapping("/{postId}")
-    public RedirectView writePostComment(@PathVariable("postId") Long postId,
-                                         @ModelAttribute CommentDto commentBody,
-                                         @AuthenticationPrincipal CustomAuthenticationPrinciple authUser) {
-        log.info("댓글 작성", commentBody.getCommentBody());
+    public List<CommentListDTO> writePostComment(@PathVariable("postId") Long postId,
+                                                 @RequestBody Comments commentBody,
+                                                 @AuthenticationPrincipal CustomAuthenticationPrinciple authUser) {
+
         Post post = findPost(postId);
         commentsService.writeComment(commentBody, post, findUser(authUser));
 
-        return new RedirectView("/post/read/" + postId);
+        return getCommentsList(post.getComments());
     }
 
     /**
