@@ -132,7 +132,18 @@ public class TestDataInit {
             postRepository.save(post3);
         }
 
-        for (int i = 1; i <= 6; i++) {
+        for (int i = 8; i <= 12; i++) {
+            AddDTO addDTO = AddDTO.builder()
+                    .title("달력 테스트")
+                    .postBody("햄버거")
+                    .nickName(user4.getNickName())
+                    .build();
+            LocalDateTime createAt = LocalDateTime.of(2022, i, i, 1, 1);
+            Post post4 = user4.writePost(addDTO, createAt);
+            postRepository.save(post4);
+        }
+
+        for (int i = 1; i <= 4; i++) {
             AddDTO addDTO = AddDTO.builder()
                     .title("달력 테스트")
                     .postBody("햄버거")

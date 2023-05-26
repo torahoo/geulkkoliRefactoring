@@ -71,6 +71,10 @@
           margin: 0px;
       }
 
+      .coloring {
+          background-color: #0a53be;
+      }
+
   </style>
 
 </head>
@@ -80,7 +84,7 @@
 <br>
 
 <div id="calendarBox">
-  <h4> < 흔적 남긴 날 > </h4>
+  <h4> < 활동한 날 > </h4>
   <div class="calendar">
     <div class="days"></div>
   </div>
@@ -107,6 +111,8 @@
         }
     }
 
+    let postingDates; //한 유저의 글 쓴 날들의 집합
+
     async function settingCalendarDaysByUserSignUpDate() {
         try {
             const response = await fetch(`/myPage/calendar`);
@@ -124,6 +130,8 @@
 
             let timeDiff = Math.abs(now.getTime() - signUpDate.getTime());
             let diffYears = Math.floor(timeDiff / (1000 * 3600 * 24 * 365));
+
+            postingDates = data.allPostDatesByOneUser;
 
             //현재 월로부터 직전 1년치 월 단위만 보여주기
             if (diffYears < 1) { //가입 날짜로부터 현재까지가 1년치 미만일 때 가입 이전 달력 노출되지 않게
@@ -154,10 +162,6 @@
                     }
                 }
             }
-
-            let postingDates = data.allPostDatesByOneUser; //일단 다 오는 거 확인
-            //시작날짜를보내면현재날짜까지만돌아오게수정해보자
-
         } catch (error) {
             console.error(error);
         }
@@ -208,6 +212,8 @@
                     cell.innerHTML = '';
                     cell.classList.add('borderLine');
                     column.appendChild(cell);
+                    if (checkDate(year, month, date))
+                        cell.classList.add('coloring');
                     date++;
                     cellCount++;
                 }
@@ -221,9 +227,17 @@
 
     settingCalendarDaysByUserSignUpDate();
 
-    // 활동날 색칠
-    function coloring() {
-
+    //post 연월일과 네모네모로 만들어준 연월일 위치 check (후에 coloring 해주려고)
+    function checkDate(year, month, date) {
+        for (let oneDate of postingDates) {
+            let postingDate = new Date(oneDate);
+            let postYear = postingDate.getFullYear();
+            let postMonth = postingDate.getMonth();
+            let postDate = postingDate.getDate();
+            if (postYear === year && postMonth === month && postDate === date) {
+                return true;
+            }
+        }
     }
 
 </script>
