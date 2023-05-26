@@ -48,7 +48,7 @@
 
             <button type="button"
                     onclick="location.href='/logout'"
-                    sec:authorize="hasRole('USER')"
+                    sec:authorize="hasAnyRole('USER','ADMIN','GUEST')"
                     class="btn btn-outline-primary">logout
             </button>
 

@@ -125,7 +125,7 @@ class UserTest {
                 .phoneNo("0102221111")
                 .gender("male")
                 .build();
-        RoleEntity roleEntity = user.hasRole(Role.USER);
+        RoleEntity roleEntity = user.Role(Role.USER);
 
         assertThat(roleEntity).isNotNull().has(new Condition<>(r -> r.getRole() == Role.USER, "USER 역할이 추가되었다")).has(new Condition<>(r -> r.getUsers().contains(user), "user가 추가되었다"));
     }

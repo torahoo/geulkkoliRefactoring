@@ -1,6 +1,6 @@
 package com.geulkkoli;
 
-import com.geulkkoli.application.security.UserSecurityService;
+import com.geulkkoli.application.user.UserSecurityService;
 import com.geulkkoli.domain.admin.Report;
 import com.geulkkoli.domain.admin.ReportRepository;
 import com.geulkkoli.domain.admin.service.AdminServiceImpl;
@@ -26,7 +26,6 @@ public class TestDataInit {
 
     private final PostRepository postRepository;
     private final ReportRepository reportRepository;
-    private final UserSecurityService userSecurityService;
     private final AdminServiceImpl adminServiceImpl;
     private final UserService userService;
 
@@ -53,7 +52,7 @@ public class TestDataInit {
         joinForm.setPhoneNo("9190232333");
         joinForm.setGender("male");
         joinForm.setPassword("qwe123!!!");
-        User user = userSecurityService.join(joinForm);
+        User user = userService.signUp(joinForm);
         adminServiceImpl.rockUser(user.getUserId(), "비밀번호가 너무 길어요");
 
         JoinFormDto joinForm2 = new JoinFormDto();
@@ -63,7 +62,7 @@ public class TestDataInit {
         joinForm2.setPhoneNo("01012345678");
         joinForm2.setGender("male");
         joinForm2.setPassword("123");
-        User user2 = userSecurityService.join(joinForm2);
+        userService.signUp(joinForm2);
 
         joinForm.setEmail("admin");
         joinForm.setUserName("타코다치");
@@ -71,7 +70,7 @@ public class TestDataInit {
         joinForm.setPhoneNo("01033132232");
         joinForm.setGender("male");
         joinForm.setPassword("123");
-        userSecurityService.joinAdmin(joinForm);
+        userService.signUpAdmin(joinForm);
 
         User user01 = userService.findById(1L);
 
@@ -96,17 +95,17 @@ public class TestDataInit {
             AddDTO addDTO2 = AddDTO.builder()
                     .title("testTitle02")
                     .postBody("test postbody 02")
-                    .nickName(user2.getNickName())
+                    .nickName(user01.getNickName())
                     .build();
-            Post post2 = user2.writePost(addDTO2);
+            Post post2 = user01.writePost(addDTO2);
             postRepository.save(post2);
 
             AddDTO addDTO3 = AddDTO.builder()
                     .title("testTitle03")
                     .postBody("test postbody 03")
-                    .nickName(user2.getNickName())
+                    .nickName(user01.getNickName())
                     .build();
-            Post post3 = user2.writePost(addDTO3);
+            Post post3 = user01.writePost(addDTO3);
             postRepository.save(post3);
         }
         /**

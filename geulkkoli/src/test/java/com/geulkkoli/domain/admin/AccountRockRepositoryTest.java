@@ -53,19 +53,19 @@ class AccountRockRepositoryTest {
     void existsById() {
         //given
         User user = User.builder()
-                .userName("김")
-                .nickName("김김")
+                .userName("김1")
+                .nickName("김김1")
                 .gender("M")
-                .password("XXXX")
-                .phoneNo("01012345678")
-                .email("ttt@gmail.com")
+                .password("XXXX1")
+                .phoneNo("010123456781")
+                .email("ttt1@gmail.com")
                 .build();
         User user1 = userRepository.save(user);
         AccountLock accountLock = AccountLock.of(user1, "정지사유", LocalDateTime.of(2023, 5, 11, 22, 22, 22));
 
-        accountRockRepository.save(accountLock);
+        AccountLock save = accountRockRepository.save(accountLock);
         //then
-        Boolean aBoolean = accountRockRepository.existsByLockedUser_UserId(1L);
+        Boolean aBoolean = accountRockRepository.existsByLockedUser_UserId(save.getLockedUser().getUserId());
 
         assertThat(aBoolean).isTrue();
     }

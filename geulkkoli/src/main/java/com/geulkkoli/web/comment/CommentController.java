@@ -1,6 +1,6 @@
 package com.geulkkoli.web.comment;
 
-import com.geulkkoli.application.user.AuthUser;
+import com.geulkkoli.application.user.CustomAuthenticationPrinciple;
 import com.geulkkoli.domain.comment.Comments;
 import com.geulkkoli.domain.comment.CommentsService;
 import com.geulkkoli.domain.post.Post;
@@ -38,7 +38,7 @@ public class CommentController {
     @PostMapping("/{postId}")
     public List<CommentListDTO> writePostComment(@PathVariable("postId") Long postId,
                                                  @RequestBody Comments commentBody,
-                                                 @AuthenticationPrincipal AuthUser authUser) {
+                                                 @AuthenticationPrincipal CustomAuthenticationPrinciple authUser) {
 
         Post post = findPost(postId);
         commentsService.writeComment(commentBody, post, findUser(authUser));
@@ -56,7 +56,7 @@ public class CommentController {
     @PutMapping("/{postId}")
     public List<CommentListDTO> editPostComment(@PathVariable("postId") Long postId,
                                                 @RequestBody Comments commentBody,
-                                                @AuthenticationPrincipal AuthUser authUser) {
+                                                @AuthenticationPrincipal CustomAuthenticationPrinciple authUser) {
 
         Post post = findPost(postId);
         commentsService.editComment(commentBody.getCommentId(), commentBody, findUser(authUser));
@@ -66,14 +66,14 @@ public class CommentController {
 
     @DeleteMapping
     public HttpStatus deletePostComment(@RequestBody Comments commentBody,
-                                  @AuthenticationPrincipal AuthUser authUser) {
+                                  @AuthenticationPrincipal CustomAuthenticationPrinciple authUser) {
 
         commentsService.deleteComment(commentBody.getCommentId(), findUser(authUser));
         return HttpStatus.OK;
     }
 
-    public User findUser(AuthUser authUser) {
-        return userService.findById(authUser.getUserId());
+    public User findUser(CustomAuthenticationPrinciple authUser) {
+        return userService.findById(Long.valueOf(authUser.getUserId()));
     }
 
     public Post findPost(Long postId) {

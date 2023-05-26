@@ -9,7 +9,7 @@ import java.io.Serializable;
 @Getter
 public class UserModelDto {
 
-    private Long userId;
+    private String userId;
     private String userName;
 
     private String password;
@@ -23,7 +23,7 @@ public class UserModelDto {
     private String gender;
 
     @Builder
-    public UserModelDto(Long userId, String userName, String password, String nickName, String email, String phoneNo, String gender) {
+    public UserModelDto(String userId, String userName, String password, String nickName, String email, String phoneNo, String gender) {
         this.userId = userId;
         this.userName = userName;
         this.password = password;
@@ -36,7 +36,7 @@ public class UserModelDto {
 
     public static UserModelDto toDto(User user) {
         return UserModelDto.builder()
-                .userId(user.getUserId())
+                .userId(String.valueOf(user.getUserId()))
                 .nickName(user.getNickName())
                 .email(user.getEmail())
                 .password(user.getPassword())

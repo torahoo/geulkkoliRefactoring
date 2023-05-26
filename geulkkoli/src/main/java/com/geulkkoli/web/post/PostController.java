@@ -1,6 +1,6 @@
 package com.geulkkoli.web.post;
 
-import com.geulkkoli.application.user.AuthUser;
+import com.geulkkoli.application.user.CustomAuthenticationPrinciple;
 import com.geulkkoli.domain.comment.Comments;
 import com.geulkkoli.domain.comment.CommentsService;
 import com.geulkkoli.domain.post.service.PostService;
@@ -115,7 +115,6 @@ public class PostController {
         if (bindingResult.hasErrors()) {
             return "/post/postEditForm";
         }
-
         postService.updatePost(postId, updateParam);
         redirectAttributes.addAttribute("updateStatus", true);
         redirectAttributes.addAttribute("page", request.getSession().getAttribute("pageNumber"));
@@ -139,7 +138,7 @@ public class PostController {
 
     //임시저장기능 (현재는 빈 값만 들어옴)
     @GetMapping("/savedone")
-    public void testBlanc(@AuthenticationPrincipal AuthUser authUser,
+    public void testBlanc(@AuthenticationPrincipal CustomAuthenticationPrinciple authUser,
                             HttpServletResponse response){
 
         Cookie cookie = new Cookie(URLEncoder.encode(authUser.getNickName()), null);

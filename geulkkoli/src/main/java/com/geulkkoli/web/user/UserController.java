@@ -1,7 +1,7 @@
 package com.geulkkoli.web.user;
 
-import com.geulkkoli.application.security.UserSecurityService;
-import com.geulkkoli.application.user.AuthUser;
+import com.geulkkoli.application.user.UserSecurityService;
+import com.geulkkoli.application.user.CustomAuthenticationPrinciple;
 import com.geulkkoli.application.user.EmailService;
 import com.geulkkoli.application.user.PasswordService;
 import com.geulkkoli.domain.user.User;
@@ -27,7 +27,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.websocket.server.PathParam;
 import java.util.Optional;
 
 @Controller
@@ -161,7 +160,7 @@ public class UserController {
         }
 
         if (!bindingResult.hasErrors()) {
-            userSecurityService.join(form);
+            userService.signUp(form);
 
             log.info("joinModel = {}", model);
             log.info("joinForm = {}", form);
@@ -212,10 +211,9 @@ public class UserController {
     }
 
     @GetMapping("user/edit")
-    public String editForm(@ModelAttribute("editForm") UserInfoEditDto userInfoEditDto, @AuthenticationPrincipal AuthUser authUser, Model model) {
-        log.info("editForm : {}", userInfoEditDto.toString());
-        log.info("authUser : {}", authUser.toString());
-        userInfoEditDto.editFormDto(authUser.getUserRealName(), authUser.getNickName(), authUser.getPhoneNo(), authUser.getGender());
+    public String editForm(@AuthenticationPrincipal CustomAuthenticationPrinciple authUser, Model model) {
+        log.info("authUser : {}", authUser.getNickName());
+        UserInfoEditDto userInfoEditDto = UserInfoEditDto.from(authUser.getUserRealName(), authUser.getNickName(), authUser.getPhoneNo(), authUser.getGender());
         model.addAttribute("editForm", userInfoEditDto);
         return EDIT_FORM;
     }
@@ -224,7 +222,7 @@ public class UserController {
      * authUser가 기존의 세션 저장 방식을 대체한다
      * */
     @PostMapping("user/edit")
-    public String editForm(@Validated @ModelAttribute("editForm") UserInfoEditDto userInfoEditDto, BindingResult bindingResult, @AuthenticationPrincipal AuthUser authUser) {
+    public String editForm(@Validated @ModelAttribute("editForm") UserInfoEditDto userInfoEditDto, BindingResult bindingResult, @AuthenticationPrincipal CustomAuthenticationPrinciple authUser) {
         log.info("editForm : {}", userInfoEditDto.toString());
         // 닉네임 중복 검사 && 본인의 기존 닉네임과 일치해도 중복이라고 안 뜨게
         if (userService.isNickNameDuplicate(userInfoEditDto.getNickName()) && !userInfoEditDto.getNickName().equals(authUser.getNickName())) {
@@ -238,10 +236,11 @@ public class UserController {
         if (bindingResult.hasErrors()) {
             return EDIT_FORM;
         } else {
-            userService.edit(authUser.getUserId(), userInfoEditDto);
+            userService.edit(parseLong(authUser), userInfoEditDto);
             // 세션에 저장된 authUser의 정보를 수정한다.
             Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-            AuthUser newAuth = (AuthUser) principal;
+            CustomAuthenticationPrinciple newAuth = (CustomAuthenticationPrinciple) principal;
+            log.info("nickName : {}", userInfoEditDto.getNickName());
             newAuth.modifyNickName(userInfoEditDto.getNickName());
             newAuth.modifyPhoneNo(userInfoEditDto.getPhoneNo());
             newAuth.modifyGender(userInfoEditDto.getGender());
@@ -256,10 +255,10 @@ public class UserController {
     }
 
     @PostMapping("user/edit/editPassword")
-    public String editPassword(@Validated @ModelAttribute("editPasswordForm") PasswordEditDto form, BindingResult bindingResult, @AuthenticationPrincipal AuthUser authUser, RedirectAttributes redirectAttributes) {
-        User user = userService.findById(authUser.getUserId());
+    public String editPassword(@Validated @ModelAttribute("editPasswordForm") PasswordEditDto form, BindingResult bindingResult, @AuthenticationPrincipal CustomAuthenticationPrinciple authUser, RedirectAttributes redirectAttributes) {
+        User user = userService.findById(parseLong(authUser));
         if (!passwordService.isPasswordVerification(user, form)) {
-            bindingResult.rejectValue("password", "Check.password");
+            bindingResult.rejectValue("oldPassword", "Check.password");
         }
 
         if (!form.getNewPassword().equals(form.getVerifyPassword())) {
@@ -269,7 +268,7 @@ public class UserController {
         if (bindingResult.hasErrors()) {
             return EDIT_PASSWORD_FORM;
         } else {
-            passwordService.updatePassword(authUser.getUserId(), form.getNewPassword());
+            passwordService.updatePassword(parseLong(authUser), form.getNewPassword());
             redirectAttributes.addAttribute("status", true);
             log.info("editPasswordForm = {}", form);
         }
@@ -282,7 +281,7 @@ public class UserController {
      * 또한 사용자 입장에서는 자신의 정보를 삭제하는 게 아니라 탈퇴하는 서비스를 쓰고 있으므로 uri를 의미에 더 가깝게 고쳤다.
      */
     @DeleteMapping("user/edit/unsubscribe/{userId}")
-    public String unsubscribe(@PathParam("userId") Long userId, @AuthenticationPrincipal AuthUser authUser) {
+    public String unsubscribe(@PathVariable("userId") Long userId) {
         try {
             User findUser = userService.findById(userId);
             userService.delete(findUser);
@@ -291,5 +290,9 @@ public class UserController {
             return REDIRECT_INDEX;
         }
         return REDIRECT_INDEX;
+    }
+
+    private Long parseLong(CustomAuthenticationPrinciple authUser) {
+        return Long.valueOf(authUser.getUserId());
     }
 }
