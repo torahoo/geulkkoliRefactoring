@@ -2,8 +2,8 @@ package com.geulkkoli.application.security.config;
 
 import com.geulkkoli.application.security.handler.LoginFailureHandler;
 import com.geulkkoli.application.security.handler.LoginSuccessHandler;
-import com.geulkkoli.application.user.UserSecurityService;
 import com.geulkkoli.application.social.CustomOauth2UserService;
+import com.geulkkoli.application.user.UserSecurityService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
@@ -14,7 +14,6 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.AuthenticationFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 /**
@@ -94,7 +93,7 @@ public class SecurityConfig {
                                 ;
                             }
                     ).loginPage("/loginPage");
-                }).userDetailsService(userSecurityService)
+                })
                 .logout()
                 .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
                 .logoutSuccessUrl("/")

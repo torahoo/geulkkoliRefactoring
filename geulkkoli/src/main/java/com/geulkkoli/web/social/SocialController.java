@@ -14,6 +14,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
@@ -52,7 +53,7 @@ public class SocialController {
                 .phoneNo(authUser.getPhoneNo())
                 .verifyPassword(authUser.getPassword())
                 .gender(authUser.getGender())
-                .userName(authUser.getName())
+                .userName(authUser.getUserRealName())
                 .password(authUser.getPassword())
                 .authorizationServerId(authUser.getUserId())
                 .clientregistrationName(authUser.getProviderName())
@@ -89,9 +90,11 @@ public class SocialController {
         CustomAuthenticationPrinciple principle = autoLogin(user, dto);
 
         UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(principle, principle.getAuthorities());
-        SecurityContextHolder.getContext().setAuthentication(token);
+        SecurityContext context = SecurityContextHolder.createEmptyContext();
+        context.setAuthentication(token);
+        SecurityContextHolder.setContext(context);
 
-        modelAndView.setViewName(HOME);
+        modelAndView.setViewName("redirect:/");
         return modelAndView;
     }
 

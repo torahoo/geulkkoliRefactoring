@@ -27,22 +27,6 @@ public class CustomAuthenticationPrinciple implements UserDetails, OAuth2User  {
     private String gender;
     private String providerName;
 
-    private CustomAuthenticationPrinciple(String userId, String userName, String password, boolean isEnabled, boolean isAccountNonExpired, boolean isAccountNonLocked, boolean isCredentialsNonExpired, Collection<GrantedAuthority> authorities, Map<String, Object> attributes, String userRealName, String nickName, String phoneNo, String gender) {
-        this.userId = userId;
-        this.userName = userName;
-        this.password = password;
-        this.isEnabled = isEnabled;
-        this.isAccountNonExpired = isAccountNonExpired;
-        this.isAccountNonLocked = isAccountNonLocked;
-        this.isCredentialsNonExpired = isCredentialsNonExpired;
-        this.authorities = authorities;
-        this.attributes = attributes;
-        this.userRealName = userRealName;
-        this.nickName = nickName;
-        this.phoneNo = phoneNo;
-        this.gender = gender;
-    }
-
     private CustomAuthenticationPrinciple(UserModelDto userModel, Collection<GrantedAuthority> authorities, AccountStatus accountStatus, Map<String, Object> attributes) {
         this.userName = userModel.getEmail();
         this.password = userModel.getPassword();

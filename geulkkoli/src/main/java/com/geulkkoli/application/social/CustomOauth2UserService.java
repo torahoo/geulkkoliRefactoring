@@ -41,7 +41,7 @@ public class CustomOauth2UserService extends AbstractOauth2UserService implement
 
         boolean isSignUp = TRUE.equals(isSignUp(providerUser));
         boolean isConnected = TRUE.equals(isConnected(providerUser));
-        log.info("provider : {}", providerUser.getProvider());
+
         if (isSignUp && isConnected) {
             log.info("providerUser : {}", providerUser.getId());
             User user = userInfo(providerUser);
