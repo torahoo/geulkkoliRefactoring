@@ -9,8 +9,10 @@ import com.geulkkoli.application.social.util.DelegateOAuth2RequestConverter;
 import com.geulkkoli.application.social.util.ProviderUserRequest;
 import com.geulkkoli.domain.user.User;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserService;
@@ -21,6 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import static java.lang.Boolean.*;
 
@@ -41,7 +44,19 @@ public class CustomOauth2UserService extends AbstractOauth2UserService implement
 
         boolean isSignUp = TRUE.equals(isSignUp(providerUser));
         boolean isConnected = TRUE.equals(isConnected(providerUser));
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
+
+        // 로그인 상태에서 소셜 연동이 되어 있지 않은 경우
+        if (!Objects.isNull(authentication) && isSignUp && !isConnected) {
+            CustomAuthenticationPrinciple principle = (CustomAuthenticationPrinciple) authentication.getPrincipal();
+            log.info("authentication : {}", principle);
+            User user = userInfo(providerUser);
+            UserModelDto model = singedUpUserToModel(user);
+            connect(providerUser, user);
+            authorities.add(new SimpleGrantedAuthority(user.roleName()));
+            return CustomAuthenticationPrinciple.from(model, authorities, AccountStatus.ACTIVE, providerUser.getAttributes(), providerUser.getProvider());
+        }
         // 회원가입이 되어 있고 소셜 연동이 되어 있는 경우
         if (isSignUp && isConnected) {
             log.info("providerUser : {}", providerUser.getId());
@@ -51,22 +66,15 @@ public class CustomOauth2UserService extends AbstractOauth2UserService implement
             return CustomAuthenticationPrinciple.from(model, authorities, AccountStatus.ACTIVE, providerUser.getAttributes(), providerUser.getProvider());
         }
 
-        // 회원가입이 되어 있고 소셜 연동이 되어 있지 않은 경우
-        if (isSignUp && !isConnected) {
-            log.info("소셜 계정 연동");
-            User user = userInfo(providerUser);
-            UserModelDto model = singedUpAndNotConnectedUserToModel(user, providerUser.getId());
-            authorities.add(new SimpleGrantedAuthority(user.roleName()));
+        // 회원가입을 아예 하지 않은 경우
+        if (!isSignUp) {
+            log.info("소셜 계정으로 회원가입");
+            UserModelDto model = provideUserToModel(providerUser);
+            authorities.add(new SimpleGrantedAuthority(Role.GUEST.getRoleName()));
             return CustomAuthenticationPrinciple.from(model, authorities, AccountStatus.ACTIVE, providerUser.getAttributes(), providerUser.getProvider());
         }
 
-        // 회원가입을 아예 하지 않은 경우
-        log.info("providerUser : {}", providerUser.getId());
-        UserModelDto model = provideUserToModel(providerUser);
-        authorities.add(new SimpleGrantedAuthority(Role.GUEST.getRoleName()));
-        return CustomAuthenticationPrinciple.from(model, authorities, AccountStatus.ACTIVE, providerUser.getAttributes(), providerUser.getProvider());
-
-
+        throw new OAuth2AuthenticationException("소셜 계정 연동이 되어 있지 않습니다.");
     }
 
     private UserModelDto provideUserToModel(ProviderUser providerUser) {
@@ -86,8 +94,5 @@ public class CustomOauth2UserService extends AbstractOauth2UserService implement
         return UserModelDto.toDto(user);
     }
 
-    private UserModelDto singedUpAndNotConnectedUserToModel(User user, String authorizationServerId) {
-        return UserModelDto.toDto(user, authorizationServerId);
-    }
 
 }

@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org",
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -13,13 +14,14 @@
 <header id="header" th:include="header"></header>
 <h1>마이 페이지</h1>
 <div class="col" style="text-align: center" >
-  <a th:href="@{/oauth2/authorization/kakao} " class="btn btn-block">
+  <a th:href="@{/social/kakao/login}" class="btn btn-block">
     카카오 계정 연결하기
   </a>
-  <a th:href="@{/oauth2/authorization/naver}" class="btn btn-block">
+
+  <a th:href="@{/social/naver/login}" class="btn btn-block">
      네이버 계정 연결하기
   </a>
-  <a th:href="@{/oauth2/authorization/google}" class="btn btn-block">
+  <a th:href="@{/social/google/login}" class="btn btn-block">
      구글 계정 연결하기
   </a>
 </div>

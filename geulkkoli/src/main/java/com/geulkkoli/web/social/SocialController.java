@@ -96,6 +96,11 @@ public class SocialController {
         return modelAndView;
     }
 
+    @GetMapping("/kakao/login")
+    public String kakaoLogin() {
+        return "redirect:/oauth2/authorization/kakao";
+    }
+
     private CustomAuthenticationPrinciple autoLogin(User user, UserModelDto dto) {
         List<GrantedAuthority> authorities = new ArrayList<>();
         authorities.add(new SimpleGrantedAuthority(user.authority()));
