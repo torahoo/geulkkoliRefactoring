@@ -1,6 +1,6 @@
 package com.geulkkoli.web.post;
 
-import com.geulkkoli.application.user.AuthUser;
+import com.geulkkoli.application.user.CustomAuthenticationPrinciple;
 import com.geulkkoli.domain.post.service.PostService;
 import com.geulkkoli.domain.user.User;
 import com.geulkkoli.domain.user.service.UserService;
@@ -134,7 +134,7 @@ public class PostController {
 
     //임시저장기능 (현재는 빈 값만 들어옴)
     @GetMapping("/savedone")
-    public void testBlanc(@AuthenticationPrincipal AuthUser authUser,
+    public void testBlanc(@AuthenticationPrincipal CustomAuthenticationPrinciple authUser,
                             HttpServletResponse response){
 
         Cookie cookie = new Cookie(URLEncoder.encode(authUser.getNickName()), null);

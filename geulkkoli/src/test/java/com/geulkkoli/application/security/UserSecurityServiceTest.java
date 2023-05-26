@@ -1,7 +1,8 @@
 package com.geulkkoli.application.security;
 
-import com.geulkkoli.application.user.AuthUser;
+import com.geulkkoli.application.user.CustomAuthenticationPrinciple;
 import com.geulkkoli.application.user.PasswordService;
+import com.geulkkoli.application.user.UserSecurityService;
 import com.geulkkoli.domain.user.User;
 import com.geulkkoli.domain.user.service.UserService;
 import com.geulkkoli.web.user.dto.JoinFormDto;
@@ -37,7 +38,6 @@ class UserSecurityServiceTest {
     PasswordService passwordService;
 
 
-
     @Test
     void join() {
         JoinFormDto joinForm = new JoinFormDto();
@@ -47,7 +47,7 @@ class UserSecurityServiceTest {
         joinForm.setPhoneNo("01012345631");
         joinForm.setGender("male");
         joinForm.setPassword("123qwe!@#");
-        User user = userSecurityService.join(joinForm);
+        User user = userService.signUp(joinForm);
 
         assertThat(user.getRole()).isEqualTo(RoleEntity.of(Role.USER, user));
     }
@@ -62,7 +62,7 @@ class UserSecurityServiceTest {
         joinForm.setPhoneNo("01012345671");
         joinForm.setGender("male");
         joinForm.setPassword("123qwe!@#");
-        User saveUser = userSecurityService.join(joinForm);
+        User saveUser = userService.signUp(joinForm);
 
 
         PasswordEditDto passwordEditDto = new PasswordEditDto();
@@ -85,7 +85,7 @@ class UserSecurityServiceTest {
         joinForm.setPhoneNo("01012345671");
         joinForm.setGender("male");
         joinForm.setPassword("123qwe!@#");
-        userSecurityService.join(joinForm);
+        userService.signUp(joinForm);
 
 
         PasswordEditDto passwordEditDto = new PasswordEditDto();
@@ -112,11 +112,11 @@ class UserSecurityServiceTest {
         joinForm.setPhoneNo("01012345671");
         joinForm.setGender("male");
         joinForm.setPassword("123qwe!@#");
-        User saveUser = userSecurityService.join(joinForm);
+        User saveUser = userService.signUp(joinForm);
 
         //when
         UserDetails user = userSecurityService.loadUserByUsername("tako1@naver.com");
-        AuthUser authUser = (AuthUser) user;
+        CustomAuthenticationPrinciple authUser = (CustomAuthenticationPrinciple) user;
         //then
 
         assertAll(() -> assertThat(authUser.getAuthorities()).hasSize(1),
@@ -147,7 +147,7 @@ class UserSecurityServiceTest {
         joinForm.setPhoneNo("01012345671");
         joinForm.setGender("male");
         joinForm.setPassword("123qwe!@#");
-        userSecurityService.join(joinForm);
+        userService.signUp(joinForm);
 
         assertThrows(AuthenticationException.class, () -> userSecurityService.loadUserByUsername("tako1@naver.com"));
     }

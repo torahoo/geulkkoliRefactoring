@@ -12,4 +12,5 @@ public class GeulkkoliApplication {
         SpringApplication.run(GeulkkoliApplication.class, args);
     }
 
+
 }

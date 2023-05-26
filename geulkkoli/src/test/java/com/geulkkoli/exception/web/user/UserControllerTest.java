@@ -1,6 +1,6 @@
 package com.geulkkoli.exception.web.user;
 
-import com.geulkkoli.application.security.UserSecurityService;
+import com.geulkkoli.application.user.UserSecurityService;
 import com.geulkkoli.application.security.config.SecurityConfig;
 import com.geulkkoli.application.security.handler.LoginFailureHandler;
 import com.geulkkoli.domain.user.User;
