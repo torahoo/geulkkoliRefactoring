@@ -1,5 +1,7 @@
 package com.geulkkoli.application.social.util;
 
+import com.geulkkoli.application.social.SocialTypeException;
+
 import java.util.Arrays;
 
 public enum SocialType {
@@ -19,7 +21,7 @@ public enum SocialType {
         return Arrays.stream(SocialType.values())
                 .filter(socialType -> socialType.getValue().equals(value))
                 .findFirst()
-                .orElseThrow(() -> new IllegalArgumentException("해당하는 소셜 타입이 없습니다."));
+                .orElseThrow(() -> new SocialTypeException("해당하는 소셜 타입이 없습니다."));
     }
 
     public boolean is(String clientregistrationName) {

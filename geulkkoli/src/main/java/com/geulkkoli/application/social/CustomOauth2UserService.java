@@ -51,7 +51,6 @@ public class CustomOauth2UserService extends AbstractOauth2UserService implement
         // 로그인 상태에서 깉은 이메일을 가진 소셜 계정 연동이 되어 있지 않은 경우
         if (!Objects.isNull(authentication) && isSignUp && !isConnected) {
             CustomAuthenticationPrinciple principle = (CustomAuthenticationPrinciple) authentication.getPrincipal();
-            log.info("authentication : {}", principle);
             User user = userInfo(providerUser.getEmail());
             UserModelDto model = singedUpUserToModel(user);
             connect(providerUser.getId(), providerUser.getProvider(), user);
@@ -62,7 +61,6 @@ public class CustomOauth2UserService extends AbstractOauth2UserService implement
         // 로그인 상태이지만 이메일이 다른 소셜 계정이 연동되어 있지 않은 경우
         if (!Objects.isNull(authentication) && !isSignUp && !isConnected) {
             CustomAuthenticationPrinciple principle = (CustomAuthenticationPrinciple) authentication.getPrincipal();
-            log.info("authentication : {}", principle);
             User user = userInfo(principle.getUsername());
             UserModelDto model = singedUpUserToModel(user);
             connect(providerUser.getId(), providerUser.getProvider(), user);
@@ -71,13 +69,13 @@ public class CustomOauth2UserService extends AbstractOauth2UserService implement
         }
         // 회원가입이 되어 있고 소셜 연동이 되어 있는 경우
         if (isSignUp && isConnected) {
-            log.info("providerUser : {}", providerUser.getId());
             User user = userInfo(providerUser.getEmail());
             UserModelDto model = singedUpUserToModel(user);
             authorities.add(new SimpleGrantedAuthority(user.roleName()));
             return CustomAuthenticationPrinciple.from(model, authorities, AccountStatus.ACTIVE, providerUser.getAttributes(), SocialType.findByProviderName(providerUser.getProvider()));
         }
 
+        // 이메일 다른 소셜 계정으로 로그인을 시도했을 경우
         if (!isSignUp && isConnected) {
             log.info("다른 이메일로 접근");
             User user = findUserBySocialId(providerUser.getId(), providerUser.getProvider());
