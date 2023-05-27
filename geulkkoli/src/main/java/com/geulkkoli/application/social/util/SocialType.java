@@ -1,5 +1,7 @@
 package com.geulkkoli.application.social.util;
 
+import java.util.Arrays;
+
 public enum SocialType {
     KAKAO("kakao"), NAVER("naver"), GOOGLE("google");
 
@@ -11,5 +13,16 @@ public enum SocialType {
 
     public String getValue() {
         return this.value;
+    }
+
+    public static SocialType findByProviderName(String value) {
+        return Arrays.stream(SocialType.values())
+                .filter(socialType -> socialType.getValue().equals(value))
+                .findFirst()
+                .orElseThrow(() -> new IllegalArgumentException("해당하는 소셜 타입이 없습니다."));
+    }
+
+    public boolean is(String clientregistrationName) {
+        return KAKAO.value.equals(clientregistrationName);
     }
 }

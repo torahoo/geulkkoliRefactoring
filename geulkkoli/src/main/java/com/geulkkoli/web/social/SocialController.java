@@ -18,6 +18,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.view.RedirectView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -54,7 +55,7 @@ public class SocialController {
                 .userName(authUser.getUserRealName())
                 .password(authUser.getPassword())
                 .authorizationServerId(authUser.getAuthorizationSeverId())
-                .clientregistrationName(authUser.getProviderName())
+                .clientregistrationName(authUser.getSocialType().getValue())
                 .build();
         SecurityContextHolder.clearContext();
 
@@ -101,9 +102,29 @@ public class SocialController {
         return "redirect:/oauth2/authorization/kakao";
     }
 
+    @GetMapping("/naver/login")
+    public String naverLogin() {
+        return "redirect:/oauth2/authorization/naver";
+    }
+
+    @GetMapping("/google/login")
+    public String googleLogin() {
+        return "redirect:/oauth2/authorization/google";
+    }
+
+
+    @GetMapping("/disconnect/socialType")
+    public RedirectView disconnect(@RequestParam("type") String socialType, @AuthenticationPrincipal CustomAuthenticationPrinciple authUser) {
+        log.info("소셜 연동 해제");
+        socialService.disconnect(authUser.getUsername(), socialType);
+        return new RedirectView("/my-page");
+    }
+
     private CustomAuthenticationPrinciple autoLogin(User user, UserModelDto dto) {
         List<GrantedAuthority> authorities = new ArrayList<>();
         authorities.add(new SimpleGrantedAuthority(user.authority()));
         return CustomAuthenticationPrinciple.from(dto, authorities, AccountStatus.ACTIVE);
     }
+
+
 }

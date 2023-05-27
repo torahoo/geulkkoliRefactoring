@@ -23,26 +23,30 @@ public abstract class AbstractOauth2UserService {
     private SocialInfoService socialInfoService;
 
     @Transactional(readOnly = true)
-    public Boolean isSignUp(ProviderUser providerUser) {
-        Optional<User> signUpUser = userService.findByEmail(providerUser.getEmail());
+    public Boolean isSignUp(String email) {
+        Optional<User> signUpUser = userService.findByEmail(email);
         return signUpUser.isPresent();
     }
 
 
-
     @Transactional(readOnly = true)
-    public User userInfo(ProviderUser providerUser) {
-        return userService.findByEmail(providerUser.getEmail()).orElseThrow(() -> new RuntimeException("User not found"));
+    public User userInfo(String email) {
+        return userService.findByEmail(email).orElseThrow(() -> new RuntimeException("User not found"));
     }
 
     @Transactional
-    public void connect(ProviderUser providerUser, User user) {
-        SocialInfoDto socialInfoDto = new SocialInfoDto(providerUser.getId(), providerUser.getProvider(), user);
+    public void connect(String socialId, String socialType,User user) {
+        SocialInfoDto socialInfoDto = new SocialInfoDto(socialId, socialType, user);
         socialInfoService.save(socialInfoDto);
     }
 
     @Transactional(readOnly = true)
-    public Boolean isConnected(ProviderUser providerUser) {
-        return socialInfoService.existsBySocialTypeAndSocialId(providerUser.getProvider(), providerUser.getId());
+    public Boolean isConnected(String socialId, String socialType) {
+        return socialInfoService.existsBySocialTypeAndSocialId(socialType, socialId);
+    }
+
+    @Transactional(readOnly = true)
+    public User findUserBySocialId(String socialId, String socialType) {
+        return socialInfoService.findBySocialTypeAndSocialId(socialType, socialId).getUser();
     }
 }

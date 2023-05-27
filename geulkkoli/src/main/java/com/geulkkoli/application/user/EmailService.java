@@ -10,7 +10,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 @RequiredArgsConstructor
 @Service
-@Transactional
 public class EmailService {  //자세한 작동 방식은 application.yml에서 확인 가능
     @Autowired
     private  JavaMailSender javaMailSender;

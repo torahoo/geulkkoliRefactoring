@@ -1,5 +1,9 @@
 package com.geulkkoli.web.mypage;
 
+import com.geulkkoli.application.user.CustomAuthenticationPrinciple;
+import com.geulkkoli.domain.social.SocialInfoService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -9,8 +13,13 @@ import org.springframework.web.servlet.ModelAndView;
 @RequestMapping("/my-page")
 public class MyPageController {
 
+    @Autowired
+    private SocialInfoService socialInfoService;
+
     @GetMapping()
-    public ModelAndView getMyPage() {
-        return new ModelAndView("mypage/mypage");
+    public ModelAndView getMyPage(@AuthenticationPrincipal CustomAuthenticationPrinciple loginUser) {
+        ConnectedSocialInfos connectedInfos = socialInfoService.findConnectedInfos(loginUser.getUsername());
+
+        return new ModelAndView("mypage/mypage", "connectedInfos", connectedInfos);
     }
 }

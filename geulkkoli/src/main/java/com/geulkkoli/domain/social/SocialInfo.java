@@ -2,22 +2,12 @@ package com.geulkkoli.domain.social;
 
 import com.geulkkoli.domain.user.User;
 import lombok.Builder;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
-// TODO: 2023/05/23
 
-/**
- * social_info_id bigint primary key auto_increment,
- * user_id bigint not null,
- * social_id varchar(255) not null,
- * social_provider_name varchar(255) not null,
- * social_connect_date TIMESTAMP Null,
- * constraint fk_social_info_user foreign key (user_id) references users (user_id),
- * constraint unique_social_info unique (social_id, social_provider_name)
- */
+
 @Entity
 @Table(name = "social_info", uniqueConstraints = {@UniqueConstraint(columnNames = {"social_id", "social_type"})})
 public class SocialInfo {

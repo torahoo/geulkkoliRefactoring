@@ -1,6 +1,7 @@
 package com.geulkkoli.application.user;
 
 import com.geulkkoli.application.security.AccountStatus;
+import com.geulkkoli.application.social.util.SocialType;
 import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -25,7 +26,7 @@ public class CustomAuthenticationPrinciple implements UserDetails, OAuth2User {
     private String nickName;
     private String phoneNo;
     private String gender;
-    private String providerName;
+    private SocialType socialType;
 
     private CustomAuthenticationPrinciple(UserModelDto userModel, Collection<GrantedAuthority> authorities, AccountStatus accountStatus, Map<String, Object> attributes) {
         this.userName = userModel.getEmail();
@@ -43,7 +44,7 @@ public class CustomAuthenticationPrinciple implements UserDetails, OAuth2User {
         this.attributes = attributes;
     }
 
-    private CustomAuthenticationPrinciple(UserModelDto userModel, Collection<GrantedAuthority> authorities, AccountStatus accountStatus, Map<String, Object> attributes, String providerName) {
+    private CustomAuthenticationPrinciple(UserModelDto userModel, Collection<GrantedAuthority> authorities, AccountStatus accountStatus, Map<String, Object> attributes, SocialType socialType) {
         this.userName = userModel.getEmail();
         this.password = userModel.getPassword();
         this.authorities = authorities;
@@ -57,7 +58,7 @@ public class CustomAuthenticationPrinciple implements UserDetails, OAuth2User {
         this.isCredentialsNonExpired = accountStatus.isCredentialsNonExpired();
         this.isEnabled = accountStatus.isEnabled();
         this.attributes = attributes;
-        this.providerName = providerName;
+        this.socialType = socialType;
     }
 
 
@@ -69,8 +70,8 @@ public class CustomAuthenticationPrinciple implements UserDetails, OAuth2User {
         return new CustomAuthenticationPrinciple(userModel, authorities, accountStatus, attributes);
     }
 
-    public static CustomAuthenticationPrinciple from(UserModelDto userModel, Collection<GrantedAuthority> authorities, AccountStatus accountStatus, Map<String, Object> attributes, String providerName) {
-        return new CustomAuthenticationPrinciple(userModel, authorities, accountStatus, attributes, providerName);
+    public static CustomAuthenticationPrinciple from(UserModelDto userModel, Collection<GrantedAuthority> authorities, AccountStatus accountStatus, Map<String, Object> attributes, SocialType socialType) {
+        return new CustomAuthenticationPrinciple(userModel, authorities, accountStatus, attributes, socialType);
     }
 
     public void modifyNickName(String nickName) {
