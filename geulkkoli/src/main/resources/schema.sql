@@ -95,6 +95,7 @@ create table if not exists social_info
     social_id varchar(255) not null,
     social_type varchar(255) not null,
     social_connect_date TIMESTAMP Null,
+    is_connected boolean default true,
     constraint fk_social_info_user foreign key (user_id) references users (user_id),
     constraint unique_social_info unique (social_id, social_type)
 );

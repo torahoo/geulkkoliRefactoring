@@ -44,13 +44,15 @@ public class CustomOauth2UserService extends AbstractOauth2UserService implement
         List<GrantedAuthority> authorities = new ArrayList<>();
 
         boolean isSignUp = TRUE.equals(isSignUp(providerUser.getEmail()));
-        boolean isConnected = TRUE.equals(isConnected(providerUser.getId(), providerUser.getProvider()));
+        boolean isAssociated = TRUE.equals(haveAssociatedRecord(providerUser.getId(), providerUser.getProvider()));
+        boolean isConnected = TRUE.equals(isConnected(providerUser.getId()));
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
-
-        // 로그인 상태에서 깉은 이메일을 가진 소셜 계정 연동이 되어 있지 않은 경우
-        if (!Objects.isNull(authentication) && isSignUp && !isConnected) {
-            CustomAuthenticationPrinciple principle = (CustomAuthenticationPrinciple) authentication.getPrincipal();
+        log.info("isSignUp: {}", isSignUp);
+        log.info("isAssociated: {}", isAssociated);
+        log.info("isConnected: {}", isConnected);
+        // 로그인 상태에서 깉은 이메일을 가진 소셜 계정 연동한 기록이 아예 없는 경우
+        if (!Objects.isNull(authentication) && isSignUp && !isAssociated) {
             User user = userInfo(providerUser.getEmail());
             UserModelDto model = singedUpUserToModel(user);
             connect(providerUser.getId(), providerUser.getProvider(), user);
@@ -58,25 +60,30 @@ public class CustomOauth2UserService extends AbstractOauth2UserService implement
             return CustomAuthenticationPrinciple.from(model, authorities, AccountStatus.ACTIVE, providerUser.getAttributes(), SocialType.findByProviderName(providerUser.getProvider()));
         }
 
-        // 로그인 상태이지만 이메일이 다른 소셜 계정이 연동되어 있지 않은 경우
-        if (!Objects.isNull(authentication) && !isSignUp && !isConnected) {
+        // 로그인 상태에서 이메일이 다른 소셜 계정이 연동되어 있지 않은 경우
+        if (!Objects.isNull(authentication) && !isSignUp && !isAssociated) {
+            return getoAuth2User(providerUser, authorities, authentication);
+        }
+
+        // 로그인한 상태에서 같은 이메일로 회원가입이 되어 있고 소셜 연동을 한 기록이 있고 소셜 연동을 유지하지 않은 경우
+        if (!Objects.isNull(authentication) && isSignUp && isAssociated && !isConnected) {
             CustomAuthenticationPrinciple principle = (CustomAuthenticationPrinciple) authentication.getPrincipal();
+            reConnected(providerUser.getId(), providerUser.getProvider());
             User user = userInfo(principle.getUsername());
             UserModelDto model = singedUpUserToModel(user);
-            connect(providerUser.getId(), providerUser.getProvider(), user);
             authorities.add(new SimpleGrantedAuthority(user.roleName()));
             return CustomAuthenticationPrinciple.from(model, authorities, AccountStatus.ACTIVE, providerUser.getAttributes(), SocialType.findByProviderName(providerUser.getProvider()));
         }
-        // 회원가입이 되어 있고 소셜 연동이 되어 있는 경우
-        if (isSignUp && isConnected) {
+        // 같은 이메일로 회원가입이 되어 있고 소셜 연동을 한 기록이 있고 소셜 연동을 유지한 경우
+        if (isSignUp && isAssociated && isConnected) {
             User user = userInfo(providerUser.getEmail());
             UserModelDto model = singedUpUserToModel(user);
             authorities.add(new SimpleGrantedAuthority(user.roleName()));
             return CustomAuthenticationPrinciple.from(model, authorities, AccountStatus.ACTIVE, providerUser.getAttributes(), SocialType.findByProviderName(providerUser.getProvider()));
         }
 
-        // 이메일 다른 소셜 계정으로 로그인을 시도했을 경우
-        if (!isSignUp && isConnected) {
+        // 이메일이 다른 소셜 계정으로 로그인을 시도했고 연동한 기록이 있고 소셜 연동을 유지한 경우
+        if (!isSignUp && isAssociated && isConnected) {
             log.info("다른 이메일로 접근");
             User user = findUserBySocialId(providerUser.getId(), providerUser.getProvider());
             UserModelDto model = singedUpUserToModel(user);
@@ -84,15 +91,25 @@ public class CustomOauth2UserService extends AbstractOauth2UserService implement
             return CustomAuthenticationPrinciple.from(model, authorities, AccountStatus.ACTIVE, providerUser.getAttributes(), SocialType.findByProviderName(providerUser.getProvider()));
         }
 
+
         // 회원가입을 아예 하지 않은 경우
-        if (!isSignUp) {
+        if (!isSignUp && !isAssociated) {
             log.info("소셜 계정으로 회원가입");
             UserModelDto model = provideUserToModel(providerUser);
             authorities.add(new SimpleGrantedAuthority(Role.GUEST.getRoleName()));
             return CustomAuthenticationPrinciple.from(model, authorities, AccountStatus.ACTIVE, providerUser.getAttributes(), SocialType.findByProviderName(providerUser.getProvider()));
         }
-
+        // 이메일이 다른 소셜 계정으로 로그인을 시도했고 연동한 기록이 있고 소셜 연동을 유지하지 않은 경우
         throw new OAuth2AuthenticationException("소셜 계정 연동이 되어 있지 않습니다.");
+    }
+
+    private OAuth2User getoAuth2User(ProviderUser providerUser, List<GrantedAuthority> authorities, Authentication authentication) {
+        CustomAuthenticationPrinciple principle = (CustomAuthenticationPrinciple) authentication.getPrincipal();
+        User user = userInfo(principle.getUsername());
+        UserModelDto model = singedUpUserToModel(user);
+        connect(providerUser.getId(), providerUser.getProvider(), user);
+        authorities.add(new SimpleGrantedAuthority(user.roleName()));
+        return CustomAuthenticationPrinciple.from(model, authorities, AccountStatus.ACTIVE, providerUser.getAttributes(), SocialType.findByProviderName(providerUser.getProvider()));
     }
 
     private UserModelDto provideUserToModel(ProviderUser providerUser) {

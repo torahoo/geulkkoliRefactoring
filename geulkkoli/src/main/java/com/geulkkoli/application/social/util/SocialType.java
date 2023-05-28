@@ -1,7 +1,5 @@
 package com.geulkkoli.application.social.util;
 
-import com.geulkkoli.application.social.SocialTypeException;
-
 import java.util.Arrays;
 
 public enum SocialType {
@@ -25,6 +23,6 @@ public enum SocialType {
     }
 
     public boolean is(String clientregistrationName) {
-        return KAKAO.value.equals(clientregistrationName);
+        return this.value.equals(clientregistrationName);
     }
 }

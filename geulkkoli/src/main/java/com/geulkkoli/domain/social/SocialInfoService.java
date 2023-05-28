@@ -1,13 +1,15 @@
 package com.geulkkoli.domain.social;
 
-import com.geulkkoli.application.social.util.SocialType;
 import com.geulkkoli.web.mypage.ConnectedSocialInfos;
 import com.geulkkoli.web.social.SocialInfoDto;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
+@Slf4j
 @Service
 public class SocialInfoService {
     private final SocialInfoRepository socialInfoRepository;
@@ -33,8 +35,18 @@ public class SocialInfoService {
     }
 
     @Transactional(readOnly = true)
-    public Boolean existsBySocialTypeAndSocialId(String socialType, String socialId) {
+    public Boolean isAssociatedRecord(String socialType, String socialId) {
         return socialInfoRepository.existsBySocialTypeAndSocialId(socialType, socialId);
+    }
+
+    @Transactional(readOnly = true)
+    public Boolean isConnected(String socialId) {
+        Optional<SocialInfo> socialInfo = socialInfoRepository.findSocialInfoBySocialId(socialId);
+        if (socialInfo.isEmpty()) {
+            return true;
+        }
+        log.info("socialInfo.get().getConnected() : {}", socialInfo.get().getConnected());
+        return socialInfo.get().getConnected();
     }
 
     @Transactional(readOnly = true)
@@ -45,15 +57,22 @@ public class SocialInfoService {
         }
         return new ConnectedSocialInfos(allByUserEmail);
     }
+
     @Transactional
     public void disconnect(String email, String socialType) {
-     socialInfoRepository.findSocialInfoBySocialTypeAndAndUser_Email(socialType, email).ifPresent(socialInfoRepository::delete);
+        socialInfoRepository.findSocialInfoBySocialTypeAndAndUser_Email(socialType, email).ifPresent(socialInfo -> {
+            socialInfo.disconnect();
+            socialInfoRepository.save(socialInfo);
+        });
     }
 
-    private List<SocialInfo> findAllByUser_eamil(String email) {
-        List<SocialInfo> allByUserEmail = socialInfoRepository.findAllByUser_Email(email);
-        return allByUserEmail;
+    @Transactional(readOnly = true)
+    public List<SocialInfo> findAllByUser_eamil(String email) {
+        return socialInfoRepository.findAllByUser_Email(email);
     }
 
 
+    public void save(SocialInfo socialInfo) {
+        socialInfoRepository.save(socialInfo);
+    }
 }

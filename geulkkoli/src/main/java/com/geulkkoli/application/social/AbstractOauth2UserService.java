@@ -1,6 +1,6 @@
 package com.geulkkoli.application.social;
 
-import com.geulkkoli.application.user.ProviderUser;
+import com.geulkkoli.domain.social.SocialInfo;
 import com.geulkkoli.domain.social.SocialInfoService;
 import com.geulkkoli.domain.user.User;
 import com.geulkkoli.domain.user.service.UserService;
@@ -35,14 +35,27 @@ public abstract class AbstractOauth2UserService {
     }
 
     @Transactional
-    public void connect(String socialId, String socialType,User user) {
+    public void connect(String socialId, String socialType, User user) {
         SocialInfoDto socialInfoDto = new SocialInfoDto(socialId, socialType, user);
         socialInfoService.save(socialInfoDto);
     }
 
     @Transactional(readOnly = true)
-    public Boolean isConnected(String socialId, String socialType) {
-        return socialInfoService.existsBySocialTypeAndSocialId(socialType, socialId);
+    public Boolean haveAssociatedRecord(String socialId, String socialType) {
+        return socialInfoService.isAssociatedRecord(socialType, socialId);
+    }
+
+    @Transactional(readOnly = true)
+    public Boolean isConnected(String socialId) {
+        return socialInfoService.isConnected(socialId);
+    }
+
+    @Transactional
+    public Boolean reConnected(String socialId, String socialType) {
+        SocialInfo socialInfo = socialInfoService.findBySocialTypeAndSocialId(socialType, socialId);
+        socialInfo.reConnected(true);
+        socialInfoService.save(socialInfo);
+        return true;
     }
 
     @Transactional(readOnly = true)

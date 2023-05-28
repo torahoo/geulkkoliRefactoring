@@ -7,7 +7,6 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 
 
-
 @Entity
 @Table(name = "social_info", uniqueConstraints = {@UniqueConstraint(columnNames = {"social_id", "social_type"})})
 public class SocialInfo {
@@ -29,6 +28,9 @@ public class SocialInfo {
     @Column
     private LocalDateTime socialConnectDate;
 
+    @Column(columnDefinition = "boolean default true")
+    private Boolean isConnected = true;
+
     public SocialInfo() {
     }
 
@@ -38,6 +40,14 @@ public class SocialInfo {
         this.socialId = socialId;
         this.socialType = socialType;
         this.socialConnectDate = socialConnectDate;
+    }
+
+    protected void disconnect() {
+        this.isConnected = false;
+    }
+
+    public Boolean getConnected() {
+        return isConnected;
     }
 
     public User getUser() {
@@ -58,5 +68,10 @@ public class SocialInfo {
 
     public LocalDateTime getSocialConnectDate() {
         return socialConnectDate;
+    }
+
+
+    public Boolean reConnected(boolean b) {
+        return this.isConnected = b;
     }
 }
