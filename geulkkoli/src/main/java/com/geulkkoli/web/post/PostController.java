@@ -94,7 +94,7 @@ public class PostController {
                 log.info("해당 UserId로 회원을 찾을 수 없음");
             }
         } catch (NullPointerException e) {
-            e.printStackTrace();
+            log.info("로그인을 안한 사용자 접속");
             model.addAttribute("post", postPage);
             model.addAttribute("authorUser", authorUser);
             model.addAttribute("checkFavorite", checkFavorite);
@@ -112,6 +112,7 @@ public class PostController {
         model.addAttribute("post", postPage);
         model.addAttribute("authorUser", authorUser);
         model.addAttribute("checkFavorite", checkFavorite);
+        model.addAttribute("loginUserId", user.getUserId());
         searchDefault(model, searchType, searchWords);
         return "/post/postPage";
     }

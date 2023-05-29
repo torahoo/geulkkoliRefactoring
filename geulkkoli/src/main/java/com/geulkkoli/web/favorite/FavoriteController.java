@@ -43,10 +43,11 @@ public class FavoriteController {
         User loginUser = userService.findById(Long.parseLong(user.getUserId()));
         if(favoriteService.favoriteCheck(post, loginUser)==null) {
             favoriteService.addFavorite(post, loginUser);
+            return "add success";
         } else {
             Favorites findFavorite = favoriteService.favoriteCheck(post, loginUser);
             favoriteService.undoFavorite(findFavorite);
+            return "cancel success";
         }
-        return "redirect:/post/read/{postId}";
     }
 }

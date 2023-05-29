@@ -47,11 +47,12 @@
     </div>
     <div class="lh-100"
          style="padding: 10px; margin: 10px;">
-      <form th:action="@{/pressFavorite/{postId}(postId=${post.postId})}" method="POST">
-        <input th:if="${#strings.equals(checkFavorite, 'none')}" type="image" th:src="@{/images/favorite_dislike.png}" alt="" width="30" height="30">
-        <input th:if="${#strings.equals(checkFavorite, 'exist')}" type="image" th:src="@{/images/favorite_like.png}" alt="" width="30" height="30">
+      <form id="favoriteForm" th:action="@{/pressFavorite/{postId}(postId=${post.postId})}" method="POST">
+        <input type="hidden" id="checkFavorite" name="checkFavorite" value="{checkFavorite}">
+        <input id="favorite_disLike" th:if="${checkFavorite eq 'none'}" type="image" th:src="@{/images/favorite_dislike.png}" alt="favoriteImage_disLike" width="30" height="30">
+        <input id="favorite_like" th:if="${checkFavorite eq 'exist'}" type="image" th:src="@{/images/favorite_like.png}" alt="favoriteImage_like" width="30" height="30">
       </form>
-      <img th:if="${#strings.equals(checkFavorite, 'never clicked')}" type="image" th:src="@{/images/favorite_dislike.png}" alt="" width="30" height="30" src="">
+      <img th:if="${#strings.equals(checkFavorite, 'never clicked')}" type="image" th:src="@{/images/favorite_dislike.png}" alt="favoriteImage_noneUser" width="30" height="30" src="">
     </div>
     <h6 th:text="${post.getFavoriteCount()}">좋아요 갯수</h6>
   </div>
@@ -149,6 +150,80 @@
   }
 
   <!-- end 게시글 삭제 -->
+
+  <!-- start 좋아요 -->
+
+  document.addEventListener("DOMContentLoaded", function () {
+    const favoriteDisLike = document.getElementById('favorite_disLike');
+    const favoriteLike = document.getElementById('favorite_Like');
+
+    favoriteDisLike.addEventListener("click", function (pressFavoriteDisLikeButton) {
+      pressFavoriteDisLikeButton.preventDefault();
+
+      const loginUserId = [[${loginUserId}]]
+      const xhr = new XMLHttpRequest();
+      xhr.open("POST", "/pressFavorite/"+postId);
+      xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+
+      xhr.onload = function () {
+        if(xhr.status === 200) {
+          let response = xhr.responseText;
+
+          if(response === "add success") {
+            favoriteDisLike.style.display = "none";
+            favoriteLike.style.display = "inline";
+          } else {
+            favoriteDisLike.style.display = "inline";
+            favoriteLike.style.display = "none";
+          }
+        } else {
+          window.location.href = "redirect:/post/read/"+postId;
+        }
+      };
+      xhr.onerror = function () {
+        //에러처리
+        console.log("XMLHttpRequest error")
+      };
+
+      const data = "userId=" + encodeURIComponent(loginUserId) + "&postId=" + encodeURIComponent(postId);
+      xhr.send(data);
+    });
+
+    favoriteLike.addEventListener("click", function (pressFavoriteLikeButton) {
+      pressFavoriteLikeButton.preventDefault();
+
+      const loginUserId = [[${loginUserId}]]
+      const xhr = new XMLHttpRequest();
+      xhr.open("POST", "/pressFavorite/"+postId);
+      xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+
+      xhr.onload = function () {
+        if(xhr.status === 200) {
+          const response = xhr.responseText;
+
+          if(response === "cancel success") {
+            favoriteDisLike.style.display = "inline";
+            favoriteLike.style.display = "none";
+          } else {
+            favoriteDisLike.style.display = "none";
+            favoriteLike.style.display = "inline";
+          }
+        } else {
+          alert("function 문제가 발생")
+        }
+      };
+      xhr.onerror = function () {
+        //에러처리
+        console.log("XMLHttpRequest error")
+        alert("xhr 문제가 발생")
+      };
+
+      const data = "userId=" + encodeURIComponent(loginUserId) + "&postId=" + encodeURIComponent(postId);
+      xhr.send(data);
+    });
+  });
+
+  <!-- end 좋아요 -->
 
 </script>
 
