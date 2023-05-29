@@ -48,13 +48,12 @@
     <div class="lh-100"
          style="padding: 10px; margin: 10px;">
       <form id="favoriteForm" th:action="@{/pressFavorite/{postId}(postId=${post.postId})}" method="POST">
-        <input type="hidden" id="checkFavorite" name="checkFavorite" value="{checkFavorite}">
-        <input id="favorite_disLike" th:if="${checkFavorite eq 'none'}" type="image" th:src="@{/images/favorite_dislike.png}" alt="favoriteImage_disLike" width="30" height="30">
+        <input id="favorite_disLike" th:if="${checkFavorite eq 'none'}" type="image" th:src="@{/images/favorite_dislike.png}" alt="favoriteImage_disLike" width="30" height="30" src="">
         <input id="favorite_like" th:if="${checkFavorite eq 'exist'}" type="image" th:src="@{/images/favorite_like.png}" alt="favoriteImage_like" width="30" height="30">
       </form>
       <img th:if="${#strings.equals(checkFavorite, 'never clicked')}" type="image" th:src="@{/images/favorite_dislike.png}" alt="favoriteImage_noneUser" width="30" height="30" src="">
     </div>
-    <h6 th:text="${post.getFavoriteCount()}">좋아요 갯수</h6>
+    <h6 id="favoriteCount" th:text="${post.getFavoriteCount()}">좋아요 갯수</h6>
   </div>
 
   <div class="mb-3">
@@ -153,74 +152,38 @@
 
   <!-- start 좋아요 -->
 
-  document.addEventListener("DOMContentLoaded", function () {
-    const favoriteDisLike = document.getElementById('favorite_disLike');
-    const favoriteLike = document.getElementById('favorite_Like');
+  // Form submit 이벤트 처리
+  document.getElementById("favoriteForm").addEventListener("submit", function(event) {
+      event.preventDefault(); // 기본 동작(페이지 새로고침) 방지
+      let count = document.getElementById("favoriteCount");
 
-    favoriteDisLike.addEventListener("click", function (pressFavoriteDisLikeButton) {
-      pressFavoriteDisLikeButton.preventDefault();
-
-      const loginUserId = [[${loginUserId}]]
       const xhr = new XMLHttpRequest();
-      xhr.open("POST", "/pressFavorite/"+postId);
+      xhr.open("POST", event.target.action, true);
       xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
 
-      xhr.onload = function () {
-        if(xhr.status === 200) {
-          let response = xhr.responseText;
-
-          if(response === "add success") {
-            favoriteDisLike.style.display = "none";
-            favoriteLike.style.display = "inline";
-          } else {
-            favoriteDisLike.style.display = "inline";
-            favoriteLike.style.display = "none";
+      xhr.onreadystatechange = function() {
+          if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
+              const response = xhr.responseText;
+              if (response === "add success") {
+                  // 좋아요 추가 성공
+                  console.log("add success")
+                  document.getElementById("favorite_disLike").src = "/images/favorite_like.png";
+                  count ++;
+              } else if (response === "cancel success") {
+                  // 좋아요 취소 성공
+                  console.log("cancel success")
+                  document.getElementById("favorite_like").src = "/images/favorite_dislike.png";
+                  if(count<1) {
+                      count = 0;
+                  } else {
+                      count --;
+                  }
+              }
           }
-        } else {
-          window.location.href = "redirect:/post/read/"+postId;
-        }
-      };
-      xhr.onerror = function () {
-        //에러처리
-        console.log("XMLHttpRequest error")
       };
 
-      const data = "userId=" + encodeURIComponent(loginUserId) + "&postId=" + encodeURIComponent(postId);
-      xhr.send(data);
-    });
-
-    favoriteLike.addEventListener("click", function (pressFavoriteLikeButton) {
-      pressFavoriteLikeButton.preventDefault();
-
-      const loginUserId = [[${loginUserId}]]
-      const xhr = new XMLHttpRequest();
-      xhr.open("POST", "/pressFavorite/"+postId);
-      xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-
-      xhr.onload = function () {
-        if(xhr.status === 200) {
-          const response = xhr.responseText;
-
-          if(response === "cancel success") {
-            favoriteDisLike.style.display = "inline";
-            favoriteLike.style.display = "none";
-          } else {
-            favoriteDisLike.style.display = "none";
-            favoriteLike.style.display = "inline";
-          }
-        } else {
-          alert("function 문제가 발생")
-        }
-      };
-      xhr.onerror = function () {
-        //에러처리
-        console.log("XMLHttpRequest error")
-        alert("xhr 문제가 발생")
-      };
-
-      const data = "userId=" + encodeURIComponent(loginUserId) + "&postId=" + encodeURIComponent(postId);
-      xhr.send(data);
-    });
+      const formData = new FormData(event.target);
+      xhr.send(formData);
   });
 
   <!-- end 좋아요 -->
