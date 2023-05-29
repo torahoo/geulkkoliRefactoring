@@ -156,7 +156,13 @@
   document.getElementById("favoriteForm").addEventListener("submit", function(event) {
       event.preventDefault(); // 기본 동작(페이지 새로고침) 방지
       let count = document.getElementById("favoriteCount");
-
+      let like = "";
+      let disLike = "";
+      if(document.getElementById("favorite_like")===null) {
+        disLike = document.getElementById("favorite_disLike").getAttribute("src");
+      } else {
+        like = document.getElementById("favorite_like").getAttribute("src");
+      }
       const xhr = new XMLHttpRequest();
       xhr.open("POST", event.target.action, true);
       xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
@@ -165,19 +171,27 @@
           if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
               const response = xhr.responseText;
               if (response === "add success") {
-                  // 좋아요 추가 성공
-                  console.log("add success")
+                // 좋아요 추가 성공
+                console.log("add success")
+                if(like === "/images/favorite_dislike.png"){
+                  document.getElementById("favorite_like").src = "/images/favorite_like.png";
+                } else {
                   document.getElementById("favorite_disLike").src = "/images/favorite_like.png";
-                  count ++;
+                }
+                count ++;
               } else if (response === "cancel success") {
                   // 좋아요 취소 성공
-                  console.log("cancel success")
+                console.log("cancel success")
+                if(disLike === "/images/favorite_like.png"){
+                  document.getElementById("favorite_disLike").src = "/images/favorite_dislike.png";
+                } else {
                   document.getElementById("favorite_like").src = "/images/favorite_dislike.png";
-                  if(count<1) {
-                      count = 0;
-                  } else {
-                      count --;
-                  }
+                }
+                if(count<1) {
+                    count = 0;
+                } else {
+                    count --;
+                }
               }
           }
       };
