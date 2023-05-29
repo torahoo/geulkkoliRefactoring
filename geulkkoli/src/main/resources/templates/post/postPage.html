@@ -155,7 +155,7 @@
   // Form submit 이벤트 처리
   document.getElementById("favoriteForm").addEventListener("submit", function(event) {
       event.preventDefault(); // 기본 동작(페이지 새로고침) 방지
-      let count = document.getElementById("favoriteCount");
+      let count = parseInt(document.getElementById("favoriteCount").textContent, 10);
       let like = "";
       let disLike = "";
       if(document.getElementById("favorite_like")===null) {
@@ -179,6 +179,7 @@
                   document.getElementById("favorite_disLike").src = "/images/favorite_like.png";
                 }
                 count ++;
+                document.getElementById("favoriteCount").textContent = count;
               } else if (response === "cancel success") {
                   // 좋아요 취소 성공
                 console.log("cancel success")
@@ -189,8 +190,10 @@
                 }
                 if(count<1) {
                     count = 0;
+                    document.getElementById("favoriteCount").textContent = count;
                 } else {
                     count --;
+                    document.getElementById("favoriteCount").textContent = count;
                 }
               }
           }
