@@ -5,9 +5,9 @@ import com.geulkkoli.domain.user.User;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Optional;
 
 @Slf4j
 @Service
@@ -43,14 +43,7 @@ public class FavoriteService {
         favoritesRepository.delete(deleteFavorite);
     }
 
-    public Favorites favoriteCheck (Post post, User user) {
-        Favorites findFavorite = new Favorites();
-        if (favoritesRepository.findByUserAndPost(user, post).isPresent()) {
-            findFavorite = favoritesRepository.findByUserAndPost(user, post)
-                    .orElseThrow(()->new NoSuchElementException("no such Favorite"));
-        } else {
-            findFavorite = null;
-        }
-        return findFavorite;
+    public Optional<Favorites> favoriteCheck (Post post, User user) {
+        return favoritesRepository.findByUserAndPost(user, post);
     }
 }

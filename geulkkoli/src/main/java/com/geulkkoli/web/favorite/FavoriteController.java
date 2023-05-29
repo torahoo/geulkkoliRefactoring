@@ -9,11 +9,15 @@ import com.geulkkoli.domain.user.User;
 import com.geulkkoli.domain.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import java.util.NoSuchElementException;
+import java.util.Optional;
 
 @RestController
 @Slf4j
@@ -25,29 +29,24 @@ public class FavoriteController {
     private final UserService userService;
 
     @PostMapping("pressFavorite/{postId}")
-    public String pressFavoriteButton (@PathVariable("postId") Long postId,
-                                       @AuthenticationPrincipal CustomAuthenticationPrinciple user) throws Exception {
-        int favoriteResult;
+    public ResponseEntity<String> pressFavoriteButton(@PathVariable("postId") Long postId,
+                                                      @AuthenticationPrincipal CustomAuthenticationPrinciple user) throws Exception {
         log.info("==========favoriteController==========");
 
         Post post = postService.findById(postId);
 
         try {
-            if(userService.findById(Long.parseLong(user.getUserId()))==null){
-                log.info("해당 UserId로 회원을 찾을 수 없음");
+            User loginUser = userService.findById(Long.parseLong(user.getUserId()));
+            Optional<Favorites> optionalFavorites = favoriteService.favoriteCheck(post, loginUser);
+            if (optionalFavorites.isEmpty()) {
+                favoriteService.addFavorite(post, loginUser);
+                return ResponseEntity.ok("Add Success");
+            } else {
+                favoriteService.undoFavorite(optionalFavorites.get());
+                return ResponseEntity.ok("Cancel Success");
             }
-        } catch (NullPointerException e) {
-            e.printStackTrace();
-            return "해당 UserId로 회원을 찾을 수 없음";
-        }
-        User loginUser = userService.findById(Long.parseLong(user.getUserId()));
-        if(favoriteService.favoriteCheck(post, loginUser)==null) {
-            favoriteService.addFavorite(post, loginUser);
-            return "add success";
-        } else {
-            Favorites findFavorite = favoriteService.favoriteCheck(post, loginUser);
-            favoriteService.undoFavorite(findFavorite);
-            return "cancel success";
+        } catch (NoSuchElementException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("로그인이 필요합니다.");
         }
     }
 }

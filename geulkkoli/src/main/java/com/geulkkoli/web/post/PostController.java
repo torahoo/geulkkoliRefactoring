@@ -102,7 +102,7 @@ public class PostController {
             return "/post/postPage";
         }
         User loginUser = userService.findById(Long.parseLong(user.getUserId()));
-        if(favoriteService.favoriteCheck(postService.findById(postId), loginUser)==null){
+        if(favoriteService.favoriteCheck(postService.findById(postId), loginUser).isEmpty()){
             checkFavorite = "none";
         } else {
             checkFavorite = "exist";

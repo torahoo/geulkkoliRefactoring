@@ -2,17 +2,17 @@
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
-  <meta charset="utf-8">
-  <link href="/css/bootstrap.min.css"
-        th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
-          integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4"
-          crossorigin="anonymous"></script>
-  <style>
-    .container {
-      max-width: 1000px;
-    }
-  </style>
+    <meta charset="utf-8">
+    <link href="/css/bootstrap.min.css"
+          th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4"
+            crossorigin="anonymous"></script>
+    <style>
+        .container {
+            max-width: 1000px;
+        }
+    </style>
 </head>
 <body>
 
@@ -20,106 +20,106 @@
 <div th:include="header"></div>
 
 <div class="container">
-  <div class="py-5 text-center">
-    <h2>게시글</h2>
-  </div>
-
-  <!-- 게시글 저장 완료 -->
-  <h2 th:if="${param.addStatus}" th:text="'저장 완료'"></h2>
-  <!-- 게시글 수정 완료 -->
-  <h2 th:if="${param.updateStatus}" th:text="'수정 완료'"></h2>
-
-  <div class="mb-3">
-    <label for="title">제목</label>
-    <input type="text" id="title" name="title" class="form-control"
-           value="제목1" th:value="${post.title}" readonly>
-  </div>
-  <div class="d-flex align-items-center text-50 p-3 my-3 rounded box-shadow">
-    <img class="mr-3" th:src="@{/images/defaultProfile.png}" src="" alt="" width="48" height="48">
-    <div class="lh-100"
-         style="padding: 10px; margin: 10px;">
-      <h6 class="mb-0 lh-100" th:text="${authorUser.nickName}"></h6>
-      <small th:text="${authorUser.email}"></small>
+    <div class="py-5 text-center">
+        <h2>게시글</h2>
     </div>
-    <div class="lh-100"
-         style="padding: 10px; margin: 10px;">
-      <h6 th:text="${post.getDate()}">날짜</h6>
+
+    <!-- 게시글 저장 완료 -->
+    <h2 th:if="${param.addStatus}" th:text="'저장 완료'"></h2>
+    <!-- 게시글 수정 완료 -->
+    <h2 th:if="${param.updateStatus}" th:text="'수정 완료'"></h2>
+
+    <div class="mb-3">
+        <label for="title">제목</label>
+        <input type="text" id="title" name="title" class="form-control"
+               value="제목1" th:value="${post.title}" readonly>
     </div>
-    <div class="lh-100"
-         style="padding: 10px; margin: 10px;">
-      <form id="favoriteForm" th:action="@{/pressFavorite/{postId}(postId=${post.postId})}" method="POST">
-        <input id="favorite_disLike" th:if="${checkFavorite eq 'none'}" type="image" th:src="@{/images/favorite_dislike.png}" alt="favoriteImage_disLike" width="30" height="30" src="">
-        <input id="favorite_like" th:if="${checkFavorite eq 'exist'}" type="image" th:src="@{/images/favorite_like.png}" alt="favoriteImage_like" width="30" height="30">
-      </form>
-      <img th:if="${#strings.equals(checkFavorite, 'never clicked')}" type="image" th:src="@{/images/favorite_dislike.png}" alt="favoriteImage_noneUser" width="30" height="30" src="">
-    </div>
-    <h6 id="favoriteCount" th:text="${post.getFavoriteCount()}">좋아요 갯수</h6>
-  </div>
-
-  <div class="mb-3">
-    <label for="postBody">내용</label>
-    <textarea id="postBody" name="postBody" class="form-control"
-              th:text="${post.postBody}" rows="8" readonly></textarea>
-  </div>
-
-  <hr class="my-4">
-  <div class="row">
-    <div sec:authorize="hasRole('USER')"
-         th:with="userNickName=${#authentication.principal.nickName}">
-      <div class="col">
-
-        <button class="w-100 btn btn-primary"
-                onclick="location.href='postUpdateForm.html'"
-                th:onclick="|location.href='@{/post/update/{postId}(postId=${post.postId},searchType=${searchType},searchWords=${searchWords})}'|"
-                th:if="${#strings.equals(authorUser.nickName, userNickName)}"
-                type="button">게시글 수정
-        </button>
-
-      </div>
-
-      <!-- Button trigger modal -->
-      <div class="col">
-        <button type="button"
-                class="w-100 btn btn-primary"
-                data-bs-toggle="modal"
-                data-bs-target="#deletePost"
-                th:if="${#strings.equals(authorUser.nickName, userNickName)}">삭제
-        </button>
-      </div>
-
-      <!-- Modal -->
-      <div class="modal fade" id="deletePost" tabindex="-1" aria-labelledby="deletePostLabel" aria-hidden="true">
-        <div class="modal-dialog">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title" id="deletePostLabel">삭제하시려면 밑의 글을 따라 치세요.</h5>
-              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-              <div>
-                <label for="post-Title">제목</label>
-                <input type="text" id="post-Title" name="post-Title" class="form-control"
-                       value="제목1" th:value="${post.title}" readonly>
-                <input type="text" id="post-Compare" name="post-Compare" class="form-control">
-              </div>
-            </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
-              <button type="button" class="btn btn-primary" onclick="deletePost()">삭제</button>
-            </div>
-          </div>
+    <div class="d-flex align-items-center text-50 p-3 my-3 rounded box-shadow">
+        <img class="mr-3" th:src="@{/images/defaultProfile.png}" src="" alt="" width="48" height="48">
+        <div class="lh-100"
+             style="padding: 10px; margin: 10px;">
+            <h6 class="mb-0 lh-100" th:text="${authorUser.nickName}"></h6>
+            <small th:text="${authorUser.email}"></small>
         </div>
-      </div>
-    </div>
-  </div>
+        <div class="lh-100"
+             style="padding: 10px; margin: 10px;">
+            <h6 th:text="${post.getDate()}">날짜</h6>
+        </div>
+        <div class="lh-100" style="padding: 10px; margin: 10px;">
+            <form id="favoriteForm" th:action="@{/pressFavorite/{postId}(postId=${post.postId})}" method="POST">
+                <input id="favorite_disLike" th:if="${checkFavorite eq 'none'}" type="image"
+                       th:src="@{/images/free-icon-like-3984190.png}" alt="favoriteImage_disLike" width="30" height="30"
+                       src="">
+                <input id="favorite_like" th:if="${checkFavorite eq 'exist'}" type="image"
+                       th:src="@{/images/free-icon-like-3984277.png}" alt="favoriteImage_like" width="30" height="30">
+            </form>
+            <img th:if="${#strings.equals(checkFavorite, 'never clicked')}" type="image"
+                 th:src="@{/images/free-icon-like-3984190.png}" alt="favoriteImage_noneUser" width="30" height="30" src="">
+        </div>
+        <h6 id="favoriteCount" th:text="${post.getFavoriteCount()}">좋아요 갯수</h6>
 
-  <div class="col">
-    <button class="w-100 btn btn-secondary"
-            onclick="location.href='postList.html'"
-            th:onclick="|location.href='@{/post/list(page=${session.pageNumber},searchType=${searchType},searchWords=${searchWords})}'|"
-            type="button">목록으로
-    </button>
-  </div>
+    </div>
+
+    <div class="mb-3">
+        <label for="postBody">내용</label>
+        <textarea id="postBody" name="postBody" class="form-control"
+                  th:text="${post.postBody}" rows="8" readonly></textarea>
+    </div>
+
+    <hr class="my-4">
+    <div class="row">
+        <div sec:authorize="hasRole('USER')"
+             th:with="userNickName=${#authentication.principal.nickName}">
+            <div class="col">
+
+                <button class="w-100 btn btn-primary" onclick="location.href='postUpdateForm.html'"
+                        th:onclick="|location.href='@{/post/update/{postId}(postId=${post.postId},searchType=${searchType},searchWords=${searchWords})}'|"
+                        th:if="${#strings.equals(authorUser.nickName, userNickName)}"
+                        type="button">게시글 수정
+                </button>
+
+            </div>
+
+            <!-- Button trigger modal -->
+            <div class="col">
+                <button type="button" class="w-100 btn btn-primary" data-bs-toggle="modal" data-bs-target="#deletePost"
+                        th:if="${#strings.equals(authorUser.nickName, userNickName)}">삭제
+                </button>
+            </div>
+
+            <!-- Modal -->
+            <div class="modal fade" id="deletePost" tabindex="-1" aria-labelledby="deletePostLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="deletePostLabel">삭제하시려면 밑의 글을 따라 치세요.</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <div>
+                                <label for="post-Title">제목</label>
+                                <input type="text" id="post-Title" name="post-Title" class="form-control"
+                                       value="제목1" th:value="${post.title}" readonly>
+                                <input type="text" id="post-Compare" name="post-Compare" class="form-control">
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
+                            <button id="deletePostButton" type="button" class="btn btn-primary">삭제</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col">
+        <button class="w-100 btn btn-secondary" onclick="location.href='postList.html'"
+                th:onclick="|location.href='@{/post/list(page=${session.pageNumber},searchType=${searchType},searchWords=${searchWords})}'|"
+                type="button">목록으로
+        </button>
+
+    </div>
 
 </div> <!-- /container -->
 
@@ -127,85 +127,82 @@
 <div th:include="footer"></div>
 
 <script type="text/javascript">
+    function deletePost() {
+        const deleteTitle = '[[${post.title}]]';
+        const postId = [[${post.postId}]];
+        const compareTitle = document.getElementById("post-Compare").value;
 
-
-  const deleteTitle = '[[${post.title}]]'
-  const postId = [[${post.postId}]]
-
-  function deletePost() {
-    console.log("deleteTitle=" + deleteTitle);
-    console.log("CompareTitle=" + document.getElementById("post-Compare").value);
-    console.log("postId=" + postId);
-
-    if (document.getElementById("post-Compare").value == deleteTitle) {
-      fetch('/post/delete/' + postId, {method: 'DELETE'})
-              .then(response => {
-                window.location = response.url
-              });
-      window.alert("삭제 성공")
-    } else {
-      window.alert("삭제 실패")
+        if (compareTitle === deleteTitle) {
+            fetch('/post/delete/' + postId, {method: 'DELETE'})
+                .then(response => {
+                    window.location = response.url;
+                });
+            window.alert("삭제 성공");
+        } else {
+            window.alert("삭제 실패");
+        }
     }
-  }
 
-  <!-- end 게시글 삭제 -->
+    function toggleFavorite() {
+        const countElement = document.getElementById("favoriteCount");
+        const count = parseInt(countElement.textContent, 10);
+        const likeImage = document.getElementById("favorite_like");
+        const disLikeImage = document.getElementById("favorite_disLike");
+        const postId = [[${post.postId}]];
+        const formData = new FormData();
+        formData.append("postId", postId);
 
-  <!-- start 좋아요 -->
+        const requestOptions = {
+            method: 'POST',
+            body: formData
+        };
+        console.log("likeImage : " + likeImage);
+        console.log("disLikeImage : " + disLikeImage);
+        fetch('/pressFavorite/' + postId, requestOptions)
+            .then(response => response.text())
+            .then(data => {
+                if (data === 'Add Success') {
+                    if (likeImage === null) {
+                        disLikeImage.src = "/images/free-icon-like-3984277.png";
+                    } else {
+                        likeImage.src = "/images/free-icon-like-3984277.png";
+                    }
+                    countElement.textContent = count + 1;
+                } else if (data === 'Cancel Success') {
+                    // Handle cancel success case
+                    if (likeImage === null) {
+                        disLikeImage.src = "/images/free-icon-like-3984190.png";
+                    } else {
+                        likeImage.src = "/images/free-icon-like-3984190.png";
+                    }
 
-  // Form submit 이벤트 처리
-  document.getElementById("favoriteForm").addEventListener("submit", function(event) {
-      event.preventDefault(); // 기본 동작(페이지 새로고침) 방지
-      let count = parseInt(document.getElementById("favoriteCount").textContent, 10);
-      let like = "";
-      let disLike = "";
-      if(document.getElementById("favorite_like")===null) {
-        disLike = document.getElementById("favorite_disLike").getAttribute("src");
-      } else {
-        like = document.getElementById("favorite_like").getAttribute("src");
-      }
-      const xhr = new XMLHttpRequest();
-      xhr.open("POST", event.target.action, true);
-      xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+                    if (count < 1) {
+                        countElement.textContent = 0;
+                    } else {
+                        countElement.textContent = count - 1;
+                    }
 
-      xhr.onreadystatechange = function() {
-          if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
-              const response = xhr.responseText;
-              if (response === "add success") {
-                // 좋아요 추가 성공
-                console.log("add success")
-                if(like === "/images/favorite_dislike.png"){
-                  document.getElementById("favorite_like").src = "/images/favorite_like.png";
                 } else {
-                  document.getElementById("favorite_disLike").src = "/images/favorite_like.png";
+                    // Handle error case
                 }
-                count ++;
-                document.getElementById("favoriteCount").textContent = count;
-              } else if (response === "cancel success") {
-                  // 좋아요 취소 성공
-                console.log("cancel success")
-                if(disLike === "/images/favorite_like.png"){
-                  document.getElementById("favorite_disLike").src = "/images/favorite_dislike.png";
-                } else {
-                  document.getElementById("favorite_like").src = "/images/favorite_dislike.png";
-                }
-                if(count<1) {
-                    count = 0;
-                    document.getElementById("favoriteCount").textContent = count;
-                } else {
-                    count --;
-                    document.getElementById("favoriteCount").textContent = count;
-                }
-              }
-          }
-      };
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                // Handle error case
+            });
+    }
 
-      const formData = new FormData(event.target);
-      xhr.send(formData);
-  });
+    document.getElementById("favoriteForm").addEventListener("submit", function (event) {
+        event.preventDefault();
 
-  <!-- end 좋아요 -->
+        // Perform necessary AJAX request
+
+        toggleFavorite();
+    });
+
+    document.getElementById("deletePostButton").addEventListener("click", deletePost);
 
 </script>
-
+<a href="https://www.flaticon.com/kr/free-icons/" title="처럼 아이콘">처럼 아이콘  제작자: Karacis - Flaticon</a>
 </body>
 </html>
