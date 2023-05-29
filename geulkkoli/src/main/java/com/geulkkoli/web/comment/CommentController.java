@@ -7,11 +7,15 @@ import com.geulkkoli.domain.post.Post;
 import com.geulkkoli.domain.post.service.PostService;
 import com.geulkkoli.domain.user.User;
 import com.geulkkoli.domain.user.service.UserService;
+import com.geulkkoli.web.comment.dto.CommentBodyDTO;
 import com.geulkkoli.web.comment.dto.CommentListDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -36,14 +40,31 @@ public class CommentController {
      * @return 새로운 댓글을 포함하는 댓글리스트 반환
      */
     @PostMapping("/{postId}")
-    public List<CommentListDTO> writePostComment(@PathVariable("postId") Long postId,
-                                                 @RequestBody Comments commentBody,
-                                                 @AuthenticationPrincipal CustomAuthenticationPrinciple authUser) {
+//    public List<CommentListDTO> writePostComment(@PathVariable("postId") Long postId,
+//                                                 @Validated  @RequestBody CommentBodyDTO commentBody, BindingResult bindingResult,
+//                                                 @AuthenticationPrincipal CustomAuthenticationPrinciple authUser) {
+//
+//        if (bindingResult.hasErrors()) {
+//
+//        }
+//
+//        Post post = findPost(postId);
+//        commentsService.writeComment(commentBody.transComments(), post, findUser(authUser));
+//
+//        return getCommentsList(post.getComments());
+//    }
+    public ResponseEntity<List<CommentListDTO>> writePostComment(@PathVariable("postId") Long postId,
+                                           @Validated  @RequestBody CommentBodyDTO commentBody,
+                                           @AuthenticationPrincipal CustomAuthenticationPrinciple authUser) {
+
+//        if (bindingResult.hasErrors()) {
+//            return ResponseEntity.accepted().build();
+//        }
 
         Post post = findPost(postId);
-        commentsService.writeComment(commentBody, post, findUser(authUser));
+        commentsService.writeComment(commentBody.transComments(), post, findUser(authUser));
 
-        return getCommentsList(post.getComments());
+        return new ResponseEntity<>(getCommentsList(post.getComments()), HttpStatus.CREATED);
     }
 
     /**

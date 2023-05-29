@@ -1,6 +1,8 @@
 commentEditButtonInit();
 commentDeleteButtonInit();
 
+let commentBodyBox = document.getElementById('commentBody');
+
 // 댓글 작성 버튼 이벤트 등록
 document.getElementById('commentSubmit').addEventListener('click', function (ev) {
 
@@ -11,16 +13,37 @@ document.getElementById('commentSubmit').addEventListener('click', function (ev)
         Object.fromEntries(
             new FormData(commentForm)));
 
-    if(document.getElementById('commentBody').value) {
+    if(commentBodyBox.value) {
         fetch(commentForm.getAttribute('action'), {
             method: 'POST',
             headers: { 'Content-Type' : 'application/json' },
             body: str_json
         })
-            .then((response) => response.json())
-            .then((list) => {
-                commentRemake(list);
+            .then((response) => {
+                if (response.ok)
+                    response.json().then((json) => {
+                        if (json) commentRemake(json);
+                    });
+                else
+                    response.text().then((text) => {
+                        let validText = document.createElement('p');
+                        validText.innerText = text;
+                        validText.style.color = '#dc3545';
+                        commentBodyBox.parentElement.appendChild(validText);
+                    });
+                /*else if (response.status == 202) {
+                    console.log('status = 202');
+                    console.log(commentBodyBox.value);
+                    commentBodyBox.style.borderColor = '#dc3545';
+                    const validText = document.createElement('p');
+                    validText.style.color = '#dc3545';
+                    validText.innerText = '댓글은 '
+                    commentBodyBox.parentElement.appendChild(validText);
+                } else {
+                    throw new Error();
+                }*/
             });
+
     }
 });
 
@@ -172,7 +195,8 @@ function commentRemake(list) {
 
         postComment.appendChild(forComment);
 
-        document.getElementById('commentBody').value = "";
+        commentBodyBox.value = "";
+
     }
     commentEditButtonInit();
     commentDeleteButtonInit();
