@@ -291,6 +291,6 @@ public class UserController {
     }
 
     private Long parseLong(CustomAuthenticationPrinciple authUser) {
-        return Long.valueOf(authUser.getAuthorizationSeverId());
+        return Long.valueOf(authUser.getUserId());
     }
 }
