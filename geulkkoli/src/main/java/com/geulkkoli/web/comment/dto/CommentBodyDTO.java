@@ -1,17 +1,19 @@
 package com.geulkkoli.web.comment.dto;
 
 import com.geulkkoli.domain.comment.Comments;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import org.hibernate.validator.constraints.Length;
 
-import javax.validation.constraints.NotNull;
+import javax.validation.constraints.NotBlank;
 
 @Setter
+@Getter
 @RequiredArgsConstructor
 public class CommentBodyDTO {
 
-    @NotNull
+    @NotBlank
     @Length(min = 2, max = 200)
     String commentBody;
 

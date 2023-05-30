@@ -18,6 +18,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 import static com.geulkkoli.domain.comment.CommentsService.*;
@@ -54,7 +55,7 @@ public class CommentController {
 //        return getCommentsList(post.getComments());
 //    }
     public ResponseEntity<List<CommentListDTO>> writePostComment(@PathVariable("postId") Long postId,
-                                           @Validated  @RequestBody CommentBodyDTO commentBody,
+                                           @Valid @RequestBody CommentBodyDTO commentBody,
                                            @AuthenticationPrincipal CustomAuthenticationPrinciple authUser) {
 
 //        if (bindingResult.hasErrors()) {
