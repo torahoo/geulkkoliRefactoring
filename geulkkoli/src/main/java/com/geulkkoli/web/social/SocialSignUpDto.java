@@ -6,31 +6,32 @@ import org.hibernate.validator.constraints.Length;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Pattern;
 
 public class SocialSignUpDto {
-    @NotEmpty
+    @NotBlank
     private String userName;
 
-    @NotEmpty
+    @NotBlank
     @Length(min = 8, max = 20)
     @Pattern(regexp = "(?=.*[0-9])(?=.*[a-zA-Z])(?=.*[*\\W])(?=\\S+$).{8,20}")
     private String password;
 
-    @NotEmpty
+    @NotBlank
     private String verifyPassword;
 
-    @NotEmpty
+    @NotBlank
     @Length(min = 2, max = 8)
     @Pattern(regexp = "^[a-zA-Z0-9가-힣]*$")
     private String nickName;
 
-    @NotEmpty
+    @NotBlank
     @Email
     private String email;
 
-    @NotEmpty
+    @NotBlank
     @Length(min = 10, max = 11)
     @Pattern(regexp = "^[*\\d]*$")
     private String phoneNo;
