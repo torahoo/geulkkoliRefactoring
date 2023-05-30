@@ -3,7 +3,6 @@ package com.geulkkoli.web;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
-import com.geulkkoli.application.security.UserSecurityService;
 import com.geulkkoli.domain.comment.Comments;
 import com.geulkkoli.domain.comment.CommentsService;
 import com.geulkkoli.domain.post.Post;
@@ -29,6 +28,7 @@ import org.springframework.util.MultiValueMap;
 
 import java.nio.charset.Charset;
 
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @Slf4j
@@ -77,17 +77,35 @@ public class CommentControllerTest {
     }
 
     private class Comment {
-        public Long commentId;
+//        public Long commentId;
         public String commentBody;
 
         public Comment(String commentBody) {
             this.commentBody = commentBody;
         }
 
-        public Comment(Long commentId, String commentBody) {
-            this.commentId = commentId;
-            this.commentBody = commentBody;
-        }
+//        public Comment(Long commentId, String commentBody) {
+//            this.commentId = commentId;
+//            this.commentBody = commentBody;
+//        }
+    }
+
+    @WithUserDetails(value = "test", userDetailsServiceBeanName = "testUserDetailService")
+    @Test
+    void 댓글_유효성_체크() throws Exception {
+
+        //ginven
+        String commentJson = commentToJson(new Comment("댓"));
+        Long postId = post01.getPostId();
+
+        //when
+        mockMvc.perform(MockMvcRequestBuilders.post("/comments/" + postId)
+                        .contentType(mediaType).content(commentJson))
+
+                //than
+                .andExpect(status().is(400))
+                .andDo(print());
+
     }
 
     @WithUserDetails(value = "test", userDetailsServiceBeanName = "testUserDetailService")
@@ -103,7 +121,7 @@ public class CommentControllerTest {
                         .contentType(mediaType).content(commentJson))
 
         //than
-                .andExpect(status().is(200))
+                .andExpect(status().is(201))
                 .andExpect(jsonPath("$[?(@.commentBody == '%s')]", "댓글 달기 테스트").exists());
 
     }
@@ -118,7 +136,7 @@ public class CommentControllerTest {
     void 댓글_변경() throws Exception {
 
         //ginven
-        String commentJson = commentToJson(new Comment(1L, "댓글 변경 테스트"));
+        String commentJson = commentToJson(new Comment( "댓글 변경 테스트"));
         Long postId = post01.getPostId();
         log.info("commentJson = {}", commentJson);
 
@@ -137,7 +155,7 @@ public class CommentControllerTest {
     @Test
     void 댓글_삭제() throws Exception {
         //given
-        String commentJson = commentToJson(new Comment(1L, "삭제 테스트"));
+        String commentJson = commentToJson(new Comment("삭제 테스트"));
 
         //when
         mockMvc.perform(MockMvcRequestBuilders.delete("/comments").contentType(mediaType).content(commentJson))
