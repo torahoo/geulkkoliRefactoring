@@ -18,6 +18,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 import static com.geulkkoli.domain.comment.CommentsService.*;
@@ -40,29 +41,13 @@ public class CommentController {
      * @return 새로운 댓글을 포함하는 댓글리스트 반환
      */
     @PostMapping("/{postId}")
-//    public List<CommentListDTO> writePostComment(@PathVariable("postId") Long postId,
-//                                                 @Validated  @RequestBody CommentBodyDTO commentBody, BindingResult bindingResult,
-//                                                 @AuthenticationPrincipal CustomAuthenticationPrinciple authUser) {
-//
-//        if (bindingResult.hasErrors()) {
-//
-//        }
-//
-//        Post post = findPost(postId);
-//        commentsService.writeComment(commentBody.transComments(), post, findUser(authUser));
-//
-//        return getCommentsList(post.getComments());
-//    }
     public ResponseEntity<List<CommentListDTO>> writePostComment(@PathVariable("postId") Long postId,
-                                           @Validated  @RequestBody CommentBodyDTO commentBody,
+                                           @Validated @RequestBody CommentBodyDTO commentBody,
                                            @AuthenticationPrincipal CustomAuthenticationPrinciple authUser) {
 
-//        if (bindingResult.hasErrors()) {
-//            return ResponseEntity.accepted().build();
-//        }
 
         Post post = findPost(postId);
-        commentsService.writeComment(commentBody.transComments(), post, findUser(authUser));
+        commentsService.writeComment(commentBody, post, findUser(authUser));
 
         return new ResponseEntity<>(getCommentsList(post.getComments()), HttpStatus.CREATED);
     }

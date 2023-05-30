@@ -6,6 +6,7 @@ import com.geulkkoli.domain.comment.CommentsService;
 import com.geulkkoli.domain.post.service.PostService;
 import com.geulkkoli.domain.user.User;
 import com.geulkkoli.domain.user.service.UserService;
+import com.geulkkoli.web.comment.dto.CommentBodyDTO;
 import com.geulkkoli.web.comment.dto.CommentDto;
 import com.geulkkoli.web.post.dto.*;
 import lombok.RequiredArgsConstructor;
@@ -91,7 +92,7 @@ public class PostController {
         model.addAttribute("post", postPage);
         model.addAttribute("commentList", postPage.getCommentList());
         model.addAttribute("authorUser", authorUser);
-        model.addAttribute("comments", new CommentDto());
+        model.addAttribute("comments", new CommentBodyDTO());
         searchDefault(model, searchType, searchWords);
         return "/post/postPage";
     }

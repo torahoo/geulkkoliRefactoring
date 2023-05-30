@@ -8,6 +8,7 @@ import com.geulkkoli.domain.admin.Report;
 import com.geulkkoli.domain.post.Post;
 import com.geulkkoli.domain.comment.Comments;
 import com.geulkkoli.domain.favorites.Favorites;
+import com.geulkkoli.web.comment.dto.CommentBodyDTO;
 import com.geulkkoli.web.comment.dto.CommentDto;
 import com.geulkkoli.web.post.dto.AddDTO;
 import com.geulkkoli.web.post.dto.EditDTO;
@@ -136,9 +137,9 @@ public class User {
      * 댓글 관련 CRUD
      */
     //유저가 쓴 댓글
-    public Comments writeComment(CommentDto commentBody, Post post) {
+    public Comments writeComment(CommentBodyDTO commentBody, Post post) {
 
-        Comments comment = new Comments(this, post, commentBody);
+        Comments comment = new Comments(this, post, commentBody.getCommentBody());
         post.getComments().add(comment);
         this.comments.add(comment);
         return comment;
