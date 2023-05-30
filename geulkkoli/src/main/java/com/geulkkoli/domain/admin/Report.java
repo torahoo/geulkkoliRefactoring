@@ -23,9 +23,11 @@ public class Report {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long reportId;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "reported_post_id", nullable = false)
     private Post reportedPost;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "reporter_id", nullable = false)
     private User reporter;
