@@ -5,34 +5,31 @@ import lombok.Builder;
 import org.hibernate.validator.constraints.Length;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.Pattern;
+import javax.validation.constraints.*;
 
 public class SocialSignUpDto {
-    @NotBlank
+    @NotEmpty
     private String userName;
 
-    @NotBlank
+    @NotEmpty
     @Length(min = 8, max = 20)
     @Pattern(regexp = "(?=.*[0-9])(?=.*[a-zA-Z])(?=.*[*\\W])(?=\\S+$).{8,20}")
     private String password;
 
-    @NotBlank
+    @NotEmpty
     private String verifyPassword;
 
-    @NotBlank
-    @Length(min = 2, max = 8)
+    @NotEmpty
+    @Size(min = 2, max = 8)
     @Pattern(regexp = "^[a-zA-Z0-9가-힣]*$")
     private String nickName;
 
-    @NotBlank
+    @NotEmpty
     @Email
     private String email;
 
-    @NotBlank
-    @Length(min = 10, max = 11)
+    @NotEmpty
+    @Size(min = 10, max = 11)
     @Pattern(regexp = "^[*\\d]*$")
     private String phoneNo;
 
