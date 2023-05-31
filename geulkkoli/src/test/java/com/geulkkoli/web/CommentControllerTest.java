@@ -9,6 +9,7 @@ import com.geulkkoli.domain.post.Post;
 import com.geulkkoli.domain.post.service.PostService;
 import com.geulkkoli.domain.user.User;
 import com.geulkkoli.domain.user.UserRepository;
+import com.geulkkoli.web.comment.dto.CommentBodyDTO;
 import com.geulkkoli.web.post.dto.AddDTO;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
@@ -73,7 +74,7 @@ public class CommentControllerTest {
                 .build();
         post01 = postService.savePost(addDTO01, user);
 
-        commentsService.writeComment(new Comments("이미 작성된 댓글 불러오기 테스트용"), post01, user);
+        commentsService.writeComment(new CommentBodyDTO("이미 작성된 댓글 불러오기 테스트용"), post01, user);
     }
 
     private class Comment {

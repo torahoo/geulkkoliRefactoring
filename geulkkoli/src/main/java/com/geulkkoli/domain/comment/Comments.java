@@ -3,6 +3,7 @@ package com.geulkkoli.domain.comment;
 import com.geulkkoli.domain.post.ConfigDate;
 import com.geulkkoli.domain.post.Post;
 import com.geulkkoli.domain.user.User;
+import com.geulkkoli.web.comment.dto.CommentDto;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -47,10 +48,10 @@ public class Comments extends ConfigDate {
         this.commentBody = commentBody;
     }
 
-    public Comments (User user, Post post, Comments comment) {
+    public Comments (User user, Post post, String commentBody) {
         this.user = user;
         this.post = post;
-        this.commentBody = comment.getCommentBody();
+        this.commentBody = commentBody;
     }
 
     //댓글 수정

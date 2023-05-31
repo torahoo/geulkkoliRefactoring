@@ -42,12 +42,10 @@ public class AjaxBadResponseHandler {
                 String code = error.getCode();
                 Object[] args = error.getArguments();
                 Locale locale =  LocaleContextHolder.getLocale();
-                log.info("********** code = {}, args = {}, locale = {}", code, args, locale);
                 message = messageSource.getMessage(code, args, locale);
             } else {
                 message = "error";
             }
-            log.info("************ message = {}", message);
         }
 
         return new ResponseEntity<>(

@@ -4,6 +4,7 @@ import com.geulkkoli.domain.post.Post;
 import com.geulkkoli.domain.post.service.PostService;
 import com.geulkkoli.domain.user.User;
 import com.geulkkoli.domain.user.UserRepository;
+import com.geulkkoli.web.comment.dto.CommentBodyDTO;
 import com.geulkkoli.web.post.dto.AddDTO;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.AfterEach;
@@ -74,7 +75,7 @@ public class CommentServiceTest {
     @Test
     void commentSave() {
         //given
-        Comments commentsBody = Comments.builder()
+        CommentBodyDTO commentsBody = CommentBodyDTO.builder()
                 .commentBody("test")
                 .build();
 
@@ -89,7 +90,7 @@ public class CommentServiceTest {
     @Test
     void commentEdit() {
         //given
-        Comments commentsBody = Comments.builder()
+        CommentBodyDTO commentsBody = CommentBodyDTO.builder()
                 .commentBody("test")
                 .build();
         commentsService.writeComment(commentsBody, post01, user);
@@ -109,7 +110,7 @@ public class CommentServiceTest {
     @Test
     void commentDelete() {
         //given
-        Comments commentsBody = Comments.builder()
+        CommentBodyDTO commentsBody = CommentBodyDTO.builder()
                 .commentBody("test")
                 .build();
         for (int i = 0; i < 10; ++i)
@@ -127,7 +128,7 @@ public class CommentServiceTest {
     void getUserComment() {
         //given
         for (int i = 0; i < 10; ++i) {
-            Comments commentsBody = Comments.builder()
+            CommentBodyDTO commentsBody = CommentBodyDTO.builder()
                     .commentBody("test")
                     .build();
             commentsService.writeComment(commentsBody, post01, user);
