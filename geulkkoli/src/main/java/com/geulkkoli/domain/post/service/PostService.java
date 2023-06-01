@@ -91,7 +91,12 @@ public class PostService {
         postRepository.save(post);
     }
     @Transactional
-    public void deletePost(Long postId) {
+    public void deletePost(Long postId , String nickName) {
+        Post post = postRepository.findById(postId)
+                .orElseThrow(() -> new NoSuchElementException("No post found id matches:" + postId));
+        if (!post.getNickName().equals(nickName)) {
+            throw new NoSuchElementException("No post found id matches:" + postId);
+        }
         postRepository.deleteById(postId);
     }
 

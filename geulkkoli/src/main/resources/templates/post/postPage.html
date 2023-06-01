@@ -132,9 +132,16 @@
         const postId = [[${post.postId}]];
         const userNickName = '[[${#authentication.principal.nickName}]]';
         const compareTitle = document.getElementById("post-Compare").value;
-
+        let params = {
+            postId: postId,
+            userNickName: userNickName
+        };
+        let query = Object.keys(params)
+            .map(key => encodeURIComponent(key) + '=' + encodeURIComponent(params[key]))
+            .join('&');
+        console.log("query : " + query);
         if (compareTitle === deleteTitle) {
-            fetch('/post/delete/' + postId, {method: 'DELETE'})
+            fetch('/post/request?' + query, {method: 'DELETE'})
                 .then(response => {
                     window.location = response.url;
                 });
