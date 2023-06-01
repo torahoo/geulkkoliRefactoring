@@ -87,8 +87,9 @@ public class PostService {
         postRepository.save(post);
     }
 
-    public void deletePost(Long postId) {
-        postRepository.delete(postId);
+    public void deletePost(User user, Long postId) {
+        Post deletePost = user.deletePost(postId);
+        postRepository.delete(deletePost);
     }
 
     public void deleteAll() {

@@ -2,6 +2,7 @@ package com.geulkkoli.web.post;
 
 import com.geulkkoli.application.user.CustomAuthenticationPrinciple;
 import com.geulkkoli.domain.favorites.FavoriteService;
+import com.geulkkoli.domain.post.Post;
 import com.geulkkoli.domain.post.service.PostService;
 import com.geulkkoli.domain.user.User;
 import com.geulkkoli.domain.user.service.UserService;
@@ -155,7 +156,8 @@ public class PostController {
     //게시글 삭제
     @DeleteMapping("/delete/{postId}")
     public String postDelete(@PathVariable Long postId) {
-        postService.deletePost(postId);
+        Post post = postService.findById(postId);
+        postService.deletePost(post.getUser(), postId);
         return "redirect:/post/list";
     }
 

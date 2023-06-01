@@ -4,6 +4,4 @@ public interface PostRepositoryCustom {
 
     void update(Long postId, Post updateParam);
 
-    void delete(Long postId);
-
 }

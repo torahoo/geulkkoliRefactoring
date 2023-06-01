@@ -34,13 +34,4 @@ public class PostRepositoryImpl implements PostRepositoryCustom {
                 .execute();
     }
 
-    @Override
-    public void delete(Long postId) {
-        QPost post = QPost.post;
-
-        queryFactory.delete(post)
-                .where(post.postId.eq(postId))
-                .execute();
-    }
-
 }

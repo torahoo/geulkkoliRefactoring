@@ -119,7 +119,7 @@ class PostServiceTest {
 
         postService.savePost(new AddDTO(1L, "title", "body", "nick"), user1);
 
-        postService.deletePost(1L);
+        postService.deletePost(user1, 1L);
 
         String searchType = "";
         String searchWords = "";
