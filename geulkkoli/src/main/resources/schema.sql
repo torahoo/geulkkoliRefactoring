@@ -15,6 +15,7 @@ CREATE table if not exists users
     nick_name varchar(20)  not null,
     phone_no  varchar(20)  not null,
     gender    varchar(10)  not null,
+    sign_up_date        TIMESTAMP      NOT NULL DEFAULT CURRENT_TIMESTAMP,
     CONSTRAINT unique_email_nick_name_phone_no UNIQUE (email, nick_name, phone_no)
 );
 create table if not exists topic_tags

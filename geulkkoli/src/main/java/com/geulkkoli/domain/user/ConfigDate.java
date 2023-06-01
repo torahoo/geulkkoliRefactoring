@@ -13,7 +13,7 @@ import java.time.format.DateTimeFormatter;
 @EntityListeners(AuditingEntityListener.class)
 public abstract class ConfigDate {
 
-    @Column(name = "created_at", nullable = false, updatable = false)
+    @Column(name = "sign_up_date", nullable = false, updatable = false)
     @CreatedDate
     private String signUpDate;
 
