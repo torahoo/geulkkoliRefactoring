@@ -24,11 +24,6 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.websocket.server.PathParam;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
 import java.util.Set;
 
 @Controller
@@ -155,20 +150,10 @@ public class MyPageController {
     @GetMapping("/calendar")
     @ResponseBody
     public ResponseEntity<CalendarDto> calendaring(@AuthenticationPrincipal AuthUser authUser) {
-        LocalDate signUpDate = LocalDate.parse(authUser.getSignUpDate(), DateTimeFormatter.ofPattern("yyyy. MM. dd"));
-
         User user = userService.findById(authUser.getUserId());
-        Set<String> createdAts = postService.getCreatedAts(user);
-        Iterator<String> iterator = createdAts.iterator();
 
-        List<LocalDateTime> allPostDatesByOneUser = new ArrayList<>();
-
-        while (iterator.hasNext()) {
-            LocalDateTime oneDate = LocalDateTime.parse(iterator.next(), DateTimeFormatter.ofPattern("yyyy. MM. dd a hh:mm:ss"));
-            allPostDatesByOneUser.add(oneDate);
-        }
-
-        CalendarDto calendarDto = new CalendarDto(authUser.getUserRealName(), signUpDate, allPostDatesByOneUser);
+        Set<LocalDate> allPostDatesByOneUser = postService.getCreatedAts(user);
+        CalendarDto calendarDto = new CalendarDto(authUser.getUserRealName(), user.getSignUpDate(), allPostDatesByOneUser);
 
         return ResponseEntity.ok(calendarDto);
     }

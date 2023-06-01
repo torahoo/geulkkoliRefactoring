@@ -21,10 +21,8 @@ public class UserModelDto {
 
     private String gender;
 
-    private String signUpDate;
-
     @Builder
-    public UserModelDto(Long userId, String userName, String password, String nickName, String email, String phoneNo, String gender, String signUpDate) {
+    public UserModelDto(Long userId, String userName, String password, String nickName, String email, String phoneNo, String gender) {
         this.userId = userId;
         this.userName = userName;
         this.password = password;
@@ -32,7 +30,6 @@ public class UserModelDto {
         this.email = email;
         this.phoneNo = phoneNo;
         this.gender = gender;
-        this.signUpDate = signUpDate;
     }
 
 
@@ -45,7 +42,6 @@ public class UserModelDto {
                 .phoneNo(user.getPhoneNo())
                 .userName(user.getUserName())
                 .gender(user.getGender())
-                .signUpDate(user.getSignUpDate())
                 .build();
     }
 }

@@ -13,9 +13,12 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.HashSet;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.NoSuchElementException;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -97,12 +100,11 @@ public class PostService {
         postRepository.deleteAll();
     }
 
-    public Set<String> getCreatedAts(User user) {
-        Set<String> setCreatedAts = new HashSet<>();
-        user.getPosts().stream()
-                .map(Post::getCreatedAt)
-                .forEach(setCreatedAts::add);
-        return setCreatedAts;
+    public Set<LocalDate> getCreatedAts(User user) {
+        return user.getPosts().stream()
+                .map(post -> LocalDateTime.parse(post.getCreatedAt(), DateTimeFormatter.ofPattern("yyyy. MM. dd a hh:mm:ss")))
+                .map(LocalDateTime::toLocalDate) //시간은 필요 없어서
+                .collect(Collectors.toSet());
     }
 
 }

@@ -85,6 +85,8 @@
 
 <div id="calendarBox">
   <h4> < 활동한 날 > </h4>
+  <select id="beforeYears" style="display: none"> 지난 활동 보기
+  </select>
   <div class="calendar">
     <div class="days"></div>
   </div>
@@ -122,50 +124,54 @@
 
             let signUpDate = new Date(data.signUpDate);
             let startYear = signUpDate.getFullYear();
-            let startMonth = signUpDate.getMonth() + 1;
 
             let now = new Date();
             let nowYear = now.getFullYear();
             let nowMonth = now.getMonth() + 1;
 
+            postingDates = data.allPostDatesByOneUser;
+
+            //가입 후 1년이 지났는지
             let timeDiff = Math.abs(now.getTime() - signUpDate.getTime());
             let diffYears = Math.floor(timeDiff / (1000 * 3600 * 24 * 365));
 
-            postingDates = data.allPostDatesByOneUser;
-
-            //현재 월로부터 직전 1년치 월 단위만 보여주기
-            if (diffYears < 1) { //가입 날짜로부터 현재까지가 1년치 미만일 때 가입 이전 달력 노출되지 않게
-                if (startYear === nowYear)
-                    for (let month = startMonth; month <= nowMonth; month++) {
-                        createCalendar(nowYear, month - 1);
-                    } else {
-                    for (let year = startYear; year <= nowYear; year++) {
-                        for (let month = startMonth; month <= 12; month++) {
-                            createCalendar(year, month - 1);
-                        }
-                        for (let month = 1; month <= nowMonth; month++) {
-                            createCalendar(year, month - 1);
-                        }
-                    }
-                }
-            } else { //가입 날짜로부터 1년 이상 활동했을 경우
-                if (nowMonth === 12) { //현재가 12월이면 다른 년도 갈 필요 없이 해당 년도 1~12월 노출
-                    for (let month = 1; month <= nowMonth; month++) {
-                        createCalendar(nowYear, month - 1);
-                    }
-                } else { //현재 기준 과거 달력 1년치만 우선으로 보여주기
-                    for (let month = nowMonth + 1; month <= 12; month++) {
-                        createCalendar(nowYear - 1, month - 1);
-                    }
-                    for (let month = 1; month <= nowMonth; month++) {
-                        createCalendar(nowYear, month - 1);
-                    }
-                }
+            if (diffYears >= 1) {
+                createBeforeYearsDropDown(nowYear, startYear);
             }
+
+            if (nowMonth === 12)  //최근 1년 보여주는데, 현재가 12월이면 해당 년도 1~12월 노출
+                for (let month = 0; month < nowMonth; month++)
+                    createCalendar(nowYear, month);
+
+            if (nowMonth !== 12) { //최근 1년 보여주는데, 현재가 12월이 아니면 전년도까지 합쳐서 1년 달력 노출
+                for (let month = nowMonth; month < 12; month++)
+                    createCalendar(nowYear - 1, month);
+
+                for (let month = 0; month < nowMonth; month++)
+                    createCalendar(nowYear, month );
+            }
+
+
         } catch (error) {
             console.error(error);
         }
     }
+
+    //선택한 연도의 활동 내역 보기
+    document.querySelectorAll('select').forEach(function (select) {
+        select.addEventListener('change', function () {
+            let selectedOption = this.options[this.selectedIndex];
+            let beforeOneMonth = parseInt(selectedOption.value);
+
+            while (calendar.childElementCount > 1) //맨 왼쪽에 써 있는 days 살리고 다 지우기
+                calendar.removeChild(calendar.lastElementChild);
+
+            for (let month = 1; month <= 12; month++)
+                createCalendar(beforeOneMonth, month - 1);
+
+        });
+    });
+
 
     // 달의 마지막 날짜 구하기 (혹은 그 달의 전체 일수로 볼 수도 있는)
     function getMonthDates(year, month) {
@@ -237,6 +243,19 @@
             if (postYear === year && postMonth === month && postDate === date) {
                 return true;
             }
+        }
+        return false;
+    }
+
+    //전년도 활동을 골라 볼 수 있는 select 등장
+    function createBeforeYearsDropDown(nowYear, startYear) {
+        let beforeYears = document.getElementById('beforeYears');
+        beforeYears.style.display = 'inline-block';
+        for (let i = nowYear; i >= startYear; i--) {
+            let beforeOneYear = document.createElement('option');
+            beforeOneYear.value = i + "";
+            beforeOneYear.textContent = i + "";
+            beforeYears.appendChild(beforeOneYear);
         }
     }
 

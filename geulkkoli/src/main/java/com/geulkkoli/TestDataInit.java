@@ -132,7 +132,7 @@ public class TestDataInit {
             postRepository.save(post3);
         }
 
-        for (int i = 8; i <= 12; i++) {
+        for (int i = 7; i <= 12; i++) {
             AddDTO addDTO = AddDTO.builder()
                     .title("달력 테스트")
                     .postBody("햄버거")
@@ -143,7 +143,7 @@ public class TestDataInit {
             postRepository.save(post4);
         }
 
-        for (int i = 1; i <= 4; i++) {
+        for (int i = 1; i <= 6; i++) {
             AddDTO addDTO = AddDTO.builder()
                     .title("달력 테스트")
                     .postBody("햄버거")
