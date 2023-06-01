@@ -5,6 +5,8 @@ drop table if exists favorites;
 drop table if exists post;
 drop table if exists users;
 drop table if exists topic_tags;
+drop table if exists hashtag;
+drop sequence if exists hashtag_seq;
 CREATE table if not exists users
 (
     user_id   BIGINT PRIMARY KEY AUTO_INCREMENT,
@@ -87,3 +89,11 @@ create table if not exists permissions
     is_credentials_non_expired boolean not null,
     constraint fk_permission_user foreign key (user_id) references users (user_id)
 );
+
+create table if not exists hashtag
+(
+    hashtag_id bigint primary key,
+    hashtagname varchar(20) not null
+);
+
+create sequence if not exists hashtag_seq start with 10001 increment by 1;

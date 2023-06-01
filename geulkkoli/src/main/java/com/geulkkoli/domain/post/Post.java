@@ -2,7 +2,8 @@ package com.geulkkoli.domain.post;
 
 import com.geulkkoli.domain.comment.Comments;
 import com.geulkkoli.domain.favorites.Favorites;
-import com.geulkkoli.domain.hashtag.HashTags;
+import com.geulkkoli.domain.hashtag.HashTag;
+import com.geulkkoli.domain.post_hashtag.Post_HashTag;
 import com.geulkkoli.domain.user.NoSuchCommnetException;
 import com.geulkkoli.domain.user.User;
 import com.geulkkoli.web.post.dto.AddDTO;
@@ -10,6 +11,7 @@ import lombok.*;
 
 import javax.persistence.*;
 import java.util.LinkedHashSet;
+import java.util.NoSuchElementException;
 import java.util.Objects;
 import java.util.Set;
 
@@ -56,7 +58,7 @@ public class Post extends ConfigDate {
 
     //해시태그의 게시글 매핑
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
-    private Set<HashTags> hashTags = new LinkedHashSet<>();
+    private Set<Post_HashTag> postHashTags = new LinkedHashSet<>();
 
     @Builder
     public Post(String title, String postBody, String nickName) {
@@ -100,12 +102,6 @@ public class Post extends ConfigDate {
         this.nickName = nickName;
     }
 
-    //해당 게시글에 들어가 있는 해시태그
-    public void addHashTag (HashTags hashTag) {
-        hashTag.addPost(this);
-        hashTags.add(hashTag);
-    }
-
     //조회수를 바꾼다.
     public void changeHits (int postHits) {
         this.postHits = postHits;
@@ -115,7 +111,7 @@ public class Post extends ConfigDate {
      *  게시글로 부터 댓글
      */
     // 게시글에서 댓글 찾기
-    private Comments bringComment (Long commentId) {
+    public Comments bringComment (Long commentId) {
         return this.comments.stream()
                 .filter(comment -> comment.getCommentId().equals(commentId))
                 .findFirst()
@@ -126,12 +122,35 @@ public class Post extends ConfigDate {
      *  게시글로 부터 좋아요
      */
     // 게시글에서 누른 좋아요 찾기
-    private Favorites bringFavorite (Long favoriteId) {
+    public Favorites bringFavorite (Long favoriteId) {
         return this.favorites.stream()
                 .filter(favorite -> favorite.getFavoritesId().equals(favoriteId))
                 .findFirst()
                 .orElseThrow(()->new NoSuchCommnetException("해당 좋아요가 없습니다."));
     }
 
+    /**
+     * 게시글 작성 시 해시태그
+     */
+    public Post_HashTag addHashTag (HashTag hashTag) {
+        Post_HashTag postHashTag = new Post_HashTag(this, hashTag);
+        this.getPostHashTags().add(postHashTag);
+        hashTag.getPostHashTags().add(postHashTag);
+        return postHashTag;
+    }
+
+    private Post_HashTag findPostHashTag (Long postHashTagId) {
+        return this.postHashTags.stream()
+                .filter(postHashTag -> postHashTag.getPostHashTagId().equals(postHashTagId))
+                .findFirst()
+                .orElseThrow(() -> new NoSuchElementException("해당 게시글해시태그가 없습니다."));
+    }
+
+    public Post_HashTag deletePostHashTag (Long postHashTagId) {
+        Post_HashTag deletePostHashTag = findPostHashTag(postHashTagId);
+        postHashTags.remove(deletePostHashTag);
+        deletePostHashTag.getHashTag().getPostHashTags().remove(deletePostHashTag);
+        return deletePostHashTag;
+    }
 }
 
