@@ -16,8 +16,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -100,11 +100,12 @@ public class PostService {
         postRepository.deleteAll();
     }
 
-    public Set<LocalDate> getCreatedAts(User user) {
-        return user.getPosts().stream()
+    public List<LocalDate> getCreatedAts(User user) {
+        List<Post> posts = postRepository.findByUser(user);
+        return posts.stream()
                 .map(post -> LocalDateTime.parse(post.getCreatedAt(), DateTimeFormatter.ofPattern("yyyy. MM. dd a hh:mm:ss")))
-                .map(LocalDateTime::toLocalDate) //시간은 필요 없어서
-                .collect(Collectors.toSet());
+                .map(LocalDateTime::toLocalDate)
+                .collect(Collectors.toList());
     }
 
 }

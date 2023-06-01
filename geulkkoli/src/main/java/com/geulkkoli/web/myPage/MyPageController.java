@@ -24,7 +24,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.websocket.server.PathParam;
 import java.time.LocalDate;
-import java.util.Set;
+import java.util.List;
 
 @Controller
 @RequestMapping("/myPage")
@@ -152,7 +152,7 @@ public class MyPageController {
     public ResponseEntity<CalendarDto> calendaring(@AuthenticationPrincipal AuthUser authUser) {
         User user = userService.findById(authUser.getUserId());
 
-        Set<LocalDate> allPostDatesByOneUser = postService.getCreatedAts(user);
+        List<LocalDate> allPostDatesByOneUser = postService.getCreatedAts(user);
         CalendarDto calendarDto = new CalendarDto(authUser.getUserRealName(), user.getSignUpDate(), allPostDatesByOneUser);
 
         return ResponseEntity.ok(calendarDto);
