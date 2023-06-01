@@ -94,10 +94,13 @@ public class PostService {
     public void deletePost(Long postId , String nickName) {
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new NoSuchElementException("No post found id matches:" + postId));
-        if (!post.getNickName().equals(nickName)) {
-            throw new NoSuchElementException("No post found id matches:" + postId);
+        Optional<User> byNickName = userRepository.findByNickName(nickName);
+        if (byNickName.isPresent() && post.getUser().equals(byNickName.get())) {
+            User user = byNickName.get();
+            user.deletePost(post);
         }
-        postRepository.deleteById(postId);
+
+        postRepository.delete(post);
     }
 
     @Transactional
