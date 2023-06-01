@@ -303,9 +303,8 @@ public class User {
         return role.authority();
     }
 
-    void setUserId(Long userId) {
-        this.userId = userId;
-    }
+
+
 }
 
 
