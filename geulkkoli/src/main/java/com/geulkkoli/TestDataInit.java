@@ -73,6 +73,7 @@ public class TestDataInit {
         userService.signUpAdmin(joinForm);
 
         User user01 = userService.findById(1L);
+        User user02 = userService.findById(2L);
 
         for (int i = 0; i < 100; ++i) {
 
@@ -104,9 +105,9 @@ public class TestDataInit {
             AddDTO addDTO3 = AddDTO.builder()
                     .title("testTitle03")
                     .postBody("test postbody 03")
-                    .nickName(user01.getNickName())
+                    .nickName(user02.getNickName())
                     .build();
-            Post post3 = user01.writePost(addDTO3);
+            Post post3 = user02.writePost(addDTO3);
             postRepository.save(post3);
         }
         /**

@@ -8,7 +8,6 @@ import com.geulkkoli.domain.user.User;
 import com.geulkkoli.domain.user.UserRepository;
 import com.geulkkoli.web.post.dto.AddDTO;
 import lombok.extern.slf4j.Slf4j;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -23,7 +22,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.*;
 
 @Slf4j
 @SpringBootTest
@@ -145,5 +143,17 @@ class Post_HashTagRepositoryTest {
         //then
         assertThat(postHashTagList.size()).isEqualTo(2);
         assertThat(postHashTagList.get(0).getHashTag().getHashTagName()).isEqualTo("일반글");
+    }
+
+    @Test
+        public void 해시태그로부터_검색어_찾기() throws Exception {
+        //given
+        Post_HashTag save01 = postHashTagRepository.save(post01.addHashTag(tag1));
+        Post_HashTag save02 = postHashTagRepository.save(post02.addHashTag(tag1));
+        String searchWord = "test";
+        //when
+        List<Post> list = postRepository.findPostsByPostHashTagsContainingAndPostBodyContaining(PageRequest.of(5, 5), searchWord, save01).toList();
+        //then
+        assertThat(list).isNotNull();
     }
 }
