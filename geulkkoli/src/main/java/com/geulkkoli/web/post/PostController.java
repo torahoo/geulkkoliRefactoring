@@ -130,7 +130,7 @@ public class PostController {
 
     //게시글 수정
     @PostMapping("/update/{postId}")
-    public String postUpdate(@Validated @ModelAttribute EditDTO updateParam, BindingResult bindingResult,
+    public String updatePost(@Validated @ModelAttribute EditDTO updateParam, BindingResult bindingResult,
                              @PathVariable Long postId, RedirectAttributes redirectAttributes, HttpServletRequest request,
                              @RequestParam(defaultValue = "") String searchType,
                              @RequestParam(defaultValue = "") String searchWords) {
@@ -154,7 +154,7 @@ public class PostController {
 
     //게시글 삭제
     @DeleteMapping("/delete/{postId}")
-    public String postDelete(@PathVariable Long postId) {
+    public String deletePost(@PathVariable Long postId) {
         postService.deletePost(postId);
         return "redirect:/post/list";
     }

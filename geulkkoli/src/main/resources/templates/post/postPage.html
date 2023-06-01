@@ -130,6 +130,7 @@
     function deletePost() {
         const deleteTitle = '[[${post.title}]]';
         const postId = [[${post.postId}]];
+        const userNickName = '[[${#authentication.principal.nickName}]]';
         const compareTitle = document.getElementById("post-Compare").value;
 
         if (compareTitle === deleteTitle) {
