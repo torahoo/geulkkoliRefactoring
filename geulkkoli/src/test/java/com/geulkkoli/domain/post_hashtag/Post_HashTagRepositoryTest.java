@@ -145,15 +145,4 @@ class Post_HashTagRepositoryTest {
         assertThat(postHashTagList.get(0).getHashTag().getHashTagName()).isEqualTo("일반글");
     }
 
-    @Test
-        public void 해시태그로부터_검색어_찾기() throws Exception {
-        //given
-        Post_HashTag save01 = postHashTagRepository.save(post01.addHashTag(tag1));
-        Post_HashTag save02 = postHashTagRepository.save(post02.addHashTag(tag1));
-        String searchWord = "test";
-        //when
-        List<Post> list = postRepository.findPostsByPostHashTagsContainingAndPostBodyContaining(PageRequest.of(5, 5), searchWord, save01).toList();
-        //then
-        assertThat(list).isNotNull();
-    }
 }

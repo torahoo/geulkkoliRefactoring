@@ -28,7 +28,7 @@ public interface PostRepository extends JpaRepository<Post,Long>, PostRepository
     Page<Post> findPostsByNickNameContaining(Pageable pageable, String searchWords);
     Page<Post> findPostsByPostBodyContaining(Pageable pageable, String searchWords);
 
-    Page<Post> findPostsByPostHashTagsContainingAndTitleContaining(Pageable pageable, String searchWords, Post_HashTag tag);
-    Page<Post> findPostsByPostHashTagsContainingAndNickNameContaining(Pageable pageable, String searchWords, Post_HashTag tag);
-    Page<Post> findPostsByPostHashTagsContainingAndPostBodyContaining(Pageable pageable, String searchWords, Post_HashTag tag);
+    List<Post> findPostsByTitleContaining(String searchWords);
+    List<Post> findPostsByNickNameContaining(String searchWords);
+    List<Post> findPostsByPostBodyContaining(String searchWords);
 }
