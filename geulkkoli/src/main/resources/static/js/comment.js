@@ -2,7 +2,6 @@ commentEditButtonInit();
 commentDeleteButtonInit();
 
 const commentBodyBox = document.getElementById('commentBody');
-const openEditComment = null;
 
 // 댓글 작성 버튼 이벤트 등록
 const commentSubmit = document.getElementById('commentSubmit');
@@ -27,7 +26,7 @@ commentSubmit.addEventListener('click', function (ev) {
                     response.json().then((commentList) => {
                         if (commentList) {
                             allRemoveChild(createFieldError);
-                            commentRemake(commentList);
+                            commentRemake(commentList, true);
                         }
                     });
                 } else {
@@ -85,13 +84,15 @@ function commentEditButtonEvent(event) {
     const updateFieldError = currentEditComment.querySelector('.field-error');
 
     transButton.addEventListener('click', function() {
-        p.innerText = commentBodyText;
-        cardBody.replaceChild(p, textarea);
-        target.innerText = '수정';
-        transButton.innerText = '삭제';
-        target.addEventListener('click', commentEditButtonEvent);
-        allRemoveChild(updateFieldError);
-        currentEditComment.classList.remove('editing');
+        if(confirm('정말 댓글 작성을 취소하시겠습니까?')) {
+            p.innerText = commentBodyText;
+            cardBody.replaceChild(p, textarea);
+            target.innerText = '수정';
+            transButton.innerText = '삭제';
+            target.addEventListener('click', commentEditButtonEvent);
+            allRemoveChild(updateFieldError);
+            currentEditComment.classList.remove('editing');
+        }
     });
 
     target.addEventListener('click', function (ev) {
@@ -112,7 +113,7 @@ function commentEditButtonEvent(event) {
             .then((response) => {
                 if (response.ok) {
                     response.json().then((commentList) => {
-                        if (commentList) commentRemake(commentList);
+                        if (commentList) commentRemake(commentList, false);
                     });
                 } else {
                     response.json().then((validList) => {
@@ -150,7 +151,7 @@ function commentDeleteButtonEvent(ev) {
 } //commentDeleteButtonEvent
 
 //댓글들을 새로 작성한다.
-function commentRemake(list) {
+function commentRemake(list, isClear) {
     const postComment = document.getElementById('postComment');
 
     allRemoveChild(postComment);
@@ -209,7 +210,8 @@ function commentRemake(list) {
 
         postComment.appendChild(forComment);
 
-        commentBodyBox.value = "";
+        if(isClear)
+            commentBodyBox.value = "";
 
     }
     commentEditButtonInit();
@@ -218,13 +220,11 @@ function commentRemake(list) {
 
 // 댓글 글자 수 유효성 검사에 걸렸을 경우
 function validCheckCommentSize(validList, fieldError) {
-    // const fieldError = node.querySelector('.field-error');
     if (fieldError.childElementCount) {
         allRemoveChild(fieldError);
         validCheckCommentSize(validList, fieldError);
     } else {
         for (let valid of validList) {
-            console.log(valid)
             let validText = document.createElement('p');
             validText.innerText = valid;
             validText.style.color = '#dc3545';
