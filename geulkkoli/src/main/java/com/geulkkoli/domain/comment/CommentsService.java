@@ -4,6 +4,7 @@ import com.geulkkoli.domain.post.Post;
 import com.geulkkoli.domain.user.User;
 import com.geulkkoli.web.comment.dto.CommentBodyDTO;
 import com.geulkkoli.web.comment.dto.CommentDto;
+import com.geulkkoli.web.comment.dto.CommentEditDTO;
 import com.geulkkoli.web.comment.dto.CommentListDTO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,8 +39,8 @@ public class CommentsService {
     }
 
     // 댓글 수정하기
-    public void editComment(Long commentId, Comments editCommentBody, User user) {
-        commentsRepository.save(user.editComment(commentId, editCommentBody));
+    public void editComment(Long commentId, CommentEditDTO commentEditDTO, User user) {
+        commentsRepository.save(user.editComment(commentId, new Comments(commentEditDTO.getCommentBody())));
     }
 
     // 댓글 지우기

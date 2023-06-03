@@ -1,32 +1,29 @@
 package com.geulkkoli.web.comment.dto;
 
-import com.geulkkoli.domain.comment.Comments;
 import lombok.Builder;
+import lombok.Data;
 import lombok.RequiredArgsConstructor;
-import lombok.Setter;
-import org.hibernate.validator.constraints.Length;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
-@Setter
-@RequiredArgsConstructor
-public class CommentBodyDTO {
+@Data
+public class CommentEditDTO {
+
+    @NotNull
+    private Long commentId;
 
     @NotBlank
     @Size(min = 2, max = 200, message = "댓글은 2자 이상 200자 이하로 입력해주세요.")
     private String commentBody;
 
+    public CommentEditDTO() {}
+
     @Builder
-    public CommentBodyDTO(String commentBody) {
+    public CommentEditDTO(Long commentId, String commentBody) {
+        this.commentId = commentId;
         this.commentBody = commentBody;
     }
-    public Comments transComments() {
-        return new Comments(this.commentBody);
-    }
-    public String getCommentBody() {
-        return commentBody;
-    }
-
 
 }

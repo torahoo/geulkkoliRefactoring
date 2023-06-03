@@ -33,23 +33,20 @@ public class AjaxBadResponseHandler {
     MessageSource messageSource;
 
     @ExceptionHandler({MethodArgumentNotValidException.class})
-    public ResponseEntity<String> validException(MethodArgumentNotValidException methodArgumentNotValidException) {
+    public ResponseEntity<List<String>> validException(MethodArgumentNotValidException methodArgumentNotValidException) {
 
-        String message = "null";
+        List<String> validMessage = new ArrayList<>();
 
         for (ObjectError error : methodArgumentNotValidException.getBindingResult().getAllErrors()) {
-            if (!Objects.isNull(error)) {
-                String code = error.getCode();
-                Object[] args = error.getArguments();
-                Locale locale =  LocaleContextHolder.getLocale();
-                message = messageSource.getMessage(code, args, locale);
-            } else {
-                message = "error";
+            try {
+                validMessage.add(messageSource.getMessage(error.getCodes()[0], error.getArguments(), LocaleContextHolder.getLocale()));
+            } catch (Exception e) {
+                validMessage.add(error.getDefaultMessage());
             }
         }
 
         return new ResponseEntity<>(
-                message,
+                validMessage,
                 HttpStatus.BAD_REQUEST);
     }
 }

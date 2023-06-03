@@ -10,6 +10,7 @@ import com.geulkkoli.domain.post.service.PostService;
 import com.geulkkoli.domain.user.User;
 import com.geulkkoli.domain.user.UserRepository;
 import com.geulkkoli.web.comment.dto.CommentBodyDTO;
+import com.geulkkoli.web.comment.dto.CommentEditDTO;
 import com.geulkkoli.web.post.dto.AddDTO;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
@@ -127,7 +128,7 @@ public class CommentControllerTest {
 
     }
 
-    private String commentToJson(Comment comment) throws JsonProcessingException {
+    private String commentToJson(Object comment) throws JsonProcessingException {
         om.configure(SerializationFeature.WRAP_ROOT_VALUE, false);
         return om.writeValueAsString(comment);
     }
@@ -137,9 +138,8 @@ public class CommentControllerTest {
     void 댓글_변경() throws Exception {
 
         //ginven
-        String commentJson = commentToJson(new Comment( "댓글 변경 테스트"));
+        String commentJson = commentToJson(new CommentEditDTO(1L, "댓글 변경 테스트"));
         Long postId = post01.getPostId();
-        log.info("commentJson = {}", commentJson);
 
         //when
         mockMvc.perform(MockMvcRequestBuilders.put("/comments/" + postId)

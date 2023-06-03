@@ -5,6 +5,7 @@ import com.geulkkoli.domain.post.service.PostService;
 import com.geulkkoli.domain.user.User;
 import com.geulkkoli.domain.user.UserRepository;
 import com.geulkkoli.web.comment.dto.CommentBodyDTO;
+import com.geulkkoli.web.comment.dto.CommentEditDTO;
 import com.geulkkoli.web.post.dto.AddDTO;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.AfterEach;
@@ -97,7 +98,8 @@ public class CommentServiceTest {
 
 
         //when
-        Comments editComment = Comments.builder()
+        CommentEditDTO editComment = CommentEditDTO.builder()
+                .commentId(1L)
                 .commentBody("edit")
                 .build();
         Comments find = new ArrayList<>(post01.getComments()).get(0);

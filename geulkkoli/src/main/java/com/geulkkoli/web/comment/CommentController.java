@@ -8,6 +8,7 @@ import com.geulkkoli.domain.post.service.PostService;
 import com.geulkkoli.domain.user.User;
 import com.geulkkoli.domain.user.service.UserService;
 import com.geulkkoli.web.comment.dto.CommentBodyDTO;
+import com.geulkkoli.web.comment.dto.CommentEditDTO;
 import com.geulkkoli.web.comment.dto.CommentListDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -60,7 +61,7 @@ public class CommentController {
      */
     @PutMapping("/{postId}")
     public List<CommentListDTO> editPostComment(@PathVariable("postId") Long postId,
-                                                @RequestBody Comments commentBody,
+                                                @Validated @RequestBody CommentEditDTO commentBody,
                                                 @AuthenticationPrincipal CustomAuthenticationPrinciple authUser) {
 
         Post post = findPost(postId);

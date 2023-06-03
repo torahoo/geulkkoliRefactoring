@@ -36,11 +36,30 @@
     </div>
     <div class="d-flex align-items-center text-50 p-3 my-3 rounded box-shadow">
         <img class="mr-3" th:src="@{/images/defaultProfile.png}" src="" alt="" width="48" height="48">
-        <div class="lh-100">
+        <div class="lh-100"
+             style="padding: 10px; margin: 10px;">
             <h6 class="mb-0 lh-100" th:text="${authorUser.nickName}"></h6>
             <small th:text="${authorUser.email}"></small>
         </div>
+        <div class="lh-100"
+             style="padding: 10px; margin: 10px;">
+            <h6 th:text="${post.getDate()}">날짜</h6>
+        </div>
+        <div class="lh-100" style="padding: 10px; margin: 10px;">
+            <form id="favoriteForm" th:action="@{/pressFavorite/{postId}(postId=${post.postId})}" method="POST">
+                <input id="favorite_disLike" th:if="${checkFavorite eq 'none'}" type="image"
+                       th:src="@{/images/free-icon-like-3984190.png}" alt="favoriteImage_disLike" width="30" height="30"
+                       src="">
+                <input id="favorite_like" th:if="${checkFavorite eq 'exist'}" type="image"
+                       th:src="@{/images/free-icon-like-3984277.png}" alt="favoriteImage_like" width="30" height="30">
+            </form>
+            <img th:if="${#strings.equals(checkFavorite, 'never clicked')}" type="image"
+                 th:src="@{/images/free-icon-like-3984190.png}" alt="favoriteImage_noneUser" width="30" height="30" src="">
+        </div>
+        <h6 id="favoriteCount" th:text="${post.getFavoriteCount()}">좋아요 갯수</h6>
+
     </div>
+
     <div class="mb-3">
         <label for="postBody">내용</label>
         <textarea id="postBody" name="postBody" class="form-control"
@@ -53,8 +72,7 @@
              th:with="userNickName=${#authentication.principal.nickName}">
             <div class="col">
 
-                <button class="w-100 btn btn-primary"
-                        onclick="location.href='postUpdateForm.html'"
+                <button class="w-100 btn btn-primary" onclick="location.href='postUpdateForm.html'"
                         th:onclick="|location.href='@{/post/update/{postId}(postId=${post.postId},searchType=${searchType},searchWords=${searchWords})}'|"
                         th:if="${#strings.equals(authorUser.nickName, userNickName)}"
                         type="button">게시글 수정
@@ -64,10 +82,7 @@
 
             <!-- Button trigger modal -->
             <div class="col">
-                <button type="button"
-                        class="w-100 btn btn-primary"
-                        data-bs-toggle="modal"
-                        data-bs-target="#deletePost"
+                <button type="button" class="w-100 btn btn-primary" data-bs-toggle="modal" data-bs-target="#deletePost"
                         th:if="${#strings.equals(authorUser.nickName, userNickName)}">삭제
                 </button>
             </div>
@@ -90,7 +105,7 @@
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
-                            <button type="button" class="btn btn-primary" onclick="deletePost()">삭제</button>
+                            <button id="deletePostButton" type="button" class="btn btn-primary">삭제</button>
                         </div>
                     </div>
                 </div>
@@ -99,23 +114,23 @@
     </div>
 
     <div class="col">
-        <button class="w-100 btn btn-secondary"
-                onclick="location.href='postList.html'"
+        <button class="w-100 btn btn-secondary" onclick="location.href='postList.html'"
                 th:onclick="|location.href='@{/post/list(page=${session.pageNumber},searchType=${searchType},searchWords=${searchWords})}'|"
                 type="button">목록으로
         </button>
+
     </div>
 
     <div sec:authorize="hasRole('USER')" class="col mt-2">
         <form id="comment" th:action="@{/comments/{postId}(postId=${post.postId})}"
               th:object="${comments}" method="post">
-            <div class="mb-3">
-                <label th:text="댓글">댓글</label>
+            <div class="mb-3 d-grid gap-2 d-md-flex justify-content-md-end">
                 <textarea class="form-control mt-1"
                           th:field="*{commentBody}" form="comment"
                           rows="3" placeholder="댓글을 남겨보세요">댓글란</textarea>
                 <input type="submit" id="commentSubmit" th:value="등록" class="mt-1">
             </div>
+            <div class="field-error"></div>
         </form>
     </div>
 
@@ -128,6 +143,7 @@
                 </div>
                 <div class="col card-body">
                     <p class="card-text" th:text="${commentDTO.commentBody}"></p>
+                    <div class="field-error"></div>
                     <div sec:authorize="hasRole('USER')"
                          th:with="userNickName=${#authentication.principal.nickName}">
                         <div th:if="${#strings.equals(authorUser.nickName, userNickName)}"
@@ -148,32 +164,89 @@
 <div th:include="footer"></div>
 
 <script th:inline="javascript">
-    /*<![CDATA[*/
 
-    const validName = /*[[${#authentication.principal != null ? '\'' + #authentication.principal.nickName + '\'' : ''}]]*/ '';
+    const validName = [[${#authentication.principal != null ? #authentication.principal.nickName : ''}]];
     const deleteTitle = '[[${post.title}]]'
     const postId = [[${post.postId}]]
+    const compareTitle = document.getElementById("post-Compare").value;
 
     function deletePost() {
         console.log("deleteTitle=" + deleteTitle);
         console.log("CompareTitle=" + document.getElementById("post-Compare").value);
         console.log("postId=" + postId);
 
-        if (document.getElementById("post-Compare").value === deleteTitle) {
+        if (compareTitle === deleteTitle) {
             fetch('/post/delete/' + postId, {method: 'DELETE'})
                 .then(response => {
-                    window.location = response.url
+                    window.location = response.url;
                 });
-            window.alert("삭제 성공")
+            window.alert("삭제 성공");
         } else {
-            window.alert("삭제 실패")
+            window.alert("삭제 실패");
         }
     }
 
-    <!-- end 게시글 삭제 -->
-    /*]]>*/
+    function toggleFavorite() {
+        const countElement = document.getElementById("favoriteCount");
+        const count = parseInt(countElement.textContent, 10);
+        const likeImage = document.getElementById("favorite_like");
+        const disLikeImage = document.getElementById("favorite_disLike");
+        const postId = [[${post.postId}]];
+        const formData = new FormData();
+        formData.append("postId", postId);
+
+        const requestOptions = {
+            method: 'POST',
+            body: formData
+        };
+        console.log("likeImage : " + likeImage);
+        console.log("disLikeImage : " + disLikeImage);
+        fetch('/pressFavorite/' + postId, requestOptions)
+            .then(response => response.text())
+            .then(data => {
+                if (data === 'Add Success') {
+                    if (likeImage === null) {
+                        disLikeImage.src = "/images/free-icon-like-3984277.png";
+                    } else {
+                        likeImage.src = "/images/free-icon-like-3984277.png";
+                    }
+                    countElement.textContent = count + 1;
+                } else if (data === 'Cancel Success') {
+                    // Handle cancel success case
+                    if (likeImage === null) {
+                        disLikeImage.src = "/images/free-icon-like-3984190.png";
+                    } else {
+                        likeImage.src = "/images/free-icon-like-3984190.png";
+                    }
+
+                    if (count < 1) {
+                        countElement.textContent = 0;
+                    } else {
+                        countElement.textContent = count - 1;
+                    }
+
+                } else {
+                    // Handle error case
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                // Handle error case
+            });
+    }
+
+    document.getElementById("favoriteForm").addEventListener("submit", function (event) {
+        event.preventDefault();
+
+        // Perform necessary AJAX request
+
+        toggleFavorite();
+    });
+
+    document.getElementById("deletePostButton").addEventListener("click", deletePost);
 
 </script>
+<a href="https://www.flaticon.com/kr/free-icons/" title="처럼 아이콘">처럼 아이콘  제작자: Karacis - Flaticon</a>
 <script type="text/javascript" src="/js/comment.js"></script>
 
 </body>

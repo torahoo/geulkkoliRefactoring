@@ -37,18 +37,29 @@ public class PageDTO {
     @Setter
     private String nickName;
 
+    @NotEmpty
+    @Setter
+    private String date;
+
+    @Setter
+    private int favoriteCount;
+
     @NotBlank
     @Setter
     private List<CommentListDTO> commentList;
 
     @Builder
-    public PageDTO(Long postId, Long authorId, String title, String postBody, String nickName, Set<Comments> comments) {
+    public PageDTO(Long postId, Long authorId, String title,
+                   String postBody, String nickName, Set<Comments> comments,
+                   String date, int favoriteCount) {
         this.postId = postId;
         this.authorId = authorId;
         this.title = title;
         this.postBody = postBody;
         this.nickName = nickName;
         this.commentList = CommentsService.getCommentsList(comments);
+        this.date = date;
+        this.favoriteCount = favoriteCount;
     }
 
     public static PageDTO toDTO (Post post) {
@@ -59,6 +70,8 @@ public class PageDTO {
                 .postBody(post.getPostBody())
                 .nickName(post.getNickName())
                 .comments(post.getComments())
+                .date(post.getUpdatedAt())
+                .favoriteCount(post.getFavorites().size())
                 .build();
     }
 }
