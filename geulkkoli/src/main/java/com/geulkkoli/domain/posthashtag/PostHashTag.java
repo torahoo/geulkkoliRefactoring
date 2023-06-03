@@ -1,4 +1,4 @@
-package com.geulkkoli.domain.post_hashtag;
+package com.geulkkoli.domain.posthashtag;
 
 import com.geulkkoli.domain.hashtag.HashTag;
 import com.geulkkoli.domain.post.ConfigDate;
@@ -13,7 +13,7 @@ import java.util.Objects;
 @Getter
 @NoArgsConstructor
 @Entity
-public class Post_HashTag extends ConfigDate {
+public class PostHashTag extends ConfigDate {
 
     @Id @Column(name = "postHashtag_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -28,14 +28,14 @@ public class Post_HashTag extends ConfigDate {
     private HashTag hashTag;
 
     @Builder
-    public Post_HashTag(Post post, HashTag hashTag) {
+    public PostHashTag(Post post, HashTag hashTag) {
         this.post = post;
         this.hashTag = hashTag;
     }
 
     @Override
     public boolean equals (Object obj) {
-        Post_HashTag postHashTag = (Post_HashTag) obj;
+        PostHashTag postHashTag = (PostHashTag) obj;
         return getPostHashTagId() != null && Objects.equals(getPostHashTagId(), postHashTag.getPostHashTagId());
     }
 }

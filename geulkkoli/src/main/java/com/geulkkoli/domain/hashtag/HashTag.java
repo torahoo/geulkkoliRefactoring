@@ -1,8 +1,7 @@
 package com.geulkkoli.domain.hashtag;
 
 import com.geulkkoli.domain.post.ConfigDate;
-import com.geulkkoli.domain.post.Post;
-import com.geulkkoli.domain.post_hashtag.Post_HashTag;
+import com.geulkkoli.domain.posthashtag.PostHashTag;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -31,9 +30,9 @@ public class HashTag extends ConfigDate {
     @Column(nullable = false)
     private String hashTagName;
 
-    //Post_HashTag 클라스와 일대다로 묶는 메서드
+    //PostHashTag 클라스와 일대다로 묶는 메서드
     @OneToMany(mappedBy = "hashTag", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<Post_HashTag> postHashTags = new LinkedHashSet<>();
+    private Set<PostHashTag> postHashTags = new LinkedHashSet<>();
 
     @Builder
     public HashTag (String hashTagName) {

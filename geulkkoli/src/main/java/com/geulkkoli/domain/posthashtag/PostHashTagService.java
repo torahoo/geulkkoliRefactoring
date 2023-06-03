@@ -1,9 +1,11 @@
-package com.geulkkoli.domain.post_hashtag;
+package com.geulkkoli.domain.posthashtag;
 
 import com.geulkkoli.domain.hashtag.HashTag;
+import com.geulkkoli.domain.hashtag.HashTagRepository;
 import com.geulkkoli.domain.post.Post;
 import com.geulkkoli.domain.post.PostRepository;
 import com.geulkkoli.web.post.dto.ListDTO;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -18,21 +20,18 @@ import java.util.NoSuchElementException;
 @Slf4j
 @Service
 @Transactional
-public class Post_HashTagService {
+@RequiredArgsConstructor
+public class PostHashTagService {
 
-    private final Post_HashTagRepository postHashTagRepository;
+    private final HashTagRepository hashTagRepository;
+    private final PostHashTagRepository postHashTagRepository;
     private final PostRepository postRepository;
-
-    public Post_HashTagService(Post_HashTagRepository postHashTagRepository, PostRepository postRepository) {
-        this.postHashTagRepository = postHashTagRepository;
-        this.postRepository = postRepository;
-    }
 
     public Long addHashTagToPost (Post post, HashTag tag){
         return postHashTagRepository.save(post.addHashTag(tag)).getPostHashTagId();
     }
 
-    public Post_HashTag findByPostHashTagId (Long postHashTagId) {
+    public PostHashTag findByPostHashTagId (Long postHashTagId) {
         return postHashTagRepository.findById(postHashTagId).orElseThrow(
                 () -> new NoSuchElementException("no such postHashTag by Id:" + postHashTagId)
         );
@@ -40,6 +39,8 @@ public class Post_HashTagService {
 
     public Page<ListDTO> searchPostsListByHashTag (Pageable pageable, String searchType, String searchWords, HashTag tag) {
         List<Post> posts;
+        String searchWord = searchWordExtractor(searchWords);
+        List<HashTag> tags = hashTagSeparator(searchWords);
         switch (searchType) {
             case "제목":
                 posts=postRepository.findPostsByTitleContaining(searchWords);
@@ -51,9 +52,9 @@ public class Post_HashTagService {
                 posts=postRepository.findPostsByNickNameContaining(searchWords);
                 break;
             case "해시태그" :
-                List<Post_HashTag> postHashTagList = postHashTagRepository.findAllByHashTag(tag);
+                List<PostHashTag> postHashTagList = postHashTagRepository.findAllByHashTag(tag);
                 List<Post> resultPosts = new ArrayList<>();
-                for(Post_HashTag postHashTag : postHashTagList) {
+                for(PostHashTag postHashTag : postHashTagList) {
                     resultPosts.add(postHashTag.getPost());
                 }
                 posts = resultPosts;
@@ -65,7 +66,7 @@ public class Post_HashTagService {
         List<Post> resultList = new ArrayList<>();
         for(int i=0; i<posts.size(); i++) {
             Post post = posts.get(i);
-            List<Post_HashTag> comparePosts = new ArrayList<>(post.getPostHashTags());
+            List<PostHashTag> comparePosts = new ArrayList<>(post.getPostHashTags());
             for (int j=0; j<comparePosts.size(); j++) {
                 if(comparePosts.get(j).getHashTag()==tag) {
                     resultList.add(comparePosts.get(j).getPost());
@@ -82,4 +83,23 @@ public class Post_HashTagService {
         ));
     }
 
+    public List<HashTag> hashTagSeparator(String searchWords){
+        List<HashTag> hashTags = new ArrayList<>();
+        String[] splitter = searchWords.split("#");
+        for (int i = 1; i<splitter.length; i++){
+            String stripper = splitter[i].strip();
+
+            HashTag hashTagByHashTagName = hashTagRepository.findHashTagByHashTagName(stripper);
+
+            if(hashTagByHashTagName!=null)
+                hashTags.add(hashTagByHashTagName);
+        }
+
+        return hashTags;
+    }
+
+    public String searchWordExtractor(String searchWords){
+        String[] splitter = searchWords.split("#");
+        return splitter[0].strip();
+    }
 }

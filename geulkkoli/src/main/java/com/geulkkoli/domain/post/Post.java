@@ -3,7 +3,7 @@ package com.geulkkoli.domain.post;
 import com.geulkkoli.domain.comment.Comments;
 import com.geulkkoli.domain.favorites.Favorites;
 import com.geulkkoli.domain.hashtag.HashTag;
-import com.geulkkoli.domain.post_hashtag.Post_HashTag;
+import com.geulkkoli.domain.posthashtag.PostHashTag;
 import com.geulkkoli.domain.user.NoSuchCommnetException;
 import com.geulkkoli.domain.user.User;
 import com.geulkkoli.web.post.dto.AddDTO;
@@ -58,7 +58,7 @@ public class Post extends ConfigDate {
 
     //해시태그의 게시글 매핑
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
-    private Set<Post_HashTag> postHashTags = new LinkedHashSet<>();
+    private Set<PostHashTag> postHashTags = new LinkedHashSet<>();
 
     @Builder
     public Post(String title, String postBody, String nickName) {
@@ -132,22 +132,22 @@ public class Post extends ConfigDate {
     /**
      * 게시글 작성 시 해시태그
      */
-    public Post_HashTag addHashTag (HashTag hashTag) {
-        Post_HashTag postHashTag = new Post_HashTag(this, hashTag);
+    public PostHashTag addHashTag (HashTag hashTag) {
+        PostHashTag postHashTag = new PostHashTag(this, hashTag);
         this.getPostHashTags().add(postHashTag);
         hashTag.getPostHashTags().add(postHashTag);
         return postHashTag;
     }
 
-    private Post_HashTag findPostHashTag (Long postHashTagId) {
+    private PostHashTag findPostHashTag (Long postHashTagId) {
         return this.postHashTags.stream()
                 .filter(postHashTag -> postHashTag.getPostHashTagId().equals(postHashTagId))
                 .findFirst()
                 .orElseThrow(() -> new NoSuchElementException("해당 게시글해시태그가 없습니다."));
     }
 
-    public Post_HashTag deletePostHashTag (Long postHashTagId) {
-        Post_HashTag deletePostHashTag = findPostHashTag(postHashTagId);
+    public PostHashTag deletePostHashTag (Long postHashTagId) {
+        PostHashTag deletePostHashTag = findPostHashTag(postHashTagId);
         postHashTags.remove(deletePostHashTag);
         deletePostHashTag.getHashTag().getPostHashTags().remove(deletePostHashTag);
         return deletePostHashTag;

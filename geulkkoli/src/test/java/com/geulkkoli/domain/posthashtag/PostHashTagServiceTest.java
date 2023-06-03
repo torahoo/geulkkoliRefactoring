@@ -1,4 +1,4 @@
-package com.geulkkoli.domain.post_hashtag;
+package com.geulkkoli.domain.posthashtag;
 
 import com.geulkkoli.domain.hashtag.HashTag;
 import com.geulkkoli.domain.hashtag.HashTagRepository;
@@ -9,12 +9,11 @@ import com.geulkkoli.domain.user.UserRepository;
 import com.geulkkoli.web.post.dto.AddDTO;
 import com.geulkkoli.web.post.dto.ListDTO;
 import lombok.extern.slf4j.Slf4j;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
@@ -24,15 +23,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @Transactional
 @Slf4j
-class Post_HashTagServiceTest {
+class PostHashTagServiceTest {
 
     @Autowired
-    private Post_HashTagService postHashTagService;
+    private PostHashTagService postHashTagService;
 
     @Autowired
     private PostRepository postRepository;
@@ -97,7 +95,8 @@ class Post_HashTagServiceTest {
         Long postHashTagId = postHashTagService.addHashTagToPost(post01, tag1);
 
         //when
-        Post_HashTag find = postHashTagService.findByPostHashTagId(postHashTagId);
+        PostHashTag find = postHashTagService.findByPostHashTagId(postHashTagId);
+
         //then
         assertThat(postHashTagId).isEqualTo(find.getPostHashTagId());
         assertThat(tag1).isEqualTo(find.getHashTag());
@@ -130,10 +129,26 @@ class Post_HashTagServiceTest {
         //when
         List<ListDTO> listDTOS = postHashTagService.searchPostsListByHashTag(pageable, searchHashTag, searchHashTagWords, tag1).toList();
         Post post = postRepository.findById(listDTOS.get(0).getPostId()).get();
-        List<Post_HashTag> postHashTags = new ArrayList<>(post.getPostHashTags());
+        List<PostHashTag> postHashTags = new ArrayList<>(post.getPostHashTags());
 
         //then
         assertThat(listDTOS.size()).isEqualTo(1);
         assertThat(postHashTags.get(0).getHashTag()).isEqualTo(tag1);
+    }
+
+    @Test
+    @DisplayName("검색어 분리 기능 테스트")
+    public void tagSeparatorTest(){
+        //given
+        String searchWords = "우리 함께 즐겨요 #판타지 #코미디";
+
+        //when
+        List<HashTag> hashTags = postHashTagService.hashTagSeparator(searchWords);
+        String searchWord = postHashTagService.searchWordExtractor(searchWords);
+
+        //then
+        assertThat(hashTags).contains(tag3, tag4);
+        assertThat(searchWord).isEqualTo("우리 함께 즐겨요");
+
     }
 }

@@ -1,10 +1,5 @@
 package com.geulkkoli.domain.post;
 
-import com.geulkkoli.domain.hashtag.HashTag;
-import com.geulkkoli.domain.post.Post;
-
-import com.geulkkoli.domain.post.PostRepositoryCustom;
-import com.geulkkoli.domain.post_hashtag.Post_HashTag;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;

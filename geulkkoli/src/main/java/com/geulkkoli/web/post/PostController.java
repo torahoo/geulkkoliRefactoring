@@ -165,7 +165,6 @@ public class PostController {
     @GetMapping("/savedone")
     public void testBlanc(@AuthenticationPrincipal CustomAuthenticationPrinciple authUser,
                             HttpServletResponse response){
-
         Cookie cookie = new Cookie(URLEncoder.encode(authUser.getNickName()), null);
         cookie.setMaxAge(0);
         response.addCookie(cookie);

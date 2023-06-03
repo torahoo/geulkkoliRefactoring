@@ -1,4 +1,4 @@
-package com.geulkkoli.domain.post_hashtag;
+package com.geulkkoli.domain.posthashtag;
 
 import com.geulkkoli.domain.hashtag.HashTag;
 import com.geulkkoli.domain.hashtag.HashTagRepository;
@@ -13,7 +13,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.test.context.ActiveProfiles;
 
 import javax.transaction.Transactional;
@@ -27,7 +26,7 @@ import static org.assertj.core.api.Assertions.*;
 @SpringBootTest
 @Transactional
 @ActiveProfiles("test")
-class Post_HashTagRepositoryTest {
+class PostHashTagRepositoryTest {
 
     @Autowired
     private PostRepository postRepository;
@@ -36,7 +35,7 @@ class Post_HashTagRepositoryTest {
     @Autowired
     private HashTagRepository hashTagRepository;
     @Autowired
-    private Post_HashTagRepository postHashTagRepository;
+    private PostHashTagRepository postHashTagRepository;
 
     private User user;
     private Post post01, post02;
@@ -87,10 +86,10 @@ class Post_HashTagRepositoryTest {
     @Test
         public void 게시글_해시태그_저장() throws Exception {
         //given
-        Post_HashTag save = post01.addHashTag(tag1);
+        PostHashTag save = post01.addHashTag(tag1);
 
         //when
-        Post_HashTag postHashTag = postHashTagRepository.save(save);
+        PostHashTag postHashTag = postHashTagRepository.save(save);
 
         //then
         assertThat(postHashTag.getHashTag().getHashTagName()).isEqualTo("일반글");
@@ -99,14 +98,14 @@ class Post_HashTagRepositoryTest {
     @Test
         public void 게시글_다중_해시태그_저장() throws Exception {
         //given
-        Post_HashTag save1 = post01.addHashTag(tag1);
-        Post_HashTag save2 = post01.addHashTag(tag3);
-        Post_HashTag save3 = post01.addHashTag(tag4);
+        PostHashTag save1 = post01.addHashTag(tag1);
+        PostHashTag save2 = post01.addHashTag(tag3);
+        PostHashTag save3 = post01.addHashTag(tag4);
 
         //when
-        Post_HashTag postHashTag1 = postHashTagRepository.save(save1);
-        Post_HashTag postHashTag2 = postHashTagRepository.save(save2);
-        Post_HashTag postHashTag3 = postHashTagRepository.save(save3);
+        PostHashTag postHashTag1 = postHashTagRepository.save(save1);
+        PostHashTag postHashTag2 = postHashTagRepository.save(save2);
+        PostHashTag postHashTag3 = postHashTagRepository.save(save3);
 
         //then
         assertThat(post01.getPostHashTags().size()).isEqualTo(3);
@@ -118,14 +117,14 @@ class Post_HashTagRepositoryTest {
     @Test
         public void 게시글_해시태그_불러오기() throws Exception {
         //given
-        Post_HashTag save1 = post01.addHashTag(tag1);
-        Post_HashTag save2 = post01.addHashTag(tag3);
-        Post_HashTag save3 = post01.addHashTag(tag4);
-        Post_HashTag postHashTag1 = postHashTagRepository.save(save1);
-        Post_HashTag postHashTag2 = postHashTagRepository.save(save2);
-        Post_HashTag postHashTag3 = postHashTagRepository.save(save3);
+        PostHashTag save1 = post01.addHashTag(tag1);
+        PostHashTag save2 = post01.addHashTag(tag3);
+        PostHashTag save3 = post01.addHashTag(tag4);
+        PostHashTag postHashTag1 = postHashTagRepository.save(save1);
+        PostHashTag postHashTag2 = postHashTagRepository.save(save2);
+        PostHashTag postHashTag3 = postHashTagRepository.save(save3);
         //when
-        List<Post_HashTag> list = new ArrayList<>(post01.getPostHashTags());
+        List<PostHashTag> list = new ArrayList<>(post01.getPostHashTags());
 
         //then
         assertThat(list.size()).isEqualTo(3);
@@ -135,11 +134,11 @@ class Post_HashTagRepositoryTest {
     @Test
         public void 해시태그로_게시글_전부_찾기() throws Exception {
         //given
-        Post_HashTag save01 = postHashTagRepository.save(post01.addHashTag(tag1));
-        Post_HashTag save02 = postHashTagRepository.save(post02.addHashTag(tag1));
+        PostHashTag save01 = postHashTagRepository.save(post01.addHashTag(tag1));
+        PostHashTag save02 = postHashTagRepository.save(post02.addHashTag(tag1));
 
         //when
-        List<Post_HashTag> postHashTagList = postHashTagRepository.findAllByHashTag(tag1);
+        List<PostHashTag> postHashTagList = postHashTagRepository.findAllByHashTag(tag1);
         //then
         assertThat(postHashTagList.size()).isEqualTo(2);
         assertThat(postHashTagList.get(0).getHashTag().getHashTagName()).isEqualTo("일반글");
