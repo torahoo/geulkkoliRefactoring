@@ -20,7 +20,9 @@ import org.springframework.data.domain.Pageable;
 import javax.transaction.Transactional;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import static org.assertj.core.api.Assertions.*;
 
@@ -40,8 +42,11 @@ class PostHashTagServiceTest {
     private HashTagRepository hashTagRepository;
 
     private User user;
-    private Post post01, post02;
-    private HashTag tag1, tag2, tag3, tag4;
+    private Post post01;
+    private Post post02;
+    private HashTag tag1, tag2, tag3, tag4, tag5, tag6, tag7, tag8;
+
+    List<Post> posts;
 
     private String searchTitle = "제목";
     private String searchPostBody = "본문";
@@ -67,6 +72,17 @@ class PostHashTagServiceTest {
 
     @BeforeEach
     void beforeEach () {
+        for(int i=0; i<10; i++){
+            AddDTO addDTO = AddDTO.builder()
+                    .title("testTitle" + i)
+                    .postBody("test postbody " + i)
+                    .nickName(user.getNickName())
+                    .build();
+            Post post = user.writePost(addDTO);
+            postRepository.save(post);
+        }
+
+
         AddDTO addDTO01 = AddDTO.builder()
                 .title("testTitle01")
                 .postBody("test postbody 01")
@@ -83,10 +99,16 @@ class PostHashTagServiceTest {
         post02 = user.writePost(addDTO02);
         postRepository.save(post02);
 
+        posts = postRepository.findAll();
+
         tag1 = hashTagRepository.save(new HashTag("일반글"));
         tag2 = hashTagRepository.save(new HashTag("공지글"));
         tag3 = hashTagRepository.save(new HashTag("판타지"));
         tag4 = hashTagRepository.save(new HashTag("코미디"));
+        tag5 = hashTagRepository.save(new HashTag("단편소설"));
+        tag6 = hashTagRepository.save(new HashTag("시"));
+        tag7 = hashTagRepository.save(new HashTag("이상"));
+        tag8 = hashTagRepository.save(new HashTag("게임"));
     }
 
     @Test
@@ -138,7 +160,7 @@ class PostHashTagServiceTest {
 
     @Test
     @DisplayName("검색어 분리 기능 테스트")
-    public void tagSeparatorTest(){
+    public void searchWordExtractorTest(){
         //given
         String searchWords = "우리 함께 즐겨요 #판타지 #코미디";
 
@@ -151,4 +173,42 @@ class PostHashTagServiceTest {
         assertThat(searchWord).isEqualTo("우리 함께 즐겨요");
 
     }
+
+    @Test
+    @DisplayName("태그에 따른 게시글을 잘 가져오는지 테스트")
+    public void searchPostContainAllHashTagsTest(){
+        //given
+
+
+        List<HashTag> hashTags = new ArrayList<>(Set.of(tag1, tag2));
+        List<HashTag> hashTags2 = new ArrayList<>(Set.of(tag4, tag5));
+
+
+        List<List<HashTag>> hashTagLists = new ArrayList<>();
+        hashTagLists.add(new ArrayList<>(Set.of(tag1, tag3)));
+        hashTagLists.add(new ArrayList<>(Set.of(tag2, tag8, tag5)));
+        hashTagLists.add(new ArrayList<>(Set.of(tag1, tag2, tag4)));
+        hashTagLists.add(new ArrayList<>(Set.of(tag1, tag2, tag7, tag8)));
+        hashTagLists.add(new ArrayList<>(Set.of(tag1, tag3, tag6)));
+        hashTagLists.add(new ArrayList<>(Set.of(tag1, tag2, tag6, tag7, tag3)));
+        hashTagLists.add(new ArrayList<>(Set.of(tag1, tag2, tag8, tag5, tag4)));
+        hashTagLists.add(new ArrayList<>(Set.of(tag2, tag6, tag7)));
+        hashTagLists.add(new ArrayList<>(Set.of(tag8, tag2, tag3, tag7)));
+        hashTagLists.add(new ArrayList<>(Set.of(tag1, tag5, tag8)));
+
+        for(int i=0; i<10; i++){
+            postHashTagService.addHashTagsToPost(posts.get(i), hashTagLists.get(i));
+        }
+
+        //when
+        List<Post> posts = postHashTagService.searchPostContainAllHashTags(hashTags);
+        List<Post> posts2 = postHashTagService.searchPostContainAllHashTags(hashTags2);
+
+
+        //then
+        assertThat(posts.size()).isEqualTo(4);
+        assertThat(posts2.size()).isEqualTo(1);
+
+    }
+
 }

@@ -16,6 +16,7 @@ import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Set;
 
 @Slf4j
 @Service
@@ -27,48 +28,55 @@ public class PostHashTagService {
     private final PostHashTagRepository postHashTagRepository;
     private final PostRepository postRepository;
 
-    public Long addHashTagToPost (Post post, HashTag tag){
+    public Long addHashTagToPost(Post post, HashTag tag) {
         return postHashTagRepository.save(post.addHashTag(tag)).getPostHashTagId();
     }
 
-    public PostHashTag findByPostHashTagId (Long postHashTagId) {
+    public void addHashTagsToPost(Post post, List<HashTag> tags) {
+        for (HashTag tag : tags) {
+            addHashTagToPost(post, tag);
+        }
+    }
+
+    public PostHashTag findByPostHashTagId(Long postHashTagId) {
         return postHashTagRepository.findById(postHashTagId).orElseThrow(
                 () -> new NoSuchElementException("no such postHashTag by Id:" + postHashTagId)
         );
     }
 
-    public Page<ListDTO> searchPostsListByHashTag (Pageable pageable, String searchType, String searchWords, HashTag tag) {
+    public Page<ListDTO> searchPostsListByHashTag(Pageable pageable, String searchType, String searchWords, HashTag tag) {
         List<Post> posts;
         String searchWord = searchWordExtractor(searchWords);
         List<HashTag> tags = hashTagSeparator(searchWords);
         switch (searchType) {
             case "제목":
-                posts=postRepository.findPostsByTitleContaining(searchWords);
+                posts = postRepository.findPostsByTitleContaining(searchWords);
                 break;
             case "본문":
-                posts=postRepository.findPostsByPostBodyContaining(searchWords);
+                posts = postRepository.findPostsByPostBodyContaining(searchWords);
                 break;
             case "닉네임":
-                posts=postRepository.findPostsByNickNameContaining(searchWords);
+                posts = postRepository.findPostsByNickNameContaining(searchWords);
                 break;
-            case "해시태그" :
+            case "해시태그":
                 List<PostHashTag> postHashTagList = postHashTagRepository.findAllByHashTag(tag);
                 List<Post> resultPosts = new ArrayList<>();
-                for(PostHashTag postHashTag : postHashTagList) {
+                for (PostHashTag postHashTag : postHashTagList) {
                     resultPosts.add(postHashTag.getPost());
                 }
                 posts = resultPosts;
                 break;
             default:
-                posts=postRepository.findAll();
+                posts = postRepository.findAll();
                 break;
         }
         List<Post> resultList = new ArrayList<>();
-        for(int i=0; i<posts.size(); i++) {
+
+        for (int i = 0; i < posts.size(); i++) {
             Post post = posts.get(i);
             List<PostHashTag> comparePosts = new ArrayList<>(post.getPostHashTags());
-            for (int j=0; j<comparePosts.size(); j++) {
-                if(comparePosts.get(j).getHashTag()==tag) {
+            for (int j = 0; j < comparePosts.size(); j++) {
+                if (comparePosts.get(j).getHashTag() == tag) {
                     resultList.add(comparePosts.get(j).getPost());
                 }
             }
@@ -83,23 +91,45 @@ public class PostHashTagService {
         ));
     }
 
-    public List<HashTag> hashTagSeparator(String searchWords){
+    public List<HashTag> hashTagSeparator(String searchWords) {
         List<HashTag> hashTags = new ArrayList<>();
         String[] splitter = searchWords.split("#");
-        for (int i = 1; i<splitter.length; i++){
+        for (int i = 1; i < splitter.length; i++) {
             String stripper = splitter[i].strip();
 
             HashTag hashTagByHashTagName = hashTagRepository.findHashTagByHashTagName(stripper);
 
-            if(hashTagByHashTagName!=null)
+            if (hashTagByHashTagName != null)
                 hashTags.add(hashTagByHashTagName);
         }
 
         return hashTags;
     }
 
-    public String searchWordExtractor(String searchWords){
+    public String searchWordExtractor(String searchWords) {
         String[] splitter = searchWords.split("#");
         return splitter[0].strip();
+    }
+
+    public List<Post> searchPostContainAllHashTags(List<HashTag> tags) {
+        HashTag tag = tags.get(0);
+        List<Post> posts = new ArrayList<>();
+        List<PostHashTag> postHashTagList = postHashTagRepository.findAllByHashTag(tag);
+
+            for (PostHashTag postHashTag : postHashTagList) {
+                Set<HashTag> postHashTags = postHashTag.
+                        getPost().
+                        getPostHashTags().
+                        stream().
+                        map(PostHashTag::getHashTag).
+                        collect(java.util.stream.Collectors.toSet());
+
+                //postHashtag not contain tags, ignore it or add on posts
+                if (postHashTags.containsAll(tags)) {
+                    posts.add(postHashTag.getPost());
+                }
+            }
+
+        return posts;
     }
 }
