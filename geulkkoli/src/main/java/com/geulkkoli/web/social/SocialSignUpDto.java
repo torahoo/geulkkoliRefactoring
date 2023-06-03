@@ -5,9 +5,7 @@ import lombok.Builder;
 import org.hibernate.validator.constraints.Length;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.Pattern;
+import javax.validation.constraints.*;
 
 public class SocialSignUpDto {
     @NotEmpty
@@ -22,7 +20,7 @@ public class SocialSignUpDto {
     private String verifyPassword;
 
     @NotEmpty
-    @Length(min = 2, max = 8)
+    @Size(min = 2, max = 8)
     @Pattern(regexp = "^[a-zA-Z0-9가-힣]*$")
     private String nickName;
 
@@ -31,15 +29,21 @@ public class SocialSignUpDto {
     private String email;
 
     @NotEmpty
-    @Length(min = 10, max = 11)
+    @Size(min = 10, max = 11)
     @Pattern(regexp = "^[*\\d]*$")
     private String phoneNo;
 
     @NotEmpty
     private String gender;
 
+    @NotEmpty
+    private String authorizationServerId;
+
+    @NotEmpty
+    private String clientregistrationName;
+
     @Builder
-    public SocialSignUpDto(String userName, String password, String verifyPassword, String nickName, String email, String phoneNo, String gender) {
+    public SocialSignUpDto(String userName, String password, String verifyPassword, String nickName, String email, String phoneNo, String gender, String authorizationServerId, String clientregistrationName) {
         this.userName = userName;
         this.password = password;
         this.verifyPassword = verifyPassword;
@@ -47,6 +51,8 @@ public class SocialSignUpDto {
         this.email = email;
         this.phoneNo = phoneNo;
         this.gender = gender;
+        this.authorizationServerId=authorizationServerId;
+        this.clientregistrationName = clientregistrationName;
     }
 
     public String getUserName() {
@@ -75,6 +81,14 @@ public class SocialSignUpDto {
 
     public String getGender() {
         return gender;
+    }
+
+    public String getAuthorizationServerId() {
+        return authorizationServerId;
+    }
+
+    public String getClientregistrationName() {
+        return clientregistrationName;
     }
 
     public void changeUserName(String userName) {

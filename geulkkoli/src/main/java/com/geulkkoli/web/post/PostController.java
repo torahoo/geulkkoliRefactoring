@@ -2,13 +2,11 @@ package com.geulkkoli.web.post;
 
 import com.geulkkoli.application.user.CustomAuthenticationPrinciple;
 import com.geulkkoli.domain.favorites.FavoriteService;
-import com.geulkkoli.domain.comment.Comments;
 import com.geulkkoli.domain.comment.CommentsService;
 import com.geulkkoli.domain.post.service.PostService;
 import com.geulkkoli.domain.user.User;
 import com.geulkkoli.domain.user.service.UserService;
 import com.geulkkoli.web.comment.dto.CommentBodyDTO;
-import com.geulkkoli.web.comment.dto.CommentDto;
 import com.geulkkoli.web.post.dto.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -137,7 +135,7 @@ public class PostController {
 
     //게시글 수정
     @PostMapping("/update/{postId}")
-    public String postUpdate(@Validated @ModelAttribute EditDTO updateParam, BindingResult bindingResult,
+    public String updatePost(@Validated @ModelAttribute EditDTO updateParam, BindingResult bindingResult,
                              @PathVariable Long postId, RedirectAttributes redirectAttributes, HttpServletRequest request,
                              @RequestParam(defaultValue = "") String searchType,
                              @RequestParam(defaultValue = "") String searchWords) {
@@ -159,9 +157,9 @@ public class PostController {
     }
 
     //게시글 삭제
-    @DeleteMapping("/delete/{postId}")
-    public String postDelete(@PathVariable Long postId) {
-        postService.deletePost(postId);
+    @DeleteMapping("/request")
+    public String deletePost(@RequestParam("postId") Long postId, @RequestParam("userNickName") String userNickName) {
+        postService.deletePost(postId, userNickName);
         return "redirect:/post/list";
     }
 

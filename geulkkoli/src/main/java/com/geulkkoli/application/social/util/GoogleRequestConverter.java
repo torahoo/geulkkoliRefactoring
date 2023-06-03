@@ -1,7 +1,7 @@
-package com.geulkkoli.application.user.util;
+package com.geulkkoli.application.social.util;
 
 import com.geulkkoli.application.user.ProviderUser;
-import com.geulkkoli.application.user.social.GoogleOAuth2User;
+import com.geulkkoli.application.social.GoogleOAuth2User;
 
 public class GoogleRequestConverter implements UserRequestConverter<ProviderUserRequest, ProviderUser>{
     @Override

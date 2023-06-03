@@ -54,7 +54,8 @@
                        th:src="@{/images/free-icon-like-3984277.png}" alt="favoriteImage_like" width="30" height="30">
             </form>
             <img th:if="${#strings.equals(checkFavorite, 'never clicked')}" type="image"
-                 th:src="@{/images/free-icon-like-3984190.png}" alt="favoriteImage_noneUser" width="30" height="30" src="">
+                 th:src="@{/images/free-icon-like-3984190.png}" alt="favoriteImage_noneUser" width="30" height="30"
+                 src="">
         </div>
         <h6 id="favoriteCount" th:text="${post.getFavoriteCount()}">좋아요 갯수</h6>
 
@@ -165,24 +166,31 @@
 
 <script th:inline="javascript">
 
-    const validName = [[${#authentication.principal != null ? #authentication.principal.nickName : ''}]];
-    const deleteTitle = '[[${post.title}]]'
+    const validName = [[${#authentication.principal != null ? #authentication.principal.nickName : null}]];
     const postId = [[${post.postId}]]
-    const compareTitle = document.getElementById("post-Compare").value;
 
     function deletePost() {
-        console.log("deleteTitle=" + deleteTitle);
-        console.log("CompareTitle=" + document.getElementById("post-Compare").value);
-        console.log("postId=" + postId);
-
+        const deleteTitle = '[[${post.title}]]';
+        const postId = [[${post.postId}]];
+        const userNickName = validName;
+        const compareTitle = document.getElementById("post-Compare").value;
+        let params = {
+            postId: postId,
+            userNickName: userNickName
+        };
+        let query = Object.keys(params)
+            .map(key => encodeURIComponent(key) + '=' + encodeURIComponent(params[key]))
+            .join('&');
         if (compareTitle === deleteTitle) {
-            fetch('/post/delete/' + postId, {method: 'DELETE'})
+            fetch('/post/request?' + query, {method: 'DELETE'})
                 .then(response => {
                     window.location = response.url;
-                });
-            window.alert("삭제 성공");
+                })
+                .then(
+                    alert("삭제되었습니다.")
+                )
         } else {
-            window.alert("삭제 실패");
+            alert("제목이 일치하지 않습니다.");
         }
     }
 
@@ -246,7 +254,7 @@
     document.getElementById("deletePostButton").addEventListener("click", deletePost);
 
 </script>
-<a href="https://www.flaticon.com/kr/free-icons/" title="처럼 아이콘">처럼 아이콘  제작자: Karacis - Flaticon</a>
+<a href="https://www.flaticon.com/kr/free-icons/" title="처럼 아이콘">처럼 아이콘 제작자: Karacis - Flaticon</a>
 <script type="text/javascript" src="/js/comment.js"></script>
 
 </body>

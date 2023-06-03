@@ -9,7 +9,6 @@ import com.geulkkoli.domain.post.Post;
 import com.geulkkoli.domain.comment.Comments;
 import com.geulkkoli.domain.favorites.Favorites;
 import com.geulkkoli.web.comment.dto.CommentBodyDTO;
-import com.geulkkoli.web.comment.dto.CommentDto;
 import com.geulkkoli.web.post.dto.AddDTO;
 import com.geulkkoli.web.post.dto.EditDTO;
 import lombok.Builder;
@@ -72,7 +71,7 @@ public class User {
     private Set<Comments> comments = new LinkedHashSet<>();
 
     //좋아요의 유저 매핑
-    @OneToMany(mappedBy = "user", orphanRemoval = true)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Favorites> favorites = new LinkedHashSet<>();
 
     @Builder
@@ -81,13 +80,6 @@ public class User {
         this.password = password;
         this.nickName = nickName;
         this.email = email;
-        this.phoneNo = phoneNo;
-        this.gender = gender;
-    }
-
-    public void updateUser(String userName, String nickName, String phoneNo, String gender) {
-        this.userName = userName;
-        this.nickName = nickName;
         this.phoneNo = phoneNo;
         this.gender = gender;
     }
@@ -101,16 +93,20 @@ public class User {
      */
     //유저가 쓴 게시글
     public Post writePost(AddDTO addDTO) {
-        Post post = new Post(addDTO, this);
+        Post post = Post.builder()
+                .title(addDTO.getTitle())
+                .postBody(addDTO.getPostBody())
+                .user(this)
+                .nickName(addDTO.getNickName())
+                .build();
+
         this.posts.add(post);
         return post;
     }
 
-    //유저가 지운 게시글
-    public Post deletePost(Long postId) {
-        Post deltePost = findPost(postId);
-        posts.remove(deltePost);
-        return deltePost;
+    public Post deletePost(Post post) {
+        posts.remove(post);
+        return post;
     }
 
     // 해당 유저가 쓴 게시글 찾기
@@ -133,12 +129,17 @@ public class User {
         return post;
     }
 
+    public Post editPost(Post post, EditDTO editDTO) {
+        post.changePostBody(editDTO.getPostBody());
+        post.changeTitle(editDTO.getTitle());
+        return post;
+    }
+
     /**
      * 댓글 관련 CRUD
      */
     //유저가 쓴 댓글
     public Comments writeComment(CommentBodyDTO commentBody, Post post) {
-
         Comments comment = new Comments(this, post, commentBody.getCommentBody());
         post.getComments().add(comment);
         this.comments.add(comment);
@@ -209,6 +210,12 @@ public class User {
         Report deletReport = findReport(reportId);
         reports.remove(deletReport);
         return deletReport;
+    }
+
+    public Report deleteReport(Report report) {
+        Report report1 = reports.stream().filter(r -> r.equals(report)).findFirst().orElseThrow(() -> new NoSuchReportException("해당 신고가 없습니다."));
+        reports.remove(report1);
+        return report1;
     }
 
     private Report findReport(Long reportId) {
@@ -296,6 +303,9 @@ public class User {
     public String authority() {
         return role.authority();
     }
+
+
+
 }
 
 

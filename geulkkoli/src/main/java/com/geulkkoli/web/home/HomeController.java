@@ -22,7 +22,6 @@ import javax.servlet.http.HttpServletRequest;
 public class HomeController {
 
     private final PostService postService;
-    private final UserService userService;
 
     @GetMapping
     public String home(@PageableDefault(size = 5, sort = "postId", direction = Sort.Direction.DESC) Pageable pageable,

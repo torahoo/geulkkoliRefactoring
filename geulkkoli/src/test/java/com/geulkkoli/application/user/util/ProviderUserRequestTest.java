@@ -2,6 +2,8 @@ package com.geulkkoli.application.user.util;
 
 
 import com.geulkkoli.application.security.Role;
+import com.geulkkoli.application.social.util.ProviderUserRequest;
+import com.geulkkoli.application.social.util.SocialType;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.security.core.GrantedAuthority;

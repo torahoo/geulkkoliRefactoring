@@ -1,4 +1,4 @@
-package com.geulkkoli.application.user.social;
+package com.geulkkoli.application.social;
 
 import com.geulkkoli.application.user.ProviderUser;
 import lombok.extern.slf4j.Slf4j;

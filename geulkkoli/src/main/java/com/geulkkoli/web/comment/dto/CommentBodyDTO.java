@@ -4,7 +4,6 @@ import com.geulkkoli.domain.comment.Comments;
 import lombok.Builder;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
-import org.hibernate.validator.constraints.Length;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
