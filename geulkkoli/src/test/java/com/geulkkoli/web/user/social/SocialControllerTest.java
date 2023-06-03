@@ -32,7 +32,7 @@ class SocialControllerTest {
     void if_NonExisting_Member_Go_To_SignUpPage() {
 
         UserModelDto userModelDto = UserModelDto.builder()
-                .userId("test")
+                .authorizaionServerId("test")
                 .email("email")
                 .gender("M")
                 .phoneNo("010-1234-5678")

@@ -22,6 +22,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.websocket.server.PathParam;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 
@@ -130,7 +131,7 @@ public class PostController {
 
     //게시글 수정
     @PostMapping("/update/{postId}")
-    public String postUpdate(@Validated @ModelAttribute EditDTO updateParam, BindingResult bindingResult,
+    public String updatePost(@Validated @ModelAttribute EditDTO updateParam, BindingResult bindingResult,
                              @PathVariable Long postId, RedirectAttributes redirectAttributes, HttpServletRequest request,
                              @RequestParam(defaultValue = "") String searchType,
                              @RequestParam(defaultValue = "") String searchWords) {
@@ -153,9 +154,9 @@ public class PostController {
     }
 
     //게시글 삭제
-    @DeleteMapping("/delete/{postId}")
-    public String postDelete(@PathVariable Long postId) {
-        postService.deletePost(postId);
+    @DeleteMapping("/request")
+    public String deletePost(@RequestParam("postId") Long postId, @RequestParam("userNickName") String userNickName) {
+        postService.deletePost(postId, userNickName);
         return "redirect:/post/list";
     }
 

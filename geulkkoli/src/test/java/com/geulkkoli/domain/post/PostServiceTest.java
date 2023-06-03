@@ -117,9 +117,9 @@ class PostServiceTest {
 
         userRepository.save(user1);
 
-        postService.savePost(new AddDTO(1L, "title", "body", "nick"), user1);
+        postService.savePost(new AddDTO(1L, "title", "body", user1.getNickName()), user1);
 
-        postService.deletePost(1L);
+        postService.deletePost(1L, user1.getNickName());
 
         String searchType = "";
         String searchWords = "";

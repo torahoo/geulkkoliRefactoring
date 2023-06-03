@@ -59,19 +59,12 @@ public class Post extends ConfigDate {
     private Set<HashTags> hashTags = new LinkedHashSet<>();
 
     @Builder
-    public Post(String title, String postBody, String nickName) {
+    public Post(String title, String postBody, String nickName, User user) {
         this.title = title;
         this.postBody = postBody;
         this.nickName = nickName;
-    }
-
-    public Post(AddDTO addDTO, User user) {
-        this.title = addDTO.getTitle();
-        this.postBody = addDTO.getPostBody();
-        this.nickName = addDTO.getNickName();
         this.user = user;
     }
-
     @Override
     public boolean equals(Object o) {
         Post post = (Post) o;

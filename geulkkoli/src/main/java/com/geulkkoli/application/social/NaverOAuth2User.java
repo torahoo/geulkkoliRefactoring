@@ -1,4 +1,4 @@
-package com.geulkkoli.application.user.social;
+package com.geulkkoli.application.social;
 
 import org.springframework.security.oauth2.client.registration.ClientRegistration;
 import org.springframework.security.oauth2.core.user.OAuth2User;

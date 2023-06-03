@@ -26,8 +26,7 @@ import static java.lang.Boolean.TRUE;
 public class UserSecurityService implements UserDetailsService {
 
     private final UserRepository userRepository;
-    private final RoleRepository roleRepository;
-    private final PasswordService passwordService;
+
 
     @Override
     @Transactional(readOnly = true)
@@ -61,27 +60,6 @@ public class UserSecurityService implements UserDetailsService {
         } else {
             authorities.add(new SimpleGrantedAuthority(Role.USER.getRoleName()));
         }
-    }
-
-    @Transactional
-    public User signUp(JoinFormDto form) {
-        User user = form.toEntity(PasswordService.passwordEncoder);
-
-        RoleEntity roleEntity = user.Role(Role.USER);
-        roleRepository.save(roleEntity);
-        userRepository.save(user);
-        return user;
-    }
-
-
-    /*
-     * 관리자 실험을 위한 임시 관리자 계정 추가용 메서드*/
-    @Transactional
-    public void signUpAdmin(JoinFormDto form) {
-        User user = form.toEntity(passwordService.passwordEncoder);
-        RoleEntity roleEntity = user.Role(Role.ADMIN);
-        roleRepository.save(roleEntity);
-        userRepository.save(user);
     }
 
 }
