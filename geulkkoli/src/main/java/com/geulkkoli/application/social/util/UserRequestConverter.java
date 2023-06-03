@@ -1,4 +1,4 @@
-package com.geulkkoli.application.user.util;
+package com.geulkkoli.application.social.util;
 
 import com.geulkkoli.application.user.ProviderUser;
 

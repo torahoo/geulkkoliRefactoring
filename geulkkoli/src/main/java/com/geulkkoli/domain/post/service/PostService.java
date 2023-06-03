@@ -17,7 +17,6 @@ import java.util.*;
 
 @Slf4j
 @Service
-@Transactional
 public class PostService {
 
     private final PostRepository postRepository;
@@ -28,18 +27,20 @@ public class PostService {
         this.userRepository = userRepository;
     }
 
+    @Transactional(readOnly = true)
     public Post findById(Long postId) {
         return postRepository.findById(postId)
                 .orElseThrow(() -> new NoSuchElementException("No post found id matches:" + postId));
     }
 
+    @Transactional(readOnly = true)
     //게시글 상세보기만을 담당하는 메서드
     public Post showDetailPost (Long postId) {
         postRepository.updateHits(postId);
         return postRepository.findById(postId)
                 .orElseThrow(() -> new NoSuchElementException("No post found id matches:" + postId));
     }
-
+@Transactional(readOnly = true)
     public Page<ListDTO> findAll (Pageable pageable) {
         Page<Post> posts = postRepository.findAll(pageable);
         return posts.map(post -> new ListDTO(
@@ -51,6 +52,7 @@ public class PostService {
         ));
     }
 
+    @Transactional(readOnly = true)
     //전체 게시글 리스트 & 조회 기능 포함
     public Page<ListDTO> searchPostFindAll(Pageable pageable, String searchType, String searchWords) {
         Page<Post> posts;
@@ -77,20 +79,31 @@ public class PostService {
         ));
     }
 
+    @Transactional
     public Post savePost(AddDTO post, User user) {
         Post writePost = user.writePost(post);
         return postRepository.save(writePost);
     }
+    @Transactional
 
     public void updatePost(Long postId, EditDTO updateParam, User user) {
         Post post = user.editPost(postId, updateParam);
         postRepository.save(post);
     }
+    @Transactional
+    public void deletePost(Long postId , String nickName) {
+        Post post = postRepository.findById(postId)
+                .orElseThrow(() -> new NoSuchElementException("No post found id matches:" + postId));
+        Optional<User> byNickName = userRepository.findByNickName(nickName);
+        if (byNickName.isPresent() && post.getUser().equals(byNickName.get())) {
+            User user = byNickName.get();
+            user.deletePost(post);
+        }
 
-    public void deletePost(Long postId) {
-        postRepository.delete(postId);
+        postRepository.delete(post);
     }
 
+    @Transactional
     public void deleteAll() {
         postRepository.deleteAll();
     }

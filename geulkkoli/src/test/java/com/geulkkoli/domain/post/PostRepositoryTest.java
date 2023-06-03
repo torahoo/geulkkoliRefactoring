@@ -113,7 +113,7 @@ class PostRepositoryTest {
                 .orElseThrow(() -> new NoSuchElementException("No post found id matches : " + save.getPostId()));
 
         assertThat(save).isEqualTo(find);
-        log.info("findDate={}",find.getUpdatedAt());
+        log.info("findDate={}", find.getUpdatedAt());
     }
 
     @Test
@@ -121,7 +121,6 @@ class PostRepositoryTest {
         List<Post> all = postRepository.findAll();
         assertThat(4).isEqualTo(all.size());
     }
-
 
 
     @Test
@@ -132,7 +131,7 @@ class PostRepositoryTest {
                 .nickName("점심뭐먹지").build());
         Post savePost = postRepository.save(post);
 
-        Post modifyPost = user.editPost(savePost.getPostId(),new EditDTO(savePost.getPostId(),"modifyTitle","modifyBody",savePost.getNickName()));
+        Post modifyPost = user.editPost(savePost.getPostId(), new EditDTO(savePost.getPostId(), "modifyTitle", "modifyBody", savePost.getNickName()));
 
         postRepository.save(modifyPost);
 
@@ -149,7 +148,7 @@ class PostRepositoryTest {
                 .postBody("test postbody")
                 .nickName("점심뭐먹지").build());
         Post savePost = postRepository.save(post);
-        Post deletedPost = user.deletePost(savePost.getPostId());
+        Post deletedPost = user.deletePost(savePost);
         postRepository.delete(deletedPost);
         List<Post> all = postRepository.findAll();
 
@@ -157,7 +156,7 @@ class PostRepositoryTest {
     }
 
     @Test
-    public void 유저_삭제 () throws Exception {
+    public void 유저_삭제() throws Exception {
         //given
         userRepository.delete(user);
 
@@ -168,7 +167,7 @@ class PostRepositoryTest {
         //then
         log.info("allSize={}", all.size());
         log.info("userAll={}", userAll.size());
-        for(Post post:all) {
+        for (Post post : all) {
             log.info("post={}", post);
         }
         assertThat(all.size()).isEqualTo(0);

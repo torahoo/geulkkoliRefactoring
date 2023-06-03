@@ -20,12 +20,10 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-@Transactional
 public class UserService {
 
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
-    private final PasswordService passwordService;
 
     @Transactional(readOnly = true)
     public boolean isEmailDuplicate(String email) {
@@ -70,27 +68,33 @@ public class UserService {
         userRepository.save(user);
     }
 
+    @Transactional
     public void delete(User user) {
         userRepository.deleteById(user.getUserId());
     }
 
+    @Transactional(readOnly = true)
     public User findById(Long id) {
         return userRepository.findById(id)
                 .orElseThrow(() -> new NoSuchElementException("No user found id matches:" + id));
     }
 
+    @Transactional(readOnly = true)
     public Optional<User> findByEmail(String email) {
         return userRepository.findByEmail(email);
     }
 
+    @Transactional(readOnly = true)
     public Optional<User> findByUserNameAndPhoneNo(String userName, String phoneNo) {
         return userRepository.findByUserNameAndPhoneNo(userName, phoneNo);
     }
 
+    @Transactional(readOnly = true)
     public Optional<User> findByEmailAndUserNameAndPhoneNo(String email, String userName, String phoneNo) {
         return userRepository.findByEmailAndUserNameAndPhoneNo(email, userName, phoneNo);
     }
 
+    @Transactional(readOnly = true)
     public User findByNickName(String nickName) {
         return userRepository.findByNickName(nickName)
                 .orElseThrow(() -> new NoSuchElementException("No user found nickname matches:" + nickName));

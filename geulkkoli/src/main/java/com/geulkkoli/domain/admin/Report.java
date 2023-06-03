@@ -18,14 +18,16 @@ import java.util.Objects;
  */
 @Getter
 @Entity
-@Table(uniqueConstraints = {@UniqueConstraint(name = "REPORTER_REPORTED_POST", columnNames = {"reported_post_id", "reporter_id"})})
+@Table(uniqueConstraints = {@UniqueConstraint(name = "unique_report", columnNames = {"reported_post_id", "reporter_id"})})
 public class Report {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long reportId;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "reported_post_id", nullable = false)
     private Post reportedPost;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "reporter_id", nullable = false)
     private User reporter;

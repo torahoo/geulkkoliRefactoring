@@ -1,7 +1,7 @@
-package com.geulkkoli.application.user.util;
+package com.geulkkoli.application.social.util;
 
 import com.geulkkoli.application.user.ProviderUser;
-import com.geulkkoli.application.user.social.NaverOAuth2User;
+import com.geulkkoli.application.social.NaverOAuth2User;
 
 import java.util.Map;
 
