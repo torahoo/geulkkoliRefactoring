@@ -97,12 +97,12 @@ public class CommentServiceTest {
         CommentBodyDTO commentsBody = CommentBodyDTO.builder()
                 .commentBody("test")
                 .build();
-        commentsService.writeComment(commentsBody, post01, user);
+        Long aLong = commentsService.writeComment(commentsBody, post01, user);
 
 
         //when
         CommentEditDTO editComment = CommentEditDTO.builder()
-                .commentId(1L)
+                .commentId(aLong)
                 .commentBody("edit")
                 .build();
         Comments find = new ArrayList<>(post01.getComments()).get(0);
