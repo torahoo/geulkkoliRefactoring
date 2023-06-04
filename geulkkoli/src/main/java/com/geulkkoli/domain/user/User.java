@@ -8,6 +8,8 @@ import com.geulkkoli.domain.admin.Report;
 import com.geulkkoli.domain.post.Post;
 import com.geulkkoli.domain.comment.Comments;
 import com.geulkkoli.domain.favorites.Favorites;
+import com.geulkkoli.web.comment.dto.CommentBodyDTO;
+import com.geulkkoli.web.comment.dto.CommentEditDTO;
 import com.geulkkoli.web.post.dto.AddDTO;
 import com.geulkkoli.web.post.dto.EditDTO;
 import lombok.Builder;
@@ -138,8 +140,8 @@ public class User {
      * 댓글 관련 CRUD
      */
     //유저가 쓴 댓글
-    public Comments writeComment(Comments commentBody, Post post) {
-        Comments comment = new Comments(this, post, commentBody);
+    public Comments writeComment(CommentBodyDTO commentBody, Post post) {
+        Comments comment = new Comments(this, post, commentBody.getCommentBody());
         post.getComments().add(comment);
         this.comments.add(comment);
         return comment;
@@ -154,8 +156,8 @@ public class User {
     }
 
     // 유저가 쓴 댓글 수정하기
-    public Comments editComment(Long commentId, Comments editCommentBody) {
-        Comments comment = findComment(commentId);
+    public Comments editComment(CommentEditDTO editCommentBody) {
+        Comments comment = findComment(editCommentBody.getCommentId());
         comment.changeComments(editCommentBody.getCommentBody());
         return comment;
     }

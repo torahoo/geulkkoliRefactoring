@@ -2,9 +2,11 @@ package com.geulkkoli.web.post;
 
 import com.geulkkoli.application.user.CustomAuthenticationPrinciple;
 import com.geulkkoli.domain.favorites.FavoriteService;
+import com.geulkkoli.domain.comment.CommentsService;
 import com.geulkkoli.domain.post.service.PostService;
 import com.geulkkoli.domain.user.User;
 import com.geulkkoli.domain.user.service.UserService;
+import com.geulkkoli.web.comment.dto.CommentBodyDTO;
 import com.geulkkoli.web.post.dto.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -22,7 +24,6 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.websocket.server.PathParam;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 
@@ -34,6 +35,7 @@ public class PostController {
 
     private final PostService postService;
     private final UserService userService;
+    private final CommentsService commentsService;
     private final FavoriteService favoriteService;
 
     /**
@@ -111,9 +113,11 @@ public class PostController {
         log.info("checkFavorite={}", checkFavorite);
 
         model.addAttribute("post", postPage);
+        model.addAttribute("commentList", postPage.getCommentList());
         model.addAttribute("authorUser", authorUser);
         model.addAttribute("checkFavorite", checkFavorite);
         model.addAttribute("loginUserId", user.getUserId());
+        model.addAttribute("comments", new CommentBodyDTO());
         searchDefault(model, searchType, searchWords);
         return "/post/postPage";
     }
@@ -138,8 +142,7 @@ public class PostController {
         if (bindingResult.hasErrors()) {
             return "/post/postEditForm";
         }
-        User user = userService.findByNickName(updateParam.getNickName());
-        postService.updatePost(postId, updateParam, user);
+        postService.updatePost(postId, updateParam);
         redirectAttributes.addAttribute("updateStatus", true);
         redirectAttributes.addAttribute("page", request.getSession().getAttribute("pageNumber"));
 

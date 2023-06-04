@@ -122,16 +122,57 @@
 
     </div>
 
+    <div sec:authorize="hasRole('USER')" class="col mt-2">
+        <form id="comment" th:action="@{/comments/{postId}(postId=${post.postId})}"
+              th:object="${comments}" method="post">
+            <div class="mb-3 d-grid gap-2 d-md-flex justify-content-md-end">
+                <textarea class="form-control mt-1"
+                          th:field="*{commentBody}" form="comment"
+                          rows="3" placeholder="댓글을 남겨보세요">댓글란</textarea>
+                <input type="submit" id="commentSubmit" th:value="등록" class="mt-1">
+            </div>
+            <div class="field-error"></div>
+        </form>
+    </div>
+
+    <div class="mt-3 col" id="postComment">
+        <div th:each="commentDTO : ${commentList}">
+            <div class="mt-2 card w-100">
+                <div class="col card-header">
+                    <h5 class="card-title" th:id="${commentDTO.commentId}" th:text="${commentDTO.nickName}"></h5>
+                    <h6 class="card-subtitle" th:text="${commentDTO.date}"></h6>
+                </div>
+                <div class="col card-body">
+                    <p class="card-text" th:text="${commentDTO.commentBody}"></p>
+                    <div class="field-error"></div>
+                    <div sec:authorize="hasRole('USER')"
+                         th:with="userNickName=${#authentication.principal.nickName}">
+                        <div th:if="${#strings.equals(commentDTO.nickName, userNickName)}"
+                             class="mt-1 d-grid gap-2 d-md-flex justify-content-md-end">
+                            <button type="button" class="btn btn-primary btn-sm commentEdit" th:text="수정"></button>
+                            <button type="button" class="btn btn-primary btn-sm commentDelete" th:text="삭제"></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
 </div> <!-- /container -->
 
 <footer id="footer"></footer>
 <div th:include="footer"></div>
 
-<script type="text/javascript">
+<script th:inline="javascript">
+
+    const validName = [[${#authentication.principal != null ? #authentication.principal.nickName : null}]];
+    const postId = [[${post.postId}]]
+
     function deletePost() {
         const deleteTitle = '[[${post.title}]]';
         const postId = [[${post.postId}]];
-        const userNickName = '[[${#authentication.principal.nickName}]]';
+        const userNickName = validName;
         const compareTitle = document.getElementById("post-Compare").value;
         let params = {
             postId: postId,
@@ -214,5 +255,7 @@
 
 </script>
 <a href="https://www.flaticon.com/kr/free-icons/" title="처럼 아이콘">처럼 아이콘 제작자: Karacis - Flaticon</a>
+<script type="text/javascript" src="/js/comment.js"></script>
+
 </body>
 </html>

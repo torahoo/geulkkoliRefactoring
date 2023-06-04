@@ -144,12 +144,19 @@ class FavoriteServiceTest {
     public void 유저가_게시글에_좋아요_눌렀는지_체크 () throws Exception {
         //given
         Long favoriteId01 = favoriteService.addFavorite(post01, user);
+        Favorites favorites1;
+        Favorites favorites2;
 
-//        //when
-//        Favorites favorites1 = favoriteService.favoriteCheck(post01, user);
-//        Favorites favorites2 = favoriteService.favoriteCheck(post01, user02);
-//        //then
-//        assertThat(favorites1.getUser()).isEqualTo(user);
-//        assertThat(favorites2).isNull();
+        //when
+        favorites1 = favoriteService.favoriteCheck(post01, user).get();
+
+        try {
+            favorites2 = favoriteService.favoriteCheck(post01, user02).get();
+        } catch (NoSuchElementException e) {
+            favorites2 = null;
+        }
+        //then
+        assertThat(favorites1.getUser()).isEqualTo(user);
+        assertThat(favorites2).isNull();
     }
 }
