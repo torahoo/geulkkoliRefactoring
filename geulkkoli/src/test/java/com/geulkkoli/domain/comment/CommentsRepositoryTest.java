@@ -5,6 +5,7 @@ import com.geulkkoli.domain.post.PostRepository;
 import com.geulkkoli.domain.user.User;
 import com.geulkkoli.domain.user.UserRepository;
 import com.geulkkoli.web.comment.dto.CommentBodyDTO;
+import com.geulkkoli.web.comment.dto.CommentEditDTO;
 import com.geulkkoli.web.post.dto.AddDTO;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.AfterEach;
@@ -138,8 +139,8 @@ class CommentsRepositoryTest {
                 .commentBody("test댓글")
                 .build(), post01);
         Comments save = commentsRepository.save(comment);
-        Comments updateParam = new Comments("수정바디");
-        Comments updateComment = user.editComment(save.getCommentId(), updateParam);
+        CommentEditDTO updateParam = new CommentEditDTO(save.getCommentId(), save.getCommentBody());
+        Comments updateComment = user.editComment(updateParam);
         commentsRepository.save(updateComment);
 
         Comments find = commentsRepository.findById(save.getCommentId())

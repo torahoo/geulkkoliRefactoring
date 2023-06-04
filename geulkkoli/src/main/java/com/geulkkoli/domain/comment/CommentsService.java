@@ -7,6 +7,7 @@ import com.geulkkoli.web.comment.dto.CommentEditDTO;
 import com.geulkkoli.web.comment.dto.CommentListDTO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,8 +24,11 @@ public class CommentsService {
     }
 
     // 댓글 달기
-    public void writeComment(CommentBodyDTO commentBody, Post post, User user) {
-        commentsRepository.save(user.writeComment(commentBody, post));
+    @Transactional
+    public Long writeComment(CommentBodyDTO commentBody, Post post, User user) {
+        Comments comments = user.writeComment(commentBody, post);
+        commentsRepository.save(comments);
+        return comments.getCommentId();
     }
 
     // 댓글 볼러오기
@@ -37,16 +41,19 @@ public class CommentsService {
     }
 
     // 댓글 수정하기
-    public void editComment(Long commentId, CommentEditDTO commentEditDTO, User user) {
-        commentsRepository.save(user.editComment(commentId, new Comments(commentEditDTO.getCommentBody())));
+    @Transactional
+    public void editComment(CommentEditDTO commentEditDTO, User user) {
+        commentsRepository.save(user.editComment(commentEditDTO));
     }
 
     // 댓글 지우기
+    @Transactional
     public void deleteComment(Long commentId, User user) {
         commentsRepository.delete(user.deleteComment(commentId));
     }
 
     // 지정한 유저의 댓글 불러오기
+    @Transactional(readOnly = true)
     public Set<Comments> getUserComment(User user) {
         return commentsRepository.findAllByUser_UserId(user.getUserId());
     }

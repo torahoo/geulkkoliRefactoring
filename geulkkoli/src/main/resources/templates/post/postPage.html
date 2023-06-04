@@ -147,7 +147,7 @@
                     <div class="field-error"></div>
                     <div sec:authorize="hasRole('USER')"
                          th:with="userNickName=${#authentication.principal.nickName}">
-                        <div th:if="${#strings.equals(authorUser.nickName, userNickName)}"
+                        <div th:if="${#strings.equals(commentDTO.nickName, userNickName)}"
                              class="mt-1 d-grid gap-2 d-md-flex justify-content-md-end">
                             <button type="button" class="btn btn-primary btn-sm commentEdit" th:text="수정"></button>
                             <button type="button" class="btn btn-primary btn-sm commentDelete" th:text="삭제"></button>

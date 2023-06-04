@@ -64,7 +64,7 @@ public class CommentController {
                                                 @AuthenticationPrincipal CustomAuthenticationPrinciple authUser) {
 
         Post post = findPost(postId);
-        commentsService.editComment(commentBody.getCommentId(), commentBody, findUser(authUser));
+        commentsService.editComment(commentBody, findUser(authUser));
 
         return getCommentsList(post.getComments());
     }

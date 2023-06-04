@@ -19,7 +19,7 @@ public class TestUserDetailService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         UserModelDto testModel = UserModelDto.builder()
-                .userId("1")
+                .authorizaionServerId("1")
                 .nickName("바나나")
                 .email("email")
                 .password("123qwe!@#")
