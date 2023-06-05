@@ -31,7 +31,6 @@ public class FavoriteController {
     @PostMapping("pressFavorite/{postId}")
     public ResponseEntity<String> pressFavoriteButton(@PathVariable("postId") Long postId,
                                                       @AuthenticationPrincipal CustomAuthenticationPrinciple user) throws Exception {
-        log.info("==========favoriteController==========");
 
         Post post = postService.findById(postId);
 

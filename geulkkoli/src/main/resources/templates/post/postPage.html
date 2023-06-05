@@ -165,15 +165,20 @@
 <div th:include="footer"></div>
 
 <script th:inline="javascript">
+    let user = [[${#authentication.principal}]];
+    let validName = '';
+    if(user != null){
+        validName = user.nickName;}
 
-    const validName = [[${#authentication.principal != null ? #authentication.principal.nickName : null}]];
-    const postId = [[${post.postId}]]
-
+    const postId = [[${post.postId}]];
     function deletePost() {
-        const deleteTitle = '[[${post.title}]]';
+
+        const deleteTitle = [[${post.title}]];
         const postId = [[${post.postId}]];
         const userNickName = validName;
         const compareTitle = document.getElementById("post-Compare").value;
+        console.log(compareTitle);
+        console.log(deleteTitle)
         let params = {
             postId: postId,
             userNickName: userNickName

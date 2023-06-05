@@ -24,7 +24,6 @@ public class CommentsService {
     }
 
     // 댓글 달기
-    @Transactional
     public Long writeComment(CommentBodyDTO commentBody, Post post, User user) {
         Comments comments = user.writeComment(commentBody, post);
         commentsRepository.save(comments);
@@ -41,13 +40,11 @@ public class CommentsService {
     }
 
     // 댓글 수정하기
-    @Transactional
     public void editComment(CommentEditDTO commentEditDTO, User user) {
         commentsRepository.save(user.editComment(commentEditDTO));
     }
 
     // 댓글 지우기
-    @Transactional
     public void deleteComment(Long commentId, User user) {
         commentsRepository.delete(user.deleteComment(commentId));
     }
