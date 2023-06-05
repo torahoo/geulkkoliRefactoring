@@ -4,12 +4,10 @@ import com.geulkkoli.domain.user.User;
 import lombok.Builder;
 import lombok.Getter;
 
-import java.io.Serializable;
-
 @Getter
 public class UserModelDto {
 
-    private String userId;
+    private String authorizaionServerId;
     private String userName;
 
     private String password;
@@ -23,8 +21,8 @@ public class UserModelDto {
     private String gender;
 
     @Builder
-    public UserModelDto(String userId, String userName, String password, String nickName, String email, String phoneNo, String gender) {
-        this.userId = userId;
+    public UserModelDto(String authorizaionServerId, String userName, String password, String nickName, String email, String phoneNo, String gender) {
+        this.authorizaionServerId = authorizaionServerId;
         this.userName = userName;
         this.password = password;
         this.nickName = nickName;
@@ -36,7 +34,19 @@ public class UserModelDto {
 
     public static UserModelDto toDto(User user) {
         return UserModelDto.builder()
-                .userId(String.valueOf(user.getUserId()))
+                .authorizaionServerId(String.valueOf(user.getUserId()))
+                .nickName(user.getNickName())
+                .email(user.getEmail())
+                .password(user.getPassword())
+                .phoneNo(user.getPhoneNo())
+                .userName(user.getUserName())
+                .gender(user.getGender())
+                .build();
+    }
+
+    public static UserModelDto toDto(User user, String authorizationServerId) {
+        return UserModelDto.builder()
+                .authorizaionServerId(authorizationServerId)
                 .nickName(user.getNickName())
                 .email(user.getEmail())
                 .password(user.getPassword())

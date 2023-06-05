@@ -1,9 +1,9 @@
 package com.geulkkoli.web.post.dto;
 
 import com.geulkkoli.domain.comment.Comments;
-//import com.geulkkoli.domain.comment.CommentsService;
+import com.geulkkoli.domain.comment.CommentsService;
 import com.geulkkoli.domain.post.Post;
-//import com.geulkkoli.web.comment.dto.CommentListDTO;
+import com.geulkkoli.web.comment.dto.CommentListDTO;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -11,6 +11,8 @@ import lombok.ToString;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 @Getter
@@ -42,9 +44,9 @@ public class PageDTO {
     @Setter
     private int favoriteCount;
 
-//    @NotBlank
-//    @Setter
-//    private List<CommentListDTO> commentList;
+    @NotBlank
+    @Setter
+    private List<CommentListDTO> commentList;
 
     @Builder
     public PageDTO(Long postId, Long authorId, String title,
@@ -55,7 +57,7 @@ public class PageDTO {
         this.title = title;
         this.postBody = postBody;
         this.nickName = nickName;
-//        this.commentList = CommentsService.getCommentsList(comments);
+        this.commentList = CommentsService.getCommentsList(comments);
         this.date = date;
         this.favoriteCount = favoriteCount;
     }
@@ -70,7 +72,6 @@ public class PageDTO {
                 .comments(post.getComments())
                 .date(post.getUpdatedAt())
                 .favoriteCount(post.getFavorites().size())
-//                .favortieCount(post.getFavorites().size())
                 .build();
     }
 }

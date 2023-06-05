@@ -8,6 +8,8 @@ import com.geulkkoli.domain.admin.Report;
 import com.geulkkoli.domain.post.Post;
 import com.geulkkoli.domain.comment.Comments;
 import com.geulkkoli.domain.favorites.Favorites;
+import com.geulkkoli.web.comment.dto.CommentBodyDTO;
+import com.geulkkoli.web.comment.dto.CommentEditDTO;
 import com.geulkkoli.web.post.dto.AddDTO;
 import com.geulkkoli.web.post.dto.EditDTO;
 import lombok.Builder;
@@ -83,13 +85,6 @@ public class User {
         this.gender = gender;
     }
 
-    public void updateUser(String userName, String nickName, String phoneNo, String gender) {
-        this.userName = userName;
-        this.nickName = nickName;
-        this.phoneNo = phoneNo;
-        this.gender = gender;
-    }
-
     public void updatePassword(String password) {
         this.password = password;
     }
@@ -99,16 +94,20 @@ public class User {
      */
     //유저가 쓴 게시글
     public Post writePost(AddDTO addDTO) {
-        Post post = new Post(addDTO, this);
+        Post post = Post.builder()
+                .title(addDTO.getTitle())
+                .postBody(addDTO.getPostBody())
+                .user(this)
+                .nickName(addDTO.getNickName())
+                .build();
+
         this.posts.add(post);
         return post;
     }
 
-    //유저가 지운 게시글
-    public Post deletePost(Long postId) {
-        Post deltePost = findPost(postId);
-        posts.remove(deltePost);
-        return deltePost;
+    public Post deletePost(Post post) {
+        posts.remove(post);
+        return post;
     }
 
     // 해당 유저가 쓴 게시글 찾기
@@ -131,12 +130,18 @@ public class User {
         return post;
     }
 
+    public Post editPost(Post post, EditDTO editDTO) {
+        post.changePostBody(editDTO.getPostBody());
+        post.changeTitle(editDTO.getTitle());
+        return post;
+    }
+
     /**
      * 댓글 관련 CRUD
      */
     //유저가 쓴 댓글
-    public Comments writeComment (Comments commentBody, Post post) {
-        Comments comment = new Comments(this, post, commentBody);
+    public Comments writeComment(CommentBodyDTO commentBody, Post post) {
+        Comments comment = new Comments(this, post, commentBody.getCommentBody());
         post.getComments().add(comment);
         this.comments.add(comment);
         return comment;
@@ -147,12 +152,12 @@ public class User {
         return this.comments.stream()
                 .filter(comment -> comment.getCommentId().equals(commentId))
                 .findFirst()
-                .orElseThrow(()->new NoSuchCommnetException("해당 댓글이 없습니다."));
+                .orElseThrow(() -> new NoSuchCommnetException("해당 댓글이 없습니다."));
     }
 
     // 유저가 쓴 댓글 수정하기
-    public Comments editComment(Long commentId, Comments editCommentBody) {
-        Comments comment = findComment(commentId);
+    public Comments editComment(CommentEditDTO editCommentBody) {
+        Comments comment = findComment(editCommentBody.getCommentId());
         comment.changeComments(editCommentBody.getCommentBody());
         return comment;
     }
@@ -169,7 +174,7 @@ public class User {
      * 좋아요 관련 CRUD
      */
     // 유저가 누른 좋아요
-    public Favorites pressFavorite (Post post) {
+    public Favorites pressFavorite(Post post) {
         Favorites favorite = new Favorites(this, post);
         post.getFavorites().add(favorite);
         this.favorites.add(favorite);
@@ -177,15 +182,15 @@ public class User {
     }
 
     // 해당 유저가 쓴 좋아요 찾기
-    private Favorites findFavorite (Long favoriteId) {
+    private Favorites findFavorite(Long favoriteId) {
         return this.favorites.stream()
                 .filter(favorite -> favorite.getFavoritesId().equals(favoriteId))
                 .findFirst()
-                .orElseThrow(()->new NoSuchCommnetException("해당 좋아요가 없습니다."));
+                .orElseThrow(() -> new NoSuchCommnetException("해당 좋아요가 없습니다."));
     }
 
     // 유저가 취소한 좋아요
-    public Favorites cancelFavorite (Long favoriteId) {
+    public Favorites cancelFavorite(Long favoriteId) {
         Favorites deleteFavorite = findFavorite(favoriteId);
         favorites.remove(deleteFavorite);
         deleteFavorite.getPost().getFavorites().remove(deleteFavorite);
@@ -206,6 +211,12 @@ public class User {
         Report deletReport = findReport(reportId);
         reports.remove(deletReport);
         return deletReport;
+    }
+
+    public Report deleteReport(Report report) {
+        Report report1 = reports.stream().filter(r -> r.equals(report)).findFirst().orElseThrow(() -> new NoSuchReportException("해당 신고가 없습니다."));
+        reports.remove(report1);
+        return report1;
     }
 
     private Report findReport(Long reportId) {
@@ -277,7 +288,7 @@ public class User {
         return Objects.hash(userId);
     }
 
-    public Boolean  isGuest() {
+    public Boolean isGuest() {
         return role.isGuest();
     }
 
@@ -293,6 +304,9 @@ public class User {
     public String authority() {
         return role.authority();
     }
+
+
+
 }
 
 

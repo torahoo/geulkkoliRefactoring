@@ -4,6 +4,8 @@ import com.geulkkoli.domain.post.Post;
 import com.geulkkoli.domain.post.PostRepository;
 import com.geulkkoli.domain.user.User;
 import com.geulkkoli.domain.user.UserRepository;
+import com.geulkkoli.web.comment.dto.CommentBodyDTO;
+import com.geulkkoli.web.comment.dto.CommentEditDTO;
 import com.geulkkoli.web.post.dto.AddDTO;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.AfterEach;
@@ -19,7 +21,6 @@ import java.util.List;
 import java.util.NoSuchElementException;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 @Slf4j
 @SpringBootTest
@@ -76,7 +77,7 @@ class CommentsRepositoryTest {
 
     @Test
     void 댓글_저장 () {
-        Comments comment = user.writeComment(Comments.builder()
+        Comments comment = user.writeComment(CommentBodyDTO.builder()
                 .commentBody("test댓글")
                 .build(), post01);
 
@@ -88,12 +89,12 @@ class CommentsRepositoryTest {
 
     @Test
     void 게시물_댓글_저장 () {
-        Comments comment = user.writeComment(Comments.builder()
+        Comments comment = user.writeComment(CommentBodyDTO.builder()
                 .commentBody("test댓글")
                 .build(), post01);
         Comments save = commentsRepository.save(comment);
 
-        Comments comment2 = user.writeComment(Comments.builder()
+        Comments comment2 = user.writeComment(CommentBodyDTO.builder()
                 .commentBody("test댓글2")
                 .build(), post01);
         Comments save2 = commentsRepository.save(comment2);
@@ -107,7 +108,7 @@ class CommentsRepositoryTest {
 
     @Test
     void findById () {
-        Comments comment = user.writeComment(Comments.builder()
+        Comments comment = user.writeComment(CommentBodyDTO.builder()
                 .commentBody("test댓글")
                 .build(), post01);
         Comments save = commentsRepository.save(comment);
@@ -123,7 +124,7 @@ class CommentsRepositoryTest {
 
     @Test
     void 전체_리스트_조회() {
-        Comments comment = user.writeComment(Comments.builder()
+        Comments comment = user.writeComment(CommentBodyDTO.builder()
                 .commentBody("test댓글")
                 .build(), post01);
         Comments save = commentsRepository.save(comment);
@@ -134,12 +135,12 @@ class CommentsRepositoryTest {
 
     @Test
     void 수정() {
-        Comments comment = user.writeComment(Comments.builder()
+        Comments comment = user.writeComment(CommentBodyDTO.builder()
                 .commentBody("test댓글")
                 .build(), post01);
         Comments save = commentsRepository.save(comment);
-        Comments updateParam = new Comments("수정바디");
-        Comments updateComment = user.editComment(save.getCommentId(), updateParam);
+        CommentEditDTO updateParam = new CommentEditDTO(save.getCommentId(), save.getCommentBody());
+        Comments updateComment = user.editComment(updateParam);
         commentsRepository.save(updateComment);
 
         Comments find = commentsRepository.findById(save.getCommentId())
@@ -151,7 +152,7 @@ class CommentsRepositoryTest {
 
     @Test
     void 삭제() {
-        Comments comment = user.writeComment(Comments.builder()
+        Comments comment = user.writeComment(CommentBodyDTO.builder()
                 .commentBody("test댓글")
                 .build(), post01);
         Comments save = commentsRepository.save(comment);
@@ -160,7 +161,7 @@ class CommentsRepositoryTest {
         log.info("saveId={}", save.getCommentId());
 
 
-        Comments comment2 = user.writeComment(Comments.builder()
+        Comments comment2 = user.writeComment(CommentBodyDTO.builder()
                 .commentBody("test댓글2")
                 .build(), post02);
         Comments save2 = commentsRepository.save(comment2);
@@ -175,5 +176,23 @@ class CommentsRepositoryTest {
         List<Comments> all = commentsRepository.findAll();
         assertThat(all.size()).isEqualTo(1);
         assertThat(all.get(0).getCommentBody()).isEqualTo("test댓글2");
+    }
+
+    @Test
+    void getUserComment() {
+        //given
+        for (int i = 0; i < 10; ++i) {
+            Comments comment = user.writeComment(CommentBodyDTO.builder()
+                    .commentBody("test댓글")
+                    .build(), post01);
+            commentsRepository.save(comment);
+        }
+        int count = post01.getComments().size();
+
+        //when
+        int size = commentsRepository.findAllByUser_UserId(user.getUserId()).size();
+
+        //then
+        assertThat(size).isEqualTo(count);
     }
 }

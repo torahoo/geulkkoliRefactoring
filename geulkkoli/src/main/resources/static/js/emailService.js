@@ -22,20 +22,23 @@ function checkEmail() {
                 document.getElementById('authenticationNumber').readOnly = false;
                 document.getElementById('authenticationButton').disabled = false;
                 document.getElementById('rightOrWrongMessage').innerHTML = "";
-                return response.text();
+                console.log(response)
+                return response.json();
             } else {
                 throw new Error('네트워크 문제');
             }
         })
         .then(function (result) {
-            if (result === "nullOrBlank") {
+            console.log(result)
+
+            if (result.nullOrBlank) {
                 document.getElementById('nullOrBlank').innerHTML = "공백이거나 입력하지 않은 이메일을 인증할 수 없습니다.";
             }
-            if (result === "emailDuplicated") {
+            if (result.duplicated) {
                 document.getElementById('timer').innerHTML = "";
                 document.getElementById('emailDuplicated').innerHTML = "이미 존재하는 이메일입니다.";
             }
-            if (result === "sendAuthenticationNumberEmail") {
+            if (result.success) {
                 document.getElementById('authenticationNumber').style.display = "block";
                 document.getElementById('authenticationButton').style.display = "block";
 
