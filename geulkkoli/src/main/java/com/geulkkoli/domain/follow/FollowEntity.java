@@ -23,10 +23,25 @@ public class FollowEntity {
     }
 
 
-    public FollowEntity(Long id, User followee, User follower) {
-        this.id = id;
+    private FollowEntity( User followee, User follower) {
         this.followee = followee;
         this.follower = follower;
+    }
+
+    public static FollowEntity of(User followee, User follower){
+        return new FollowEntity(followee, follower);
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public User getFollowee() {
+        return followee;
+    }
+
+    public User getFollower() {
+        return follower;
     }
 
     @Override
