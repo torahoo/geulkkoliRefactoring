@@ -166,7 +166,12 @@
 
 <script th:inline="javascript">
 
-    const validName = [[${#authentication.principal != null ? #authentication.principal.nickName : null}]];
+    let user = [[${#authentication.principal}]];
+    let validName = '';
+    if(user != null){
+        validName = user.nickName;
+    }
+
     const postId = [[${post.postId}]]
 
     function deletePost() {

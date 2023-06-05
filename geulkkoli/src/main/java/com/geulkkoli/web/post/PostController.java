@@ -100,8 +100,10 @@ public class PostController {
         } catch (NullPointerException e) {
             log.info("로그인을 안한 사용자 접속");
             model.addAttribute("post", postPage);
+            model.addAttribute("commentList", postPage.getCommentList());
             model.addAttribute("authorUser", authorUser);
             model.addAttribute("checkFavorite", checkFavorite);
+            model.addAttribute("comments", new CommentBodyDTO());
             searchDefault(model, searchType, searchWords);
             return "/post/postPage";
         }
