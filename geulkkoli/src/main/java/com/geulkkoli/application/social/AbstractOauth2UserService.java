@@ -7,7 +7,6 @@ import com.geulkkoli.domain.user.service.UserFindService;
 import com.geulkkoli.web.social.SocialInfoDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -36,7 +35,7 @@ public abstract class AbstractOauth2UserService {
     @Transactional
     public void connect(String socialId, String socialType, User user) {
         SocialInfoDto socialInfoDto = new SocialInfoDto(socialId, socialType, user);
-        socialInfoService.save(socialInfoDto);
+        socialInfoService.connect(socialInfoDto);
     }
 
     public Boolean haveAssociatedRecord(String socialId, String socialType) {
@@ -50,7 +49,7 @@ public abstract class AbstractOauth2UserService {
     public Boolean reConnected(String socialId, String socialType) {
         SocialInfo socialInfo = socialInfoService.findBySocialTypeAndSocialId(socialType, socialId);
         socialInfo.reConnected(true);
-        socialInfoService.save(socialInfo);
+        socialInfoService.reconnect(socialInfo);
         return true;
     }
 

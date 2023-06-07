@@ -284,11 +284,10 @@ public class User {
 
     private Follow findFollow(User followee) {
         return this.followees.stream()
-                .filter(follow -> follow.getFollowee().equals(followee))
+                .filter(follow -> follow.isFollowee(followee))
                 .findFirst()
                 .orElseThrow(() -> new NoSuchFollowException("해당 팔로우가 없습니다."));
     }
-
     public RoleEntity getRole() {
         return role;
     }
@@ -327,8 +326,9 @@ public class User {
     public int hashCode() {
         return Objects.hash(userId);
     }
-
 }
+
+
 
 
 

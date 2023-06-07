@@ -18,8 +18,12 @@ public class SocialInfoService {
     public SocialInfoService(SocialInfoRepository socialInfoRepository) {
         this.socialInfoRepository = socialInfoRepository;
     }
-    public SocialInfo save(SocialInfoDto socialInfo) {
+    public SocialInfo connect(SocialInfoDto socialInfo) {
         return socialInfoRepository.save(socialInfo.toEntity());
+    }
+
+    public SocialInfo reconnect(SocialInfo socialInfo) {
+        return socialInfoRepository.save(socialInfo);
     }
 
     @Transactional(readOnly = true)

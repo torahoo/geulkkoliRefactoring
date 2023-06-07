@@ -3,6 +3,7 @@ package com.geulkkoli.web.post;
 import com.geulkkoli.application.user.CustomAuthenticationPrinciple;
 import com.geulkkoli.domain.favorites.FavoriteService;
 import com.geulkkoli.domain.comment.CommentsService;
+import com.geulkkoli.domain.follow.service.FollowFindService;
 import com.geulkkoli.domain.post.service.PostService;
 import com.geulkkoli.domain.user.User;
 import com.geulkkoli.domain.user.service.UserFindService;
@@ -38,15 +39,16 @@ public class PostController {
     private final UserFindService userFindService;
     private final CommentsService commentsService;
     private final FavoriteService favoriteService;
+    private final FollowFindService followFindService;
 
     /**
+     * @param pageable - get 파라미터 page, size, sort 캐치
+     * @return
      * @PageableDefault - get 파라미터가 없을 때 기본설정 변경(기본값: page=0, size=20)
      * page: 배열과 같이 0부터 시작한다. 즉, 0 = 1page
      * size: 한 페이지에 보여줄 게시물 수
      * sort: 정렬기준
      * direction: 정렬법
-     * @param pageable - get 파라미터 page, size, sort 캐치
-     * @return
      */
     // 게시판 리스트 html로 이동
     @GetMapping("/list")
@@ -62,7 +64,7 @@ public class PostController {
 
     //게시글 addForm html 로 이동
     @GetMapping("/add")
-    public String postAddForm(Model model){
+    public String postAddForm(Model model) {
         model.addAttribute("addDTO", new AddDTO());
         return "/post/postAddForm";
     }
@@ -77,7 +79,7 @@ public class PostController {
         }
         User user = userFindService.findById(post.getAuthorId());
         long postId = postService.savePost(post, user).getPostId();
-        redirectAttributes.addAttribute("postId",postId);
+        redirectAttributes.addAttribute("postId", postId);
         response.addCookie(new Cookie(URLEncoder.encode(post.getNickName(), "UTF-8"), "done"));
         return "redirect:/post/read/{postId}";
     }
@@ -87,35 +89,37 @@ public class PostController {
     public String readPost(Model model, @PathVariable Long postId, HttpServletRequest request,
                            @RequestParam(defaultValue = "") String searchType,
                            @RequestParam(defaultValue = "") String searchWords,
-                           @AuthenticationPrincipal CustomAuthenticationPrinciple loginUser) {
+                           @AuthenticationPrincipal CustomAuthenticationPrinciple authUser) {
         PageDTO postPage = PageDTO.toDTO(postService.showDetailPost(postId));
         User authorUser = userFindService.findById(postPage.getAuthorId());
         request.getSession().setAttribute("pageNumber", request.getParameter("page"));
 
         String checkFavorite = "never clicked";
 
-        if (Objects.isNull(loginUser)){
+        if (Objects.isNull(authUser)) {
             log.info("로그인을 안한 사용자 접속");
             model.addAttribute("post", postPage);
+            model.addAttribute("commentList", postPage.getCommentList());
             model.addAttribute("authorUser", authorUser);
             model.addAttribute("checkFavorite", checkFavorite);
             searchDefault(model, searchType, searchWords);
             return "/post/postPage";
         }
 
-        User user = userFindService.findById(Long.parseLong(loginUser.getUserId()));
-        if(favoriteService.favoriteCheck(postService.findById(postId), user).isEmpty()){
+        User loggingUser = userFindService.findById(Long.parseLong(authUser.getUserId()));
+
+        if (favoriteService.checkFavorite(postService.findById(postId), loggingUser).isEmpty()) {
             checkFavorite = "none";
         } else {
             checkFavorite = "exist";
         }
         log.info("checkFavorite={}", checkFavorite);
-
+        model.addAttribute("followResult", followFindService.checkFollow(loggingUser, authorUser));
         model.addAttribute("post", postPage);
         model.addAttribute("commentList", postPage.getCommentList());
         model.addAttribute("authorUser", authorUser);
         model.addAttribute("checkFavorite", checkFavorite);
-        model.addAttribute("loginUserId", loginUser.getUserId());
+        model.addAttribute("loginUserId", authUser.getUserId());
         model.addAttribute("comments", new CommentBodyDTO());
         searchDefault(model, searchType, searchWords);
         return "/post/postPage";
@@ -145,7 +149,7 @@ public class PostController {
         redirectAttributes.addAttribute("updateStatus", true);
         redirectAttributes.addAttribute("page", request.getSession().getAttribute("pageNumber"));
 
-        if(searchType!=null&&searchWords!=null){
+        if (searchType != null && searchWords != null) {
             redirectAttributes.addAttribute("searchType", searchType);
             redirectAttributes.addAttribute("searchWords", searchWords);
         } else {
@@ -165,7 +169,7 @@ public class PostController {
     //임시저장기능 (현재는 빈 값만 들어옴)
     @GetMapping("/savedone")
     public void testBlanc(@AuthenticationPrincipal CustomAuthenticationPrinciple authUser,
-                            HttpServletResponse response){
+                          HttpServletResponse response) {
 
         Cookie cookie = new Cookie(URLEncoder.encode(authUser.getNickName()), null);
         cookie.setMaxAge(0);
@@ -173,7 +177,7 @@ public class PostController {
     }
 
     private static void searchDefault(Model model, String searchType, String searchWords) {
-        if(searchType!=null&&searchWords!=null){
+        if (searchType != null && searchWords != null) {
             model.addAttribute("searchType", searchType);
             model.addAttribute("searchWords", searchWords);
         } else {

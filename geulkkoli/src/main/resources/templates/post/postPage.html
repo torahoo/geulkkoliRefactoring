@@ -41,6 +41,16 @@
             <h6 class="mb-0 lh-100" th:text="${authorUser.nickName}"></h6>
             <small th:text="${authorUser.email}"></small>
         </div>
+
+        <div sec:authorize="hasRole('USER')" th:if="${followResult}" class="lh-100"
+             style="padding: 10px; margin: 10px;">
+            구독 취소
+        </div>
+        <div sec:authorize="hasRole('USER')"
+             th:unless="${followResult}" class="lh-100"
+             style="padding: 10px; margin: 10px;">
+
+        </div>
         <div class="lh-100"
              style="padding: 10px; margin: 10px;">
             <h6 th:text="${post.getDate()}">날짜</h6>
@@ -167,10 +177,12 @@
 <script th:inline="javascript">
     let user = [[${#authentication.principal}]];
     let validName = '';
-    if(user != null){
-        validName = user.nickName;}
+    if (user != null) {
+        validName = user.nickName;
+    }
 
     const postId = [[${post.postId}]];
+
     function deletePost() {
 
         const deleteTitle = [[${post.title}]];

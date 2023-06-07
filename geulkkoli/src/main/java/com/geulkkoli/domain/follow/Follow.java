@@ -32,6 +32,9 @@ public class Follow {
         return new Follow(followee, follower);
     }
 
+    public boolean isFollowee(User followee) {
+        return this.followee.equals(followee);
+    }
     public Long getId() {
         return id;
     }
@@ -60,4 +63,6 @@ public class Follow {
     public int hashCode() {
         return Objects.hash(id);
     }
+
+
 }

@@ -36,7 +36,7 @@ public class FavoriteController {
 
         try {
             User loginUser = userService.findById(Long.parseLong(user.getUserId()));
-            Optional<Favorites> optionalFavorites = favoriteService.favoriteCheck(post, loginUser);
+            Optional<Favorites> optionalFavorites = favoriteService.checkFavorite(post, loginUser);
             if (optionalFavorites.isEmpty()) {
                 favoriteService.addFavorite(post, loginUser);
                 return ResponseEntity.ok("Add Success");
