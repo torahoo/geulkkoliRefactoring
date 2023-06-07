@@ -40,6 +40,10 @@ public class FollowEntity {
         return followee;
     }
 
+    public String followeeNickName() {
+        return followee.getNickName();
+    }
+
     public User getFollower() {
         return follower;
     }

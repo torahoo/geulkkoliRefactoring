@@ -2,6 +2,7 @@ package com.geulkkoli.web.mypage;
 
 import com.geulkkoli.application.user.CustomAuthenticationPrinciple;
 import com.geulkkoli.domain.social.SocialInfoService;
+import com.geulkkoli.web.mypage.dto.ConnectedSocialInfos;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;

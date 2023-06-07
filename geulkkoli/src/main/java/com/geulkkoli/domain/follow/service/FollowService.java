@@ -1,35 +1,40 @@
-package com.geulkkoli.domain.follow;
+package com.geulkkoli.domain.follow.service;
 
+import com.geulkkoli.domain.follow.FollowEntity;
+import com.geulkkoli.domain.follow.FollowRepository;
 import com.geulkkoli.domain.user.User;
 import com.geulkkoli.domain.user.UserRepository;
+import com.geulkkoli.domain.user.service.UserService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Optional;
+import java.util.List;
 
 @Service
 @Transactional
 public class FollowService {
     private final FollowRepository followRepository;
-    private final UserRepository userRepository;
+    private final UserService userService;
 
-    public FollowService(FollowRepository followRepository, UserRepository userRepository) {
+    public FollowService(FollowRepository followRepository, UserService userService) {
         this.followRepository = followRepository;
-        this.userRepository = userRepository;
+        this.userService = userService;
     }
 
-    public FollowEntity save(Long followeeId, Long followerId) {
-        User followee = userRepository.findById(followeeId).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 팔로우 대상입니다."));
-        User follower = userRepository.findById(followerId).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 팔로워입니다."));
+    public FollowEntity follow(Long followeeId, Long followerId) {
+        User followee = userService.findById(followeeId);
+        User follower = userService.findById(followerId);
 
         return followRepository.save(FollowEntity.of(followee, follower));
     }
 
     @Transactional(readOnly = true)
-    public FollowEntity findByFollowerId(Long followerId) {
-        return followRepository.findByFollower_UserId(followerId);
+    public List<FollowEntity> findAllFollowerByFolloweeId(Long followeeId) {
+
+        return followRepository.findFollowEntitiesByFollowee_UserId(followeeId);
     }
 
+    @Transactional
     public void deleteByFolloweeIdAndFollowerId(Long followeeId, Long followerId) {
         try {
             FollowEntity followEntity = followRepository.findByFollowee_UserIdAndFollower_UserId(followeeId, followerId);
