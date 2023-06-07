@@ -1,6 +1,8 @@
 package com.geulkkoli.web.mypage;
 
+import com.geulkkoli.application.follow.FollowMyPageUserInfoService;
 import com.geulkkoli.application.user.CustomAuthenticationPrinciple;
+import com.geulkkoli.domain.follow.service.FollowService;
 import com.geulkkoli.domain.social.SocialInfoService;
 import com.geulkkoli.web.mypage.dto.ConnectedSocialInfos;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +18,7 @@ public class MyPageController {
 
     @Autowired
     private SocialInfoService socialInfoService;
+
 
     @GetMapping()
     public ModelAndView getMyPage(@AuthenticationPrincipal CustomAuthenticationPrinciple loginUser) {

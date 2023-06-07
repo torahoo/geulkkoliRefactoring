@@ -5,6 +5,7 @@ import com.geulkkoli.application.security.Role;
 import com.geulkkoli.application.security.RoleEntity;
 import com.geulkkoli.domain.admin.AccountLock;
 import com.geulkkoli.domain.admin.Report;
+import com.geulkkoli.domain.follow.Follow;
 import com.geulkkoli.domain.post.Post;
 import com.geulkkoli.domain.comment.Comments;
 import com.geulkkoli.domain.favorites.Favorites;
@@ -74,6 +75,9 @@ public class User {
     //좋아요의 유저 매핑
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Favorites> favorites = new LinkedHashSet<>();
+
+    @OneToMany(mappedBy = "followee", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<Follow> followees = new LinkedHashSet<>();
 
     @Builder
     public User(String userName, String password, String nickName, String email, String phoneNo, String gender) {
@@ -264,6 +268,25 @@ public class User {
         RoleEntity roleEntity = RoleEntity.of(role, this);
         this.role = roleEntity;
         return roleEntity;
+    }
+
+    public Follow follow(User followee) {
+        Follow follow = Follow.of(followee, this);
+        this.followees.add(follow);
+        return follow;
+    }
+
+    public Follow unfollow(User followee) {
+        Follow follow = findFollow(followee);
+        this.followees.remove(follow);
+        return follow;
+    }
+
+    private Follow findFollow(User followee) {
+        return this.followees.stream()
+                .filter(follow -> follow.getFollowee().equals(followee))
+                .findFirst()
+                .orElseThrow(() -> new NoSuchFollowException("해당 팔로우가 없습니다."));
     }
 
     public RoleEntity getRole() {

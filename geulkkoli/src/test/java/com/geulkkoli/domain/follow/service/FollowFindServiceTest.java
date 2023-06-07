@@ -1,6 +1,6 @@
 package com.geulkkoli.domain.follow.service;
 
-import com.geulkkoli.domain.follow.FollowEntity;
+import com.geulkkoli.domain.follow.Follow;
 import com.geulkkoli.domain.follow.FollowRepository;
 import com.geulkkoli.domain.user.User;
 import org.junit.jupiter.api.BeforeEach;
@@ -60,9 +60,9 @@ class FollowFindServiceTest {
         ReflectionTestUtils.setField(user2, "userId", 2L);
         ReflectionTestUtils.setField(user3, "userId", 3L);
 
-        FollowEntity followEntity = FollowEntity.of(user, user2);
-        FollowEntity followEntity2 = FollowEntity.of(user, user3);
-        List<FollowEntity> followEntities = new ArrayList<>();
+        Follow followEntity = Follow.of(user, user2);
+        Follow followEntity2 = Follow.of(user, user3);
+        List<Follow> followEntities = new ArrayList<>();
         followEntities.add(followEntity);
         followEntities.add(followEntity2);
 
@@ -71,7 +71,7 @@ class FollowFindServiceTest {
         when(followFindService.findAllFollowerByFolloweeId(1L)).thenReturn(followEntities);
 
 
-        List<FollowEntity> allFollower = followFindService.findAllFollowerByFolloweeId(1L);
+        List<Follow> allFollower = followFindService.findAllFollowerByFolloweeId(1L);
 
         then(followRepository).should().findFollowEntitiesByFollowee_UserId(1L);
 
@@ -115,8 +115,8 @@ class FollowFindServiceTest {
         ReflectionTestUtils.setField(user2, "userId", 2L);
         ReflectionTestUtils.setField(user3, "userId", 3L);
 
-        FollowEntity followEntity = FollowEntity.of(user, user2);
-        FollowEntity followEntity2 = FollowEntity.of(user3, user2);
+        Follow followEntity = Follow.of(user, user2);
+        Follow followEntity2 = Follow.of(user3, user2);
 
         given(followRepository.findFollowEntitiesByFollower_UserId(user.getUserId()));
 

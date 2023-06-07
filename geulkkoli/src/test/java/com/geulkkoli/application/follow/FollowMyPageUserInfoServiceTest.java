@@ -1,6 +1,6 @@
 package com.geulkkoli.application.follow;
 
-import com.geulkkoli.domain.follow.FollowEntity;
+import com.geulkkoli.domain.follow.Follow;
 import com.geulkkoli.domain.follow.service.FollowFindService;
 import com.geulkkoli.domain.user.User;
 import org.junit.jupiter.api.BeforeEach;
@@ -61,10 +61,10 @@ class FollowMyPageUserInfoServiceTest {
         ReflectionTestUtils.setField(user2, "userId", 2L);
         ReflectionTestUtils.setField(user3, "userId", 3L);
 
-        FollowEntity followEntity = FollowEntity.of(user, user2);
-        FollowEntity followEntity2 = FollowEntity.of(user3, user2);
+        Follow followEntity = Follow.of(user, user2);
+        Follow followEntity2 = Follow.of(user3, user2);
 
-        List<FollowEntity> followEntities = List.of(followEntity, followEntity2);
+        List<Follow> followEntities = List.of(followEntity, followEntity2);
         given(followFindService.findAllFolloweeByFollowerId(user2.getUserId())).willReturn(followEntities);
         List<MyPageUserInfo> mypageUserInfos = new ArrayList<>();
         MyPageUserInfo myPageUserInfo = MyPageUserInfo.of(user.getNickName());

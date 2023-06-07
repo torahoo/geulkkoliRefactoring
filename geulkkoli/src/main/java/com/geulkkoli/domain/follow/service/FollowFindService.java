@@ -1,6 +1,6 @@
 package com.geulkkoli.domain.follow.service;
 
-import com.geulkkoli.domain.follow.FollowEntity;
+import com.geulkkoli.domain.follow.Follow;
 import com.geulkkoli.domain.follow.FollowRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,7 +16,7 @@ public class FollowFindService {
     }
 
     @Transactional(readOnly = true)
-    public List<FollowEntity> findAllFollowerByFolloweeId(Long followeeId) {
+    public List<Follow> findAllFollowerByFolloweeId(Long followeeId) {
         return followRepository.findFollowEntitiesByFollowee_UserId(followeeId);
     }
 
@@ -31,7 +31,7 @@ public class FollowFindService {
     }
 
     @Transactional(readOnly = true)
-    public List<FollowEntity> findAllFolloweeByFollowerId(Long followerId) {
+    public List<Follow> findAllFolloweeByFollowerId(Long followerId) {
         return followRepository.findFollowEntitiesByFollower_UserId(followerId);
     }
 

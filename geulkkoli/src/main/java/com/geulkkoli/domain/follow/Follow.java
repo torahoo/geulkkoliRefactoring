@@ -7,7 +7,7 @@ import java.util.Objects;
 
 @Table(name = "user_followings", uniqueConstraints = @UniqueConstraint(columnNames = {"followee_id", "follower_id"}))
 @Entity
-public class FollowEntity {
+public class Follow {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -19,17 +19,17 @@ public class FollowEntity {
     @ManyToOne
     private User follower;
 
-    public FollowEntity() {
+    public Follow() {
     }
 
 
-    private FollowEntity( User followee, User follower) {
+    private Follow(User followee, User follower) {
         this.followee = followee;
         this.follower = follower;
     }
 
-    public static FollowEntity of(User followee, User follower){
-        return new FollowEntity(followee, follower);
+    public static Follow of(User followee, User follower){
+        return new Follow(followee, follower);
     }
 
     public Long getId() {
@@ -51,8 +51,8 @@ public class FollowEntity {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof FollowEntity)) return false;
-        FollowEntity that = (FollowEntity) o;
+        if (!(o instanceof Follow)) return false;
+        Follow that = (Follow) o;
         return Objects.equals(id, that.id);
     }
 

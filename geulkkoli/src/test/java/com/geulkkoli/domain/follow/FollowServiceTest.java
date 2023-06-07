@@ -2,7 +2,6 @@ package com.geulkkoli.domain.follow;
 
 import com.geulkkoli.domain.follow.service.FollowService;
 import com.geulkkoli.domain.user.User;
-import com.geulkkoli.domain.user.service.UserService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -16,16 +15,13 @@ import static org.mockito.Mockito.when;
 
 class FollowServiceTest {
     private FollowRepository followRepository;
-    private UserService userService;
-
     private FollowService followService;
 
 
     @BeforeEach
     void setUp() {
         followRepository = Mockito.mock(FollowRepository.class);
-        userService = Mockito.mock(UserService.class);
-        followService = new FollowService(followRepository, userService);
+        followService = new FollowService(followRepository);
     }
 
     @Test
@@ -49,12 +45,10 @@ class FollowServiceTest {
         ReflectionTestUtils.setField(user, "userId", 1L);
         ReflectionTestUtils.setField(user2, "userId", 2L);
 
-        given(userService.findById(1L)).willReturn(user);
-        given(userService.findById(2L)).willReturn(user);
 
-        FollowEntity followEntity = FollowEntity.of(user, user2);
+        Follow followEntity = Follow.of(user, user2);
 
-        when(followService.follow(1L, 2L)).thenReturn(followEntity);
+        when(followService.follow(user, user2)).thenReturn(followEntity);
 
         assertAll(() -> {
             assertThat(followEntity.getFollowee()).isEqualTo(user);
@@ -84,7 +78,7 @@ class FollowServiceTest {
                 .build();
 
 
-        FollowEntity followEntity = FollowEntity.of(user, user2);
+        Follow followEntity = Follow.of(user, user2);
 
         given(followRepository.findByFollowee_UserIdAndFollower_UserId(1L, 2L)).willReturn(followEntity);
 

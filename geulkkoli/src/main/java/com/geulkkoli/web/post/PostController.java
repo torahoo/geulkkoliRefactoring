@@ -5,7 +5,7 @@ import com.geulkkoli.domain.favorites.FavoriteService;
 import com.geulkkoli.domain.comment.CommentsService;
 import com.geulkkoli.domain.post.service.PostService;
 import com.geulkkoli.domain.user.User;
-import com.geulkkoli.domain.user.service.UserService;
+import com.geulkkoli.domain.user.service.UserFindService;
 import com.geulkkoli.web.comment.dto.CommentBodyDTO;
 import com.geulkkoli.web.post.dto.*;
 import lombok.RequiredArgsConstructor;
@@ -26,6 +26,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.util.Objects;
 
 @Slf4j
 @Controller
@@ -34,7 +35,7 @@ import java.net.URLEncoder;
 public class PostController {
 
     private final PostService postService;
-    private final UserService userService;
+    private final UserFindService userFindService;
     private final CommentsService commentsService;
     private final FavoriteService favoriteService;
 
@@ -74,7 +75,7 @@ public class PostController {
         if (bindingResult.hasErrors()) {
             return "/post/postAddForm";
         }
-        User user = userService.findById(post.getAuthorId());
+        User user = userFindService.findById(post.getAuthorId());
         long postId = postService.savePost(post, user).getPostId();
         redirectAttributes.addAttribute("postId",postId);
         response.addCookie(new Cookie(URLEncoder.encode(post.getNickName(), "UTF-8"), "done"));
@@ -83,20 +84,17 @@ public class PostController {
 
     //게시글 읽기 Page로 이동
     @GetMapping("/read/{postId}")
-    public String postRead(Model model, @PathVariable Long postId, HttpServletRequest request,
+    public String readPost(Model model, @PathVariable Long postId, HttpServletRequest request,
                            @RequestParam(defaultValue = "") String searchType,
                            @RequestParam(defaultValue = "") String searchWords,
-                           @AuthenticationPrincipal CustomAuthenticationPrinciple user) {
+                           @AuthenticationPrincipal CustomAuthenticationPrinciple loginUser) {
         PageDTO postPage = PageDTO.toDTO(postService.showDetailPost(postId));
-        User authorUser = userService.findById(postPage.getAuthorId());
+        User authorUser = userFindService.findById(postPage.getAuthorId());
         request.getSession().setAttribute("pageNumber", request.getParameter("page"));
 
         String checkFavorite = "never clicked";
-        try {
-            if(userService.findById(Long.parseLong(user.getUserId()))==null){
-                log.info("해당 UserId로 회원을 찾을 수 없음");
-            }
-        } catch (NullPointerException e) {
+
+        if (Objects.isNull(loginUser)){
             log.info("로그인을 안한 사용자 접속");
             model.addAttribute("post", postPage);
             model.addAttribute("authorUser", authorUser);
@@ -104,8 +102,9 @@ public class PostController {
             searchDefault(model, searchType, searchWords);
             return "/post/postPage";
         }
-        User loginUser = userService.findById(Long.parseLong(user.getUserId()));
-        if(favoriteService.favoriteCheck(postService.findById(postId), loginUser).isEmpty()){
+
+        User user = userFindService.findById(Long.parseLong(loginUser.getUserId()));
+        if(favoriteService.favoriteCheck(postService.findById(postId), user).isEmpty()){
             checkFavorite = "none";
         } else {
             checkFavorite = "exist";
@@ -116,7 +115,7 @@ public class PostController {
         model.addAttribute("commentList", postPage.getCommentList());
         model.addAttribute("authorUser", authorUser);
         model.addAttribute("checkFavorite", checkFavorite);
-        model.addAttribute("loginUserId", user.getUserId());
+        model.addAttribute("loginUserId", loginUser.getUserId());
         model.addAttribute("comments", new CommentBodyDTO());
         searchDefault(model, searchType, searchWords);
         return "/post/postPage";
@@ -124,9 +123,9 @@ public class PostController {
 
     //게시글 수정 html로 이동
     @GetMapping("/update/{postId}")
-    public String postUpdateForm(Model model, @PathVariable Long postId,
-                                 @RequestParam(defaultValue = "") String searchType,
-                                 @RequestParam(defaultValue = "") String searchWords) {
+    public String movePostEditForm(Model model, @PathVariable Long postId,
+                                   @RequestParam(defaultValue = "") String searchType,
+                                   @RequestParam(defaultValue = "") String searchWords) {
         EditDTO postPage = EditDTO.toDTO(postService.findById(postId));
         model.addAttribute("editDTO", postPage);
         searchDefault(model, searchType, searchWords);
@@ -135,10 +134,10 @@ public class PostController {
 
     //게시글 수정
     @PostMapping("/update/{postId}")
-    public String updatePost(@Validated @ModelAttribute EditDTO updateParam, BindingResult bindingResult,
-                             @PathVariable Long postId, RedirectAttributes redirectAttributes, HttpServletRequest request,
-                             @RequestParam(defaultValue = "") String searchType,
-                             @RequestParam(defaultValue = "") String searchWords) {
+    public String editPost(@Validated @ModelAttribute EditDTO updateParam, BindingResult bindingResult,
+                           @PathVariable Long postId, RedirectAttributes redirectAttributes, HttpServletRequest request,
+                           @RequestParam(defaultValue = "") String searchType,
+                           @RequestParam(defaultValue = "") String searchWords) {
         if (bindingResult.hasErrors()) {
             return "/post/postEditForm";
         }
