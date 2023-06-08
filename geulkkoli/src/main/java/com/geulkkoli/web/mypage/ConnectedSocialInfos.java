@@ -1,4 +1,4 @@
-package com.geulkkoli.web.myPage;
+package com.geulkkoli.web.mypage;
 
 import com.geulkkoli.application.social.util.SocialType;
 import com.geulkkoli.application.social.util.SocialTypeException;
@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class ConnectedSocialInfos {
+
     private List<ConnectSocialInfo> connectedSocialInfos;
 
 

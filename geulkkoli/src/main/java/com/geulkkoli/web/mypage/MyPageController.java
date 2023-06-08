@@ -1,4 +1,4 @@
-package com.geulkkoli.web.myPage;
+package com.geulkkoli.web.mypage;
 
 import com.geulkkoli.application.user.CustomAuthenticationPrinciple;
 import com.geulkkoli.application.user.service.PasswordService;
@@ -10,6 +10,7 @@ import com.geulkkoli.web.myPage.dto.MyPageFormDto;
 import com.geulkkoli.web.myPage.dto.calendar.CalendarDto;
 import com.geulkkoli.web.myPage.dto.edit.PasswordEditFormDto;
 import com.geulkkoli.web.myPage.dto.edit.UserInfoEditFormDto;
+import com.geulkkoli.web.mypage.ConnectedSocialInfos;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -32,7 +33,7 @@ import java.util.List;
 @Slf4j
 public class MyPageController {
 
-    public static final String MY_PAGE_FORM = "mypage";
+    public static final String MY_PAGE_FORM = "mypage/mypage";
     public static final String EDIT_USER_INFO_FORM = "mypage/edit/userInfoEditForm";
     public static final String EDIT_PASSWORD_FORM = "mypage/edit/passwordEditForm";
     public static final String REDIRECT_EDIT_USER_INFO = "redirect:/myPage/editUserInfo";
