@@ -1,6 +1,5 @@
 package com.geulkkoli.web.myPage.dto.edit;
 
-import lombok.Builder;
 import lombok.Getter;
 import lombok.ToString;
 import org.hibernate.validator.constraints.Length;
@@ -35,7 +34,7 @@ public class UserInfoEditFormDto {
         this.gender = gender;
     }
 
-    public static UserInfoEditFormDto from(String userName, String nickName, String phoneNo, String gender) {
-      return new UserInfoEditDto(userName, nickName, phoneNo, gender);
+    public static UserInfoEditFormDto form(String userName, String nickName, String phoneNo, String gender) {
+      return new UserInfoEditFormDto(userName, nickName, phoneNo, gender);
     }
 }

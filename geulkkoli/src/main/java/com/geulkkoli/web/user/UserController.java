@@ -1,8 +1,7 @@
 package com.geulkkoli.web.user;
 
-import com.geulkkoli.application.user.CustomAuthenticationPrinciple;
-import com.geulkkoli.application.user.EmailService;
-import com.geulkkoli.application.user.PasswordService;
+import com.geulkkoli.application.email.EmailService;
+import com.geulkkoli.application.user.service.PasswordService;
 import com.geulkkoli.domain.user.User;
 import com.geulkkoli.domain.user.service.UserService;
 import com.geulkkoli.web.user.dto.EmailCheckForJoinDto;

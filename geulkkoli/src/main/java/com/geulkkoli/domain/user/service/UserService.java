@@ -3,18 +3,18 @@ package com.geulkkoli.domain.user.service;
 import com.geulkkoli.application.security.Role;
 import com.geulkkoli.application.security.RoleEntity;
 import com.geulkkoli.application.security.RoleRepository;
-import com.geulkkoli.application.user.PasswordService;
+import com.geulkkoli.application.user.service.PasswordService;
 import com.geulkkoli.domain.user.User;
 import com.geulkkoli.domain.user.UserRepository;
 import com.geulkkoli.web.myPage.dto.edit.UserInfoEditFormDto;
 import com.geulkkoli.web.social.SocialSignUpDto;
 import com.geulkkoli.web.user.dto.JoinFormDto;
-import com.geulkkoli.web.user.dto.edit.UserInfoEditDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
@@ -44,8 +44,7 @@ public class UserService {
     @Transactional(readOnly = true)
     public void edit(Long id, UserInfoEditFormDto userInfoEditFormDto) {
         userRepository.edit(id, userInfoEditFormDto);
-
-
+    }
 
     @Transactional
     public User signUp(JoinFormDto form) {
@@ -55,6 +54,24 @@ public class UserService {
         return user;
     }
 
+    @Transactional
+    public User signUp(JoinFormDto form, LocalDate localDate) {
+        User user = form.toEntity(PasswordService.passwordEncoder);
+        user.setCreatedAtForCalendarTest(localDate);
+        userRepository.save(user);
+
+        RoleEntity roleEntity = user.Role(Role.USER);
+        roleRepository.save(roleEntity);
+        return user;
+    }
+
+    @Transactional
+    public User signUp(SocialSignUpDto signUpDto) {
+        User user = userRepository.save(signUpDto.toEntity(PasswordService.passwordEncoder));
+        RoleEntity roleEntity = user.Role(Role.USER);
+        roleRepository.save(roleEntity);
+        return user;
+    }
 
     /*
      * 관리자 실험을 위한 임시 관리자 계정 추가용 메서드*/
@@ -92,17 +109,4 @@ public class UserService {
         return userRepository.findByEmailAndUserNameAndPhoneNo(email, userName, phoneNo);
     }
 
-    @Transactional(readOnly = true)
-    public User findByNickName(String nickName) {
-        return userRepository.findByNickName(nickName)
-                .orElseThrow(() -> new NoSuchElementException("No user found nickname matches:" + nickName));
-    }
-
-    @Transactional
-    public User signUp(SocialSignUpDto signUpDto) {
-        User user = userRepository.save(signUpDto.toEntity(PasswordService.passwordEncoder));
-        RoleEntity roleEntity = user.Role(Role.USER);
-        roleRepository.save(roleEntity);
-        return user;
-    }
 }

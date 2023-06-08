@@ -1,6 +1,5 @@
 package com.geulkkoli;
 
-import com.geulkkoli.application.user.UserSecurityService;
 import com.geulkkoli.domain.admin.Report;
 import com.geulkkoli.domain.admin.ReportRepository;
 import com.geulkkoli.domain.admin.service.AdminServiceImpl;
@@ -58,15 +57,6 @@ public class TestDataInit {
         User user = userService.signUp(joinForm);
 
 
-//        JoinFormDto joinForm1 = new JoinFormDto();
-//        joinForm1.setEmail("kimpjh1@naver.com");
-//        joinForm1.setUserName("김");
-//        joinForm1.setNickName("바나나121");
-//        joinForm1.setPhoneNo("9290232333");
-//        joinForm1.setGender("male");
-//        joinForm1.setPassword("123");
-//        userService.signUp(joinForm1);
-
         JoinFormDto joinForm2 = new JoinFormDto();
         joinForm2.setEmail("test01@naver.com");
         joinForm2.setUserName("테스트유저");
@@ -83,7 +73,7 @@ public class TestDataInit {
         joinForm3.setPhoneNo("01099995555");
         joinForm3.setGender("female");
         joinForm3.setPassword("123");
-        userSecurityService.join(joinForm3);
+        userService.signUp(joinForm3);
 
         joinForm.setEmail("admin");
         joinForm.setUserName("타코다치");
@@ -101,10 +91,9 @@ public class TestDataInit {
         joinForm4.setGender("female");
         joinForm4.setPassword("123");
         LocalDate signUpDate = LocalDate.of(2022, 1, 1);
-        User user4 = userSecurityService.join(joinForm4, signUpDate);
+        User user4 = userService.signUp(joinForm4, signUpDate);
 
         User user01 = userService.findById(1L);
-
         for (int i = 0; i < 4; ++i) {
 
             AddDTO addDTO = AddDTO.builder()
@@ -173,9 +162,6 @@ public class TestDataInit {
         reportRepository.save(report1);
         reportRepository.save(report2);
 
-
-//        Follow follow1 = user.writeFollow(followRepository.findBySelectUserId(1L).get().getFolloweeId());
-//        followRepository.save(follow1);
     }
 
 

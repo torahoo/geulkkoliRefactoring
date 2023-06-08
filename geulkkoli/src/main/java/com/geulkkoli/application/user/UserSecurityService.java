@@ -1,9 +1,10 @@
 package com.geulkkoli.application.user;
 
-import com.geulkkoli.application.security.*;
+import com.geulkkoli.application.security.AccountStatus;
+import com.geulkkoli.application.security.Role;
+import com.geulkkoli.application.security.RoleException;
 import com.geulkkoli.domain.user.User;
 import com.geulkkoli.domain.user.UserRepository;
-import com.geulkkoli.web.user.dto.JoinFormDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.GrantedAuthority;
@@ -14,7 +15,6 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -61,25 +61,6 @@ public class UserSecurityService implements UserDetailsService {
         } else {
             authorities.add(new SimpleGrantedAuthority(Role.USER.getRoleName()));
         }
-    }
-
-    public User join(JoinFormDto form) {
-        User user = form.toEntity(passwordService.passwordEncoder);
-
-        RoleEntity roleEntity = user.hasRole(Role.USER);
-        roleRepository.save(roleEntity);
-        userRepository.save(user);
-        return user;
-    }
-
-    public User join(JoinFormDto form, LocalDate localDate) {
-        User user = form.toEntity(passwordService.passwordEncoder);
-        user.setCreatedAtForCalendarTest(localDate);
-
-        RoleEntity roleEntity = user.hasRole(Role.USER);
-        roleRepository.save(roleEntity);
-        userRepository.save(user);
-        return user;
     }
 
 }

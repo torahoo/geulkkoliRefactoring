@@ -107,7 +107,12 @@ public class User extends ConfigDate {
 
     //달력 잔디 심기용 각 다른 날짜의 게시물들 필요
     public Post writePost(AddDTO addDTO, LocalDateTime localDateTime) {
-        Post post = new Post(addDTO, this);
+        Post post = Post.builder()
+                .title(addDTO.getTitle())
+                .postBody(addDTO.getPostBody())
+                .user(this)
+                .nickName(addDTO.getNickName())
+                .build();
         post.setCreatedAtForCalendarTest(localDateTime);
         this.posts.add(post);
         return post;

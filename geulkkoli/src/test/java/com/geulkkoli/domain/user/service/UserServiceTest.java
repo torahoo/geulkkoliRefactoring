@@ -59,7 +59,7 @@ class UserServiceTest {
     @DisplayName("회원정보 수정 성공")
     void updateTest() {
         //given
-        UserInfoEditFormDto preupdateUser = UserInfoEditFormDto.from("김2","바나나155","01055554646","female");
+        UserInfoEditFormDto preupdateUser = UserInfoEditFormDto.form("김2","바나나155","01055554646","female");
 
         //when
         userService.edit(saveUser.getUserId(), preupdateUser);

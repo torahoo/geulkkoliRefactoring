@@ -77,18 +77,19 @@
   <div class="mb-3">
     <h4>성별</h4>
     <div class="form-check form-check-inline">
-      <input type="radio" name="gender" id="male" value="male" checked>
+      <input type="radio" name="gender" id="male" value="male" th:checked="${userInfoEditForm.getGender() == 'male'}">
       <label for="male">남자</label>
     </div>
     <div class="form-check form-check-inline">
-      <input type="radio" name="gender" id="female" value="female">
+      <input type="radio" name="gender" id="female" value="female" th:checked="${userInfoEditForm.getGender() == 'female'}">
       <label for="female">여자</label>
     </div>
     <div class="form-check form-check-inline">
-      <input type="radio" name="gender" id="non" value="non">
+      <input type="radio" name="gender" id="non" value="non" th:checked="${userInfoEditForm.getGender() == 'non'}">
       <label for="non">밝히고 싶지 않음</label>
     </div>
   </div>
+
 
   <br>
   <br>
@@ -99,7 +100,9 @@
   </div>
 
 </form>
+
 <div id="footer" th:include="footer"></div>
+
 </body>
 
 </html>
