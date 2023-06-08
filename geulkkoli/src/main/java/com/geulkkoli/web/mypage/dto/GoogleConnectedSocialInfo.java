@@ -1,6 +1,8 @@
-package com.geulkkoli.web.mypage;
+package com.geulkkoli.web.mypage.dto;
 
-public class GoogleConnectedSocialInfo implements ConnectSocialInfo{
+import com.geulkkoli.web.mypage.dto.ConnectSocialInfo;
+
+public class GoogleConnectedSocialInfo implements ConnectSocialInfo {
     private String socialType;
     private Boolean connected;
 

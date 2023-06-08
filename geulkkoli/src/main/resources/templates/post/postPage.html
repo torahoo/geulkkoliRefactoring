@@ -39,8 +39,18 @@
         <div class="lh-100"
              style="padding: 10px; margin: 10px;">
             <h6 class="mb-0 lh-100" th:text="${authorUser.nickName}"></h6>
-            <small th:text="${authorUser.email}"></small>
+            <small id="email" th:text="${authorUser.email}"></small>
         </div>
+        <div sec:authorize="hasRole('USER')" th:if="${!followResult.isMine()}" class="lh-100"
+             style="padding: 10px; margin: 10px;">
+            <button id="btn-follow" th:unless="${followResult.isFollow()}" class="w-100 btn btn-primary"
+                    type="button">구독
+            </button>
+            <button id="btn-unfollow" th:if="${followResult.isFollow()}" class="w-100 btn btn-primary"
+                    type="button">구독 취소
+            </button>
+        </div>
+
         <div class="lh-100"
              style="padding: 10px; margin: 10px;">
             <h6 th:text="${post.getDate()}">날짜</h6>
@@ -166,14 +176,22 @@
 
 <script th:inline="javascript">
 
-    const validName = [[${#authentication.principal != null ? #authentication.principal.nickName : null}]];
-    const postId = [[${post.postId}]]
+    let user = [[${#authentication.principal}]];
+    let validName = '';
+    if (Object.is(user) === null) {
+        validName = user.nickName;
+    }
+
+    const postId = [[${post.postId}]];
 
     function deletePost() {
-        const deleteTitle = '[[${post.title}]]';
+
+        const deleteTitle = [[${post.title}]];
         const postId = [[${post.postId}]];
         const userNickName = validName;
         const compareTitle = document.getElementById("post-Compare").value;
+        console.log(compareTitle);
+        console.log(deleteTitle)
         let params = {
             postId: postId,
             userNickName: userNickName
@@ -256,6 +274,6 @@
 </script>
 <a href="https://www.flaticon.com/kr/free-icons/" title="처럼 아이콘">처럼 아이콘 제작자: Karacis - Flaticon</a>
 <script type="text/javascript" src="/js/comment.js"></script>
-
+<script type="text/javascript" src="/js/follow.js"></script>
 </body>
 </html>

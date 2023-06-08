@@ -1,4 +1,4 @@
-package com.geulkkoli.web.mypage;
+package com.geulkkoli.web.mypage.dto;
 
 import com.geulkkoli.application.social.util.SocialType;
 import com.geulkkoli.application.social.util.SocialTypeException;
