@@ -22,6 +22,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import javax.websocket.server.PathParam;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -135,11 +136,11 @@ public class MyPageController {
      * 서비스에서 쓰는 객체의 이름은 User인데 memberDelete라는 이름으로 되어 있어서 통일성을 위해 이름을 고친다.
      * 또한 사용자 입장에서는 자신의 정보를 삭제하는 게 아니라 탈퇴하는 서비스를 쓰고 있으므로 uri를 의미에 더 가깝게 고쳤다.
      */
-    @DeleteMapping("/unsubscribe/{email}")
-    public String unsubscribe(@PathVariable("email") String email) {
+    @DeleteMapping("unsubscribe/{userId}")
+    public String unsubscribe(@PathParam("userId") Long userId, @AuthenticationPrincipal CustomAuthenticationPrinciple authUser) {
         try {
-            User user = userService.findByEmail(email).get();
-            userService.delete(user);
+            User findUser = userService.findById(userId);
+            userService.delete(findUser);
         } catch (Exception e) {
             //만약 findUser가 null이라면? 다른 에러페이지를 보여줘야하지 않을까?
             return REDIRECT_INDEX;
