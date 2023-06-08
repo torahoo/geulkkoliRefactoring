@@ -10,7 +10,6 @@ import org.springframework.security.oauth2.core.user.OAuth2User;
 import java.util.Collection;
 import java.util.Map;
 import java.util.Objects;
-
 @Getter
 public class CustomAuthenticationPrinciple implements UserDetails, OAuth2User {
     private final String userId; // 권한을 부여한 서버의 아이디
@@ -121,8 +120,13 @@ public class CustomAuthenticationPrinciple implements UserDetails, OAuth2User {
 
     @Override
     public String getUsername() {
-        return this.userName;
+        return userName;
     }
+
+    public String getUserName() {
+        return userName;
+    }
+
 
 
     public String getNickName() {

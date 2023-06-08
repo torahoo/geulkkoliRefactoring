@@ -3,11 +3,13 @@ package com.geulkkoli.web.post;
 import com.geulkkoli.application.user.CustomAuthenticationPrinciple;
 import com.geulkkoli.domain.favorites.FavoriteService;
 import com.geulkkoli.domain.comment.CommentsService;
+import com.geulkkoli.domain.follow.Follow;
 import com.geulkkoli.domain.follow.service.FollowFindService;
 import com.geulkkoli.domain.post.service.PostService;
 import com.geulkkoli.domain.user.User;
 import com.geulkkoli.domain.user.service.UserFindService;
 import com.geulkkoli.web.comment.dto.CommentBodyDTO;
+import com.geulkkoli.web.follow.FollowResult;
 import com.geulkkoli.web.post.dto.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -27,7 +29,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Controller
@@ -107,14 +111,19 @@ public class PostController {
         }
 
         User loggingUser = userFindService.findById(Long.parseLong(authUser.getUserId()));
-
         if (favoriteService.checkFavorite(postService.findById(postId), loggingUser).isEmpty()) {
             checkFavorite = "none";
         } else {
             checkFavorite = "exist";
         }
+        boolean mine = loggingUser.getUserId().equals(authorUser.getUserId());
+        Boolean follow = followFindService.checkFollow(loggingUser, authorUser);
+        FollowResult followResult =  new FollowResult(mine, follow);
+
+        log.info("followResult={}", followResult.isFollow());
+        log.info("mine={}", followResult.isMine());
         log.info("checkFavorite={}", checkFavorite);
-        model.addAttribute("followResult", followFindService.checkFollow(loggingUser, authorUser));
+        model.addAttribute("followResult", followResult);
         model.addAttribute("post", postPage);
         model.addAttribute("commentList", postPage.getCommentList());
         model.addAttribute("authorUser", authorUser);

@@ -282,6 +282,11 @@ public class User {
         return follow;
     }
 
+    public Follow unfollow(Follow follow) {
+        this.followees.remove(follow);
+        return follow;
+    }
+
     private Follow findFollow(User followee) {
         return this.followees.stream()
                 .filter(follow -> follow.isFollowee(followee))
