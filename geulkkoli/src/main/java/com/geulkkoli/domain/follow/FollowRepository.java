@@ -8,15 +8,15 @@ import java.util.List;
 @Repository
 public interface FollowRepository extends JpaRepository<Follow, Long> {
 
-    Integer countByFollowee_UserId(Long followeeId);
+    Integer countByFolloweeUserId(Long followeeId);
 
-    Integer countByFollower_UserId(Long followerId);
+    Integer countByFollowerUserId(Long followerId);
 
-    List<Follow> findFollowEntitiesByFollowee_UserId(Long followeeId);
+    List<Follow> findFollowEntitiesByFolloweeUserId(Long followeeId);
 
-    List<Follow> findFollowEntitiesByFollower_UserId(Long followerId);
+    List<Follow> findFollowEntitiesByFollowerUserId(Long followerId);
 
-    Follow findByFollowee_UserIdAndFollower_UserId(Long followeeId, Long followerId);
+    Follow findByFolloweeUserIdAndFollowerUserId(Long followeeId, Long followerId);
 
-    Boolean existsByFollowee_UserIdAndFollower_UserId(Long followeeId, Long followerId);
+    Boolean existsByFolloweeUserIdAndFollowerUserId(Long followeeId, Long followerId);
 }

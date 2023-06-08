@@ -24,10 +24,9 @@ public class CommentsService {
     }
 
     // 댓글 달기
-    public Long writeComment(CommentBodyDTO commentBody, Post post, User user) {
+    public Comments writeComment(CommentBodyDTO commentBody, Post post, User user) {
         Comments comments = user.writeComment(commentBody, post);
-        commentsRepository.save(comments);
-        return comments.getCommentId();
+        return commentsRepository.save(comments);
     }
 
     // 댓글 볼러오기

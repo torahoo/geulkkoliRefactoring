@@ -19,7 +19,7 @@ public class FollowFindService {
 
 
     public List<Follow> findAllFollowerByFolloweeId(Long followeeId) {
-        return followRepository.findFollowEntitiesByFollowee_UserId(followeeId);
+        return followRepository.findFollowEntitiesByFolloweeUserId(followeeId);
     }
 
     public Integer countFollowerByFolloweeId(Long followeeId) {
@@ -27,14 +27,14 @@ public class FollowFindService {
     }
 
     public Integer countFolloweeByFollowerId(Long followerId) {
-        return followRepository.countByFollower_UserId(followerId);
+        return followRepository.countByFollowerUserId(followerId);
     }
 
     public List<Follow> findAllFolloweeByFollowerId(Long followerId) {
-        return followRepository.findFollowEntitiesByFollower_UserId(followerId);
+        return followRepository.findFollowEntitiesByFollowerUserId(followerId);
     }
 
     public Boolean checkFollow(User loggingUser, User authorUser) {
-        return followRepository.existsByFollowee_UserIdAndFollower_UserId(authorUser.getUserId(), loggingUser.getUserId());
+        return followRepository.existsByFolloweeUserIdAndFollowerUserId(authorUser.getUserId(), loggingUser.getUserId());
     }
 }

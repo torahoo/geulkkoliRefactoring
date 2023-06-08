@@ -3,12 +3,9 @@ package com.geulkkoli.domain.follow.service;
 import com.geulkkoli.domain.follow.Follow;
 import com.geulkkoli.domain.follow.FollowRepository;
 import com.geulkkoli.domain.user.User;
-import com.geulkkoli.domain.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
 
 @Service
 @Transactional
@@ -26,7 +23,7 @@ public class FollowService {
     }
 
     public Follow unfollow(User followee, User follower) {
-        Follow follow = followRepository.findByFollowee_UserIdAndFollower_UserId(followee.getUserId(), follower.getUserId());
+        Follow follow = followRepository.findByFolloweeUserIdAndFollowerUserId(followee.getUserId(), follower.getUserId());
         Follow unFollowResult = follower.unfollow(follow);
         followRepository.delete(unFollowResult);
         return unFollowResult;
@@ -34,7 +31,7 @@ public class FollowService {
 
     public void deleteByFolloweeIdAndFollowerId(Long followeeId, Long followerId) {
         try {
-            Follow followEntity = followRepository.findByFollowee_UserIdAndFollower_UserId(followeeId, followerId);
+            Follow followEntity = followRepository.findByFolloweeUserIdAndFollowerUserId(followeeId, followerId);
             followRepository.delete(followEntity);
         } catch (Exception e) {
             throw new IllegalArgumentException("존재하지 않는 팔로우입니다.");

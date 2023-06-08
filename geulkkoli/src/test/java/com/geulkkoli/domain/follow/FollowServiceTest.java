@@ -80,7 +80,7 @@ class FollowServiceTest {
 
         Follow followEntity = Follow.of(user, user2);
 
-        given(followRepository.findByFollowee_UserIdAndFollower_UserId(1L, 2L)).willReturn(followEntity);
+        given(followRepository.findByFolloweeUserIdAndFollowerUserId(1L, 2L)).willReturn(followEntity);
 
         followService.deleteByFolloweeIdAndFollowerId(1L, 2L);
 
