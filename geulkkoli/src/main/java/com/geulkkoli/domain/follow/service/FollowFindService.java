@@ -23,7 +23,7 @@ public class FollowFindService {
     }
 
     public Integer countFollowerByFolloweeId(Long followeeId) {
-        return followRepository.countByFollowee_UserId(followeeId);
+        return followRepository.countByFolloweeUserId(followeeId);
     }
 
     public Integer countFolloweeByFollowerId(Long followerId) {

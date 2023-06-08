@@ -117,12 +117,20 @@ class FollowFindServiceTest {
 
         Follow followEntity = Follow.of(user, user2);
         Follow followEntity2 = Follow.of(user3, user2);
+        List<Follow> followEntities = new ArrayList<>();
+        followEntities.add(followEntity);
+        followEntities.add(followEntity2);
+        given(followRepository.findFollowEntitiesByFollowerUserId(user2.getUserId())).willReturn(followEntities);
 
-        given(followRepository.findFollowEntitiesByFollowerUserId(user.getUserId()));
+        when(followFindService.findAllFollowerByFolloweeId(user2.getUserId())).thenReturn(followEntities);
 
-        when(followFindService.findAllFolloweeByFollowerId(user.getUserId()));
+        List<Follow> allFollowerByFolloweeId = followFindService.findAllFollowerByFolloweeId(user2.getUserId());
 
-        followFindService.findAllFollowerByFolloweeId(user.getUserId());
-
+        assertAll(() -> {
+            assertThat(allFollowerByFolloweeId.get(0).getFollowee().getNickName()).isEqualTo("nickName");
+            assertThat(allFollowerByFolloweeId.get(0).getFollower().getNickName()).isEqualTo("nickName2");
+            assertThat(allFollowerByFolloweeId.get(1).getFollowee().getNickName()).isEqualTo("nickName3");
+            assertThat(allFollowerByFolloweeId.get(1).getFollower().getNickName()).isEqualTo("nickName2");
+        });
     }
 }
