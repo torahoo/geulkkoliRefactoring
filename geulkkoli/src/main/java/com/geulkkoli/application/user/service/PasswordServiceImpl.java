@@ -10,7 +10,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.security.SecureRandom;
 
 @Service
-@Transactional
 @RequiredArgsConstructor
 public class PasswordServiceImpl implements PasswordService {
 

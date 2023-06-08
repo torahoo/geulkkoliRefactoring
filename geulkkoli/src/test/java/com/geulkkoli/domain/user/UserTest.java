@@ -21,16 +21,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
 
-@DataJpaTest
 class UserTest {
-
-
-    @Autowired
-    private PostRepository postRepository;
-    @Autowired
-    private ReportRepository reportRepository;
-    @Autowired
-    private UserRepository userRepository;
 
     @Test
     @DisplayName("계정 잠금 테스트")
@@ -104,19 +95,24 @@ class UserTest {
                 .title("title")
                 .postBody("content")
                 .build();
-        User user1 = userRepository.save(user);
-        Post save1 = postRepository.save(post);
-        Report report = user1.writeReport(save1, "reason");
-        Report save = reportRepository.save(report);
-        Report report1 = user1.deleteReport(save.getReportId());
-        reportRepository.delete(report1);
 
-        assertThat(user).has(new Condition<>(u -> !u.getReports().contains(report), "report가 삭제되었다"));
+        Post post1 = Post.builder()
+                .nickName("nickName1")
+                .title("title1")
+                .postBody("content1")
+                .build();
+
+        Report report = user.writeReport(post, "reason");
+        Report report1 = user.writeReport(post1, "reason1");
+
+        user.deleteReport(report1);
+
+        assertThat(user).has(new Condition<>(u -> !u.getReports().contains(report1), "report가 삭제되었다"));
     }
 
     @DisplayName("역할을 추가한다")
     @Test
-    void hasRole() {
+    void addRole() {
         User user = User.builder()
                 .email("email@gmail.com")
                 .userName("userName")
@@ -125,7 +121,7 @@ class UserTest {
                 .phoneNo("0102221111")
                 .gender("male")
                 .build();
-        RoleEntity roleEntity = user.hasRole(Role.USER);
+        RoleEntity roleEntity = user.Role(Role.USER);
 
         assertThat(roleEntity).isNotNull().has(new Condition<>(r -> r.getRole() == Role.USER, "USER 역할이 추가되었다")).has(new Condition<>(r -> r.getUsers().contains(user), "user가 추가되었다"));
     }
@@ -177,7 +173,6 @@ class UserTest {
                 .postBody("content")
                 .build();
         Post post = user.writePost(addDTO);
-        postRepository.save(post);
 
         EditDTO editDTO = EditDTO.builder()
                 .postId(1L)
@@ -185,7 +180,7 @@ class UserTest {
                 .postBody("content1")
                 .build();
 
-        Post post1 = user.editPost(1L, editDTO);
+        Post post1 = user.editPost(post, editDTO);
 
         assertAll(
                 () -> assertThat(post1).has(new Condition<>(p -> p.getTitle().equals("title1"), "title이 수정되었다")),
@@ -213,9 +208,8 @@ class UserTest {
                 .postBody("content")
                 .build();
         Post post = user.writePost(addDTO);
-        postRepository.save(post);
-        Post post1 = user.deletePost(1L);
-        postRepository.delete(post1);
+        Post post2 = user.writePost(addDTO);
+        Post post1 = user.deletePost(post);
 
         assertThat(user).has(new Condition<>(u -> !u.getPosts().contains(post1), "post가 삭제되었다"));
     }

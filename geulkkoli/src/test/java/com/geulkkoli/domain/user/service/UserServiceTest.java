@@ -59,14 +59,14 @@ class UserServiceTest {
     @DisplayName("회원정보 수정 성공")
     void updateTest() {
         //given
-        UserInfoEditFormDto preupdateUser = UserInfoEditFormDto.builder().userName("김2").nickName("바나나155").phoneNo("01055554646").gender("female").build();
+        UserInfoEditFormDto preupdateUser = UserInfoEditFormDto.from("김2","바나나155","01055554646","female");
 
         //when
         userService.edit(saveUser.getUserId(), preupdateUser);
         Optional<User> one = userRepository.findById(saveUser.getUserId());
 
         // then
-        assertThat("바나나155").isEqualTo(one.get().getNickName());
+        assertThat(one).get().extracting("userName", "nickName", "phoneNo", "gender").containsExactly("김2", "바나나155", "01055554646", "female");
     }
 
 }

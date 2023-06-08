@@ -98,7 +98,7 @@ class PostServiceTest {
 
         Post post= postService.savePost(new AddDTO(1L, "title", "body", "nick"), user1);
         EditDTO editDTO = new EditDTO(post.getPostId(),"title update", "body update", "nick update");
-        postService.updatePost(post.getPostId(), editDTO, user1);
+        postService.updatePost(post.getPostId(), editDTO);
 
         Post one = postService.findById(1L);
 
@@ -119,9 +119,9 @@ class PostServiceTest {
 
         userRepository.save(user1);
 
-        postService.savePost(new AddDTO(1L, "title", "body", "nick"), user1);
+        postService.savePost(new AddDTO(1L, "title", "body", user1.getNickName()), user1);
 
-        postService.deletePost(1L);
+        postService.deletePost(1L, user1.getNickName());
 
         String searchType = "";
         String searchWords = "";

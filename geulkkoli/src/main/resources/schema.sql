@@ -1,3 +1,4 @@
+drop table if exists social_info;
 drop table if exists report;
 drop table if exists user_followings;
 drop table if exists comments;
@@ -71,30 +72,34 @@ CREATE TABLE IF NOT EXISTS user_followings
 );
 
 
+create table if not exists roles
+(
+    role_id bigint primary key auto_increment,
+    role_name varchar(255) not null unique,
+    user_id bigint not null,
+    constraint fk_role_user foreign key (user_id) references users (user_id)
+);
+
 create table if not exists report
 (
     report_id bigint primary key auto_increment,
-    report_post_id bigint not null,
+    reported_post_id bigint not null,
     reporter_id bigint not null,
     reported_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    constraint fk_reported_post foreign key (report_post_id) references post (post_id),
-    constraint fk_reporter foreign key (reporter_id) references users (user_id)
+    reason varchar(100) not null,
+    constraint fk_reported_post foreign key (reported_post_id) references post (post_id),
+    constraint fk_reporter foreign key (reporter_id) references users (user_id),
+    constraint unique_report unique (reported_post_id, reporter_id)
 );
 
-create table if not exists permissions
+create table if not exists social_info
 (
-    permission_id bigint primary key auto_increment,
+    social_info_id bigint primary key auto_increment,
     user_id bigint not null,
-    role int not null,
-    is_enabled boolean not null,
-    is_account_non_expired boolean not null,
-    is_account_non_locked boolean not null,
-    is_credentials_non_expired boolean not null,
-    constraint fk_permission_user foreign key (user_id) references users (user_id)
+    social_id varchar(255) not null,
+    social_type varchar(255) not null,
+    social_connect_date TIMESTAMP Null,
+    is_connected boolean default true,
+    constraint fk_social_info_user foreign key (user_id) references users (user_id),
+    constraint unique_social_info unique (social_id, social_type)
 );
-
-
-
-
-
-

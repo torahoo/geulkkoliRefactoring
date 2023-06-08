@@ -1,8 +1,8 @@
 package com.geulkkoli.web.user;
 
-import com.geulkkoli.application.email.EmailService;
-import com.geulkkoli.application.security.UserSecurityService;
-import com.geulkkoli.application.user.service.PasswordService;
+import com.geulkkoli.application.user.CustomAuthenticationPrinciple;
+import com.geulkkoli.application.user.EmailService;
+import com.geulkkoli.application.user.PasswordService;
 import com.geulkkoli.domain.user.User;
 import com.geulkkoli.domain.user.service.UserService;
 import com.geulkkoli.web.user.dto.EmailCheckForJoinDto;
@@ -37,7 +37,6 @@ public class UserController {
     public static final String REDIRECT_INDEX = "redirect:/";
 
     private final UserService userService;
-    private final UserSecurityService userSecurityService;
     private final PasswordService passwordService;
     private final EmailService emailService;
 
@@ -152,10 +151,7 @@ public class UserController {
         }
 
         if (!bindingResult.hasErrors()) {
-            userSecurityService.join(form);
-
-            log.info("joinModel = {}", model);
-            log.info("joinForm = {}", form);
+            userService.signUp(form);
 
             return REDIRECT_INDEX;
         } else {
@@ -165,24 +161,22 @@ public class UserController {
 
     @PostMapping("/checkEmail")
     @ResponseBody
-    public String checkEmail(@RequestBody EmailCheckForJoinDto form, HttpServletRequest request) {
+    public ResponseMessage checkEmail(@RequestBody EmailCheckForJoinDto form, HttpServletRequest request) {
 
-        String responseMessage;
 
         if (form.getEmail().isEmpty()) {
-            responseMessage = "nullOrBlank";
-        } else if (userService.isEmailDuplicate(form.getEmail())) {
-            responseMessage = "emailDuplicated";
-        } else {
-            int length = 6;
-            String authenticationNumber = passwordService.authenticationNumber(length);
-            request.getSession().setAttribute("authenticationNumber", authenticationNumber);
-            emailService.sendAuthenticationNumberEmail(form.getEmail(), authenticationNumber);
-            log.info("email 발송");
-            responseMessage = "sendAuthenticationNumberEmail";
+            return ResponseMessage.NULL_OR_BLANK_EMAIL;
         }
+        if (userService.isEmailDuplicate(form.getEmail())) {
+            return ResponseMessage.EMAIL_DUPLICATION;
+        }
+        int length = 6;
+        String authenticationNumber = passwordService.authenticationNumber(length);
+        request.getSession().setAttribute("authenticationNumber", authenticationNumber);
+        emailService.sendAuthenticationNumberEmail(form.getEmail(), authenticationNumber);
+        log.info("email 발송");
 
-        return responseMessage;
+        return ResponseMessage.SEND_AUTHENTICATION_NUMBER_SUCCESS;
     }
 
     @PostMapping("/checkAuthenticationNumber")

@@ -5,10 +5,11 @@ import com.geulkkoli.application.security.Role;
 import com.geulkkoli.application.security.RoleEntity;
 import com.geulkkoli.domain.admin.AccountLock;
 import com.geulkkoli.domain.admin.Report;
-import com.geulkkoli.domain.follow.Follow;
 import com.geulkkoli.domain.post.Post;
 import com.geulkkoli.domain.comment.Comments;
 import com.geulkkoli.domain.favorites.Favorites;
+import com.geulkkoli.web.comment.dto.CommentBodyDTO;
+import com.geulkkoli.web.comment.dto.CommentEditDTO;
 import com.geulkkoli.web.post.dto.AddDTO;
 import com.geulkkoli.web.post.dto.EditDTO;
 import lombok.Builder;
@@ -41,7 +42,7 @@ public class User extends ConfigDate {
     @Column(name = "email", nullable = false, unique = true)
     private String email;
 
-    @Column(name = "phone_No", nullable = false, unique = true)
+    @Column(name = "phone_No", unique = true)
     private String phoneNo;
 
     @Column(nullable = false)
@@ -71,13 +72,8 @@ public class User extends ConfigDate {
     private Set<Comments> comments = new LinkedHashSet<>();
 
     //좋아요의 유저 매핑
-    @OneToMany(mappedBy = "user", orphanRemoval = true)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Favorites> favorites = new LinkedHashSet<>();
-
-    // 팔로우의 유저 매핑
-    @OneToMany(mappedBy = "followeeId", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<Follow> follows = new LinkedHashSet<>();
-
 
     @Builder
     public User(String userName, String password, String nickName, String email, String phoneNo, String gender) {
@@ -85,13 +81,6 @@ public class User extends ConfigDate {
         this.password = password;
         this.nickName = nickName;
         this.email = email;
-        this.phoneNo = phoneNo;
-        this.gender = gender;
-    }
-
-    public void updateUser(String userName, String nickName, String phoneNo, String gender) {
-        this.userName = userName;
-        this.nickName = nickName;
         this.phoneNo = phoneNo;
         this.gender = gender;
     }
@@ -105,7 +94,13 @@ public class User extends ConfigDate {
      */
     //유저가 쓴 게시글
     public Post writePost(AddDTO addDTO) {
-        Post post = new Post(addDTO, this);
+        Post post = Post.builder()
+                .title(addDTO.getTitle())
+                .postBody(addDTO.getPostBody())
+                .user(this)
+                .nickName(addDTO.getNickName())
+                .build();
+
         this.posts.add(post);
         return post;
     }
@@ -118,14 +113,12 @@ public class User extends ConfigDate {
         return post;
     }
 
-    //유저가 지운 게시글
-    public Post deletePost(Long postId) {
-        Post deltePost = findPost(postId);
-        posts.remove(deltePost);
-        return deltePost;
+    public Post deletePost(Post post) {
+        posts.remove(post);
+        return post;
     }
 
-    // 해당 유저가 쓴 특정 게시글 찾기
+    // 해당 유저가 쓴 게시글 찾기
     private Post findPost(Long postId) {
         return this.posts.stream()
                 .filter(post -> post.getPostId().equals(postId))
@@ -133,14 +126,7 @@ public class User extends ConfigDate {
                 .orElseThrow(() -> new NoSuchPostException("해당 게시글이 없습니다."));
     }
 
-//    // 해당 유저가 쓴 모든 게시글 찾기
-//    public Post findPost() {
-//        return this.posts.stream()
-//                .findFirst()
-//                .orElseThrow(() -> new NoSuchPostException("해당 게시글이 없습니다."));
-//    }
-
-    // 유저가 쓴 특정 게시글 수정하기
+    // 유저가 쓴 게시글 수정하기
     public Post editPost(Long postId, EditDTO editDTO) {
         Post post = this.posts.stream()
                 .filter(p -> p.getPostId().equals(postId))
@@ -152,12 +138,18 @@ public class User extends ConfigDate {
         return post;
     }
 
+    public Post editPost(Post post, EditDTO editDTO) {
+        post.changePostBody(editDTO.getPostBody());
+        post.changeTitle(editDTO.getTitle());
+        return post;
+    }
+
     /**
      * 댓글 관련 CRUD
      */
     //유저가 쓴 댓글
-    public Comments writeComment(Comments commentBody, Post post) {
-        Comments comment = new Comments(this, post, commentBody);
+    public Comments writeComment(CommentBodyDTO commentBody, Post post) {
+        Comments comment = new Comments(this, post, commentBody.getCommentBody());
         post.getComments().add(comment);
         this.comments.add(comment);
         return comment;
@@ -172,8 +164,8 @@ public class User extends ConfigDate {
     }
 
     // 유저가 쓴 댓글 수정하기
-    public Comments editComment(Long commentId, Comments editCommentBody) {
-        Comments comment = findComment(commentId);
+    public Comments editComment(CommentEditDTO editCommentBody) {
+        Comments comment = findComment(editCommentBody.getCommentId());
         comment.changeComments(editCommentBody.getCommentBody());
         return comment;
     }
@@ -229,6 +221,12 @@ public class User extends ConfigDate {
         return deletReport;
     }
 
+    public Report deleteReport(Report report) {
+        Report report1 = reports.stream().filter(r -> r.equals(report)).findFirst().orElseThrow(() -> new NoSuchReportException("해당 신고가 없습니다."));
+        reports.remove(report1);
+        return report1;
+    }
+
     private Report findReport(Long reportId) {
         return this.reports.stream()
                 .filter(report -> report.getReportId().equals(reportId))
@@ -270,7 +268,7 @@ public class User extends ConfigDate {
     }
 
 
-    public RoleEntity hasRole(Role role) {
+    public RoleEntity Role(Role role) {
         RoleEntity roleEntity = RoleEntity.of(role, this);
         this.role = roleEntity;
         return roleEntity;
@@ -280,24 +278,10 @@ public class User extends ConfigDate {
         return role;
     }
 
-    public Follow writeFollow(User user) {
-        Follow follow = Follow.of(user, this);
-        this.follows.add(follow);
-        return follow;
+    public String roleName() {
+        return role.getRole().getRoleName();
     }
 
-    public Follow deleteFollow(Long followingsId) {
-        Follow deletFollow = findFollow(followingsId);
-        follows.remove(deletFollow);
-        return deletFollow;
-    }
-
-    public Follow findFollow(Long followingsId) {
-        return this.follows.stream()
-                .filter(follow -> follow.getFollowingsId().equals(followingsId))
-                .findFirst()
-                .orElseThrow(() -> new NoSuchReportException("팔로워가 없어요."));
-    }
 
     @Override
     public boolean equals(Object o) {
@@ -311,6 +295,25 @@ public class User extends ConfigDate {
     public int hashCode() {
         return Objects.hash(userId);
     }
+
+    public Boolean isGuest() {
+        return role.isGuest();
+    }
+
+    public Boolean isAdmin() {
+        return role.isAdmin();
+    }
+
+
+    public Boolean isUser() {
+        return role.isUser();
+    }
+
+    public String authority() {
+        return role.authority();
+    }
+
+
 
 }
 

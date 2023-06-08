@@ -1,6 +1,7 @@
 package com.geulkkoli.application.email;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
@@ -9,10 +10,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 @RequiredArgsConstructor
 @Service
-@Transactional
 public class EmailService {  //자세한 작동 방식은 application.yml에서 확인 가능
-
-    private final JavaMailSender javaMailSender;
+    @Autowired
+    private  JavaMailSender javaMailSender;
 
     public void sendEmail(EmailDto form) {
         SimpleMailMessage message = new SimpleMailMessage(); // 파일 없이 텍스트만 전송할 때 사용

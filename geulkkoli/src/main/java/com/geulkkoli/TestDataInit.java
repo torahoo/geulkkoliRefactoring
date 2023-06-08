@@ -1,6 +1,6 @@
 package com.geulkkoli;
 
-import com.geulkkoli.application.security.UserSecurityService;
+import com.geulkkoli.application.user.UserSecurityService;
 import com.geulkkoli.domain.admin.Report;
 import com.geulkkoli.domain.admin.ReportRepository;
 import com.geulkkoli.domain.admin.service.AdminServiceImpl;
@@ -29,7 +29,6 @@ public class TestDataInit {
 
     private final PostRepository postRepository;
     private final ReportRepository reportRepository;
-    private final UserSecurityService userSecurityService;
     private final AdminServiceImpl adminServiceImpl;
     private final UserService userService;
 
@@ -56,8 +55,17 @@ public class TestDataInit {
         joinForm.setPhoneNo("9190232333");
         joinForm.setGender("male");
         joinForm.setPassword("qwe123!!!");
-        User user = userSecurityService.join(joinForm);
-        adminServiceImpl.rockUser(user.getUserId(), "비밀번호가 너무 길어요");
+        User user = userService.signUp(joinForm);
+
+
+//        JoinFormDto joinForm1 = new JoinFormDto();
+//        joinForm1.setEmail("kimpjh1@naver.com");
+//        joinForm1.setUserName("김");
+//        joinForm1.setNickName("바나나121");
+//        joinForm1.setPhoneNo("9290232333");
+//        joinForm1.setGender("male");
+//        joinForm1.setPassword("123");
+//        userService.signUp(joinForm1);
 
         JoinFormDto joinForm2 = new JoinFormDto();
         joinForm2.setEmail("test01@naver.com");
@@ -66,7 +74,7 @@ public class TestDataInit {
         joinForm2.setPhoneNo("01012345678");
         joinForm2.setGender("male");
         joinForm2.setPassword("123");
-        User user2 = userSecurityService.join(joinForm2);
+        userService.signUp(joinForm2);
 
         JoinFormDto joinForm3 = new JoinFormDto();
         joinForm3.setEmail("cheese@naver.com");
@@ -83,7 +91,7 @@ public class TestDataInit {
         joinForm.setPhoneNo("01033132232");
         joinForm.setGender("male");
         joinForm.setPassword("123");
-        userSecurityService.joinAdmin(joinForm);
+        userService.signUpAdmin(joinForm);
 
         JoinFormDto joinForm4 = new JoinFormDto();
         joinForm4.setEmail("calendar@naver.com");
@@ -118,17 +126,17 @@ public class TestDataInit {
             AddDTO addDTO2 = AddDTO.builder()
                     .title("testTitle02")
                     .postBody("test postbody 02")
-                    .nickName(user2.getNickName())
+                    .nickName(user01.getNickName())
                     .build();
-            Post post2 = user2.writePost(addDTO2);
+            Post post2 = user01.writePost(addDTO2);
             postRepository.save(post2);
 
             AddDTO addDTO3 = AddDTO.builder()
                     .title("testTitle03")
                     .postBody("test postbody 03")
-                    .nickName(user2.getNickName())
+                    .nickName(user01.getNickName())
                     .build();
-            Post post3 = user2.writePost(addDTO3);
+            Post post3 = user01.writePost(addDTO3);
             postRepository.save(post3);
         }
 

@@ -1,13 +1,13 @@
 package com.geulkkoli.web.post;
 
-import com.geulkkoli.application.user.AuthUser;
+import com.geulkkoli.application.user.CustomAuthenticationPrinciple;
+import com.geulkkoli.domain.favorites.FavoriteService;
+import com.geulkkoli.domain.comment.CommentsService;
 import com.geulkkoli.domain.post.service.PostService;
 import com.geulkkoli.domain.user.User;
 import com.geulkkoli.domain.user.service.UserService;
-import com.geulkkoli.web.post.dto.AddDTO;
-import com.geulkkoli.web.post.dto.EditDTO;
-import com.geulkkoli.web.post.dto.PageDTO;
-import com.geulkkoli.web.post.dto.PagingDTO;
+import com.geulkkoli.web.comment.dto.CommentBodyDTO;
+import com.geulkkoli.web.post.dto.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
@@ -35,15 +35,17 @@ public class PostController {
 
     private final PostService postService;
     private final UserService userService;
+    private final CommentsService commentsService;
+    private final FavoriteService favoriteService;
 
     /**
-     * @param pageable - get 파라미터 page, size, sort 캐치
-     * @return
      * @PageableDefault - get 파라미터가 없을 때 기본설정 변경(기본값: page=0, size=20)
      * page: 배열과 같이 0부터 시작한다. 즉, 0 = 1page
      * size: 한 페이지에 보여줄 게시물 수
      * sort: 정렬기준
      * direction: 정렬법
+     * @param pageable - get 파라미터 page, size, sort 캐치
+     * @return
      */
     // 게시판 리스트 html로 이동
     @GetMapping("/list")
@@ -84,12 +86,39 @@ public class PostController {
     @GetMapping("/read/{postId}")
     public String postRead(Model model, @PathVariable Long postId, HttpServletRequest request,
                            @RequestParam(defaultValue = "") String searchType,
-                           @RequestParam(defaultValue = "") String searchWords) {
+                           @RequestParam(defaultValue = "") String searchWords,
+                           @AuthenticationPrincipal CustomAuthenticationPrinciple user) {
         PageDTO postPage = PageDTO.toDTO(postService.showDetailPost(postId));
         User authorUser = userService.findById(postPage.getAuthorId());
         request.getSession().setAttribute("pageNumber", request.getParameter("page"));
+
+        String checkFavorite = "never clicked";
+        try {
+            if(userService.findById(Long.parseLong(user.getUserId()))==null){
+                log.info("해당 UserId로 회원을 찾을 수 없음");
+            }
+        } catch (NullPointerException e) {
+            log.info("로그인을 안한 사용자 접속");
+            model.addAttribute("post", postPage);
+            model.addAttribute("authorUser", authorUser);
+            model.addAttribute("checkFavorite", checkFavorite);
+            searchDefault(model, searchType, searchWords);
+            return "/post/postPage";
+        }
+        User loginUser = userService.findById(Long.parseLong(user.getUserId()));
+        if(favoriteService.favoriteCheck(postService.findById(postId), loginUser).isEmpty()){
+            checkFavorite = "none";
+        } else {
+            checkFavorite = "exist";
+        }
+        log.info("checkFavorite={}", checkFavorite);
+
         model.addAttribute("post", postPage);
+        model.addAttribute("commentList", postPage.getCommentList());
         model.addAttribute("authorUser", authorUser);
+        model.addAttribute("checkFavorite", checkFavorite);
+        model.addAttribute("loginUserId", user.getUserId());
+        model.addAttribute("comments", new CommentBodyDTO());
         searchDefault(model, searchType, searchWords);
         return "/post/postPage";
     }
@@ -107,15 +136,14 @@ public class PostController {
 
     //게시글 수정
     @PostMapping("/update/{postId}")
-    public String postUpdate(@Validated @ModelAttribute EditDTO updateParam, BindingResult bindingResult,
+    public String updatePost(@Validated @ModelAttribute EditDTO updateParam, BindingResult bindingResult,
                              @PathVariable Long postId, RedirectAttributes redirectAttributes, HttpServletRequest request,
                              @RequestParam(defaultValue = "") String searchType,
                              @RequestParam(defaultValue = "") String searchWords) {
         if (bindingResult.hasErrors()) {
             return "/post/postEditForm";
         }
-        User user = userService.findByNickName(updateParam.getNickName());
-        postService.updatePost(postId, updateParam, user);
+        postService.updatePost(postId, updateParam);
         redirectAttributes.addAttribute("updateStatus", true);
         redirectAttributes.addAttribute("page", request.getSession().getAttribute("pageNumber"));
 
@@ -130,16 +158,16 @@ public class PostController {
     }
 
     //게시글 삭제
-    @DeleteMapping("/delete/{postId}")
-    public String postDelete(@PathVariable Long postId) {
-        postService.deletePost(postId);
+    @DeleteMapping("/request")
+    public String deletePost(@RequestParam("postId") Long postId, @RequestParam("userNickName") String userNickName) {
+        postService.deletePost(postId, userNickName);
         return "redirect:/post/list";
     }
 
     //임시저장기능 (현재는 빈 값만 들어옴)
     @GetMapping("/savedone")
-    public void testBlanc(@AuthenticationPrincipal AuthUser authUser,
-                          HttpServletResponse response) {
+    public void testBlanc(@AuthenticationPrincipal CustomAuthenticationPrinciple authUser,
+                            HttpServletResponse response){
 
         Cookie cookie = new Cookie(URLEncoder.encode(authUser.getNickName()), null);
         cookie.setMaxAge(0);

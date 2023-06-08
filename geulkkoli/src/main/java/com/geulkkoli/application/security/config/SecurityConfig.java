@@ -1,7 +1,10 @@
 package com.geulkkoli.application.security.config;
 
-import com.geulkkoli.application.security.UserSecurityService;
 import com.geulkkoli.application.security.handler.LoginFailureHandler;
+import com.geulkkoli.application.security.handler.LoginSuccessHandler;
+import com.geulkkoli.application.social.CustomOauth2UserService;
+import com.geulkkoli.application.user.UserSecurityService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -16,14 +19,22 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
  * 시큐리티 설정파일
  */
 @Configuration
+@Slf4j
 public class SecurityConfig {
 
-    private final LoginFailureHandler loginFailureHandler;
+    public static final String LOGIN_PAGE = "/loginPage";
     private final UserSecurityService userSecurityService;
+    private final CustomOauth2UserService customOauth2UserService;
 
-    public SecurityConfig(LoginFailureHandler loginFailureHandler, UserSecurityService userSecurityService) {
-        this.loginFailureHandler = loginFailureHandler;
+    private final LoginFailureHandler loginFailureHandler;
+
+    private final LoginSuccessHandler loginSuccessHandler;
+
+    public SecurityConfig(UserSecurityService userSecurityService, CustomOauth2UserService customOauth2UserService, LoginFailureHandler loginFailureHandler, LoginSuccessHandler loginSuccessHandler) {
         this.userSecurityService = userSecurityService;
+        this.customOauth2UserService = customOauth2UserService;
+        this.loginFailureHandler = loginFailureHandler;
+        this.loginSuccessHandler = loginSuccessHandler;
     }
 
     /**
@@ -44,25 +55,35 @@ public class SecurityConfig {
      * auth mvcMatchers는 특정 경로에 대한 권한을 설정합니다.
      * permitAll()은 누구나 겁근 가능하다는 뜻입니다.
      */
+
     @Bean
+
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http.userDetailsService(userSecurityService)
-                .authorizeRequests((auth) -> {
+        http.authorizeRequests(auth -> {
                     auth.mvcMatchers("/admin/**").hasRole("ADMIN");
-                    auth.mvcMatchers("/user/edit/**").hasRole("USER");
+                    auth.mvcMatchers("/user/edit/**").hasAnyRole("USER");
+                    auth.mvcMatchers(HttpMethod.GET, "/social/oauth2/signup").hasAnyRole("GUEST");
                     auth.mvcMatchers("/post/add/**", "/post/update/**", "/post/delete/**").hasAnyRole("USER", "ADMIN");
-                    auth.mvcMatchers(HttpMethod.GET, "/", "/loginPage", "/post/read/**", "/post/list/**", "/post/search/**", "/post/category/*")
+                    auth.mvcMatchers(LOGIN_PAGE).anonymous();
+                    auth.mvcMatchers(HttpMethod.GET, "/", "/post/read/**", "/post/list/**", "/post/search/**", "/post/category/*")
                             .permitAll();
                     auth.requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll(); // 정적 리소스들(css,js)등을 권장 방식에 맞게 인증 체크에서 제외 시켰다
                 }).csrf().disable()
                 .formLogin()
-                .loginPage("/loginPage")
+                .loginPage(LOGIN_PAGE)
                 .loginProcessingUrl("/login-process")
                 .defaultSuccessUrl("/")
                 .usernameParameter("email")
                 .passwordParameter("password")
-                .failureHandler(loginFailureHandler)
                 .and()
+                .oauth2Login(oauth -> oauth.userInfoEndpoint(
+                        userInfoEndpointConfig -> userInfoEndpointConfig
+                                .userService(customOauth2UserService)
+                                .and()
+                                .successHandler(loginSuccessHandler)
+                                .failureHandler(loginFailureHandler)
+                ).loginPage(LOGIN_PAGE))
+                .userDetailsService(userSecurityService)
                 .logout()
                 .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
                 .logoutSuccessUrl("/")
@@ -79,6 +100,8 @@ public class SecurityConfig {
         return new BCryptPasswordEncoder();
     }
 
+
 }
+
 
 

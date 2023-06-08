@@ -1,6 +1,6 @@
-package com.geulkkoli.exception.web.user;
+package com.geulkkoli.web.user;
 
-import com.geulkkoli.application.security.UserSecurityService;
+import com.geulkkoli.application.user.UserSecurityService;
 import com.geulkkoli.domain.user.User;
 import com.geulkkoli.domain.user.UserRepository;
 import com.geulkkoli.domain.user.service.UserService;

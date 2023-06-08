@@ -364,3 +364,4 @@ build/
 
 /.gradle/
 /src/main/generated/
+/bin/

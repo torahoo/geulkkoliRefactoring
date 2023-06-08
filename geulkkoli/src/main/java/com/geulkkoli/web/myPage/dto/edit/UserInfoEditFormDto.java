@@ -28,19 +28,14 @@ public class UserInfoEditFormDto {
     @NotEmpty
     private String gender;
 
-    @Builder
-    public UserInfoEditFormDto(String userName, String nickName, String phoneNo, String gender) {
+    private UserInfoEditFormDto(String userName, String nickName, String phoneNo, String gender) {
         this.userName = userName;
         this.nickName = nickName;
         this.phoneNo = phoneNo;
         this.gender = gender;
     }
 
-    public UserInfoEditFormDto editFormDto(String userName, String nickName, String phoneNo, String gender) {
-        this.userName = userName;
-        this.nickName = nickName;
-        this.phoneNo = phoneNo;
-        this.gender = gender;
-        return this;
+    public static UserInfoEditFormDto from(String userName, String nickName, String phoneNo, String gender) {
+      return new UserInfoEditDto(userName, nickName, phoneNo, gender);
     }
 }

@@ -16,6 +16,7 @@ import java.util.Set;
  * User Entity는 Role Entity와 다대일 연관관계를 가집니다.
  */
 @Entity
+@Table(name = "roles")
 public class RoleEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -54,6 +55,10 @@ public class RoleEntity {
         return role.equals(Role.ADMIN);
     }
 
+    public Boolean isGuest() {
+        return role.equals(Role.GUEST);
+    }
+
     public Set<User> getUsers() {
         return users;
     }
@@ -69,5 +74,9 @@ public class RoleEntity {
     @Override
     public int hashCode() {
         return Objects.hash(role);
+    }
+
+    public String authority() {
+        return role.getRoleName();
     }
 }

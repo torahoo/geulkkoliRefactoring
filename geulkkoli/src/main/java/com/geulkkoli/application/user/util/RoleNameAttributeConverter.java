@@ -19,7 +19,7 @@ public class RoleNameAttributeConverter implements AttributeConverter<Role, Inte
         } else if (Role.ADMIN.equals(attribute)) {
             return 1;
         } else {
-            return 0;
+            return 3;
         }
 
     }
@@ -28,7 +28,7 @@ public class RoleNameAttributeConverter implements AttributeConverter<Role, Inte
     public Role convertToEntityAttribute(Integer dbData) {
 
         return Stream.of(Role.values())
-                .filter(c -> c.getRoleCode() == dbData)
+                .filter(role -> role.getRoleCode() == dbData)
                 .findFirst().orElseThrow(IllegalArgumentException::new);
     }
 }
