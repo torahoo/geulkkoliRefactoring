@@ -149,7 +149,6 @@ public class MyPageController {
         return REDIRECT_INDEX;
     }
 
-
     private Long parseLong(CustomAuthenticationPrinciple authUser) {
         return Long.valueOf(authUser.getUserId());
     }
