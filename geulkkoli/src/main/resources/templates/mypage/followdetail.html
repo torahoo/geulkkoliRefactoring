@@ -8,12 +8,20 @@
     <title>follow</title>
 </head>
 <body>
+<div>
+    <button id="btn-back"> X</button>
+</div>
 <main>
     <div>
-        <ul th:each="followee : ${followees}">
-            <li th:text="${followee.nickName}"></li>
+        <ul >
+            <li th:each="followee : ${followees}">
+                <span th:text="${followee.nickName}"></span>
+            </li>
         </ul>
     </div>
 </main>
 </body>
+<footer>
+</footer>
+<script src="/js/followdetail.js"></script>
 </html>
