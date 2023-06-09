@@ -14,8 +14,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.InstanceOfAssertFactories.LOCAL_DATE_TIME;
-import static org.assertj.core.api.InstanceOfAssertFactories.LOCAL_TIME;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.when;
@@ -76,7 +74,7 @@ class FollowMyPageUserInfoServiceTest {
         mypageUserInfos.add(myPageUserInfo);
         mypageUserInfos.add(myPageUserInfo2);
 
-        when(followMyPageUserInfoService.followUserInfosByFolloweeId(user2.getUserId())).thenReturn(mypageUserInfos);
+        when(followMyPageUserInfoService.findFolloweeUserByFollowerId(user2.getUserId())).thenReturn(mypageUserInfos);
 
         assertAll(
                 () -> assertThat(mypageUserInfos.get(0).getNickName()).isEqualTo(user.getNickName()),

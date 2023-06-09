@@ -8,15 +8,24 @@
     <title>마이페이지</title>
     <link rel="stylesheet" href="/css/bootstrap.min.css">
     <link rel="stylesheet" href="/css/userForm.css">
+    <link rel="stylesheet" href="/css/mypage.css">
 </head>
 
 <body>
 <header id="header" th:include="header"></header>
-<h3 style="text-align: center">마이 페이지</h3>
+<strong style="text-align: center">마이 페이지</strong>
 <main style="text-align: center">
     <section style="text-align: center">
-        구독자 수 <span th:text="${followsCount.getFollowerCount()}"></span>
-        관심 글쓴이 <span th:text="${followsCount.getFolloweeCount()}"></span>
+        <a class="following-link" th:href="@{/my-page/followers}">
+            <em>구독자</em>
+            <span th:text="${followsCount.getFollowerCount()}">
+            </span>
+        </a>
+        <a class="following-link" th:href="@{/my-page/followees}">
+            <em>관심 글쓴이</em>
+            <span th:text="${followsCount.getFolloweeCount()}">
+            </span>
+        </a>
     </section>
 </main>
 

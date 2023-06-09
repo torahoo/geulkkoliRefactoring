@@ -1,0 +1,8 @@
+.following-link{
+    text-decoration: none;
+    color: inherit;
+}
+
+.following-link em {
+    font-style: normal !important;
+}
