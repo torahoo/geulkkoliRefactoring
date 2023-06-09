@@ -76,6 +76,7 @@ public class User {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Favorites> favorites = new LinkedHashSet<>();
 
+    //팔로우의 유저 매핑
     @OneToMany(mappedBy = "followee", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Follow> followees = new LinkedHashSet<>();
 
@@ -276,23 +277,11 @@ public class User {
         return follow;
     }
 
-    public Follow unfollow(User followee) {
-        Follow follow = findFollow(followee);
-        this.followees.remove(follow);
-        return follow;
-    }
-
     public Follow unfollow(Follow follow) {
         this.followees.remove(follow);
         return follow;
     }
 
-    private Follow findFollow(User followee) {
-        return this.followees.stream()
-                .filter(follow -> follow.isFollowee(followee))
-                .findFirst()
-                .orElseThrow(() -> new NoSuchFollowException("해당 팔로우가 없습니다."));
-    }
     public RoleEntity getRole() {
         return role;
     }

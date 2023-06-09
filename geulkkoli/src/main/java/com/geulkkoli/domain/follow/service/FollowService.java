@@ -15,7 +15,7 @@ public class FollowService {
 
 
     public Follow follow(User followee, User follower) {
-        if (follower.equals(followee)){
+        if (follower.equals(followee)) {
             throw new IllegalArgumentException("자기 자신을 팔로우할 수 없습니다.");
         }
         Follow follow = follower.follow(followee);
@@ -24,9 +24,8 @@ public class FollowService {
 
     public Follow unfollow(User followee, User follower) {
         Follow follow = followRepository.findByFolloweeUserIdAndFollowerUserId(followee.getUserId(), follower.getUserId());
-        Follow unFollowResult = follower.unfollow(follow);
-        followRepository.delete(unFollowResult);
-        return unFollowResult;
+        followRepository.delete(follow);
+        return follow;
     }
 
     public void deleteByFolloweeIdAndFollowerId(Long followeeId, Long followerId) {

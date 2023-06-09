@@ -17,7 +17,7 @@ public class FollowMyPageUserInfoService {
     public List<MyPageUserInfo> followUserInfosByFolloweeId(Long followeeId) {
         return followFindService.findAllFollowerByFolloweeId(followeeId)
                 .stream()
-                .map(followEntity -> MyPageUserInfo.of(followEntity.followeeNickName()))
+                .map(followEntity -> MyPageUserInfo.of(followEntity.followeeNickName(), followEntity.getCreatedAt()))
                 .collect(Collectors.toUnmodifiableList());
     }
 }

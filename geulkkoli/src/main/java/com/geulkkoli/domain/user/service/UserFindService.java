@@ -28,6 +28,11 @@ public class UserFindService {
     }
 
     @Transactional(readOnly = true)
+    public User findUserByEmail(String email) {
+        return userRepository.findByEmail(email).orElseThrow(() -> new NoSuchElementException("No user found email matches:" + email));
+    }
+
+    @Transactional(readOnly = true)
     public Optional<User> findByUserNameAndPhoneNo(String userName, String phoneNo) {
         return userRepository.findByUserNameAndPhoneNo(userName, phoneNo);
     }

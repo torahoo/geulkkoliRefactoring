@@ -16,7 +16,6 @@ import java.util.Set;
 @Getter
 @NoArgsConstructor
 @Entity
-@ToString
 public class Post extends ConfigDate {
 
     @Id @Column(name = "post_id")
@@ -28,22 +27,18 @@ public class Post extends ConfigDate {
     @JoinColumn(name = "user_id")
     private User user;
 
-    @Setter
     @Column(nullable = false)
     private String title;
 
-    @Setter
     @Column(name = "body", nullable = false)
     private String postBody;
 
     @Column(name = "nick_name", nullable = false)
     private String nickName;
 
-    @Setter
     @Column(nullable = false)
     private int postHits;
 
-    @Setter
     private String imageUploadName;
 
     //댓글의 게시글 매핑

@@ -1,5 +1,7 @@
 package com.geulkkoli.domain.follow;
 
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -13,6 +15,10 @@ public interface FollowRepository extends JpaRepository<Follow, Long> {
     Integer countByFollowerUserId(Long followerId);
 
     List<Follow> findFollowEntitiesByFolloweeUserId(Long followeeId);
+
+    Slice<Follow> findFollowEntitiesByFolloweeUserId(Long followeeId, Pageable pageable);
+
+    Slice<Follow> findFollowEntitiesByFollowerUserId(Long followerId, Pageable pageable);
 
     List<Follow> findFollowEntitiesByFollowerUserId(Long followerId);
 

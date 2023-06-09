@@ -64,6 +64,7 @@ CREATE TABLE IF NOT EXISTS user_followings
     followings_id bigint primary key AUTO_INCREMENT,
     follower_id   BIGINT NOT NULL,
     followee_id   BIGINT NOT NULL,
+    created_at    TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     CONSTRAINT fk_follower FOREIGN KEY (follower_id) REFERENCES users (user_id) ON DELETE CASCADE,
     CONSTRAINT fk_followee FOREIGN KEY (followee_id) REFERENCES users (user_id) ON DELETE CASCADE,
     Constraint unique_following unique (follower_id, followee_id)

@@ -12,8 +12,15 @@
 
 <body>
 <header id="header" th:include="header"></header>
-<h1>마이 페이지</h1>
-<div class="col" style="text-align: center">
+<h3 style="text-align: center">마이 페이지</h3>
+<main style="text-align: center">
+    <section style="text-align: center">
+        구독자 수 <span th:text="${followsCount.getFollowerCount()}"></span>
+        관심 글쓴이 <span th:text="${followsCount.getFolloweeCount()}"></span>
+    </section>
+</main>
+
+<section class="col" style="text-align: center">
     <a th:if="${connectedInfos.isKakaoConnected()}"
        th:href="@{/social/disconnect/socialType(type=kakao)}" class="btn btn-block">
         카카오 계정 연동 취소
@@ -36,9 +43,9 @@
         구글 계정 연동 취소
     </a>
     <a th:unless="${connectedInfos.isGoogleConnected()}"
-            th:href="@{/social/google/login}" class="btn btn-block">
+       th:href="@{/social/google/login}" class="btn btn-block">
         구글 계정 연결하기
     </a>
-</div>
+</section>
 </body>
 </html>

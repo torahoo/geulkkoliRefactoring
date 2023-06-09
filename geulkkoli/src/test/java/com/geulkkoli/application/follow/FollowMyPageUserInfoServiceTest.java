@@ -9,10 +9,13 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.test.util.ReflectionTestUtils;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.InstanceOfAssertFactories.LOCAL_DATE_TIME;
+import static org.assertj.core.api.InstanceOfAssertFactories.LOCAL_TIME;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.when;
@@ -67,8 +70,9 @@ class FollowMyPageUserInfoServiceTest {
         List<Follow> followEntities = List.of(followEntity, followEntity2);
         given(followFindService.findAllFolloweeByFollowerId(user2.getUserId())).willReturn(followEntities);
         List<MyPageUserInfo> mypageUserInfos = new ArrayList<>();
-        MyPageUserInfo myPageUserInfo = MyPageUserInfo.of(user.getNickName());
-        MyPageUserInfo myPageUserInfo2 = MyPageUserInfo.of(user3.getNickName());
+
+        MyPageUserInfo myPageUserInfo = MyPageUserInfo.of(user.getNickName(),LocalDateTime.now().toString());
+        MyPageUserInfo myPageUserInfo2 = MyPageUserInfo.of(user3.getNickName(),LocalDateTime.now().toString());
         mypageUserInfos.add(myPageUserInfo);
         mypageUserInfos.add(myPageUserInfo2);
 
