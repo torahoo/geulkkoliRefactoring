@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -26,7 +27,6 @@ public class PostHashTagService {
 
     private final HashTagRepository hashTagRepository;
     private final PostHashTagRepository postHashTagRepository;
-    private final PostRepository postRepository;
 
     public Long addHashTagToPost(Post post, HashTag tag) {
         return postHashTagRepository.save(post.addHashTag(tag)).getPostHashTagId();
@@ -44,22 +44,37 @@ public class PostHashTagService {
         );
     }
 
-    public Page<ListDTO> searchPostsListByHashTag(Pageable pageable, String searchType, String searchWords, HashTag tag) {
-        List<Post> posts;
+    public HashTag findByHashTagId(Long hashTagId){
+        return hashTagRepository.findHashTagByHashTagId(hashTagId);
+    }
+
+    public Page<ListDTO> searchPostsListByHashTag(Pageable pageable, String searchType, String searchWords) {
+
         String searchWord = searchWordExtractor(searchWords);
         List<HashTag> tags = hashTagSeparator(searchWords);
+
+        List<Post> posts = searchPostContainAllHashTags(tags);
+
+        List<Post> resultList = new ArrayList<>();
+
         switch (searchType) {
             case "제목":
-                posts = postRepository.findPostsByTitleContaining(searchWords);
+                resultList = posts.stream()
+                        .filter(post -> post.getTitle().contains(searchWord))
+                        .collect(Collectors.toList());
                 break;
             case "본문":
-                posts = postRepository.findPostsByPostBodyContaining(searchWords);
+                resultList = posts.stream()
+                        .filter(post -> post.getPostBody().contains(searchWord))
+                        .collect(Collectors.toList());
                 break;
             case "닉네임":
-                posts = postRepository.findPostsByNickNameContaining(searchWords);
+                resultList = posts.stream()
+                        .filter(post -> post.getNickName().contains(searchWord))
+                        .collect(Collectors.toList());
                 break;
             case "해시태그":
-                List<PostHashTag> postHashTagList = postHashTagRepository.findAllByHashTag(tag);
+                List<PostHashTag> postHashTagList = postHashTagRepository.findAllByHashTag(hashTagRepository.findHashTagByHashTagName(searchWord));
                 List<Post> resultPosts = new ArrayList<>();
                 for (PostHashTag postHashTag : postHashTagList) {
                     resultPosts.add(postHashTag.getPost());
@@ -67,20 +82,11 @@ public class PostHashTagService {
                 posts = resultPosts;
                 break;
             default:
-                posts = postRepository.findAll();
+                resultList = new ArrayList<>(posts);
                 break;
         }
-        List<Post> resultList = new ArrayList<>();
 
-        for (int i = 0; i < posts.size(); i++) {
-            Post post = posts.get(i);
-            List<PostHashTag> comparePosts = new ArrayList<>(post.getPostHashTags());
-            for (int j = 0; j < comparePosts.size(); j++) {
-                if (comparePosts.get(j).getHashTag() == tag) {
-                    resultList.add(comparePosts.get(j).getPost());
-                }
-            }
-        }
+
         Page<Post> finalPostsList = new PageImpl<>(resultList, pageable, resultList.size());
         return finalPostsList.map(post -> new ListDTO(
                 post.getPostId(),
@@ -90,6 +96,7 @@ public class PostHashTagService {
                 post.getPostHits()
         ));
     }
+
 
     public List<HashTag> hashTagSeparator(String searchWords) {
         List<HashTag> hashTags = new ArrayList<>();
@@ -116,19 +123,18 @@ public class PostHashTagService {
         List<Post> posts = new ArrayList<>();
         List<PostHashTag> postHashTagList = postHashTagRepository.findAllByHashTag(tag);
 
-            for (PostHashTag postHashTag : postHashTagList) {
-                Set<HashTag> postHashTags = postHashTag.
-                        getPost().
-                        getPostHashTags().
-                        stream().
-                        map(PostHashTag::getHashTag).
-                        collect(java.util.stream.Collectors.toSet());
+        for (PostHashTag postHashTag : postHashTagList) {
+            Set<HashTag> postHashTags = postHashTag.
+                    getPost().
+                    getPostHashTags().
+                    stream().
+                    map(PostHashTag::getHashTag).
+                    collect(java.util.stream.Collectors.toSet());
 
-                //postHashtag not contain tags, ignore it or add on posts
-                if (postHashTags.containsAll(tags)) {
-                    posts.add(postHashTag.getPost());
-                }
+            if (postHashTags.containsAll(tags)) {
+                posts.add(postHashTag.getPost());
             }
+        }
 
         return posts;
     }

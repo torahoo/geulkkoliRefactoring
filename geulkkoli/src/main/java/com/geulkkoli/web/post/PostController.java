@@ -1,14 +1,17 @@
 package com.geulkkoli.web.post;
 
 import com.geulkkoli.application.user.CustomAuthenticationPrinciple;
-import com.geulkkoli.domain.favorites.FavoriteService;
 import com.geulkkoli.domain.comment.CommentsService;
-import com.geulkkoli.domain.post.Post;
+import com.geulkkoli.domain.favorites.FavoriteService;
 import com.geulkkoli.domain.post.service.PostService;
+import com.geulkkoli.domain.posthashtag.PostHashTagService;
 import com.geulkkoli.domain.user.User;
 import com.geulkkoli.domain.user.service.UserService;
 import com.geulkkoli.web.comment.dto.CommentBodyDTO;
-import com.geulkkoli.web.post.dto.*;
+import com.geulkkoli.web.post.dto.AddDTO;
+import com.geulkkoli.web.post.dto.EditDTO;
+import com.geulkkoli.web.post.dto.PageDTO;
+import com.geulkkoli.web.post.dto.PagingDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
@@ -38,6 +41,7 @@ public class PostController {
     private final UserService userService;
     private final CommentsService commentsService;
     private final FavoriteService favoriteService;
+    private final PostHashTagService postHashTagService;
 
     /**
      * @PageableDefault - get 파라미터가 없을 때 기본설정 변경(기본값: page=0, size=20)
@@ -55,6 +59,21 @@ public class PostController {
                            @RequestParam(defaultValue = "") String searchType,
                            @RequestParam(defaultValue = "") String searchWords) {
         PagingDTO pagingDTO = PagingDTO.listDTOtoPagingDTO(postService.searchPostFindAll(pageable, searchType, searchWords));
+        model.addAttribute("page", pagingDTO);
+        searchDefault(model, searchType, searchWords);
+        return "/post/postList";
+    }
+
+    @GetMapping("/list/{tagId}")
+    public String postListWithBoardId(@PageableDefault(size = 5, sort = "postId", direction = Sort.Direction.DESC) Pageable pageable,
+                                      Model model,
+                                      @RequestParam(defaultValue = "") String searchType,
+                                      @RequestParam(defaultValue = "") String searchWords,
+                                      @PathVariable Long tagId) {
+        searchWords += " #" + postHashTagService.findByHashTagId(tagId).getHashTagName();
+
+        PagingDTO pagingDTO = PagingDTO.listDTOtoPagingDTO(postHashTagService.searchPostsListByHashTag(pageable, searchType, searchWords));
+
         model.addAttribute("page", pagingDTO);
         searchDefault(model, searchType, searchWords);
         return "/post/postList";
