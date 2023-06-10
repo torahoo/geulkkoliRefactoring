@@ -5,18 +5,27 @@ drop table if exists comments;
 drop table if exists favorites;
 drop table if exists post;
 drop table if exists users;
+drop table if exists roles;
 drop table if exists topic_tags;
 
+
+create table if not exists roles
+(
+    role_id bigint primary key auto_increment,
+    role_number int not null
+);
 CREATE table if not exists users
 (
     user_id   BIGINT PRIMARY KEY AUTO_INCREMENT,
     email     varchar(255) not null,
     password  varchar(255) not null,
-    name      varchar(20)  not null,
+    user_name      varchar(20)  not null,
     nick_name varchar(20)  not null,
     phone_no  varchar(20)  not null,
-    gender    varchar(10)  not null,
-    CONSTRAINT unique_email_nick_name_phone_no UNIQUE (email, nick_name, phone_no)
+    gender    varchar(100)  not null,
+    role_id   bigint not null ,
+    CONSTRAINT unique_email_nick_name_phone_no UNIQUE (email, nick_name, phone_no),
+    CONSTRAINT fk_role_id FOREIGN KEY (role_id) REFERENCES roles (role_id) ON DELETE CASCADE
 );
 create table if not exists topic_tags
 (
@@ -70,13 +79,7 @@ CREATE TABLE IF NOT EXISTS user_followings
     Constraint unique_following unique (follower_id, followee_id)
 );
 
-create table if not exists roles
-(
-    role_id bigint primary key auto_increment,
-    role_name varchar(255) not null unique,
-    user_id bigint not null,
-    constraint fk_role_user foreign key (user_id) references users (user_id)
-);
+
 
 create table if not exists report
 (

@@ -6,6 +6,7 @@ import com.geulkkoli.domain.user.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
+import org.springframework.data.domain.Pageable;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import java.util.ArrayList;
@@ -68,10 +69,10 @@ class FollowFindServiceTest {
 
         given(followRepository.findFollowEntitiesByFolloweeUserId(1L)).willReturn(followEntities);
 
-        when(followFindService.findAllFollowerByFolloweeId(1L)).thenReturn(followEntities);
+        when(followFindService.findAllFollowerByFolloweeId(1L,Pageable.ofSize(10))).thenReturn(followEntities);
 
 
-        List<Follow> allFollower = followFindService.findAllFollowerByFolloweeId(1L);
+        List<Follow> allFollower = followFindService.findAllFollowerByFolloweeId(1L, Pageable.ofSize(10));
 
         then(followRepository).should().findFollowEntitiesByFolloweeUserId(1L);
 
@@ -122,9 +123,11 @@ class FollowFindServiceTest {
         followEntities.add(followEntity2);
         given(followRepository.findFollowEntitiesByFollowerUserId(user2.getUserId())).willReturn(followEntities);
 
-        when(followFindService.findAllFollowerByFolloweeId(user2.getUserId())).thenReturn(followEntities);
+        when(followFindService.findAllFollowerByFolloweeId(user2.getUserId(),Pageable.ofSize(10))).thenReturn(followEntities);
 
-        List<Follow> allFollowerByFolloweeId = followFindService.findAllFollowerByFolloweeId(user2.getUserId());
+        List<Follow> allFollowerByFolloweeId = followFindService.findAllFollowerByFolloweeId(user2.getUserId(), Pageable.ofSize(10));
+
+        then(followRepository).should().findFollowEntitiesByFollowerUserId(user2.getUserId());
 
         assertAll(() -> {
             assertThat(allFollowerByFolloweeId.get(0).getFollowee().getNickName()).isEqualTo("nickName");

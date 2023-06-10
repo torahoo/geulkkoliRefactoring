@@ -5,6 +5,7 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.Objects;
 @EntityListeners(AuditingEntityListener.class)
 @Table(name = "user_followings", uniqueConstraints = @UniqueConstraint(columnNames = {"followee_id", "follower_id"}))
@@ -12,6 +13,7 @@ import java.util.Objects;
 public class Follow {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "followings_id")
     private Long id;
     // follower가 followee를 팔로우한다.
     @ManyToOne
@@ -23,7 +25,7 @@ public class Follow {
 
     @Column(name = "created_at", nullable = false, updatable = false)
     @CreatedDate
-    private String createdAt;
+    private LocalDateTime createdAt;
 
     public Follow() {
     }
@@ -58,7 +60,7 @@ public class Follow {
         return follower;
     }
 
-    public String getCreatedAt() {
+    public LocalDateTime getCreatedAt() {
         return createdAt;
     }
 

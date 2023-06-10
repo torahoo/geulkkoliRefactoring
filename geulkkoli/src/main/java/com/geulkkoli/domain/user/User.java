@@ -25,13 +25,13 @@ import java.util.*;
 @NoArgsConstructor
 @Entity
 @Getter
-@Table(name = "users")
+@Table(name = "users", indexes = @Index(name = "idx_user_email_nick_name", columnList = "email,nick_name"))
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long userId;
 
-    @Column(name = "name", nullable = false)
+    @Column(nullable = false)
     private String userName;
 
     @Column(name = "password", nullable = false)
@@ -265,7 +265,7 @@ public class User {
     }
 
 
-    public RoleEntity Role(Role role) {
+    public RoleEntity addRole(Role role) {
         RoleEntity roleEntity = RoleEntity.of(role, this);
         this.role = roleEntity;
         return roleEntity;

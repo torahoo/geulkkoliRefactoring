@@ -33,7 +33,7 @@ public class PostService {
                 .orElseThrow(() -> new NoSuchElementException("No post found id matches:" + postId));
     }
 
-    @Transactional(readOnly = true)
+    @Transactional
     //게시글 상세보기만을 담당하는 메서드
     public Post showDetailPost (Long postId) {
         postRepository.updateHits(postId);

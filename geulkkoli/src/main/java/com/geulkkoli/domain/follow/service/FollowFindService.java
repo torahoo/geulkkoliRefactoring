@@ -1,6 +1,6 @@
 package com.geulkkoli.domain.follow.service;
 
-import com.geulkkoli.domain.follow.Follow;
+import com.geulkkoli.application.follow.FollowInfo;
 import com.geulkkoli.domain.follow.FollowRepository;
 import com.geulkkoli.domain.user.User;
 import org.springframework.data.domain.Pageable;
@@ -19,13 +19,14 @@ public class FollowFindService {
     }
 
 
-    public List<Follow> findAllFollowerByFolloweeId(Long followeeId, Pageable pageable) {
-        return followRepository.findFollowEntitiesByFolloweeUserId(followeeId,pageable);
+    public List<FollowInfo> findAllFollowerByFolloweeId(Long followeeId, Long lastFollowId, Pageable pageable) {
+        return followRepository.findFollowEntitiesByFolloweeUserId(followeeId, lastFollowId, pageable.getPageSize());
     }
 
-    public List<Follow> findAllFolloweeByFollowerId(Long followerId, Pageable pageable) {
-        return followRepository.findFollowEntitiesByFollowerUserId(followerId,pageable);
+    public List<FollowInfo> findAllFolloweeByFollowerId(Long followerId, Long lastFollowId, Pageable pageable) {
+        return followRepository.findFollowEntitiesByFollowerUserId(followerId, lastFollowId, pageable.getPageSize());
     }
+
     public Integer countFollowerByFolloweeId(Long followeeId) {
         return followRepository.countByFolloweeUserId(followeeId);
     }

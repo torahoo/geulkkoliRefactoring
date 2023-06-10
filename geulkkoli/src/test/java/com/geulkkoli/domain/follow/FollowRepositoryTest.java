@@ -20,30 +20,7 @@ class FollowRepositoryTest {
     @Test
     @Transactional(readOnly = true)
     void findFollowEntitiesByFolloweeUserId() {
-        User user = User.builder()
-                .email("test@gmil.com")
-                .userName("test")
-                .password("test")
-                .gender("male")
-                .phoneNo("010-1234-1234")
-                .nickName("test")
-                .build();
 
-        User user1 = User.builder()
-                .email("test1@gmil.com")
-                .userName("test1")
-                .password("test1")
-                .gender("male")
-                .phoneNo("010-1244-1234")
-                .nickName("test1")
-                .build();
-        userRepository.save(user);
-        userRepository.save(user1);
-        followRepository.save(user.follow(user1));
-
-        Slice<Follow> followers = followRepository.findFollowEntitiesByFolloweeUserId(user1.getUserId(), PageRequest.of(0, 3));
-
-        System.out.println(followers);
     }
 
     @Test

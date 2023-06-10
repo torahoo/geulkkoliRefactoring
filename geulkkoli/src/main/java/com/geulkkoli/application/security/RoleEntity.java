@@ -23,6 +23,7 @@ public class RoleEntity {
     private Long roleId;
 
     @Convert(converter = RoleNameAttributeConverter.class)
+    @Column(name = "role_number")
     private Role role;
     @OneToMany(mappedBy = "role")
     private Set<User> users = new HashSet<>();

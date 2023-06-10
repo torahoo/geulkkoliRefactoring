@@ -29,7 +29,7 @@ public class HomeController {
                        @RequestParam(defaultValue = "7") String searchType,
                        @RequestParam(defaultValue = "7") String searchWords) {
 
-        model.addAttribute("list", postService.searchPostFindAll(pageable, searchType, searchWords).toList());
+//        model.addAttribute("list", postService.searchPostFindAll(pageable, searchType, searchWords).toList());
 
         return "/home";
     }

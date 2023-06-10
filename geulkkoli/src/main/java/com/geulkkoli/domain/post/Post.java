@@ -24,7 +24,7 @@ public class Post extends ConfigDate {
 
     //게시글 작성자
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "author_id")
     private User user;
 
     @Column(nullable = false)
@@ -39,6 +39,7 @@ public class Post extends ConfigDate {
     @Column(nullable = false)
     private int postHits;
 
+    @Column(name = "image_upload_name")
     private String imageUploadName;
 
     //댓글의 게시글 매핑

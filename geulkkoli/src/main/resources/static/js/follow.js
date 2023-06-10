@@ -3,7 +3,7 @@ function followButtonHandler() {
     if (followButton) {
         followButton.addEventListener('click', function() {
             var email = document.getElementById('email').textContent;
-            var url = '/follow/' + email;
+            var url = 'api/follow/' + email;
 
             fetch(url, {
                 method: 'GET', // or 'POST'
@@ -35,7 +35,7 @@ function unFollowButtonHandler() {
     if (unfollowButton) {
         unfollowButton.addEventListener('click', function() {
             var email = document.getElementById('email').textContent;
-            var url = '/unfollow/' + email;
+            var url = 'api/unfollow/' + email;
 
             fetch(url, {
                 method: 'GET', // or 'POST'

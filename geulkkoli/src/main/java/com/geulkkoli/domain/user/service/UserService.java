@@ -15,7 +15,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.NoSuchElementException;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -51,7 +50,7 @@ public class UserService {
     @Transactional
     public User signUp(JoinFormDto form) {
         User user = userRepository.save(form.toEntity(PasswordService.passwordEncoder));
-        RoleEntity roleEntity = user.Role(Role.USER);
+        RoleEntity roleEntity = user.addRole(Role.USER);
         roleRepository.save(roleEntity);
         return user;
     }
@@ -62,7 +61,7 @@ public class UserService {
     @Transactional
     public void signUpAdmin(JoinFormDto form) {
         User user = form.toEntity(PasswordService.passwordEncoder);
-        RoleEntity roleEntity = user.Role(Role.ADMIN);
+        RoleEntity roleEntity = user.addRole(Role.ADMIN);
         roleRepository.save(roleEntity);
         userRepository.save(user);
     }
@@ -80,9 +79,10 @@ public class UserService {
 
     @Transactional
     public User signUp(SocialSignUpDto signUpDto) {
-        User user = userRepository.save(signUpDto.toEntity(PasswordService.passwordEncoder));
-        RoleEntity roleEntity = user.Role(Role.USER);
-        roleRepository.save(roleEntity);
+        User user = signUpDto.toEntity(PasswordService.passwordEncoder);
+        RoleEntity role = user.addRole(Role.USER);
+        roleRepository.save(role);
+        userRepository.save(user);
         return user;
     }
 }
