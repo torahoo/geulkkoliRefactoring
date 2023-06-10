@@ -1,0 +1,19 @@
+.list_follow .span_follow {
+    background-position: -70px -210px;
+    border-radius: 42px;
+    float: left;
+    height: 42px;
+    position: relative;
+    width: 42px;
+}
+
+.list_follow li{
+    border-bottom: 1px solid #eee;
+    overflow: hidden;
+    padding: 30px 0;
+    width: 100%;
+}
+
+li {
+    list-style-type: none;
+}
