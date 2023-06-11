@@ -94,6 +94,7 @@ public class PostController {
         if (bindingResult.hasErrors()) {
             return "/post/postAddForm";
         }
+        post.setTagListString(post.getTagListString()+"#일반글");
         User user = userService.findById(post.getAuthorId());
         long postId = postService.savePost(post, user).getPostId();
         redirectAttributes.addAttribute("postId",postId);

@@ -92,9 +92,6 @@ public class PostService {
             List<HashTag> hashTags = postHashTagService.hashTagSeparator(post.getTagListString());
             postHashTagService.addHashTagsToPost(save, hashTags);
         }
-        //일반글 태그를 넣기위한 코드
-        HashTag generalTag = new HashTag("일반글");
-        postHashTagService.addHashTagToPost(save, generalTag);
 
         return save;
     }
