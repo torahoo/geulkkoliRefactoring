@@ -9,15 +9,38 @@
     <title>follow</title>
 </head>
 <body>
-<div>
-    <button id="btn-back"> X</button>
-</div>
+<aside>
+    <button class="btn-back_text_hide"></button>
+</aside>
+<header>
+    <div>
+        <strong class="title_follow">
+            내가 구독하는
+            <span class="span_follow">
+                <span th:text="${allCount}"></span>
+            </span>
+            명
+        </strong>
+    </div>
+</header>
 <main>
     <div>
         <ul class="list_follow">
             <li th:each="followee : ${followees}">
+                <span class="span_follow-profile-image">
+                </span>
                 <span class="span_follow" th:text="${followee.nickName}"></span>
                 <span class="span_follow" hidden="hidden" id="follow-id" th:text="${followee.id}"></span>
+                <span class="span_follow" hidden="hidden" id="userId" th:text="${followee.userId}"></span>
+                <button th:id="btn-unfollow+${followee.id}" class="btn-subscribe"
+                        type="button">
+                    <span class = "txt_default">
+                        구독중
+                    </span>
+                    <span class = "txt_on">
+                        구독 취소
+                    </span>
+                </button>
             </li>
         </ul>
     </div>
@@ -25,54 +48,5 @@
 </body>
 <footer>
 </footer>
-<script>
-    var lastId = document.querySelector('ul li:last-child span#follow-id').innerText;
-    console.log(lastId);
-    URL = "/api/followees/" + lastId;
-    let isFetching = false;
-    const getList = () => {
-        isFetching = true;
-        fetch(URL, {
-            method: "GET",
-        }).then(response => response.json())
-            .then(data => {
-                console.log(data);
-                drawList(data);
-            });
-    }
-
-    const drawList = (data) => {
-        const list = document.querySelector('ul.list_follow');
-        data.forEach((followee, index) => {
-            const li = document.createElement('li');
-            const span = document.createElement('span');
-            span.innerText = followee.nickName;
-            span.classList.add('span_follow');
-            li.appendChild(span);
-            const span2 = document.createElement('span');
-            span2.innerText = followee.id;
-            span2.classList.add('span_follow');
-            span2.hidden = true;
-            span2.id = 'follow-id';
-            li.appendChild(span2);
-            list.appendChild(li);
-
-            if (index === data.length - 1) {
-                lastId = followee.id;
-            }
-        });
-    }
-    window.addEventListener("scroll", () => {
-        console.log('scroll')
-        let scrollHeight = window.scrollY;
-        let innerHeight = window.innerHeight;
-        let offsetHeight = document.body.offsetHeight;
-        const Is_END = scrollHeight + innerHeight > offsetHeight - 10;
-        if (Is_END && !isFetching) {
-            console.log('list')
-            getList();
-        }
-    });
-</script>
 <script src="/js/followdetail.js"></script>
 </html>

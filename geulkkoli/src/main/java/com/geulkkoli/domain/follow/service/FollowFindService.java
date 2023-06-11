@@ -20,11 +20,11 @@ public class FollowFindService {
 
 
     public List<FollowInfo> findAllFollowerByFolloweeId(Long followeeId, Long lastFollowId, Pageable pageable) {
-        return followRepository.findFollowEntitiesByFolloweeUserId(followeeId, lastFollowId, pageable.getPageSize());
+        return followRepository.findFollowersByFolloweeUserId(followeeId, lastFollowId, pageable.getPageSize());
     }
 
     public List<FollowInfo> findAllFolloweeByFollowerId(Long followerId, Long lastFollowId, Pageable pageable) {
-        return followRepository.findFollowEntitiesByFollowerUserId(followerId, lastFollowId, pageable.getPageSize());
+        return followRepository.findFolloweesByFollowerUserId(followerId, lastFollowId, pageable.getPageSize());
     }
 
     public Integer countFollowerByFolloweeId(Long followeeId) {

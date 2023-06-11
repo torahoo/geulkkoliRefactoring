@@ -48,7 +48,22 @@ public class MyPageController {
     @GetMapping("/followees")
     public ModelAndView getFollowees(@PageableDefault(size = 10, sort = "id", direction = Sort.Direction.DESC) Pageable pageable, @AuthenticationPrincipal CustomAuthenticationPrinciple loginUser) {
         User user = userFindService.findUserByEmail(loginUser.getUsername());
+        Integer followee = followFindService.countFolloweeByFollowerId(user.getUserId());
         List<FollowInfo> followeeUserInfos = followFindService.findAllFolloweeByFollowerId(user.getUserId(), null, pageable);
-        return new ModelAndView("mypage/followdetail", "followees", followeeUserInfos);
+        ModelAndView modelAndView = new ModelAndView("mypage/followdetail", "followees", followeeUserInfos);
+        modelAndView.addObject("allCount", followee);
+
+        return modelAndView;
+    }
+
+    @GetMapping("/followers")
+    public ModelAndView getFollowers(@PageableDefault(size = 10, sort = "id", direction = Sort.Direction.DESC) Pageable pageable, @AuthenticationPrincipal CustomAuthenticationPrinciple loginUser) {
+        User user = userFindService.findUserByEmail(loginUser.getUsername());
+        Integer follower = followFindService.countFollowerByFolloweeId(user.getUserId());
+        List<FollowInfo> followerUserInfos = followFindService.findAllFollowerByFolloweeId(user.getUserId(), null, pageable);
+        ModelAndView modelAndView = new ModelAndView("mypage/followdetail", "followers", followerUserInfos);
+        modelAndView.addObject("allCount", follower);
+
+        return modelAndView;
     }
 }

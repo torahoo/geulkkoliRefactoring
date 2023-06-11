@@ -3,7 +3,17 @@
     max-width: 1000px;
 }
 
-.field-error {
-    border-color: #dc3545;
-    color: #dc3545;
+.txt_on {
+    display: none;
+}
+#btn-unfollow .txt_on {
+    display: none;
+}
+
+#btn-unfollow:hover .txt_on {
+    display: inline;
+}
+
+#btn-unfollow:hover .txt_default {
+    display: none;
 }

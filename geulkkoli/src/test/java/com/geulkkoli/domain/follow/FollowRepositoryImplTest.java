@@ -86,7 +86,7 @@ class FollowRepositoryImplTest {
         followRepository.save(follow2);
         followRepository.save(follow3);
 
-        List<FollowInfo> followEntitiesByFolloweeUserId = followRepositoryDsl.findFollowEntitiesByFolloweeUserId(user.getUserId(), null, 3);
+        List<FollowInfo> followEntitiesByFolloweeUserId = followRepositoryDsl.findFollowersByFolloweeUserId(user.getUserId(), null, 3);
 
         assertAll(() -> {
             assertThat(followEntitiesByFolloweeUserId).size().isEqualTo(3);

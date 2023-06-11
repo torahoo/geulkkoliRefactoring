@@ -16,16 +16,26 @@
 <strong style="text-align: center">마이 페이지</strong>
 <main style="text-align: center">
     <section style="text-align: center">
-        <a class="following-link" th:href="@{/my-page/followers}">
+
+        <a class="following-link" th:href="@{/my-page/followers}" th:if="${followsCount.getFollowerCount() > 0}">
             <em>구독자</em>
-            <span th:text="${followsCount.getFollowerCount()}">
-            </span>
+            <span th:text="${followsCount.getFollowerCount()}"></span>
         </a>
-        <a class="following-link" th:href="@{/my-page/followees}">
+        <a class="following-link" href="#" th:unless="${followsCount.getFollowerCount() > 0}">
+            <em>구독자</em>
+            <span th:text="${followsCount.getFollowerCount()}"></span>
+        </a>
+
+
+        <a class="following-link" th:href="@{/my-page/followees}" th:if="${followsCount.getFolloweeCount() > 0}">
             <em>작가</em>
-            <span th:text="${followsCount.getFolloweeCount()}">
-            </span>
+            <span th:text="${followsCount.getFolloweeCount()}"></span>
         </a>
+        <a class="following-link" href="#" th:unless="${followsCount.getFolloweeCount() > 0}">
+            <em>작가</em>
+            <span th:text="${followsCount.getFolloweeCount()}"></span>
+        </a>
+
     </section>
 </main>
 

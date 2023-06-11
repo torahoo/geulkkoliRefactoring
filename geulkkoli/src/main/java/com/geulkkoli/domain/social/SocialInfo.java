@@ -2,9 +2,9 @@ package com.geulkkoli.domain.social;
 
 import com.geulkkoli.domain.user.User;
 import lombok.Builder;
+import org.springframework.data.annotation.CreatedDate;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
 
 
 @Entity
@@ -26,7 +26,8 @@ public class SocialInfo {
     private String socialType;
 
     @Column
-    private LocalDateTime socialConnectDate;
+    @CreatedDate
+    private String socialConnectDate;
 
     @Column(columnDefinition = "boolean default true")
     private Boolean isConnected = true;
@@ -35,7 +36,7 @@ public class SocialInfo {
     }
 
     @Builder
-    public SocialInfo(User user, String socialId, String socialType, LocalDateTime socialConnectDate) {
+    public SocialInfo(User user, String socialId, String socialType, String socialConnectDate) {
         this.user = user;
         this.socialId = socialId;
         this.socialType = socialType;
@@ -66,7 +67,7 @@ public class SocialInfo {
         return socialType;
     }
 
-    public LocalDateTime getSocialConnectDate() {
+    public String getSocialConnectDate() {
         return socialConnectDate;
     }
 

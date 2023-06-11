@@ -10,6 +10,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
+import java.util.Locale;
 
 @Getter
 @MappedSuperclass
@@ -26,15 +27,17 @@ public abstract class ConfigDate {
 
     @PrePersist
     public void onPrePersist () {
-        this.createdAt = LocalDateTime.now()
-                .format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM));
-        this.updatedAt = createdAt;
+        LocalDateTime now = LocalDateTime.now();
+        this.createdAt = formatDateTime(now);
+        this.updatedAt = this.createdAt;
     }
 
     @PreUpdate
     public void onPreUpdate () {
-        this.updatedAt = LocalDateTime.now()
-                .format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM));
+        this.updatedAt = formatDateTime(LocalDateTime.now());
     }
-
+    private String formatDateTime(LocalDateTime dateTime) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        return dateTime.format(formatter);
+    }
 }

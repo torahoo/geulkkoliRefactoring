@@ -96,6 +96,7 @@ public class PostController {
                            @AuthenticationPrincipal CustomAuthenticationPrinciple authUser) {
         PageDTO postPage = PageDTO.toDTO(postService.showDetailPost(postId));
         User authorUser = userFindService.findById(postPage.getAuthorId());
+        UserProfileDTO userProfile = UserProfileDTO.toDTO(authorUser);
         request.getSession().setAttribute("pageNumber", request.getParameter("page"));
 
         String checkFavorite = "never clicked";
@@ -104,7 +105,7 @@ public class PostController {
             log.info("로그인을 안한 사용자 접속");
             model.addAttribute("post", postPage);
             model.addAttribute("commentList", postPage.getCommentList());
-            model.addAttribute("authorUser", authorUser);
+            model.addAttribute("authorUser", userProfile);
             model.addAttribute("checkFavorite", checkFavorite);
             searchDefault(model, searchType, searchWords);
             return "/post/postPage";
@@ -118,7 +119,7 @@ public class PostController {
         }
         boolean mine = loggingUser.getUserId().equals(authorUser.getUserId());
         Boolean follow = followFindService.checkFollow(loggingUser, authorUser);
-        FollowResult followResult =  new FollowResult(mine, follow);
+        FollowResult followResult = new FollowResult(mine, follow);
 
         log.info("followResult={}", followResult.isFollow());
         log.info("mine={}", followResult.isMine());

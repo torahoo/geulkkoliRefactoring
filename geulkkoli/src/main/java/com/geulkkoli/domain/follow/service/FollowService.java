@@ -7,6 +7,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.NoSuchElementException;
+
 @Service
 @Transactional
 @RequiredArgsConstructor
@@ -23,14 +25,14 @@ public class FollowService {
     }
 
     public Follow unfollow(User followee, User follower) {
-        Follow follow = followRepository.findByFolloweeUserIdAndFollowerUserId(followee.getUserId(), follower.getUserId());
+        Follow follow = followRepository.findByFolloweeUserIdAndFollowerUserId(followee.getUserId(), follower.getUserId()).orElseThrow(() -> new NoSuchElementException("존재하지 않는 팔로우입니다."));
         followRepository.delete(follow);
         return follow;
     }
 
     public void deleteByFolloweeIdAndFollowerId(Long followeeId, Long followerId) {
         try {
-            Follow followEntity = followRepository.findByFolloweeUserIdAndFollowerUserId(followeeId, followerId);
+            Follow followEntity = followRepository.findByFolloweeUserIdAndFollowerUserId(followeeId, followerId).orElseThrow(() -> new NoSuchElementException("존재하지 않는 팔로우입니다."));
             followRepository.delete(followEntity);
         } catch (Exception e) {
             throw new IllegalArgumentException("존재하지 않는 팔로우입니다.");

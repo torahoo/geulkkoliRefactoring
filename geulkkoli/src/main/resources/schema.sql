@@ -3,7 +3,9 @@ drop table if exists report;
 drop table if exists user_followings;
 drop table if exists comments;
 drop table if exists favorites;
+drop table if exists hash_tags;
 drop table if exists post;
+drop table if exists account_lock;
 drop table if exists users;
 drop table if exists roles;
 drop table if exists topic_tags;
@@ -11,7 +13,7 @@ drop table if exists topic_tags;
 
 create table if not exists roles
 (
-    role_id bigint primary key auto_increment,
+    role_id     bigint primary key auto_increment,
     role_number int not null
 );
 CREATE table if not exists users
@@ -19,11 +21,11 @@ CREATE table if not exists users
     user_id   BIGINT PRIMARY KEY AUTO_INCREMENT,
     email     varchar(255) not null,
     password  varchar(255) not null,
-    user_name      varchar(20)  not null,
+    user_name varchar(20)  not null,
     nick_name varchar(20)  not null,
     phone_no  varchar(20)  not null,
-    gender    varchar(100)  not null,
-    role_id   bigint not null ,
+    gender    varchar(100) not null,
+    role_id   bigint       not null,
     CONSTRAINT unique_email_nick_name_phone_no UNIQUE (email, nick_name, phone_no),
     CONSTRAINT fk_role_id FOREIGN KEY (role_id) REFERENCES roles (role_id) ON DELETE CASCADE
 );
@@ -41,9 +43,9 @@ create table if not exists post
     nick_name         varchar(20)    not null,
     post_hits         BIGINT,
     image_upload_name varchar(255),
-    post_topic        Bigint         not null,
-    created_at        TIMESTAMP      NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    updated_at        TIMESTAMP      NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    post_topic        Bigint         not null default 3,
+    created_at        datetime DEFAULT CURRENT_TIMESTAMP,
+    updated_at        datetime      ,
     CONSTRAINT fk_users foreign key (author_id) REFERENCES users (user_id) ON DELETE CASCADE,
     CONSTRAINT fk_post_topic foreign key (post_topic) references topic_tags (topic_id) ON DELETE CASCADE
 );
@@ -55,8 +57,8 @@ create table if not exists comments
     author_id  BIGINT       NOT NULL,
     post_id    BIGINT       NOT NULL,
     body       VARCHAR(255) NOT NULL,
-    created_at TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    created_at datetime DEFAULT CURRENT_TIMESTAMP,
+    updated_at datetime DEFAULT CURRENT_TIMESTAMP,
     CONSTRAINT fk_comment_author FOREIGN KEY (author_id) REFERENCES users (user_id) ON DELETE CASCADE,
     CONSTRAINT fk_comment_post FOREIGN KEY (post_id) REFERENCES post (post_id) ON DELETE CASCADE
 );
@@ -73,7 +75,7 @@ CREATE TABLE IF NOT EXISTS user_followings
     followings_id bigint primary key AUTO_INCREMENT,
     follower_id   BIGINT NOT NULL,
     followee_id   BIGINT NOT NULL,
-    created_at    TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    created_at    datetime DEFAULT CURRENT_TIMESTAMP,
     CONSTRAINT fk_follower FOREIGN KEY (follower_id) REFERENCES users (user_id) ON DELETE CASCADE,
     CONSTRAINT fk_followee FOREIGN KEY (followee_id) REFERENCES users (user_id) ON DELETE CASCADE,
     Constraint unique_following unique (follower_id, followee_id)
@@ -83,11 +85,11 @@ CREATE TABLE IF NOT EXISTS user_followings
 
 create table if not exists report
 (
-    report_id bigint primary key auto_increment,
-    reported_post_id bigint not null,
-    reporter_id bigint not null,
-    reported_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    reason varchar(100) not null,
+    report_id        bigint primary key auto_increment,
+    reported_post_id bigint       not null,
+    reporter_id      bigint       not null,
+    reported_at      VARCHAR(255) not null,
+    reason           varchar(100) not null,
     constraint fk_reported_post foreign key (reported_post_id) references post (post_id),
     constraint fk_reporter foreign key (reporter_id) references users (user_id),
     constraint unique_report unique (reported_post_id, reporter_id)
@@ -95,12 +97,12 @@ create table if not exists report
 
 create table if not exists social_info
 (
-    social_info_id bigint primary key auto_increment,
-    user_id bigint not null,
-    social_id varchar(255) not null,
-    social_type varchar(255) not null,
-    social_connect_date TIMESTAMP Null,
-    is_connected boolean default true,
+    social_info_id      bigint primary key auto_increment,
+    user_id             bigint       not null,
+    social_id           varchar(255) not null,
+    social_type         varchar(255) not null,
+    social_connect_date datetime default CURRENT_TIMESTAMP,
+    is_connected        boolean   default true,
     constraint fk_social_info_user foreign key (user_id) references users (user_id),
     constraint unique_social_info unique (social_id, social_type)
 );

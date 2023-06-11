@@ -20,9 +20,9 @@ public class FollowRepositoryImpl implements FollowRepositoryCustom {
     }
 
     @Override
-    public List<FollowInfo> findFollowEntitiesByFolloweeUserId(Long followeeId, Long lastFollowId, int pageSize) {
+    public List<FollowInfo> findFollowersByFolloweeUserId(Long followeeId, Long lastFollowId, int pageSize) {
         return queryFactory.select(Projections.constructor(FollowInfo.class,
-                        follow.id, follow.follower.nickName, follow.createdAt))
+                        follow.id, follow.follower.userId, follow.follower.nickName, follow.createdAt))
                 .from(follow)
                 .where(follow.followee.userId.eq(followeeId))
                 .limit(pageSize)
@@ -31,9 +31,9 @@ public class FollowRepositoryImpl implements FollowRepositoryCustom {
     }
 
     @Override
-    public List<FollowInfo> findFollowEntitiesByFollowerUserId(Long followerId, Long lastFollowId, int pageSize) {
+    public List<FollowInfo> findFolloweesByFollowerUserId(Long followerId, Long lastFollowId, int pageSize) {
         return queryFactory.select(Projections.constructor(FollowInfo.class,
-                        follow.id, follow.followee.nickName, follow.createdAt))
+                        follow.id, follow.followee.userId, follow.followee.nickName, follow.createdAt))
                 .from(follow)
                 .where(eqLastFollowId(lastFollowId), follow.follower.userId.eq(followerId)) // lt : less than , <- and와 같다, id가 lastId보다 작고 followerId가 followerId와 같은 것
                 .limit(pageSize)
