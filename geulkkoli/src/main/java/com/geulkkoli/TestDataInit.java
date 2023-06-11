@@ -90,6 +90,7 @@ public class TestDataInit {
                     .title("여러분")
                     .postBody("나는 멋지고 섹시한 개발자")
                     .nickName(user01.getNickName())
+                    .tagListString("#testTag1")
                     .build();
             Post post = user01.writePost(addDTO);
             postRepository.save(post);
@@ -98,6 +99,7 @@ public class TestDataInit {
                     .title("testTitle01")
                     .postBody("test postbody 01")
                     .nickName(user01.getNickName())
+                    .tagListString("#testTag1")
                     .build();
             Post post1 = user01.writePost(addDTO1);
             postRepository.save(post1);
@@ -106,6 +108,7 @@ public class TestDataInit {
                     .title("testTitle02")
                     .postBody("test postbody 02")
                     .nickName(user01.getNickName())
+                    .tagListString("#testTag2")
                     .build();
             Post post2 = user01.writePost(addDTO2);
             postRepository.save(post2);
@@ -114,6 +117,7 @@ public class TestDataInit {
                     .title("testTitle03")
                     .postBody("test postbody 03")
                     .nickName(user02.getNickName())
+                    .tagListString("#testTag2")
                     .build();
             Post post3 = user02.writePost(addDTO3);
             postRepository.save(post3);

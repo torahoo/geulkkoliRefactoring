@@ -67,6 +67,13 @@
                   th:text="${post.postBody}" rows="8" readonly></textarea>
     </div>
 
+    <div class="mb-3">
+        <label for="postHashTag" >해시태그</label>
+        <tr id="postHashTag" th:each="hashTag : ${post.getTagList()}">
+            <td th:align="center" th:text="${hashTag.getHashTagName()}">tagName</td>
+        </tr>
+    </div>
+
     <hr class="my-4">
     <div class="row">
         <div sec:authorize="hasRole('USER')"

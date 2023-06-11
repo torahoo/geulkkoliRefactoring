@@ -1,7 +1,9 @@
 package com.geulkkoli.domain.post.service;
 
+import com.geulkkoli.domain.hashtag.HashTag;
 import com.geulkkoli.domain.post.Post;
 import com.geulkkoli.domain.post.PostRepository;
+import com.geulkkoli.domain.posthashtag.PostHashTagService;
 import com.geulkkoli.domain.user.User;
 import com.geulkkoli.domain.user.UserRepository;
 import com.geulkkoli.web.post.dto.AddDTO;
@@ -22,10 +24,12 @@ public class PostService {
 
     private final PostRepository postRepository;
     private final UserRepository userRepository;
+    private final PostHashTagService postHashTagService;
 
-    public PostService(PostRepository postRepository, UserRepository userRepository) {
+    public PostService(PostRepository postRepository, UserRepository userRepository, PostHashTagService postHashTagService) {
         this.postRepository = postRepository;
         this.userRepository = userRepository;
+        this.postHashTagService = postHashTagService;
     }
 
     @Transactional(readOnly = true)
@@ -83,7 +87,16 @@ public class PostService {
     @Transactional
     public Post savePost(AddDTO post, User user) {
         Post writePost = user.writePost(post);
-        return postRepository.save(writePost);
+        Post save = postRepository.save(writePost);
+        if (post.getTagListString()!=null && post.getTagListString()!="") {
+            List<HashTag> hashTags = postHashTagService.hashTagSeparator(post.getTagListString());
+            postHashTagService.addHashTagsToPost(save, hashTags);
+        }
+        //일반글 태그를 넣기위한 코드
+        HashTag generalTag = new HashTag("일반글");
+        postHashTagService.addHashTagToPost(save, generalTag);
+
+        return save;
     }
     @Transactional
 

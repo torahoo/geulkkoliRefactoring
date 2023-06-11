@@ -26,12 +26,15 @@ public class AddDTO {
     @NotBlank
     private String nickName;
 
+    private String tagListString;
+
     @Builder
-    public AddDTO(Long authorId, String title, String postBody, String nickName) {
+    public AddDTO(Long authorId, String title, String postBody, String nickName, String tagListString) {
         this.authorId = authorId;
         this.title = title;
         this.postBody = postBody;
         this.nickName = nickName;
+        this.tagListString = tagListString;
     }
 
 }

@@ -106,8 +106,12 @@ public class PostHashTagService {
 
             HashTag hashTagByHashTagName = hashTagRepository.findHashTagByHashTagName(stripper);
 
-            if (hashTagByHashTagName != null)
+            if (hashTagByHashTagName != null) {
                 hashTags.add(hashTagByHashTagName);
+            } else {
+                HashTag save = hashTagRepository.save(new HashTag(stripper));
+                hashTags.add(save);
+            }
         }
 
         return hashTags;

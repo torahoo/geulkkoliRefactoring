@@ -1,6 +1,7 @@
 package com.geulkkoli.domain.post;
 
 import com.geulkkoli.domain.post.service.PostService;
+import com.geulkkoli.domain.posthashtag.PostHashTag;
 import com.geulkkoli.domain.user.User;
 import com.geulkkoli.domain.user.UserRepository;
 import com.geulkkoli.web.post.dto.AddDTO;
@@ -12,6 +13,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -44,12 +46,14 @@ class PostServiceTest {
 
         userRepository.save(user1);
 
-        AddDTO addDTO = new AddDTO(1L, "title", "body", "nick");
-        postService.savePost(addDTO, user1);
+        AddDTO addDTO = new AddDTO(1L, "title", "body", "nick", "#testTag");
+        Post save = postService.savePost(addDTO, user1);
 
-        Post post = postService.findById(1L);
+        Post post = postService.findById(save.getPostId());
+        List<PostHashTag> postHashTags = new ArrayList<>(post.getPostHashTags());
 
         assertThat("title").isEqualTo(post.getTitle());
+        assertThat("testTag").isEqualTo(postHashTags.get(0).getHashTag().getHashTagName());
     }
 
     @Test
@@ -68,10 +72,10 @@ class PostServiceTest {
 
         userRepository.save(user1);
 
-        postService.savePost(new AddDTO(1L, "title", "body", "nick"), user1);
-        postService.savePost(new AddDTO(1L, "title", "body", "nick"), user1);
-        postService.savePost(new AddDTO(1L, "title", "body", "nick"), user1);
-        postService.savePost(new AddDTO(1L, "title", "body", "nick"), user1);
+        postService.savePost(new AddDTO(1L, "title", "body", "nick", "#testTag"), user1);
+        postService.savePost(new AddDTO(1L, "title", "body", "nick", "#testTag"), user1);
+        postService.savePost(new AddDTO(1L, "title", "body", "nick", "#testTag"), user1);
+        postService.savePost(new AddDTO(1L, "title", "body", "nick", "#testTag"), user1);
 
         String searchType = "";
         String searchWords = "";
@@ -94,7 +98,7 @@ class PostServiceTest {
         userRepository.save(user1);
 
 
-        Post post= postService.savePost(new AddDTO(1L, "title", "body", "nick"), user1);
+        Post post= postService.savePost(new AddDTO(1L, "title", "body", "nick", "#testTag"), user1);
         EditDTO editDTO = new EditDTO(post.getPostId(),"title update", "body update", "nick update");
         postService.updatePost(post.getPostId(), editDTO);
 
@@ -117,7 +121,7 @@ class PostServiceTest {
 
         userRepository.save(user1);
 
-        postService.savePost(new AddDTO(1L, "title", "body", user1.getNickName()), user1);
+        postService.savePost(new AddDTO(1L, "title", "body", user1.getNickName(), "#testTag"), user1);
 
         postService.deletePost(1L, user1.getNickName());
 

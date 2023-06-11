@@ -43,6 +43,16 @@
                     <div class="field-error" th:errors="*{postBody}">본문 오류</div>
                 </div>
 
+                <div class="mb-3">
+                    <label th:text="해시태그">해시태그</label>
+                    <input class="form-control"
+                           type="text"
+                           id="tagListString"
+                           th:field="*{tagListString}" form="add"
+                           rows="8" placeholder="#태그1 #태그2 ...">태그이름</input>
+                    <div class="field-error" th:errors="*{tagListString}">태그 오류</div>
+                </div>
+
                 <hr class="my-4">
                 <div class="row">
                     <div class="col">
