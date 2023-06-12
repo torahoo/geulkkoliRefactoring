@@ -6,6 +6,7 @@ import com.geulkkoli.domain.favorites.Favorites;
 import com.geulkkoli.domain.post.Post;
 import com.geulkkoli.domain.post.service.PostService;
 import com.geulkkoli.domain.user.User;
+import com.geulkkoli.domain.user.service.UserFindService;
 import com.geulkkoli.domain.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -26,7 +27,7 @@ public class FavoriteController {
 
     private final FavoriteService favoriteService;
     private final PostService postService;
-    private final UserService userService;
+    private final UserFindService userFindService;
 
     @PostMapping("pressFavorite/{postId}")
     public ResponseEntity<String> pressFavoriteButton(@PathVariable("postId") Long postId,
@@ -35,7 +36,7 @@ public class FavoriteController {
         Post post = postService.findById(postId);
 
         try {
-            User loginUser = userService.findById(Long.parseLong(user.getUserId()));
+            User loginUser = userFindService.findById(Long.parseLong(user.getUserId()));
             Optional<Favorites> optionalFavorites = favoriteService.checkFavorite(post, loginUser);
             if (optionalFavorites.isEmpty()) {
                 favoriteService.addFavorite(post, loginUser);

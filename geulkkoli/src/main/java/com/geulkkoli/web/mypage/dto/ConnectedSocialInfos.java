@@ -3,10 +3,10 @@ package com.geulkkoli.web.mypage.dto;
 import com.geulkkoli.application.social.util.SocialType;
 import com.geulkkoli.application.social.util.SocialTypeException;
 import com.geulkkoli.domain.social.SocialInfo;
-import com.geulkkoli.web.mypage.ConnectSocialInfo;
-import com.geulkkoli.web.mypage.GoogleConnectedSocialInfo;
-import com.geulkkoli.web.mypage.KaKaoConnectedSocialInfo;
-import com.geulkkoli.web.mypage.NaverConnectedSocialInfo;
+import com.geulkkoli.web.mypage.dto.ConnectSocialInfo;
+import com.geulkkoli.web.mypage.dto.GoogleConnectedSocialInfo;
+import com.geulkkoli.web.mypage.dto.KaKaoConnectedSocialInfo;
+import com.geulkkoli.web.mypage.dto.NaverConnectedSocialInfo;
 
 import java.util.List;
 import java.util.stream.Collectors;

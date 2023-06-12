@@ -3,10 +3,10 @@ package com.geulkkoli.domain.user.service;
 import com.geulkkoli.application.security.Role;
 import com.geulkkoli.application.security.RoleEntity;
 import com.geulkkoli.application.security.RoleRepository;
-import com.geulkkoli.application.user.PasswordService;
+import com.geulkkoli.application.user.service.PasswordService;
 import com.geulkkoli.domain.user.User;
 import com.geulkkoli.domain.user.UserRepository;
-import com.geulkkoli.web.myPage.dto.edit.UserInfoEditFormDto;
+import com.geulkkoli.web.mypage.dto.edit.UserInfoEditFormDto;
 import com.geulkkoli.web.social.SocialSignUpDto;
 import com.geulkkoli.web.user.dto.JoinFormDto;
 import lombok.RequiredArgsConstructor;
@@ -88,38 +88,4 @@ public class UserService {
         userRepository.deleteById(user.getUserId());
     }
 
-    @Transactional(readOnly = true)
-    public User findById(Long id) {
-        return userRepository.findById(id)
-                .orElseThrow(() -> new NoSuchElementException("No user found id matches:" + id));
-    }
-
-    @Transactional(readOnly = true)
-    public Optional<User> findByEmail(String email) {
-        return userRepository.findByEmail(email);
-    }
-
-    @Transactional(readOnly = true)
-    public Optional<User> findByUserNameAndPhoneNo(String userName, String phoneNo) {
-        return userRepository.findByUserNameAndPhoneNo(userName, phoneNo);
-    }
-
-    @Transactional(readOnly = true)
-    public Optional<User> findByEmailAndUserNameAndPhoneNo(String email, String userName, String phoneNo) {
-        return userRepository.findByEmailAndUserNameAndPhoneNo(email, userName, phoneNo);
-    }
-
-    @Transactional(readOnly = true)
-    public User findByNickName(String nickName) {
-        return userRepository.findByNickName(nickName)
-                .orElseThrow(() -> new NoSuchElementException("No user found nickname matches:" + nickName));
-    }
-
-    @Transactional
-    public User signUp(SocialSignUpDto signUpDto) {
-        User user = userRepository.save(signUpDto.toEntity(PasswordService.passwordEncoder));
-        RoleEntity roleEntity = user.Role(Role.USER);
-        roleRepository.save(roleEntity);
-        return user;
-    }
 }

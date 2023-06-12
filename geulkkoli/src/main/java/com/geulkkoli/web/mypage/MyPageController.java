@@ -2,10 +2,22 @@ package com.geulkkoli.web.mypage;
 
 import com.geulkkoli.application.follow.FollowMyPageUserInfoService;
 import com.geulkkoli.application.user.CustomAuthenticationPrinciple;
+import com.geulkkoli.application.user.service.PasswordService;
 import com.geulkkoli.domain.follow.service.FollowService;
+import com.geulkkoli.domain.post.service.PostService;
 import com.geulkkoli.domain.social.SocialInfoService;
+import com.geulkkoli.domain.user.User;
+import com.geulkkoli.domain.user.service.UserFindService;
+import com.geulkkoli.domain.user.service.UserService;
 import com.geulkkoli.web.mypage.dto.ConnectedSocialInfos;
+import com.geulkkoli.web.mypage.dto.MyPageFormDto;
+import com.geulkkoli.web.mypage.dto.calendar.CalendarDto;
+import com.geulkkoli.web.mypage.dto.edit.PasswordEditFormDto;
+import com.geulkkoli.web.mypage.dto.edit.UserInfoEditFormDto;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -32,6 +44,7 @@ public class MyPageController {
     public static final String REDIRECT_INDEX = "redirect:/";
 
     private final UserService userService;
+    private final UserFindService userFindService;
     private final PostService postService;
     private final PasswordService passwordService;
     private final SocialInfoService socialInfoService;
@@ -94,7 +107,7 @@ public class MyPageController {
 
     @PostMapping("/editPassword")
     public String editPassword(@Validated @ModelAttribute("passwordEditForm") PasswordEditFormDto form, BindingResult bindingResult, @AuthenticationPrincipal CustomAuthenticationPrinciple authUser, RedirectAttributes redirectAttributes) {
-        User user = userService.findById(parseLong(authUser));
+        User user = userFindService.findById(parseLong(authUser));
         //null값 처리
         if (!passwordService.isPasswordVerification(user, form)) {
             bindingResult.rejectValue("oldPassword", "Check.password");
@@ -118,7 +131,7 @@ public class MyPageController {
     @GetMapping("/calendar")
     @ResponseBody
     public ResponseEntity<CalendarDto> calendaring(@AuthenticationPrincipal CustomAuthenticationPrinciple authUser) {
-        User user = userService.findById(parseLong(authUser));
+        User user = userFindService.findById(parseLong(authUser));
 
         List<LocalDate> allPostDatesByOneUser = postService.getCreatedAts(user);
         CalendarDto calendarDto = new CalendarDto(authUser.getUserRealName(), user.getSignUpDate(), allPostDatesByOneUser);
@@ -133,7 +146,7 @@ public class MyPageController {
     @DeleteMapping("unsubscribe/{userId}")
     public String unsubscribe(@PathParam("userId") Long userId, @AuthenticationPrincipal CustomAuthenticationPrinciple authUser) {
         try {
-            User findUser = userService.findById(userId);
+            User findUser = userFindService.findById(userId);
             userService.delete(findUser);
         } catch (Exception e) {
             //만약 findUser가 null이라면? 다른 에러페이지를 보여줘야하지 않을까?

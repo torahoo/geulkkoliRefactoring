@@ -6,6 +6,7 @@ import com.geulkkoli.domain.admin.service.AdminServiceImpl;
 import com.geulkkoli.domain.post.Post;
 import com.geulkkoli.domain.post.PostRepository;
 import com.geulkkoli.domain.user.User;
+import com.geulkkoli.domain.user.service.UserFindService;
 import com.geulkkoli.domain.user.service.UserService;
 import com.geulkkoli.web.post.dto.AddDTO;
 import com.geulkkoli.web.user.dto.JoinFormDto;
@@ -30,6 +31,7 @@ public class TestDataInit {
     private final ReportRepository reportRepository;
     private final AdminServiceImpl adminServiceImpl;
     private final UserService userService;
+    private final UserFindService userFindService;
 
     /**
      * 확인용 초기 데이터 추가
@@ -93,7 +95,7 @@ public class TestDataInit {
         LocalDate signUpDate = LocalDate.of(2022, 1, 1);
         User user4 = userService.signUp(joinForm4, signUpDate);
 
-        User user01 = userService.findById(1L);
+        User user01 = userFindService.findById(1L);
         for (int i = 0; i < 4; ++i) {
 
             AddDTO addDTO = AddDTO.builder()
