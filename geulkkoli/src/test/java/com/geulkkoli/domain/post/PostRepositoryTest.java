@@ -130,7 +130,7 @@ class PostRepositoryTest {
                 .nickName("점심뭐먹지").build());
         Post savePost = postRepository.save(post);
 
-        Post modifyPost = user.editPost(savePost.getPostId(), new EditDTO(savePost.getPostId(), "modifyTitle", "modifyBody", savePost.getNickName()));
+        Post modifyPost = user.editPost(savePost.getPostId(), new EditDTO(savePost.getPostId(), "modifyTitle", "modifyBody", savePost.getNickName(), savePost.getPostHashTags()));
 
         postRepository.save(modifyPost);
 

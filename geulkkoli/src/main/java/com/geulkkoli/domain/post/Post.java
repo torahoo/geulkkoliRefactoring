@@ -145,5 +145,9 @@ public class Post extends ConfigDate {
         deletePostHashTag.getHashTag().getPostHashTags().remove(deletePostHashTag);
         return deletePostHashTag;
     }
+
+    public void deleteAllPostHashTag () {
+        this.postHashTags.removeAll(postHashTags);
+    }
 }
 

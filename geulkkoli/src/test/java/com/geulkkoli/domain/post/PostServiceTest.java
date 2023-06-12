@@ -99,7 +99,7 @@ class PostServiceTest {
 
 
         Post post= postService.savePost(new AddDTO(1L, "title", "body", "nick", "#testTag"), user1);
-        EditDTO editDTO = new EditDTO(post.getPostId(),"title update", "body update", "nick update");
+        EditDTO editDTO = new EditDTO(post.getPostId(),"title update", "body update", "nick update", post.getPostHashTags());
         postService.updatePost(post.getPostId(), editDTO);
 
         Post one = postService.findById(1L);

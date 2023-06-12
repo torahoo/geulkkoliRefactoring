@@ -101,6 +101,11 @@ public class PostService {
         Post post = findById(postId)
                 .getUser()
                 .editPost(postId, updateParam);
+        if (updateParam.getTagListString()!=null && updateParam.getTagListString()!="") {
+            post.deleteAllPostHashTag();
+            List<HashTag> hashTags = postHashTagService.hashTagSeparator(updateParam.getTagListString());
+            postHashTagService.addHashTagsToPost(post, hashTags);
+        }
         postRepository.save(post);
     }
     @Transactional

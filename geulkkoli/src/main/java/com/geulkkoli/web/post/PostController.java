@@ -168,14 +168,9 @@ public class PostController {
         postService.updatePost(postId, updateParam);
         redirectAttributes.addAttribute("updateStatus", true);
         redirectAttributes.addAttribute("page", request.getSession().getAttribute("pageNumber"));
+        redirectAttributes.addAttribute("searchType", searchType);
+        redirectAttributes.addAttribute("searchWords", searchWords);
 
-        if(searchType!=null&&searchWords!=null){
-            redirectAttributes.addAttribute("searchType", searchType);
-            redirectAttributes.addAttribute("searchWords", searchWords);
-        } else {
-            redirectAttributes.addAttribute("searchType", "");
-            redirectAttributes.addAttribute("searchWords", "");
-        }
         return "redirect:/post/read/{postId}?page={page}&searchType={searchType}&searchWords={searchWords}";
     }
 
