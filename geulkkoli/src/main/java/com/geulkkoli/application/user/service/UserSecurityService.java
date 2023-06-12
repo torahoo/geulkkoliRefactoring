@@ -1,8 +1,10 @@
-package com.geulkkoli.application.user;
+package com.geulkkoli.application.user.service;
 
 import com.geulkkoli.application.security.AccountStatus;
 import com.geulkkoli.application.security.Role;
 import com.geulkkoli.application.security.RoleException;
+import com.geulkkoli.application.user.CustomAuthenticationPrinciple;
+import com.geulkkoli.application.user.UserModelDto;
 import com.geulkkoli.domain.user.User;
 import com.geulkkoli.domain.user.UserRepository;
 import lombok.RequiredArgsConstructor;

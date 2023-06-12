@@ -1,6 +1,6 @@
 package com.geulkkoli.web.user;
 
-import com.geulkkoli.application.email.EmailService;
+import com.geulkkoli.application.user.service.EmailService;
 import com.geulkkoli.application.user.service.PasswordService;
 import com.geulkkoli.domain.user.User;
 import com.geulkkoli.domain.user.service.UserFindService;
@@ -13,15 +13,12 @@ import com.geulkkoli.web.user.dto.find.FindPasswordFormDto;
 import com.geulkkoli.web.user.dto.find.FoundEmailFormDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Optional;

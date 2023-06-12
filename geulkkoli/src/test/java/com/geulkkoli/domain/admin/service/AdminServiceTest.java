@@ -1,6 +1,6 @@
 package com.geulkkoli.domain.admin.service;
 
-import com.geulkkoli.application.user.UserSecurityService;
+import com.geulkkoli.application.user.service.UserSecurityService;
 import com.geulkkoli.domain.user.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;

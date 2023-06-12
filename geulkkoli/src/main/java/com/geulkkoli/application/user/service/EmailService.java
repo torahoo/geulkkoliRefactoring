@@ -1,5 +1,6 @@
-package com.geulkkoli.application.email;
+package com.geulkkoli.application.user.service;
 
+import com.geulkkoli.application.user.EmailDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;

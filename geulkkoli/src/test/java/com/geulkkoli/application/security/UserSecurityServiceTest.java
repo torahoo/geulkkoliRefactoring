@@ -2,7 +2,7 @@ package com.geulkkoli.application.security;
 
 import com.geulkkoli.application.user.CustomAuthenticationPrinciple;
 import com.geulkkoli.application.user.service.PasswordService;
-import com.geulkkoli.application.user.UserSecurityService;
+import com.geulkkoli.application.user.service.UserSecurityService;
 import com.geulkkoli.domain.user.User;
 import com.geulkkoli.domain.user.service.UserFindService;
 import com.geulkkoli.domain.user.service.UserService;
