@@ -89,12 +89,15 @@ public class PostController {
     //새 게시글 등록
     @PostMapping("/add")
     public String postAdd(@Validated @ModelAttribute AddDTO post, BindingResult bindingResult,
-                          RedirectAttributes redirectAttributes, HttpServletResponse response)
+                          RedirectAttributes redirectAttributes, HttpServletResponse response, HttpServletRequest request)
             throws UnsupportedEncodingException {
         if (bindingResult.hasErrors()) {
             return "/post/postAddForm";
         }
-        post.setTagListString(post.getTagListString()+"#일반글");
+
+        String s = post.getTagListString() + "#일반글";
+        redirectAttributes.addAttribute("page", request.getSession().getAttribute("pageNumber"));
+
         User user = userService.findById(post.getAuthorId());
         long postId = postService.savePost(post, user).getPostId();
         redirectAttributes.addAttribute("postId",postId);
@@ -165,12 +168,19 @@ public class PostController {
         if (bindingResult.hasErrors()) {
             return "/post/postEditForm";
         }
+
         postService.updatePost(postId, updateParam);
+
         redirectAttributes.addAttribute("updateStatus", true);
         redirectAttributes.addAttribute("page", request.getSession().getAttribute("pageNumber"));
-        redirectAttributes.addAttribute("searchType", searchType);
-        redirectAttributes.addAttribute("searchWords", searchWords);
 
+        if(searchType!=null&&searchWords!=null){
+            redirectAttributes.addAttribute("searchType", searchType);
+            redirectAttributes.addAttribute("searchWords", searchWords);
+        } else {
+            redirectAttributes.addAttribute("searchType", "");
+            redirectAttributes.addAttribute("searchWords", "");
+        }
         return "redirect:/post/read/{postId}?page={page}&searchType={searchType}&searchWords={searchWords}";
     }
 
