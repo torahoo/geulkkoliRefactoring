@@ -1,4 +1,4 @@
-package com.geulkkoli.web.myPage.dto.calendar;
+package com.geulkkoli.web.mypage.dto.calendar;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
