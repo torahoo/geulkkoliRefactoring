@@ -6,17 +6,20 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>마이페이지</title>
-    <link rel="stylesheet" href="/css/bootstrap.min.css">
-    <link rel="stylesheet" href="/css/userForm.css">
+    <link th:href="@{/css/styles.css}" rel="stylesheet">
     <link rel="stylesheet" href="/css/mypage.css">
 </head>
-
+<nav id="sidenav">
+    <ul>
+        <li>좋아요 누른 작품</a></li>
+        <li>내 작품</li>
+    </ul>
+</nav>
 <body>
 <header id="header" th:include="header"></header>
-<strong style="text-align: center">마이 페이지</strong>
-<main style="text-align: center">
+<aside>
+    <span><strong style="text-align: center">개인 페이지</strong></span>
     <section style="text-align: center">
-
         <a class="following-link" th:href="@{/my-page/followers}" th:if="${followsCount.getFollowerCount() > 0}">
             <em>구독자</em>
             <span th:text="${followsCount.getFollowerCount()}"></span>
@@ -37,6 +40,9 @@
         </a>
 
     </section>
+</aside>
+<main style="text-align: center">
+
 </main>
 
 <section class="col" style="text-align: center">
