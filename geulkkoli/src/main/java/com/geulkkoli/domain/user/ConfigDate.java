@@ -29,7 +29,7 @@ public abstract class ConfigDate {
         }
     }
 
-    // 달력 잔디 심기용 달력 시작 기준 날짜 필요
+    // 달력 잔디 심기용 달력 시작 기준 날짜 필요 (추후 제거)
     public LocalDate setCreatedAtForCalendarTest(LocalDate localDate) {
         return calendarData = localDate;
     }

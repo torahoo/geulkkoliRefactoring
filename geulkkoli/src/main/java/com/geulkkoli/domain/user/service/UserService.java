@@ -41,7 +41,7 @@ public class UserService {
         return userRepository.findByPhoneNo(phoneNo).isPresent();
     }
 
-    @Transactional(readOnly = true)
+    @Transactional
     public void edit(Long id, UserInfoEditFormDto userInfoEditFormDto) {
         userRepository.edit(id, userInfoEditFormDto);
     }
