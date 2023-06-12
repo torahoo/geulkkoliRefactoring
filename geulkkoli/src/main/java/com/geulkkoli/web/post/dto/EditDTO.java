@@ -30,6 +30,7 @@ public class EditDTO {
     @Length(min = 10, max = 10000)
     private String postBody;
 
+    @Setter
     private String tagListString;
 
     private final String nickName;

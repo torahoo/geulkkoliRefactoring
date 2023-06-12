@@ -13,10 +13,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -99,7 +96,7 @@ public class PostHashTagService {
 
 
     public List<HashTag> hashTagSeparator(String searchWords) {
-        List<HashTag> hashTags = new ArrayList<>();
+        Set<HashTag> hashTags = new LinkedHashSet<>();
         String[] splitter = searchWords.split("#");
         for (int i = 1; i < splitter.length; i++) {
             String stripper = splitter[i].strip();
@@ -114,7 +111,7 @@ public class PostHashTagService {
             }
         }
 
-        return hashTags;
+        return new ArrayList<>(hashTags);
     }
 
     public String searchWordExtractor(String searchWords) {

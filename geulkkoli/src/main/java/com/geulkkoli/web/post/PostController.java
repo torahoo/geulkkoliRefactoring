@@ -95,7 +95,7 @@ public class PostController {
             return "/post/postAddForm";
         }
 
-        String s = post.getTagListString() + "#일반글";
+        post.setTagListString(post.getTagListString() + "#일반글");
         redirectAttributes.addAttribute("page", request.getSession().getAttribute("pageNumber"));
 
         User user = userService.findById(post.getAuthorId());
@@ -169,6 +169,7 @@ public class PostController {
             return "/post/postEditForm";
         }
 
+        updateParam.setTagListString(updateParam.getTagListString()+"#일반글");
         postService.updatePost(postId, updateParam);
 
         redirectAttributes.addAttribute("updateStatus", true);
