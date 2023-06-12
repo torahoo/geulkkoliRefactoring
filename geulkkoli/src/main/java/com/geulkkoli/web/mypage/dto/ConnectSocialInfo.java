@@ -1,4 +1,4 @@
-package com.geulkkoli.web.mypage;
+package com.geulkkoli.web.mypage.dto;
 
 public interface ConnectSocialInfo {
     String getSocialType();

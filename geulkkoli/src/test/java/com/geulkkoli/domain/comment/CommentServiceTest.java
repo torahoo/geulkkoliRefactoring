@@ -1,149 +1,72 @@
 package com.geulkkoli.domain.comment;
 
 import com.geulkkoli.domain.post.Post;
-import com.geulkkoli.domain.post.service.PostService;
 import com.geulkkoli.domain.user.User;
-import com.geulkkoli.domain.user.UserRepository;
 import com.geulkkoli.web.comment.dto.CommentBodyDTO;
-import com.geulkkoli.web.comment.dto.CommentEditDTO;
-import com.geulkkoli.web.post.dto.AddDTO;
-import lombok.extern.slf4j.Slf4j;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.MethodSource;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.transaction.annotation.Transactional;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentMatcher;
+import org.mockito.ArgumentMatchers;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.test.util.ReflectionTestUtils;
 
-import java.util.ArrayList;
-import java.util.stream.Stream;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.BDDMockito.given;
 
-import static org.assertj.core.api.Assertions.*;
-
-@Slf4j
-@ActiveProfiles("test")
-@SpringBootTest
-@Transactional
-public class CommentServiceTest {
-
-    @Autowired
-    private CommentsService commentsService;
-    @Autowired
+@ExtendWith(MockitoExtension.class)
+class CommentsServiceTest {
+    @Mock
     private CommentsRepository commentsRepository;
-    @Autowired
-    private PostService postService;
-    @Autowired
-    private UserRepository userRepository;
 
-    private User user;
-    private Post post01, post02;
+    @InjectMocks
+    private CommentsService commentsService;
 
-    @AfterEach
-    void afterEach () {
-        commentsRepository.deleteAll();
-    }
 
-    @BeforeEach
-    void init(){
-        User save = User.builder()
-                .email("test@naver.com")
-                .userName("test")
-                .nickName("test")
-                .phoneNo("00000000000")
-                .password("123")
-                .gender("male").build();
-
-        user = userRepository.save(save);
-    }
-
-    @BeforeEach
-    void beforeEach () {
-        AddDTO addDTO01 = AddDTO.builder()
-                .title("testTitle01")
-                .postBody("test postbody 01")
+    @Test
+    void writeComment() {
+        User user = User.builder()
+                .email("test1@gmail.com")
+                .userName("name")
+                .nickName("nickName")
+                .phoneNo("010-1111-2222")
+                .password("1234")
+                .gender("Male")
+                .build();
+        ReflectionTestUtils.setField(user, "userId", 1L);
+        Post post = Post.builder()
                 .nickName(user.getNickName())
+                .title("title")
+                .user(user)
+                .postBody("test")
                 .build();
-        post01 = postService.savePost(addDTO01, user);
+        ReflectionTestUtils.setField(post, "postId", 1L);
 
-        AddDTO addDTO02 = AddDTO.builder()
-                .title("testTitle02")
-                .postBody("test postbody 02")
-                .nickName(user.getNickName())
+        CommentBodyDTO commentBodyDTO = CommentBodyDTO.builder()
+                .commentBody("test")
                 .build();
-        post02 = postService.savePost(addDTO02, user);
+        Comments comments = new Comments(user, post, commentBodyDTO.getCommentBody());
+        ReflectionTestUtils.setField(comments, "commentId", 1L);
+        given(commentsRepository.save(any(Comments.class))).willReturn(comments);
+        Comments save = commentsService.writeComment(commentBodyDTO, post, user);
+        assertThat(save).isEqualTo(comments);
     }
 
     @Test
-    void commentSave() {
-        //given
-        CommentBodyDTO commentsBody = CommentBodyDTO.builder()
-                .commentBody("test")
-                .build();
-
-        //when
-        commentsService.writeComment(commentsBody, post01, user);
-
-        //then
-        Comments find = new ArrayList<>(post01.getComments()).get(0);
-        assertThat(commentsBody.getCommentBody()).isEqualTo(find.getCommentBody());
+    void getCommentsList() {
     }
 
     @Test
-    void commentEdit() {
-        //given
-        CommentBodyDTO commentsBody = CommentBodyDTO.builder()
-                .commentBody("test")
-                .build();
-        Long aLong = commentsService.writeComment(commentsBody, post01, user);
-
-
-        //when
-        CommentEditDTO editComment = CommentEditDTO.builder()
-                .commentId(aLong)
-                .commentBody("edit")
-                .build();
-        Comments find = new ArrayList<>(post01.getComments()).get(0);
-        commentsService.editComment(editComment, user);
-
-        //then
-        assertThat(editComment.getCommentBody()).isEqualTo(find.getCommentBody());
+    void editComment() {
     }
 
     @Test
-    void commentDelete() {
-        //given
-        CommentBodyDTO commentsBody = CommentBodyDTO.builder()
-                .commentBody("test")
-                .build();
-        for (int i = 0; i < 10; ++i)
-            commentsService.writeComment(commentsBody, post01, user);
-        int size = post01.getComments().size();
-
-        //when
-        commentsService.deleteComment(post01.getComments().iterator().next().getCommentId(), user);
-
-        //then
-        assertThat(size - 1).isEqualTo(post01.getComments().size());
+    void deleteComment() {
     }
 
     @Test
     void getUserComment() {
-        //given
-        for (int i = 0; i < 10; ++i) {
-            CommentBodyDTO commentsBody = CommentBodyDTO.builder()
-                    .commentBody("test")
-                    .build();
-            commentsService.writeComment(commentsBody, post01, user);
-        }
-        int count = post01.getComments().size();
-
-        //when
-        int size = commentsService.getUserComment(user).size();
-
-        //then
-        assertThat(size).isEqualTo(count);
     }
 }

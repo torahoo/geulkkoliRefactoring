@@ -8,7 +8,9 @@ import com.geulkkoli.application.user.ProviderUser;
 import com.geulkkoli.application.user.UserModelDto;
 import com.geulkkoli.application.social.util.DelegateOAuth2RequestConverter;
 import com.geulkkoli.application.social.util.ProviderUserRequest;
+import com.geulkkoli.domain.social.SocialInfoService;
 import com.geulkkoli.domain.user.User;
+import com.geulkkoli.domain.user.service.UserFindService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -33,6 +35,10 @@ import static java.lang.Boolean.*;
 @Service
 public class CustomOauth2UserService extends AbstractOauth2UserService implements OAuth2UserService<OAuth2UserRequest, OAuth2User> {
 
+
+    public CustomOauth2UserService(UserFindService userFindService, SocialInfoService socialInfoService) {
+        super(userFindService, socialInfoService);
+    }
 
     @Override
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {

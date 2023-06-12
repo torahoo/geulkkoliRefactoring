@@ -1,19 +1,11 @@
 package com.geulkkoli.web.mypage;
 
+import com.geulkkoli.application.follow.FollowMyPageUserInfoService;
 import com.geulkkoli.application.user.CustomAuthenticationPrinciple;
-import com.geulkkoli.application.user.service.PasswordService;
-import com.geulkkoli.domain.post.service.PostService;
+import com.geulkkoli.domain.follow.service.FollowService;
 import com.geulkkoli.domain.social.SocialInfoService;
-import com.geulkkoli.domain.user.User;
-import com.geulkkoli.domain.user.service.UserService;
-import com.geulkkoli.web.myPage.dto.MyPageFormDto;
-import com.geulkkoli.web.myPage.dto.calendar.CalendarDto;
-import com.geulkkoli.web.myPage.dto.edit.PasswordEditFormDto;
-import com.geulkkoli.web.myPage.dto.edit.UserInfoEditFormDto;
-import com.geulkkoli.web.mypage.ConnectedSocialInfos;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.ResponseEntity;
+import com.geulkkoli.web.mypage.dto.ConnectedSocialInfos;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -43,6 +35,7 @@ public class MyPageController {
     private final PostService postService;
     private final PasswordService passwordService;
     private final SocialInfoService socialInfoService;
+
 
     @GetMapping()
     public String myPage(@ModelAttribute("myPageForm") MyPageFormDto myPageFormDto, @AuthenticationPrincipal CustomAuthenticationPrinciple authUser, Model model) {

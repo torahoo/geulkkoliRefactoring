@@ -3,6 +3,7 @@ package com.geulkkoli.web.user;
 import com.geulkkoli.application.email.EmailService;
 import com.geulkkoli.application.user.service.PasswordService;
 import com.geulkkoli.domain.user.User;
+import com.geulkkoli.domain.user.service.UserFindService;
 import com.geulkkoli.domain.user.service.UserService;
 import com.geulkkoli.web.user.dto.EmailCheckForJoinDto;
 import com.geulkkoli.web.user.dto.JoinFormDto;
@@ -12,12 +13,15 @@ import com.geulkkoli.web.user.dto.find.FindPasswordFormDto;
 import com.geulkkoli.web.user.dto.find.FoundEmailFormDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Optional;
@@ -36,6 +40,7 @@ public class UserController {
     public static final String REDIRECT_INDEX = "redirect:/";
 
     private final UserService userService;
+    private final UserFindService userFindService;
     private final PasswordService passwordService;
     private final EmailService emailService;
 
@@ -52,7 +57,7 @@ public class UserController {
     @PostMapping("/findEmail")
     public String userFindEmail(@Validated @ModelAttribute("findEmailForm") FindEmailFormDto form, BindingResult bindingResult, Model model) {
 
-        Optional<User> user = userService.findByUserNameAndPhoneNo(form.getUserName(), form.getPhoneNo());
+        Optional<User> user = userFindService.findByUserNameAndPhoneNo(form.getUserName(), form.getPhoneNo());
 
         if (user.isEmpty()) {
             bindingResult.addError(new ObjectError("empty", "Check.findContent"));
@@ -81,7 +86,7 @@ public class UserController {
     @PostMapping("/findPassword")
     public String userFindPassword(@Validated @ModelAttribute("findPasswordForm") FindPasswordFormDto form, BindingResult bindingResult, HttpServletRequest request) {
 
-        Optional<User> user = userService.findByEmailAndUserNameAndPhoneNo(form.getEmail(), form.getUserName(), form.getPhoneNo());
+        Optional<User> user = userFindService.findByEmailAndUserNameAndPhoneNo(form.getEmail(), form.getUserName(), form.getPhoneNo());
 
         if (user.isEmpty()) {
             bindingResult.addError(new ObjectError("empty", "Check.findContent"));
@@ -103,7 +108,7 @@ public class UserController {
     @GetMapping("/tempPassword")
     public String userTempPassword(HttpServletRequest request, Model model) {
         String email = (String) request.getSession().getAttribute("email");
-        Optional<User> user = userService.findByEmail(email);
+        Optional<User> user = userFindService.findByEmail(email);
 
         int length = passwordService.setLength(8, 20);
         String tempPassword = passwordService.createTempPassword(length);
@@ -123,7 +128,7 @@ public class UserController {
     }
 
     @PostMapping("/join")
-    public String userJoin(@Validated @ModelAttribute("joinForm") JoinFormDto form, BindingResult bindingResult, Model model, HttpServletRequest request) {
+    public String userJoin(@Validated @ModelAttribute("joinForm") JoinFormDto form, BindingResult bindingResult, HttpServletRequest request) {
         log.info("join Method={}", this);
 
         if (userService.isNickNameDuplicate(form.getNickName())) {

@@ -1,6 +1,6 @@
 package com.geulkkoli.domain.social;
 
-import com.geulkkoli.web.mypage.ConnectedSocialInfos;
+import com.geulkkoli.web.mypage.dto.ConnectedSocialInfos;
 import com.geulkkoli.web.social.SocialInfoDto;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -8,7 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
-
+@Transactional
 @Slf4j
 @Service
 public class SocialInfoService {
@@ -18,10 +18,12 @@ public class SocialInfoService {
     public SocialInfoService(SocialInfoRepository socialInfoRepository) {
         this.socialInfoRepository = socialInfoRepository;
     }
-
-    @Transactional
-    public SocialInfo save(SocialInfoDto socialInfo) {
+    public SocialInfo connect(SocialInfoDto socialInfo) {
         return socialInfoRepository.save(socialInfo.toEntity());
+    }
+
+    public SocialInfo reconnect(SocialInfo socialInfo) {
+        return socialInfoRepository.save(socialInfo);
     }
 
     @Transactional(readOnly = true)
@@ -29,7 +31,6 @@ public class SocialInfoService {
         return socialInfoRepository.findSocialInfoBySocialTypeAndSocialId(socialType, socialId).orElseThrow(() -> new IllegalArgumentException("해당하는 소셜 정보가 없습니다."));
     }
 
-    @Transactional
     public void delete(SocialInfo socialInfo) {
         socialInfoRepository.delete(socialInfo);
     }
@@ -58,7 +59,6 @@ public class SocialInfoService {
         return new ConnectedSocialInfos(allByUserEmail);
     }
 
-    @Transactional
     public void disconnect(String email, String socialType) {
         socialInfoRepository.findSocialInfoBySocialTypeAndAndUser_Email(socialType, email).ifPresent(socialInfo -> {
             socialInfo.disconnect();
@@ -72,7 +72,4 @@ public class SocialInfoService {
     }
 
 
-    public void save(SocialInfo socialInfo) {
-        socialInfoRepository.save(socialInfo);
-    }
 }

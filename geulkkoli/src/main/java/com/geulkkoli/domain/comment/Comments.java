@@ -58,13 +58,5 @@ public class Comments extends ConfigDate {
         this.commentBody = commentBody;
     }
 
-    @Override
-    public String toString() {
-        return "Comments{" +
-                "commentId=" + commentId +
-                ", user=" + user +
-                ", post=" + post +
-                ", commentBody='" + commentBody + '\'' +
-                '}';
-    }
+
 }

@@ -6,7 +6,6 @@ import com.geulkkoli.domain.user.User;
 import com.geulkkoli.domain.user.UserRepository;
 import com.geulkkoli.web.post.dto.AddDTO;
 import lombok.extern.slf4j.Slf4j;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -20,7 +19,6 @@ import java.util.List;
 import java.util.NoSuchElementException;
 
 import static org.assertj.core.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.*;
 
 @Slf4j
 @ActiveProfiles("test")
@@ -148,10 +146,10 @@ class FavoriteServiceTest {
         Favorites favorites2;
 
         //when
-        favorites1 = favoriteService.favoriteCheck(post01, user).get();
+        favorites1 = favoriteService.checkFavorite(post01, user).get();
 
         try {
-            favorites2 = favoriteService.favoriteCheck(post01, user02).get();
+            favorites2 = favoriteService.checkFavorite(post01, user02).get();
         } catch (NoSuchElementException e) {
             favorites2 = null;
         }

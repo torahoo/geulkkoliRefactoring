@@ -3,7 +3,7 @@ package com.geulkkoli.domain.user.service;
 import com.geulkkoli.application.security.Role;
 import com.geulkkoli.application.security.RoleEntity;
 import com.geulkkoli.application.security.RoleRepository;
-import com.geulkkoli.application.user.service.PasswordService;
+import com.geulkkoli.application.user.PasswordService;
 import com.geulkkoli.domain.user.User;
 import com.geulkkoli.domain.user.UserRepository;
 import com.geulkkoli.web.myPage.dto.edit.UserInfoEditFormDto;
@@ -109,4 +109,17 @@ public class UserService {
         return userRepository.findByEmailAndUserNameAndPhoneNo(email, userName, phoneNo);
     }
 
+    @Transactional(readOnly = true)
+    public User findByNickName(String nickName) {
+        return userRepository.findByNickName(nickName)
+                .orElseThrow(() -> new NoSuchElementException("No user found nickname matches:" + nickName));
+    }
+
+    @Transactional
+    public User signUp(SocialSignUpDto signUpDto) {
+        User user = userRepository.save(signUpDto.toEntity(PasswordService.passwordEncoder));
+        RoleEntity roleEntity = user.Role(Role.USER);
+        roleRepository.save(roleEntity);
+        return user;
+    }
 }

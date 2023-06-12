@@ -68,7 +68,8 @@ CREATE TABLE IF NOT EXISTS user_followings
     follower_id   BIGINT NOT NULL,
     followee_id   BIGINT NOT NULL,
     CONSTRAINT fk_follower FOREIGN KEY (follower_id) REFERENCES users (user_id) ON DELETE CASCADE,
-    CONSTRAINT fk_followee FOREIGN KEY (followee_id) REFERENCES users (user_id) ON DELETE CASCADE
+    CONSTRAINT fk_followee FOREIGN KEY (followee_id) REFERENCES users (user_id) ON DELETE CASCADE,
+    Constraint unique_following unique (follower_id, followee_id)
 );
 
 
