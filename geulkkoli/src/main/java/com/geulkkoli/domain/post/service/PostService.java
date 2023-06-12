@@ -3,6 +3,7 @@ package com.geulkkoli.domain.post.service;
 import com.geulkkoli.domain.hashtag.HashTag;
 import com.geulkkoli.domain.post.Post;
 import com.geulkkoli.domain.post.PostRepository;
+import com.geulkkoli.domain.posthashtag.PostHashTag;
 import com.geulkkoli.domain.posthashtag.PostHashTagService;
 import com.geulkkoli.domain.user.User;
 import com.geulkkoli.domain.user.UserRepository;
@@ -101,8 +102,11 @@ public class PostService {
         Post post = findById(postId)
                 .getUser()
                 .editPost(postId, updateParam);
+        ArrayList<PostHashTag> postHashTags = new ArrayList<>(post.getPostHashTags());
         if (updateParam.getTagListString()!=null && updateParam.getTagListString()!="") {
-            post.deleteAllPostHashTag();
+            for(int i=0; i<postHashTags.size(); i++) {
+                post.deletePostHashTag(postHashTags.get(i).getPostHashTagId());
+            }
             List<HashTag> hashTags = postHashTagService.hashTagSeparator(updateParam.getTagListString());
             postHashTagService.addHashTagsToPost(post, hashTags);
         }
@@ -113,9 +117,13 @@ public class PostService {
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new NoSuchElementException("No post found id matches:" + postId));
         Optional<User> byNickName = userRepository.findByNickName(nickName);
+        ArrayList<PostHashTag> postHashTags = new ArrayList<>(post.getPostHashTags());
         if (byNickName.isPresent() && post.getUser().equals(byNickName.get())) {
             User user = byNickName.get();
             user.deletePost(post);
+            for(int i=0; i<postHashTags.size(); i++) {
+                post.deletePostHashTag(postHashTags.get(i).getPostHashTagId());
+            }
         }
 
         postRepository.delete(post);

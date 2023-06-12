@@ -6,6 +6,7 @@ import com.geulkkoli.domain.admin.ReportRepository;
 import com.geulkkoli.domain.admin.service.AdminServiceImpl;
 import com.geulkkoli.domain.post.Post;
 import com.geulkkoli.domain.post.PostRepository;
+import com.geulkkoli.domain.post.service.PostService;
 import com.geulkkoli.domain.user.User;
 import com.geulkkoli.domain.user.service.UserService;
 import com.geulkkoli.web.post.dto.AddDTO;
@@ -28,6 +29,7 @@ public class TestDataInit {
     private final ReportRepository reportRepository;
     private final AdminServiceImpl adminServiceImpl;
     private final UserService userService;
+    private final PostService postService;
 
     /**
      * 확인용 초기 데이터 추가
@@ -90,37 +92,33 @@ public class TestDataInit {
                     .title("여러분")
                     .postBody("나는 멋지고 섹시한 개발자")
                     .nickName(user01.getNickName())
-                    .tagListString("#testTag1")
+                    .tagListString("#testTag1 #일반글")
                     .build();
-            Post post = user01.writePost(addDTO);
-            postRepository.save(post);
+            postService.savePost(addDTO, user01);
 
             AddDTO addDTO1 = AddDTO.builder()
                     .title("testTitle01")
                     .postBody("test postbody 01")
                     .nickName(user01.getNickName())
-                    .tagListString("#testTag1")
+                    .tagListString("#testTag1 #일반글")
                     .build();
-            Post post1 = user01.writePost(addDTO1);
-            postRepository.save(post1);
+            postService.savePost(addDTO1, user01);
 
             AddDTO addDTO2 = AddDTO.builder()
                     .title("testTitle02")
                     .postBody("test postbody 02")
                     .nickName(user01.getNickName())
-                    .tagListString("#testTag2")
+                    .tagListString("#testTag2 #일반글")
                     .build();
-            Post post2 = user01.writePost(addDTO2);
-            postRepository.save(post2);
+            postService.savePost(addDTO2, user01);
 
             AddDTO addDTO3 = AddDTO.builder()
                     .title("testTitle03")
                     .postBody("test postbody 03")
                     .nickName(user02.getNickName())
-                    .tagListString("#testTag2")
+                    .tagListString("#testTag2 #일반글")
                     .build();
-            Post post3 = user02.writePost(addDTO3);
-            postRepository.save(post3);
+            postService.savePost(addDTO3, user02);
         }
         /**
           신고받은 게시물 더미 데이터를 리팩토링한 방식으로 다시 작성해봤습니다.
