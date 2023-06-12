@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository;
 import javax.persistence.EntityManager;
 import java.util.List;
 
-import static com.geulkkoli.domain.follow.QFollow.*;
+import static com.geulkkoli.domain.follow.QFollow.follow;
 
 @Repository
 public class FollowRepositoryImpl implements FollowRepositoryCustom {
@@ -24,11 +24,21 @@ public class FollowRepositoryImpl implements FollowRepositoryCustom {
         return queryFactory.select(Projections.constructor(FollowInfo.class,
                         follow.id, follow.follower.userId, follow.follower.nickName, follow.createdAt))
                 .from(follow)
-                .where(follow.followee.userId.eq(followeeId))
+                .where(eqLastFollowId(lastFollowId), follow.followee.userId.eq(followeeId))
                 .limit(pageSize)
                 .orderBy(follow.id.desc())
                 .fetch();
     }
+
+    @Override
+    public List<Long> findFollowedEachOther(List<Long> followerIds, Long followerId, int pageSize) {
+        return queryFactory.select(follow.followee.userId)
+                .from(follow)
+                .where(follow.followee.userId.in(followerIds), follow.follower.userId.eq(followerId))
+                .limit(pageSize)
+                .fetch();
+    }
+
 
     @Override
     public List<FollowInfo> findFolloweesByFollowerUserId(Long followerId, Long lastFollowId, int pageSize) {

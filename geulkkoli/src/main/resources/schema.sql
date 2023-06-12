@@ -44,8 +44,8 @@ create table if not exists post
     post_hits         BIGINT,
     image_upload_name varchar(255),
     post_topic        Bigint         not null default 3,
-    created_at        datetime DEFAULT CURRENT_TIMESTAMP,
-    updated_at        datetime      ,
+    created_at        TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at        TIMESTAMP DEFAULT CURRENT_TIMESTAMP      ,
     CONSTRAINT fk_users foreign key (author_id) REFERENCES users (user_id) ON DELETE CASCADE,
     CONSTRAINT fk_post_topic foreign key (post_topic) references topic_tags (topic_id) ON DELETE CASCADE
 );
@@ -57,8 +57,8 @@ create table if not exists comments
     author_id  BIGINT       NOT NULL,
     post_id    BIGINT       NOT NULL,
     body       VARCHAR(255) NOT NULL,
-    created_at datetime DEFAULT CURRENT_TIMESTAMP,
-    updated_at datetime DEFAULT CURRENT_TIMESTAMP,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     CONSTRAINT fk_comment_author FOREIGN KEY (author_id) REFERENCES users (user_id) ON DELETE CASCADE,
     CONSTRAINT fk_comment_post FOREIGN KEY (post_id) REFERENCES post (post_id) ON DELETE CASCADE
 );
@@ -101,7 +101,7 @@ create table if not exists social_info
     user_id             bigint       not null,
     social_id           varchar(255) not null,
     social_type         varchar(255) not null,
-    social_connect_date datetime default CURRENT_TIMESTAMP,
+    social_connect_date TIMESTAMP default CURRENT_TIMESTAMP,
     is_connected        boolean   default true,
     constraint fk_social_info_user foreign key (user_id) references users (user_id),
     constraint unique_social_info unique (social_id, social_type)

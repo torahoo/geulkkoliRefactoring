@@ -35,7 +35,7 @@ class SocialInfoRepositoryTest {
                 .user(user)
                 .socialType(SocialType.KAKAO.getValue())
                 .socialId("1234")
-                .socialConnectDate(LocalDateTime.of(2021, 1, 1, 0, 0, 0))
+                .socialConnectDate(LocalDateTime.of(2021, 1, 1, 0, 0, 0).toString())
                 .build();
 
         SocialInfo save = socialInfoRepository.save(socialInfo);

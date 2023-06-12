@@ -19,30 +19,31 @@ const getList = () => {
 // 스크롤 이벤트 시 실행할 구독하는 사람 목록 구독 취소 버튼과과 각 구독하는 사람의 구독 취소 버튼에 이벤트를 추가하는 함수
 const drawList = (data) => {
     const list = document.querySelector('ul.list_follow');
-    data.forEach((followee, index) => {
+    data.followInfos.forEach((followInfo, index) => {
+        console.log(followInfo)
         const li = document.createElement('li');
         const span = document.createElement('span');
         span.classList.add('span_follow-profile-image');
         li.appendChild(span);
         const span2 = document.createElement('span');
-        span2.innerText = followee.nickName;
+        span2.innerText = followInfo.nickName;
         span2.classList.add('span_follow');
         li.appendChild(span2);
         const span3 = document.createElement('span');
-        span3.innerText = followee.id;
+        span3.innerText = followInfo.id;
         span3.classList.add('span_follow');
         span3.hidden = true;
         span3.id = 'follow-id';
         li.appendChild(span3);
         list.appendChild(li);
         const span4 = document.createElement('span');
-        span4.innerText = followee.userId;
+        span4.innerText = followInfo.userId;
         span4.classList.add('span_follow');
         span4.hidden = true;
         span4.id = 'userId';
         li.appendChild(span4);
         const button = document.createElement('button');
-        const uniqueId = 'btn-unfollow-' + followee.id;
+        const uniqueId = 'btn-unfollow-' + followInfo.id;
         button.id = uniqueId;
         button.className = 'btn-subscribe';
         button.setAttribute('type', 'button');
@@ -59,7 +60,7 @@ const drawList = (data) => {
 
         list.appendChild(li);
         if (index === data.length - 1) {
-            lastId = followee.id;
+            lastId = followInfo.id;
         }
         unFollowButtonHandler(uniqueId);
     });
@@ -78,7 +79,9 @@ function followButtonHandler(buttonId) {
     if (followButton) {
         followButton.addEventListener('click', function (event) {
             let target = event.target;
-            var userId = target.parentElement.querySelector('span#userId').innerText;
+            console.log(target)
+            console.log(target.parentElement)
+            var userId = target.parentElement.parentElement.querySelector('span#userId').innerText;
             var url = '/api/follow/' + userId;
             fetch(url, {
                 method: 'GET', // or 'POST'
@@ -132,14 +135,15 @@ function unFollowButtonHandler(buttonId) {
                         followButton.id = getNewId(buttonId);
                         followButton.className = 'btn-subscribe';
                         followButton.setAttribute('type', 'button');
-                        followButton.textContent = '구독하기';
-
+                        const buttonInnerSpan = document.createElement('span');
+                        buttonInnerSpan.classList.add('txt_default');
+                        buttonInnerSpan.innerText = '구독하기';
+                        followButton.appendChild(buttonInnerSpan);
                         var parentElement = unfollowButton.parentNode;
                         if (parentElement) {
                             parentElement.replaceChild(followButton, unfollowButton);
                         }
 
-                        console.log(followButton.id)
                         followButtonHandler(followButton.id);
                     }
                 })
@@ -152,11 +156,20 @@ function unFollowButtonHandler(buttonId) {
 
 // 처음 서버 렌더링 시에는 각 버튼에 이벤트 핸들러를 등록해준다.
 document.addEventListener('DOMContentLoaded', function () {
+    //button.btn-subscribe 클래스를 가진 모든 요소를 찾아서 이벤트 핸들러를 등록한다.
     let element = document.querySelectorAll('button.btn-subscribe');
     element.forEach(function (element) {
         var buttonId = element.id;
         if (!Object.is(buttonId, null)) {
-            unFollowButtonHandler(buttonId);
+            if (buttonId.startsWith('btn-unfollow')) {
+                console.log(buttonId)
+                unFollowButtonHandler(buttonId);
+            }
+
+            if (buttonId.startsWith('btn-follow')) {
+                console.log(buttonId)
+                followButtonHandler(buttonId);
+            }
         }
     });
 });

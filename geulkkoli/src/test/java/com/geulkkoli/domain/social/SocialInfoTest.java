@@ -13,7 +13,7 @@ class SocialInfoTest {
         SocialInfo socialInfo = SocialInfo.builder()
                 .socialId("kakao")
                 .socialType("kakao")
-                .socialConnectDate(LocalDateTime.of(2021, 5, 23, 0, 0))
+                .socialConnectDate(LocalDateTime.of(2021, 5, 23, 0, 0).toString())
                 .build();
 
         assertEquals("kakao", socialInfo.getSocialType());

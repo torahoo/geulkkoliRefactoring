@@ -1,6 +1,7 @@
 package com.geulkkoli.web.follow;
 
 import com.geulkkoli.application.follow.FollowInfo;
+import com.geulkkoli.application.follow.FollowInfos;
 import com.geulkkoli.application.user.CustomAuthenticationPrinciple;
 import com.geulkkoli.domain.follow.service.FollowFindService;
 import com.geulkkoli.domain.follow.service.FollowService;
@@ -60,13 +61,13 @@ public class FollowApiController {
     }
 
     @GetMapping("/followees/{lastFollowId}")
-    public ResponseEntity<List<FollowInfo>> getFollowees(@PathVariable String
+    public ResponseEntity<FollowInfos> getFollowees(@PathVariable String
                                                                  lastFollowId, @PageableDefault Pageable pageable, @AuthenticationPrincipal CustomAuthenticationPrinciple
                                                                  authUser) {
         Optional<User> byEmail = userFindService.findByEmail(authUser.getUserName());
         if (byEmail.isPresent()) {
             User user = byEmail.get();
-            return ResponseEntity.ok().body(followFindService.findAllFolloweeByFollowerId(user.getUserId(), Long.parseLong(lastFollowId), pageable));
+            return ResponseEntity.ok().body(followFindService.findSomeFolloweeByFollowerId(user.getUserId(), Long.parseLong(lastFollowId), pageable));
         }
         return ResponseEntity.status(404).build();
     }
@@ -78,7 +79,7 @@ public class FollowApiController {
         Optional<User> byEmail = userFindService.findByEmail(authUser.getUserName());
         if (byEmail.isPresent()) {
             User user = byEmail.get();
-            return ResponseEntity.ok().body(followFindService.findAllFollowerByFolloweeId(user.getUserId(), Long.parseLong(lastFollowId), pageable));
+            return ResponseEntity.ok().body(followFindService.findSomeFollowerByFolloweeId(user.getUserId(), Long.parseLong(lastFollowId), pageable));
         }
         return ResponseEntity.status(404).build();
     }

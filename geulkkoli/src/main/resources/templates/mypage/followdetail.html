@@ -26,13 +26,13 @@
 <main>
     <div>
         <ul class="list_follow">
-            <li th:each="followee : ${followees}">
+            <li th:each="follower : ${followers.getFollowInfos()}">
                 <span class="span_follow-profile-image">
                 </span>
-                <span class="span_follow" th:text="${followee.nickName}"></span>
-                <span class="span_follow" hidden="hidden" id="follow-id" th:text="${followee.id}"></span>
-                <span class="span_follow" hidden="hidden" id="userId" th:text="${followee.userId}"></span>
-                <button th:id="btn-unfollow+${followee.id}" class="btn-subscribe"
+                <span class="span_follow" th:text="${follower.nickName}"></span>
+                <span class="span_follow" hidden="hidden" id="follow-id" th:text="${follower.id}"></span>
+                <span class="span_follow" hidden="hidden" id="userId" th:text="${follower.userId}"></span>
+                <button th:id="btn-unfollow+${follower.id}" class="btn-subscribe"
                         type="button">
                     <span class = "txt_default">
                         구독중

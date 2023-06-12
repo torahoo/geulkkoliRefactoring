@@ -1,5 +1,6 @@
 package com.geulkkoli.domain.follow.service;
 
+import com.geulkkoli.application.follow.FollowInfo;
 import com.geulkkoli.domain.follow.Follow;
 import com.geulkkoli.domain.follow.FollowRepository;
 import com.geulkkoli.domain.user.User;
@@ -63,25 +64,22 @@ class FollowFindServiceTest {
 
         Follow followEntity = Follow.of(user, user2);
         Follow followEntity2 = Follow.of(user, user3);
-        List<Follow> followEntities = new ArrayList<>();
-        followEntities.add(followEntity);
-        followEntities.add(followEntity2);
+        List<FollowInfo> followInfos = new ArrayList<>();
+        FollowInfo followInfo = new FollowInfo(followEntity.getId(), followEntity.getFollowee().getUserId(), followEntity.getFollower().getNickName(), followEntity.getCreatedAt());
+        FollowInfo followInfo2 = new FollowInfo(followEntity2.getId(), followEntity2.getFollowee().getUserId(), followEntity2.getFollower().getNickName(), followEntity2.getCreatedAt());
+        followInfos.add(followInfo);
+        followInfos.add(followInfo2);
 
-        given(followRepository.findFollowEntitiesByFolloweeUserId(1L)).willReturn(followEntities);
+        given(followRepository.findFollowEntitiesByFolloweeUserId(1L)).willReturn(List.of(followEntity, followEntity2));
 
-        when(followFindService.findAllFollowerByFolloweeId(1L,Pageable.ofSize(10))).thenReturn(followEntities);
+        when(followFindService.findSomeFollowerByFolloweeId(1L,null,Pageable.ofSize(10))).thenReturn(followInfos);
 
 
-        List<Follow> allFollower = followFindService.findAllFollowerByFolloweeId(1L, Pageable.ofSize(10));
+        List<FollowInfo> allFollower = followFindService.findSomeFollowerByFolloweeId(1L, null,Pageable.ofSize(10));
 
         then(followRepository).should().findFollowEntitiesByFolloweeUserId(1L);
 
-        assertAll(() -> {
-            assertThat(allFollower.get(0).getFollowee().getNickName()).isEqualTo("nickName");
-            assertThat(allFollower.get(0).getFollower().getNickName()).isEqualTo("nickName2");
-            assertThat(allFollower.get(1).getFollowee().getNickName()).isEqualTo("nickName");
-            assertThat(allFollower.get(1).getFollower().getNickName()).isEqualTo("nickName3");
-        });
+        assertThat(allFollower).hasSize(2);
 
     }
 
@@ -121,19 +119,24 @@ class FollowFindServiceTest {
         List<Follow> followEntities = new ArrayList<>();
         followEntities.add(followEntity);
         followEntities.add(followEntity2);
-        given(followRepository.findFolloweesByFollowerUserId(user2.getUserId())).willReturn(followEntities);
 
-        when(followFindService.findAllFollowerByFolloweeId(user2.getUserId(),Pageable.ofSize(10))).thenReturn(followEntities);
+        List<FollowInfo> followInfos = new ArrayList<>();
+        FollowInfo followInfo = new FollowInfo(followEntity.getId(), followEntity.getFollowee().getUserId(), followEntity.getFollower().getNickName(), followEntity.getCreatedAt());
+        FollowInfo followInfo2 = new FollowInfo(followEntity2.getId(), followEntity2.getFollowee().getUserId(), followEntity2.getFollower().getNickName(), followEntity2.getCreatedAt());
+        followInfos.add(followInfo);
+        followInfos.add(followInfo2);
+        given(followRepository.findFolloweesByFollowerUserId(user2.getUserId(),null,10)).willReturn(followInfos);
 
-        List<Follow> allFollowerByFolloweeId = followFindService.findAllFollowerByFolloweeId(user2.getUserId(), Pageable.ofSize(10));
+        when(followFindService.findSomeFollowerByFolloweeId(user2.getUserId(),null,Pageable.ofSize(10))).thenReturn(followInfos);
 
-        then(followRepository).should().findFolloweesByFollowerUserId(user2.getUserId());
+        List<FollowInfo> allFollowerByFolloweeId = followFindService.findSomeFollowerByFolloweeId(user2.getUserId(), null, Pageable.ofSize(10));
+
+        then(followRepository).should().findFolloweesByFollowerUserId(user2.getUserId(),null,10);
 
         assertAll(() -> {
-            assertThat(allFollowerByFolloweeId.get(0).getFollowee().getNickName()).isEqualTo("nickName");
-            assertThat(allFollowerByFolloweeId.get(0).getFollower().getNickName()).isEqualTo("nickName2");
-            assertThat(allFollowerByFolloweeId.get(1).getFollowee().getNickName()).isEqualTo("nickName3");
-            assertThat(allFollowerByFolloweeId.get(1).getFollower().getNickName()).isEqualTo("nickName2");
+            assertThat(allFollowerByFolloweeId).hasSize(2);
+            assertThat(allFollowerByFolloweeId.get(0).getUserId()).isEqualTo(1L);
+            assertThat(allFollowerByFolloweeId.get(1).getUserId()).isEqualTo(3L);
         });
     }
 }

@@ -1,6 +1,7 @@
 package com.geulkkoli.web.mypage;
 
 import com.geulkkoli.application.follow.FollowInfo;
+import com.geulkkoli.application.follow.FollowInfos;
 import com.geulkkoli.application.user.CustomAuthenticationPrinciple;
 import com.geulkkoli.domain.follow.service.FollowFindService;
 import com.geulkkoli.domain.social.SocialInfoService;
@@ -49,8 +50,8 @@ public class MyPageController {
     public ModelAndView getFollowees(@PageableDefault(size = 10, sort = "id", direction = Sort.Direction.DESC) Pageable pageable, @AuthenticationPrincipal CustomAuthenticationPrinciple loginUser) {
         User user = userFindService.findUserByEmail(loginUser.getUsername());
         Integer followee = followFindService.countFolloweeByFollowerId(user.getUserId());
-        List<FollowInfo> followeeUserInfos = followFindService.findAllFolloweeByFollowerId(user.getUserId(), null, pageable);
-        ModelAndView modelAndView = new ModelAndView("mypage/followdetail", "followees", followeeUserInfos);
+        FollowInfos followeeUserInfos = followFindService.findSomeFolloweeByFollowerId(user.getUserId(), null, pageable);
+        ModelAndView modelAndView = new ModelAndView("mypage/followdetail", "followers", followeeUserInfos);
         modelAndView.addObject("allCount", followee);
 
         return modelAndView;
@@ -60,8 +61,14 @@ public class MyPageController {
     public ModelAndView getFollowers(@PageableDefault(size = 10, sort = "id", direction = Sort.Direction.DESC) Pageable pageable, @AuthenticationPrincipal CustomAuthenticationPrinciple loginUser) {
         User user = userFindService.findUserByEmail(loginUser.getUsername());
         Integer follower = followFindService.countFollowerByFolloweeId(user.getUserId());
-        List<FollowInfo> followerUserInfos = followFindService.findAllFollowerByFolloweeId(user.getUserId(), null, pageable);
-        ModelAndView modelAndView = new ModelAndView("mypage/followdetail", "followers", followerUserInfos);
+        List<FollowInfo> followerUserInfos = followFindService.findSomeFollowerByFolloweeId(user.getUserId(), null, pageable);
+        FollowInfos followInfos = FollowInfos.of(followerUserInfos);
+        List<Long> userIdByFollowedEachOther = followFindService.findUserIdByFollowedEachOther(followInfos.userIds(), user.getUserId(), pageable.getPageSize());
+        followInfos.checkSubscribe(userIdByFollowedEachOther);
+
+        log.info("followInfos: {}", followInfos.getFollowInfos());
+
+        ModelAndView modelAndView = new ModelAndView("mypage/followerdetail", "followers", followInfos);
         modelAndView.addObject("allCount", follower);
 
         return modelAndView;
