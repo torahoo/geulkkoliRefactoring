@@ -54,6 +54,7 @@ public class UserService {
         return user;
     }
 
+    // 가입 날짜 임의 추가용 메소드 (추후 제거)
     @Transactional
     public User signUp(JoinFormDto form, LocalDate localDate) {
         User user = form.toEntity(PasswordService.passwordEncoder);
