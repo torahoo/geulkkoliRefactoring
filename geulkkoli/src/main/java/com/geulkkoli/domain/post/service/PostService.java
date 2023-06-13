@@ -121,7 +121,7 @@ public class PostService {
 
     @Transactional
     public List<LocalDate> getCreatedAts(User user) {
-        Set<String> createdAt = postRepository.getCreatedAt(user);
+        Set<String> createdAt = postRepository.findCreatedAt(user.getUserId());
         return createdAt.stream()
                 .map(postingDate -> LocalDateTime.parse(postingDate, DateTimeFormatter.ofPattern("yyyy. MM. dd a hh:mm:ss")))
                 .map(LocalDateTime::toLocalDate)
