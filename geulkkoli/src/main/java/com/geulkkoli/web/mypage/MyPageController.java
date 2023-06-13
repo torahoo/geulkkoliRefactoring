@@ -16,7 +16,6 @@ import com.geulkkoli.web.mypage.dto.edit.PasswordEditFormDto;
 import com.geulkkoli.web.mypage.dto.edit.UserInfoEditFormDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -51,8 +50,8 @@ public class MyPageController {
 
 
     @GetMapping()
-    public String myPage(@ModelAttribute("myPageForm") MyPageFormDto myPageFormDto, @AuthenticationPrincipal CustomAuthenticationPrinciple authUser, Model model) {
-        myPageFormDto.myPageFormDto(authUser.getUserRealName(), authUser.getUsername());
+    public String myPage(@AuthenticationPrincipal CustomAuthenticationPrinciple authUser, Model model) {
+        MyPageFormDto myPageFormDto = new MyPageFormDto(authUser.getUserRealName(), authUser.getUsername());
         model.addAttribute("myPageForm", myPageFormDto);
 
         ConnectedSocialInfos connectedInfos = socialInfoService.findConnectedInfos(authUser.getUsername());

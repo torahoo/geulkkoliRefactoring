@@ -19,6 +19,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -120,9 +121,9 @@ public class PostService {
 
     @Transactional
     public List<LocalDate> getCreatedAts(User user) {
-        List<Post> posts = postRepository.findByUser(user);
-        return posts.stream()
-                .map(post -> LocalDateTime.parse(post.getCreatedAt(), DateTimeFormatter.ofPattern("yyyy. MM. dd a hh:mm:ss")))
+        Set<String> createdAt = postRepository.getCreatedAt(user);
+        return createdAt.stream()
+                .map(postingDate -> LocalDateTime.parse(postingDate, DateTimeFormatter.ofPattern("yyyy. MM. dd a hh:mm:ss")))
                 .map(LocalDateTime::toLocalDate)
                 .collect(Collectors.toList());
     }

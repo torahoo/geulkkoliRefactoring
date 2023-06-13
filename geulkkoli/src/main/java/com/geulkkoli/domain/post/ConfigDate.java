@@ -23,6 +23,7 @@ public abstract class ConfigDate {
     @LastModifiedDate
     private String updatedAt;
 
+    // 추후 제거
     @Transient
     private LocalDateTime calendarData;
 
@@ -42,7 +43,7 @@ public abstract class ConfigDate {
     }
 
     // 달력 잔디 심기용 각 다른 날짜의 게시물들 필요 (추후 제거)
-    public LocalDateTime setCreatedAtForCalendarTest(LocalDateTime localDateTime) {
-        return calendarData = localDateTime;
+    public void setCreatedAtForCalendarTest(LocalDateTime localDateTime) {
+        calendarData = localDateTime;
     }
 }

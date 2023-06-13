@@ -17,6 +17,7 @@ public abstract class ConfigDate {
     @CreatedDate
     private String signUpDate;
 
+    // 추후 제거
     @Transient
     private LocalDate calendarData;
 
@@ -30,7 +31,7 @@ public abstract class ConfigDate {
     }
 
     // 달력 잔디 심기용 달력 시작 기준 날짜 필요 (추후 제거)
-    public LocalDate setCreatedAtForCalendarTest(LocalDate localDate) {
-        return calendarData = localDate;
+    public void setCreatedAtForCalendarTest(LocalDate localDate) {
+        calendarData = localDate;
     }
 }
