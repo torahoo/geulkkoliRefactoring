@@ -7,7 +7,6 @@ import com.geulkkoli.domain.post.Post;
 import com.geulkkoli.domain.post.service.PostService;
 import com.geulkkoli.domain.user.User;
 import com.geulkkoli.domain.user.service.UserFindService;
-import com.geulkkoli.domain.user.service.UserService;
 import com.geulkkoli.web.comment.dto.CommentBodyDTO;
 import com.geulkkoli.web.comment.dto.CommentEditDTO;
 import com.geulkkoli.web.comment.dto.CommentListDTO;
@@ -21,7 +20,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-import static com.geulkkoli.domain.comment.CommentsService.*;
+import static com.geulkkoli.domain.comment.CommentsService.getCommentsList;
 
 @Slf4j
 @RequiredArgsConstructor
