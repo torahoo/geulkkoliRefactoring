@@ -15,11 +15,9 @@ public class MyPageFormDto {
     @NotEmpty
     private String email;
 
-    public void myPageFormDto(String userName, String email) {
+    public MyPageFormDto(String userName, String email) {
         this.userName = userName;
         this.email = email;
     }
-
-
 
 }
