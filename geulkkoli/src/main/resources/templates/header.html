@@ -1,24 +1,9 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
-<head th:fragment="header">
-    <meta charset="UTF-8">
-    <title>Root Page</title>
-    <style>
-        .nav li {
-            margin-right: 10px;
-        }
-
-        /* CSS to move the buttons to the right */
-        .justify-content-lg-start {
-            justify-content: flex-end;
-        }
-    </style>
-</head>
 <body>
-<header class="p-3 bg-white text-white">
-    <div class="container">
-        <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
+<header th:fragment="header" class="p-3 bg-white text-white">
+    <div class="header-buttons">
             <button type="button"
                     onclick="location.href='/loginPage'"
                     sec:authorize="isAnonymous()"
@@ -58,7 +43,6 @@
             </button>
 
         </div>
-    </div>
 </header>
 </body>
 </html>

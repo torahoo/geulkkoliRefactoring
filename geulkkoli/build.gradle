@@ -71,7 +71,7 @@ dependencyManagement {
 tasks.named('test') {
     useJUnitPlatform()
 }
-//query dsl이 마든 qclass 파일은 git에 올라갈 이유가 없기에 지운다. build clean해서 지운다
+//query dsl이 만든 qclass 파일은 git에 올라갈 이유가 없기에 지운다. build clean해서 지운다
 clean{
     delete file ('src/main/generated')
 }
