@@ -67,16 +67,6 @@ public class Post extends ConfigDate {
         this.nickName = nickName;
         this.user = user;
     }
-    @Override
-    public boolean equals(Object o) {
-        Post post = (Post) o;
-        return getPostId() != null && Objects.equals(getPostId(), post.getPostId());
-    }
-
-    @Override
-    public int hashCode() {
-        return getClass().hashCode();
-    }
 
     //==연관관계 메서드==//
 
@@ -148,6 +138,15 @@ public class Post extends ConfigDate {
 
     public void deleteAllPostHashTag () {
         this.postHashTags.removeAll(postHashTags);
+    }
+
+    @Override
+    public String toString() {
+        return "Post{" +
+                "title='" + title + '\'' +
+                ", postBody='" + postBody + '\'' +
+                ", nickName='" + nickName + '\'' +
+                '}';
     }
 }
 

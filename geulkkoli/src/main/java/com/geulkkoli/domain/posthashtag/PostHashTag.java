@@ -34,8 +34,15 @@ public class PostHashTag extends ConfigDate {
     }
 
     @Override
-    public boolean equals (Object obj) {
-        PostHashTag postHashTag = (PostHashTag) obj;
-        return getPostHashTagId() != null && Objects.equals(getPostHashTagId(), postHashTag.getPostHashTagId());
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof PostHashTag)) return false;
+        PostHashTag that = (PostHashTag) o;
+        return Objects.equals(postHashTagId, that.postHashTagId);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(postHashTagId);
     }
 }
