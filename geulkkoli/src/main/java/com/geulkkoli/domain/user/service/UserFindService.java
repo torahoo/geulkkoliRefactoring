@@ -33,6 +33,11 @@ public class UserFindService {
     }
 
     @Transactional(readOnly = true)
+    public User findByNickName(String nickName){
+        return userRepository.findByNickName(nickName).orElseThrow(() -> new NoSuchElementException("No user found nickname matches:" + nickName));
+    }
+
+    @Transactional(readOnly = true)
     public Optional<User> findByUserNameAndPhoneNo(String userName, String phoneNo) {
         return userRepository.findByUserNameAndPhoneNo(userName, phoneNo);
     }

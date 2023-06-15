@@ -20,7 +20,10 @@
 <aside>
     <span><strong style="text-align: center">개인 페이지</strong></span>
     <section style="text-align: center">
-        <a class="following-link" th:href="@{/my-page/followers}" th:if="${followsCount.getFollowerCount() > 0}">
+        <a class="following-link"
+           th:attr="data-url='/user/'+${#authentication.principal.nickName} + '/followers'"
+           onclick="location.href=this.getAttribute('data-url')"
+           th:if="${followsCount.getFollowerCount() > 0}">
             <em>구독자</em>
             <span th:text="${followsCount.getFollowerCount()}"></span>
         </a>
@@ -30,7 +33,10 @@
         </a>
 
 
-        <a class="following-link" th:href="@{/my-page/followees}" th:if="${followsCount.getFolloweeCount() > 0}">
+        <a class="following-link"
+           th:attr="data-url='/user/'+${#authentication.principal.nickName} + '/followees'"
+           onclick="location.href=this.getAttribute('data-url')"
+           th:if="${followsCount.getFolloweeCount() > 0}">
             <em>작가</em>
             <span th:text="${followsCount.getFolloweeCount()}"></span>
         </a>

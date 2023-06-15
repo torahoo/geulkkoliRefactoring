@@ -1,6 +1,7 @@
 package com.geulkkoli.application.social;
 
 import com.geulkkoli.domain.social.SocialInfo;
+import com.geulkkoli.domain.social.SocialInfoFindService;
 import com.geulkkoli.domain.social.SocialInfoService;
 import com.geulkkoli.domain.user.User;
 import com.geulkkoli.domain.user.service.UserFindService;
@@ -19,42 +20,40 @@ import java.util.Optional;
 public abstract class AbstractOauth2UserService {
     private final UserFindService userFindService;
 
+    private final SocialInfoFindService socialInfoFindService;
     private final SocialInfoService socialInfoService;
 
-    @Transactional(readOnly = true)
     public Boolean isSignUp(String email) {
         Optional<User> signUpUser = userFindService.findByEmail(email);
         return signUpUser.isPresent();
     }
 
-    @Transactional(readOnly = true)
     public User userInfo(String email) {
         return userFindService.findByEmail(email).orElseThrow(() -> new RuntimeException("User not found"));
     }
 
-    @Transactional
     public void connect(String socialId, String socialType, User user) {
         SocialInfoDto socialInfoDto = new SocialInfoDto(socialId, socialType, user);
         socialInfoService.connect(socialInfoDto);
     }
 
     public Boolean haveAssociatedRecord(String socialId, String socialType) {
-        return socialInfoService.isAssociatedRecord(socialType, socialId);
+        return socialInfoFindService.isAssociatedRecord(socialType, socialId);
     }
 
     public Boolean isConnected(String socialId) {
-        return socialInfoService.isConnected(socialId);
+        return socialInfoFindService.isConnected(socialId);
     }
 
+    @Transactional
     public Boolean reConnected(String socialId, String socialType) {
-        SocialInfo socialInfo = socialInfoService.findBySocialTypeAndSocialId(socialType, socialId);
+        SocialInfo socialInfo = socialInfoFindService.findBySocialTypeAndSocialId(socialType, socialId);
         socialInfo.reConnected(true);
         socialInfoService.reconnect(socialInfo);
         return true;
     }
 
-    @Transactional(readOnly = true)
     public User findUserBySocialId(String socialId, String socialType) {
-        return socialInfoService.findBySocialTypeAndSocialId(socialType, socialId).getUser();
+        return socialInfoFindService.findBySocialTypeAndSocialId(socialType, socialId).getUser();
     }
 }

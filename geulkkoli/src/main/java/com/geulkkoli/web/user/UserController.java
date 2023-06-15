@@ -1,11 +1,18 @@
 package com.geulkkoli.web.user;
 
+import com.geulkkoli.application.follow.FollowInfo;
+import com.geulkkoli.application.follow.FollowInfos;
 import com.geulkkoli.application.user.CustomAuthenticationPrinciple;
 import com.geulkkoli.application.user.EmailService;
 import com.geulkkoli.application.user.PasswordService;
+import com.geulkkoli.domain.follow.service.FollowFindService;
+import com.geulkkoli.domain.social.SocialInfoFindService;
+import com.geulkkoli.domain.social.SocialInfoService;
 import com.geulkkoli.domain.user.User;
 import com.geulkkoli.domain.user.service.UserFindService;
 import com.geulkkoli.domain.user.service.UserService;
+import com.geulkkoli.web.mypage.dto.ConnectedSocialInfos;
+import com.geulkkoli.web.mypage.dto.FollowsCount;
 import com.geulkkoli.web.user.dto.EmailCheckForJoinDto;
 import com.geulkkoli.web.user.dto.JoinFormDto;
 import com.geulkkoli.web.user.dto.LoginFormDto;
@@ -16,6 +23,9 @@ import com.geulkkoli.web.user.dto.find.FindPasswordFormDto;
 import com.geulkkoli.web.user.dto.find.FoundEmailFormDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -24,17 +34,19 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 import java.util.Optional;
 
 @Controller
 @RequiredArgsConstructor
 @Slf4j
+@RequestMapping("/user")
 public class UserController {
 
-    public static final String LOGIN_FORM = "user/loginForm";
     public static final String FIND_EMAIL_FORM = "user/find/findEmailForm";
     public static final String FOUND_EMAIL_FORM = "user/find/foundEmailForm";
     public static final String FIND_PASSWORD_FORM = "user/find/findPasswordForm";
@@ -47,11 +59,51 @@ public class UserController {
     private final UserService userService;
     private final UserFindService userFindService;
     private final PasswordService passwordService;
+    private final SocialInfoService socialInfoService;
+    private final FollowFindService followFindService;
+    private final SocialInfoFindService socialInfoFindService;
     private final EmailService emailService;
 
-    @RequestMapping("/loginPage")
-    public String loginForm(@ModelAttribute("loginForm") LoginFormDto form) {
-        return LOGIN_FORM;
+
+    @GetMapping("/{nickName}")
+    public ModelAndView getMyPage(@PathVariable("nickName") String nickName) {
+        ConnectedSocialInfos connectedInfos = socialInfoFindService.findAllByNickName(nickName);
+        User user = userFindService.findByNickName(nickName);
+        log.info("user: {}", user.getUserId());
+        Integer followee = followFindService.countFolloweeByFollowerId(user.getUserId());
+        Integer follower = followFindService.countFollowerByFolloweeId(user.getUserId());
+        FollowsCount followsCount = FollowsCount.of(followee, follower);
+        ModelAndView modelAndView = new ModelAndView("mypage/mypage", "connectedInfos", connectedInfos);
+        modelAndView.addObject("followsCount", followsCount);
+        return modelAndView;
+    }
+
+    @GetMapping("/{nickName}/followees")
+    public ModelAndView getFollowees(@PathVariable("nickName")String nickName,@PageableDefault(size = 10, sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
+        User user = userFindService.findByNickName(nickName);
+        Integer followee = followFindService.countFolloweeByFollowerId(user.getUserId());
+        FollowInfos followeeUserInfos = followFindService.findSomeFolloweeByFollowerId(user.getUserId(), null, pageable);
+        ModelAndView modelAndView = new ModelAndView("mypage/followdetail", "followers", followeeUserInfos);
+        modelAndView.addObject("allCount", followee);
+
+        return modelAndView;
+    }
+
+    @GetMapping("/{nickName}/followers")
+    public ModelAndView getFollowers(@PathVariable("nickName")String nickName,@PageableDefault(size = 10, sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
+        User user = userFindService.findByNickName(nickName);
+        Integer follower = followFindService.countFollowerByFolloweeId(user.getUserId());
+        List<FollowInfo> followerUserInfos = followFindService.findSomeFollowerByFolloweeId(user.getUserId(), null, pageable);
+        FollowInfos followInfos = FollowInfos.of(followerUserInfos);
+        List<Long> userIdByFollowedEachOther = followFindService.findUserIdByFollowedEachOther(followInfos.userIds(), user.getUserId(), pageable.getPageSize());
+        followInfos.checkSubscribe(userIdByFollowedEachOther);
+
+        log.info("followInfos: {}", followInfos.getFollowInfos());
+
+        ModelAndView modelAndView = new ModelAndView("mypage/followerdetail", "followers", followInfos);
+        modelAndView.addObject("allCount", follower);
+
+        return modelAndView;
     }
 
     @GetMapping("/findEmail")
@@ -205,18 +257,19 @@ public class UserController {
         return responseMessage;
     }
 
-    @GetMapping("user/edit")
-    public String editUserInfo(@AuthenticationPrincipal CustomAuthenticationPrinciple authUser, Model model) {
+    @GetMapping("/edit")
+    public ModelAndView editUserInfo(@AuthenticationPrincipal CustomAuthenticationPrinciple authUser, Model model) {
         log.info("authUser : {}", authUser.getNickName());
+        ConnectedSocialInfos connectedInfos = socialInfoFindService.findConnectedInfos(authUser.getUsername());
         UserInfoEditDto userInfoEditDto = UserInfoEditDto.from(authUser.getUserRealName(), authUser.getNickName(), authUser.getPhoneNo(), authUser.getGender());
-        model.addAttribute("editForm", userInfoEditDto);
-        return EDIT_FORM;
+        ModelAndView modelAndView = new ModelAndView().addObject("editForm", userInfoEditDto);
+        modelAndView.addObject("connectedInfos", connectedInfos);
+
+        return modelAndView;
     }
 
-    /*
-     * authUser가 기존의 세션 저장 방식을 대체한다
-     * */
-    @PostMapping("user/edit")
+
+    @PostMapping("/edit")
     public String editUserInfo(@Validated @ModelAttribute("editForm") UserInfoEditDto userInfoEditDto, BindingResult bindingResult, @AuthenticationPrincipal CustomAuthenticationPrinciple authUser) {
         log.info("editForm : {}", userInfoEditDto.toString());
         // 닉네임 중복 검사 && 본인의 기존 닉네임과 일치해도 중복이라고 안 뜨게
@@ -244,12 +297,12 @@ public class UserController {
         return REDIRECT_EDIT_INDEX;
     }
 
-    @GetMapping("user/edit/editPassword")
+    @GetMapping("/edit/editPassword")
     public String editPasswordForm(@ModelAttribute("editPasswordForm") PasswordEditDto form) {
         return EDIT_PASSWORD_FORM;
     }
 
-    @PostMapping("user/edit/editPassword")
+    @PostMapping("/edit/editPassword")
     public String editPassword(@Validated @ModelAttribute("editPasswordForm") PasswordEditDto form, BindingResult bindingResult, @AuthenticationPrincipal CustomAuthenticationPrinciple authUser, RedirectAttributes redirectAttributes) {
         User user = userFindService.findById(parseLong(authUser));
         if (!passwordService.isPasswordVerification(user, form)) {
@@ -275,10 +328,10 @@ public class UserController {
      * 서비스에서 쓰는 객체의 이름은 User인데 memberDelete라는 이름으로 되어 있어서 통일성을 위해 이름을 고친다.
      * 또한 사용자 입장에서는 자신의 정보를 삭제하는 게 아니라 탈퇴하는 서비스를 쓰고 있으므로 uri를 의미에 더 가깝게 고쳤다.
      */
-    @DeleteMapping("user/edit/unsubscribe/{userId}")
-    public String unsubscribe(@PathVariable("userId") Long userId) {
+    @DeleteMapping("/unsubscribe/{nickName}")
+    public String unsubscribe(@PathVariable("nickName") String nickName) {
         try {
-            User findUser = userFindService.findById(userId);
+            User findUser = userFindService.findByNickName(nickName);
             userService.delete(findUser);
         } catch (Exception e) {
             //만약 findUser가 null이라면? 다른 에러페이지를 보여줘야하지 않을까?

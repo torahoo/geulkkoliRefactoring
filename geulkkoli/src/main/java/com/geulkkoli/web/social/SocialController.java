@@ -7,8 +7,8 @@ import com.geulkkoli.domain.social.SocialInfoService;
 import com.geulkkoli.domain.user.User;
 import com.geulkkoli.domain.user.service.UserService;
 import com.geulkkoli.web.social.util.SocialSignUpValueEncryptoDecryptor;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -27,17 +27,15 @@ import java.util.List;
 @Controller
 @RequestMapping("/social")
 @Slf4j
+@RequiredArgsConstructor
 public class SocialController {
     private static final String SIGN_UP_VIEW_NAME = "social/oauth2/signup";
     private static final String HOME = "/home";
-    @Autowired
-    private UserService userService;
+    private final UserService userService;
 
-    @Autowired
-    private SocialInfoService socialService;
+    private final SocialInfoService socialService;
 
-    @Autowired
-    SocialSignUpValueEncryptoDecryptor socialSignUpValueEncryptoDecryptor;
+    private final SocialSignUpValueEncryptoDecryptor socialSignUpValueEncryptoDecryptor;
 
     /**
      * @param authUser     각 인증 서버 (구글, 카카오, 네이버)에서 성공적으로 정보를 받아 인증이 완료되었지만 우리 서비스에 가입되지 않은 회원의 경우

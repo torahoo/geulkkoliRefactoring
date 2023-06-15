@@ -31,8 +31,10 @@
             </button>
 
             <button type="button"
-                    onclick="location.href='/my-page'"
                     sec:authorize="hasRole('USER')"
+                    th:if="${#authentication.principal != null}"
+                    th:attr="data-url='/user/'+${#authentication.principal.nickName}"
+                    onclick="location.href=this.getAttribute('data-url')"
                     class="btn btn-primary">mypage
             </button>
 

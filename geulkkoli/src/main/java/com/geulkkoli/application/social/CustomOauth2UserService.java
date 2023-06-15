@@ -8,6 +8,7 @@ import com.geulkkoli.application.user.ProviderUser;
 import com.geulkkoli.application.user.UserModelDto;
 import com.geulkkoli.application.social.util.DelegateOAuth2RequestConverter;
 import com.geulkkoli.application.social.util.ProviderUserRequest;
+import com.geulkkoli.domain.social.SocialInfoFindService;
 import com.geulkkoli.domain.social.SocialInfoService;
 import com.geulkkoli.domain.user.User;
 import com.geulkkoli.domain.user.service.UserFindService;
@@ -36,8 +37,8 @@ import static java.lang.Boolean.*;
 public class CustomOauth2UserService extends AbstractOauth2UserService implements OAuth2UserService<OAuth2UserRequest, OAuth2User> {
 
 
-    public CustomOauth2UserService(UserFindService userFindService, SocialInfoService socialInfoService) {
-        super(userFindService, socialInfoService);
+    public CustomOauth2UserService(UserFindService userFindService, SocialInfoFindService socialInfoFindService, SocialInfoService socialInfoService) {
+        super(userFindService, socialInfoFindService, socialInfoService);
     }
 
     @Override
