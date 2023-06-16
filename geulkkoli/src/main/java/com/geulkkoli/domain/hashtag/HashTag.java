@@ -11,14 +11,13 @@ import java.util.LinkedHashSet;
 import java.util.Objects;
 import java.util.Set;
 
+
 @Entity
 @NoArgsConstructor
 @Getter
 @SequenceGenerator(
         name = "hashtag_seq_generator",
-        sequenceName = "hashtag_seq",
-        initialValue = 10001,
-        allocationSize = 1)
+        sequenceName = "hashtag_seq")
 @Table(name = "hashtag")
 public class HashTag extends ConfigDate {
 
@@ -30,14 +29,19 @@ public class HashTag extends ConfigDate {
     @Column(nullable = false)
     private String hashTagName;
 
+    @Column(nullable = false)
+    private HashTagType hashTagType;
+
     //PostHashTag 클라스와 일대다로 묶는 메서드
     @OneToMany(mappedBy = "hashTag", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<PostHashTag> postHashTags = new LinkedHashSet<>();
 
     @Builder
-    public HashTag (String hashTagName) {
+    public HashTag (String hashTagName , HashTagType hashTagType){
         this.hashTagName = hashTagName;
+        this.hashTagType = hashTagType;
     }
+
 
     @Override
     public boolean equals(Object obj) {

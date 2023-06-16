@@ -2,17 +2,22 @@ package com.geulkkoli.domain.posthashtag;
 
 import com.geulkkoli.domain.hashtag.HashTag;
 import com.geulkkoli.domain.hashtag.HashTagRepository;
+import com.geulkkoli.domain.hashtag.HashTagType;
+import com.geulkkoli.domain.post.AdminTagAccessDenied;
 import com.geulkkoli.domain.post.Post;
 import com.geulkkoli.domain.post.PostRepository;
 import com.geulkkoli.web.post.dto.ListDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.PermissionDeniedDataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.validation.BindingResult;
 
 import javax.transaction.Transactional;
+import java.nio.file.AccessDeniedException;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -71,12 +76,23 @@ public class PostHashTagService {
                         .collect(Collectors.toList());
                 break;
             case "해시태그":
-                List<PostHashTag> postHashTagList = postHashTagRepository.findAllByHashTag(hashTagRepository.findHashTagByHashTagName(searchWord));
-                List<Post> resultPosts = new ArrayList<>();
-                for (PostHashTag postHashTag : postHashTagList) {
-                    resultPosts.add(postHashTag.getPost());
+                List<HashTag> tagsList = hashTagRepository.findHashTagsByHashTagNameContaining(searchWord);
+                List<PostHashTag> postHashTagsList = new ArrayList<>();
+                for (HashTag hashTag : tagsList) {
+                    List<PostHashTag> allByHashTag = postHashTagRepository.findAllByHashTag(hashTag);
+                    postHashTagsList.addAll(allByHashTag);
                 }
-                posts = resultPosts;
+                Set<Post> postsSet = new LinkedHashSet<>();
+                for (Post post : posts) {
+                    for (PostHashTag postHashTag : postHashTagsList) {
+                        List<PostHashTag> list = new ArrayList<>(post.getPostHashTags());
+                        if (list.contains(postHashTag)) {
+                            postsSet.add(post);
+                        }
+                    }
+                }
+                resultList = new ArrayList<>(postsSet);
+
                 break;
             default:
                 resultList = new ArrayList<>(posts);
@@ -106,7 +122,7 @@ public class PostHashTagService {
             if (hashTagByHashTagName != null) {
                 hashTags.add(hashTagByHashTagName);
             } else {
-                HashTag save = hashTagRepository.save(new HashTag(stripper));
+                HashTag save = hashTagRepository.save(new HashTag(stripper, HashTagType.GENERAL));
                 hashTags.add(save);
             }
         }
@@ -139,4 +155,23 @@ public class PostHashTagService {
 
         return posts;
     }
+
+    //Validation Post has "분류", "상태" Type and Not Include "관리"
+    public void validatePostHasType(List<HashTag> tags) {
+        if(tags.stream().noneMatch(a -> a.getHashTagType().equals(HashTagType.CATEGORY))){
+            throw new IllegalArgumentException("분류");
+        }
+        if(tags.stream().noneMatch(a -> a.getHashTagType().equals(HashTagType.STATUS))){
+            throw new IllegalArgumentException("상태");
+        }
+
+        String managementTag = tags.stream().filter(a -> a.getHashTagType().equals(HashTagType.MANAGEMENT)).findAny().orElseGet(HashTag::new).getHashTagName();
+
+        if(tags.stream().anyMatch(a -> a.getHashTagType().equals(HashTagType.MANAGEMENT))){
+            throw new AdminTagAccessDenied(managementTag);
+        }
+
+    }
+
+
 }

@@ -104,7 +104,6 @@ create table if not exists social_info
 create table if not exists hashtag
 (
     hashtag_id bigint primary key,
-    hashtagname varchar(20) not null
+    hashtag_name varchar(20) not null,
+    hashtag_type  varchar(20) not null
 );
-
-create sequence if not exists hashtag_seq start with 10001 increment by 1;

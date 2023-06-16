@@ -4,6 +4,9 @@ import com.geulkkoli.application.user.UserSecurityService;
 import com.geulkkoli.domain.admin.Report;
 import com.geulkkoli.domain.admin.ReportRepository;
 import com.geulkkoli.domain.admin.service.AdminServiceImpl;
+import com.geulkkoli.domain.hashtag.HashTag;
+import com.geulkkoli.domain.hashtag.HashTagRepository;
+import com.geulkkoli.domain.hashtag.HashTagType;
 import com.geulkkoli.domain.post.Post;
 import com.geulkkoli.domain.post.PostRepository;
 import com.geulkkoli.domain.post.service.PostService;
@@ -30,6 +33,7 @@ public class TestDataInit {
     private final AdminServiceImpl adminServiceImpl;
     private final UserService userService;
     private final PostService postService;
+    private final HashTagRepository hashTagRepository;
 
     /**
      * 확인용 초기 데이터 추가
@@ -86,13 +90,56 @@ public class TestDataInit {
         User user01 = userService.findById(1L);
         User user02 = userService.findById(2L);
 
+
+        HashTag hashTagCategory1 = HashTag.builder()
+                .hashTagName("시")
+                .hashTagType(HashTagType.CATEGORY)
+                .build();
+        HashTag hashTagCategory2 = HashTag.builder()
+                .hashTagName("소설")
+                .hashTagType(HashTagType.CATEGORY)
+                .build();
+
+        HashTag hashTagCategory3 = HashTag.builder()
+                .hashTagName("수필")
+                .hashTagType(HashTagType.CATEGORY)
+                .build();
+
+        HashTag hashTagStatus1 = HashTag.builder()
+                .hashTagName("단편")
+                .hashTagType(HashTagType.STATUS)
+                .build();
+        HashTag hashTagStatus2 = HashTag.builder()
+                .hashTagName("연재중")
+                .hashTagType(HashTagType.STATUS)
+                .build();
+        HashTag hashTagStatus3 = HashTag.builder()
+                .hashTagName("완결")
+                .hashTagType(HashTagType.STATUS)
+                .build();
+
+        HashTag hashTagManagement1 = HashTag.builder()
+                .hashTagName("공지글")
+                .hashTagType(HashTagType.MANAGEMENT)
+                .build();
+
+
+        hashTagRepository.save(hashTagCategory1);
+        hashTagRepository.save(hashTagCategory2);
+        hashTagRepository.save(hashTagCategory3);
+        hashTagRepository.save(hashTagStatus1);
+        hashTagRepository.save(hashTagStatus2);
+        hashTagRepository.save(hashTagStatus3);
+        hashTagRepository.save(hashTagManagement1);
+
+
         for (int i = 0; i < 100; ++i) {
 
             AddDTO addDTO = AddDTO.builder()
                     .title("여러분")
                     .postBody("나는 멋지고 섹시한 개발자")
                     .nickName(user01.getNickName())
-                    .tagListString("#testTag1 #일반글")
+                    .tagListString("#testTag1 #일반글 #단편 #시")
                     .build();
             postService.savePost(addDTO, user01);
 
@@ -100,7 +147,7 @@ public class TestDataInit {
                     .title("testTitle01")
                     .postBody("test postbody 01")
                     .nickName(user01.getNickName())
-                    .tagListString("#testTag1 #일반글")
+                    .tagListString("#testTag1 #일반글 #완결 #소설")
                     .build();
             postService.savePost(addDTO1, user01);
 
@@ -108,7 +155,7 @@ public class TestDataInit {
                     .title("testTitle02")
                     .postBody("test postbody 02")
                     .nickName(user01.getNickName())
-                    .tagListString("#testTag2 #일반글")
+                    .tagListString("#testTag2 #일반글 #시 #연재중")
                     .build();
             postService.savePost(addDTO2, user01);
 
@@ -116,7 +163,7 @@ public class TestDataInit {
                     .title("testTitle03")
                     .postBody("test postbody 03")
                     .nickName(user02.getNickName())
-                    .tagListString("#testTag2 #일반글")
+                    .tagListString("#testTag2 #일반글 #수필 #연재중")
                     .build();
             postService.savePost(addDTO3, user02);
         }

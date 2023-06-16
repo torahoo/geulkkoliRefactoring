@@ -2,6 +2,7 @@ package com.geulkkoli.domain.post;
 
 import com.geulkkoli.domain.hashtag.HashTag;
 import com.geulkkoli.domain.hashtag.HashTagRepository;
+import com.geulkkoli.domain.hashtag.HashTagType;
 import com.geulkkoli.domain.posthashtag.PostHashTag;
 import com.geulkkoli.domain.posthashtag.PostHashTagRepository;
 import com.geulkkoli.domain.user.User;
@@ -298,10 +299,10 @@ class PostRepositoryTest {
         postRepository.save(post04);
         postRepository.save(post05);
 
-        HashTag tag1 = hashTagRepository.save(new HashTag("일반글"));
-        HashTag tag2 = hashTagRepository.save(new HashTag("공지글"));
-        HashTag tag3 = hashTagRepository.save(new HashTag("판타지"));
-        HashTag tag4 = hashTagRepository.save(new HashTag("코미디"));
+        HashTag tag1 = hashTagRepository.save(new HashTag("일반글", HashTagType.GENERAL));
+        HashTag tag2 = hashTagRepository.save(new HashTag("공지글", HashTagType.MANAGEMENT));
+        HashTag tag3 = hashTagRepository.save(new HashTag("판타지", HashTagType.GENERAL));
+        HashTag tag4 = hashTagRepository.save(new HashTag("코미디", HashTagType.GENERAL));
 
         PostHashTag save1 = post01.addHashTag(tag1);
         PostHashTag save2 = post01.addHashTag(tag3);
@@ -380,10 +381,10 @@ class PostRepositoryTest {
         postRepository.save(post04);
         postRepository.save(post05);
 
-        HashTag tag1 = hashTagRepository.save(new HashTag("일반글"));
-        HashTag tag2 = hashTagRepository.save(new HashTag("공지글"));
-        HashTag tag3 = hashTagRepository.save(new HashTag("판타지"));
-        HashTag tag4 = hashTagRepository.save(new HashTag("코미디"));
+        HashTag tag1 = hashTagRepository.save(new HashTag("일반글", HashTagType.GENERAL));
+        HashTag tag2 = hashTagRepository.save(new HashTag("공지글", HashTagType.MANAGEMENT));
+        HashTag tag3 = hashTagRepository.save(new HashTag("판타지", HashTagType.GENERAL));
+        HashTag tag4 = hashTagRepository.save(new HashTag("코미디", HashTagType.GENERAL));
 
         PostHashTag save1 = post01.addHashTag(tag1);
         PostHashTag save2 = post01.addHashTag(tag3);
@@ -417,11 +418,14 @@ class PostRepositoryTest {
         List<String> hashTagNames = List.of(tag1.getHashTagName(), tag3.getHashTagName());
 
         List<Post> posts = postRepository.allPostsTitleAndMultiPosts("testTitle01", hashTagNames);
+        List<Post> posts02 = postRepository.allPostsTitleAndMultiPosts("test", hashTagNames);
 
         log.info("posts={}", posts);
 
         assertThat(posts).hasSize(3);
+        assertThat(posts02).hasSize(4);
         assertThat(posts).contains(post01, post04, post05);
+        assertThat(posts02).contains(post01, post03, post04, post05);
     }
 
 }

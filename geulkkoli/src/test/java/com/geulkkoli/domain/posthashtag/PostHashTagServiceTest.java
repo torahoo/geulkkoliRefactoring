@@ -2,6 +2,7 @@ package com.geulkkoli.domain.posthashtag;
 
 import com.geulkkoli.domain.hashtag.HashTag;
 import com.geulkkoli.domain.hashtag.HashTagRepository;
+import com.geulkkoli.domain.hashtag.HashTagType;
 import com.geulkkoli.domain.post.Post;
 import com.geulkkoli.domain.post.PostRepository;
 import com.geulkkoli.domain.user.User;
@@ -43,9 +44,8 @@ class PostHashTagServiceTest {
     private HashTagRepository hashTagRepository;
 
     private User user;
-    private Post post01;
-    private Post post02;
-    private HashTag tag1, tag2, tag3, tag4, tag5, tag6, tag7, tag8;
+    private Post post, post01, post02, post03;
+    private HashTag tag1, tag2, tag3, tag4, tag5, tag6, tag7, tag8, tag9;
 
     List<Post> posts;
 
@@ -59,7 +59,7 @@ class PostHashTagServiceTest {
     private String searchHashTagWords = "일반글";
 
     @BeforeEach
-    void init(){
+    void init() {
         User save = User.builder()
                 .email("test@naver.com")
                 .userName("test")
@@ -72,14 +72,14 @@ class PostHashTagServiceTest {
     }
 
     @BeforeEach
-    void beforeEach () {
-        for(int i=0; i<10; i++){
+    void beforeEach() {
+        for (int i = 0; i < 10; i++) {
             AddDTO addDTO = AddDTO.builder()
                     .title("testTitle" + i)
                     .postBody("test postbody " + i)
                     .nickName(user.getNickName())
                     .build();
-            Post post = user.writePost(addDTO);
+            post = user.writePost(addDTO);
             postRepository.save(post);
         }
 
@@ -100,20 +100,29 @@ class PostHashTagServiceTest {
         post02 = user.writePost(addDTO02);
         postRepository.save(post02);
 
+        AddDTO addDTO03 = AddDTO.builder()
+                .title("testTitle03")
+                .postBody("test postbody 03")
+                .nickName(user.getNickName())
+                .build();
+        post03 = user.writePost(addDTO03);
+        postRepository.save(post03);
+
         posts = postRepository.findAll();
 
-        tag1 = hashTagRepository.save(new HashTag("일반글"));
-        tag2 = hashTagRepository.save(new HashTag("공지글"));
-        tag3 = hashTagRepository.save(new HashTag("판타지"));
-        tag4 = hashTagRepository.save(new HashTag("코미디"));
-        tag5 = hashTagRepository.save(new HashTag("단편소설"));
-        tag6 = hashTagRepository.save(new HashTag("시"));
-        tag7 = hashTagRepository.save(new HashTag("이상"));
-        tag8 = hashTagRepository.save(new HashTag("게임"));
+        tag1 = hashTagRepository.save(new HashTag("일반글", HashTagType.GENERAL));
+        tag2 = hashTagRepository.save(new HashTag("공지글", HashTagType.MANAGEMENT));
+        tag3 = hashTagRepository.save(new HashTag("판타지", HashTagType.GENERAL));
+        tag4 = hashTagRepository.save(new HashTag("코미디", HashTagType.GENERAL));
+        tag5 = hashTagRepository.save(new HashTag("단편소설", HashTagType.GENERAL));
+        tag6 = hashTagRepository.save(new HashTag("시", HashTagType.GENERAL));
+        tag7 = hashTagRepository.save(new HashTag("이상", HashTagType.GENERAL));
+        tag8 = hashTagRepository.save(new HashTag("게임", HashTagType.GENERAL));
+        tag9 = hashTagRepository.save(new HashTag("판게아", HashTagType.GENERAL));
     }
 
     @Test
-        public void 게시물에_해시태그_추가_및_ID로_찾기 () throws Exception {
+    public void 게시물에_해시태그_추가_및_ID로_찾기() throws Exception {
         //given
         Long postHashTagId = postHashTagService.addHashTagToPost(post01, tag1);
 
@@ -161,7 +170,7 @@ class PostHashTagServiceTest {
 
     @Test
     @DisplayName("검색어 분리 기능 테스트")
-    public void searchWordExtractorTest(){
+    public void searchWordExtractorTest() {
         //given
         String searchWords = "우리 함께 즐겨요 #판타지 #코미디";
 
@@ -177,7 +186,7 @@ class PostHashTagServiceTest {
 
     @Test
     @DisplayName("태그에 따른 게시글을 잘 가져오는지 테스트")
-    public void searchPostContainAllHashTagsTest(){
+    public void searchPostContainAllHashTagsTest() {
         //given
 
 
@@ -197,7 +206,7 @@ class PostHashTagServiceTest {
         hashTagLists.add(new ArrayList<>(Set.of(tag8, tag2, tag3, tag7)));
         hashTagLists.add(new ArrayList<>(Set.of(tag1, tag5, tag8)));
 
-        for(int i=0; i<10; i++){
+        for (int i = 0; i < 10; i++) {
             postHashTagService.addHashTagsToPost(posts.get(i), hashTagLists.get(i));
         }
 
@@ -215,11 +224,11 @@ class PostHashTagServiceTest {
 
     @Test
     @DisplayName("실제로 검색 타입, 검색어에 따라 잘 찾을 수 있는지")
-    public void searchPostsListByHashTagVer2(){
+    public void searchPostsListByHashTagVer2() {
         //given
-        postHashTagService.addHashTagsToPost(post01,new ArrayList<>(Set.of(tag1, tag3)));
+        postHashTagService.addHashTagsToPost(post01, new ArrayList<>(Set.of(tag1, tag3)));
 
-        Pageable pageable = PageRequest.of(5,5);
+        Pageable pageable = PageRequest.of(5, 5);
         String searchWords = "01 #일반글";
         String searchType = "제목";
 
@@ -230,6 +239,33 @@ class PostHashTagServiceTest {
         //then
         assertThat(collect.size()).isEqualTo(1);
 
+    }
+
+    @Test
+    @DisplayName("해시태그를 검색하여 게시물이 나오는지")
+    public void 해시태그를타입으로검색하기() throws Exception {
+        //given
+        postHashTagService.addHashTagsToPost(post01,new ArrayList<>(Set.of(tag1, tag3)));
+        postHashTagService.addHashTagsToPost(post02,new ArrayList<>(Set.of(tag1, tag3, tag4)));
+        postHashTagService.addHashTagsToPost(post,new ArrayList<>(Set.of(tag1, tag9)));
+        postHashTagService.addHashTagsToPost(post03,new ArrayList<>(Set.of(tag2, tag3, tag9)));
+
+        Pageable pageable = PageRequest.of(5,5);
+        String searchWords = "판 #일반글";
+        String searchType = "해시태그";
+        String searchWords2 = "판 #공지글";
+
+        //when
+        Page<ListDTO> listDTOS = postHashTagService.searchPostsListByHashTag(pageable, searchType, searchWords);
+        List<ListDTO> collect = listDTOS.get().collect(Collectors.toList());
+        Page<ListDTO> listDTOS2 = postHashTagService.searchPostsListByHashTag(pageable, searchType, searchWords2);
+        List<ListDTO> collect2 = listDTOS2.get().collect(Collectors.toList());
+        log.info("collect02(01)={}", collect2.get(0).getTitle());
+
+
+        //then
+        assertThat(collect.size()).isEqualTo(3);
+        assertThat(collect2.size()).isEqualTo(1);
     }
 
 }

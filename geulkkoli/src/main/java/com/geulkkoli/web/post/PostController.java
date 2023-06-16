@@ -3,6 +3,7 @@ package com.geulkkoli.web.post;
 import com.geulkkoli.application.user.CustomAuthenticationPrinciple;
 import com.geulkkoli.domain.comment.CommentsService;
 import com.geulkkoli.domain.favorites.FavoriteService;
+import com.geulkkoli.domain.post.AdminTagAccessDenied;
 import com.geulkkoli.domain.post.service.PostService;
 import com.geulkkoli.domain.posthashtag.PostHashTagService;
 import com.geulkkoli.domain.user.User;
@@ -14,6 +15,7 @@ import com.geulkkoli.web.post.dto.PageDTO;
 import com.geulkkoli.web.post.dto.PagingDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.MessageSource;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
@@ -30,6 +32,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.nio.file.AccessDeniedException;
+import java.util.Locale;
 
 @Slf4j
 @Controller
@@ -42,6 +46,7 @@ public class PostController {
     private final CommentsService commentsService;
     private final FavoriteService favoriteService;
     private final PostHashTagService postHashTagService;
+    private final MessageSource messageSource;
 
     /**
      * @PageableDefault - get 파라미터가 없을 때 기본설정 변경(기본값: page=0, size=20)
@@ -91,15 +96,25 @@ public class PostController {
     public String postAdd(@Validated @ModelAttribute AddDTO post, BindingResult bindingResult,
                           RedirectAttributes redirectAttributes, HttpServletResponse response, HttpServletRequest request)
             throws UnsupportedEncodingException {
-        if (bindingResult.hasErrors()) {
-            return "/post/postAddForm";
-        }
+
 
         post.setTagListString(post.getTagListString() + "#일반글");
         redirectAttributes.addAttribute("page", request.getSession().getAttribute("pageNumber"));
 
         User user = userService.findById(post.getAuthorId());
-        long postId = postService.savePost(post, user).getPostId();
+        long postId = 0;
+        try {
+             postId=postService.savePost(post, user).getPostId();
+        } catch (IllegalArgumentException e) {
+            bindingResult.rejectValue("title", "Tag.Required", new String[]{e.getMessage()},e.toString());
+        } catch (AdminTagAccessDenied e) {
+            bindingResult.rejectValue("tagListString", "Tag.Denied", new String[]{e.getMessage()},e.toString());
+        }
+
+        if (bindingResult.hasErrors()) {
+            return "/post/postAddForm";
+        }
+
         redirectAttributes.addAttribute("postId",postId);
         response.addCookie(new Cookie(URLEncoder.encode(post.getNickName(), "UTF-8"), "done"));
         return "redirect:/post/read/{postId}";

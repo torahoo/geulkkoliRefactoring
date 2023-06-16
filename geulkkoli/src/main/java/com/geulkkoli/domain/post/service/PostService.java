@@ -15,6 +15,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.BindingResult;
 
 import java.util.*;
 
@@ -89,8 +90,10 @@ public class PostService {
     public Post savePost(AddDTO post, User user) {
         Post writePost = user.writePost(post);
         Post save = postRepository.save(writePost);
-        if (post.getTagListString()!=null && post.getTagListString()!="") {
+        if (post.getTagListString()!=null && !post.getTagListString().equals("")) {
             List<HashTag> hashTags = postHashTagService.hashTagSeparator(post.getTagListString());
+            postHashTagService.validatePostHasType(hashTags);
+
             postHashTagService.addHashTagsToPost(save, hashTags);
         }
 

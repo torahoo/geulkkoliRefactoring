@@ -2,6 +2,7 @@ package com.geulkkoli.domain.posthashtag;
 
 import com.geulkkoli.domain.hashtag.HashTag;
 import com.geulkkoli.domain.hashtag.HashTagRepository;
+import com.geulkkoli.domain.hashtag.HashTagType;
 import com.geulkkoli.domain.post.Post;
 import com.geulkkoli.domain.post.PostRepository;
 import com.geulkkoli.domain.user.User;
@@ -77,10 +78,10 @@ class PostHashTagRepositoryTest {
         post02 = user.writePost(addDTO02);
         postRepository.save(post02);
 
-        tag1 = hashTagRepository.save(new HashTag("일반글"));
-        tag2 = hashTagRepository.save(new HashTag("공지글"));
-        tag3 = hashTagRepository.save(new HashTag("판타지"));
-        tag4 = hashTagRepository.save(new HashTag("코미디"));
+        tag1 = hashTagRepository.save(new HashTag("일반글", HashTagType.GENERAL));
+        tag2 = hashTagRepository.save(new HashTag("공지글", HashTagType.GENERAL));
+        tag3 = hashTagRepository.save(new HashTag("판타지",HashTagType.GENERAL));
+        tag4 = hashTagRepository.save(new HashTag("코미디", HashTagType.GENERAL));
     }
 
     @Test

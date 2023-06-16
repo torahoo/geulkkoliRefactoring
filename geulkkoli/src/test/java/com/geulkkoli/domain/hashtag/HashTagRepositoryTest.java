@@ -44,9 +44,9 @@ class HashTagRepositoryTest {
     @Test
     void 해시태그_시퀀스번호_확인() throws Exception {
         //given
-        HashTag hashTag = new HashTag("일반글");
+        HashTag hashTag = new HashTag("일반글", HashTagType.GENERAL);
         HashTag save = hashTagRepository.save(hashTag);
-        HashTag hashTag2 = new HashTag("공지글");
+        HashTag hashTag2 = new HashTag("공지글", HashTagType.MANAGEMENT);
         HashTag save2 = hashTagRepository.save(hashTag2);
         //when
         long checkSeq = save.getHashTagId() + 1;
@@ -60,9 +60,9 @@ class HashTagRepositoryTest {
     @Test
     void findHashTagIds() {
         //given
-        HashTag hashTag = new HashTag("일반글");
+        HashTag hashTag = new HashTag("일반글",  HashTagType.GENERAL);
         HashTag save = hashTagRepository.save(hashTag);
-        HashTag hashTag2 = new HashTag("공지글");
+        HashTag hashTag2 = new HashTag("공지글",   HashTagType.MANAGEMENT);
         HashTag save2 = hashTagRepository.save(hashTag2);
         List<String> hashTagNames = new ArrayList<>();
         hashTagNames.add("일반글");

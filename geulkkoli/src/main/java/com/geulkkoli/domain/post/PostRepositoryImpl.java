@@ -67,7 +67,7 @@ public class PostRepositoryImpl implements PostRepositoryCustom {
         SubQueryExpression<Post> subquery = multiHashTag(hashTagNames);
 
         return queryFactory.selectFrom(post)
-                .where(post.title.eq(title))
+                .where(post.title.contains(title))
                 .where(post.in(subquery))
                 .fetch();
     }
