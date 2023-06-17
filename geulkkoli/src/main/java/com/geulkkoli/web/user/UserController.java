@@ -96,8 +96,7 @@ public class UserController {
     public ModelAndView getFollowers(@PathVariable("nickName") String nickName, @PageableDefault(size = 10, sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
         User user = userFindService.findByNickName(nickName);
         Integer follower = followFindService.countFollowerByFolloweeId(user.getUserId());
-        List<FollowInfo> followerUserInfos = followFindService.findSomeFollowerByFolloweeId(user.getUserId(), null, pageable);
-        FollowInfos followInfos = FollowInfos.of(followerUserInfos);
+        FollowInfos followInfos = followFindService.findSomeFollowerByFolloweeId(user.getUserId(), null, pageable);
         List<Long> userIdByFollowedEachOther = followFindService.findUserIdByFollowedEachOther(followInfos.userIds(), user.getUserId(), pageable.getPageSize());
         followInfos.checkSubscribe(userIdByFollowedEachOther);
 

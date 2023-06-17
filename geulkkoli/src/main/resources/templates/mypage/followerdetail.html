@@ -17,7 +17,7 @@
         <strong class="title_follow">
             나를 구독하는
             <span class="span_follow">
-                <span th:text="${allCount}"></span>
+                <span id="all-count" th:text="${allCount}"></span>
             </span>
             명
         </strong>
@@ -25,7 +25,7 @@
 </header>
 <main>
     <div>
-        <ul class="list_follow">
+        <ul id="ul-follow" class="list_follow">
             <li th:each="follower : ${followers.getFollowInfos()}">
                 <span class="span_follow-profile-image">
                 </span>
@@ -46,5 +46,5 @@
 </body>
 <footer>
 </footer>
-<script src="/js/followdetail.js"></script>
+<script src="/js/followerdetail.js"></script>
 </html>
