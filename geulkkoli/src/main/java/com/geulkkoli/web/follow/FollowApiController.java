@@ -62,12 +62,14 @@ public class FollowApiController {
 
     @GetMapping("/followees/{lastFollowId}")
     public ResponseEntity<FollowInfos> getFollowees(@PathVariable String
-                                                                 lastFollowId, @PageableDefault Pageable pageable, @AuthenticationPrincipal CustomAuthenticationPrinciple
+                                                                 lastFollowId, @PageableDefault(size = 10) Pageable pageable, @AuthenticationPrincipal CustomAuthenticationPrinciple
                                                                  authUser) {
         Optional<User> byEmail = userFindService.findByEmail(authUser.getUserName());
         if (byEmail.isPresent()) {
             User user = byEmail.get();
-            return ResponseEntity.ok().body(followFindService.findSomeFolloweeByFollowerId(user.getUserId(), Long.parseLong(lastFollowId), pageable));
+            FollowInfos someFolloweeByFollowerId = followFindService.findSomeFolloweeByFollowerId(user.getUserId(), Long.parseLong(lastFollowId), pageable);
+            log.info("someFolloweeByFollowerId: {}", someFolloweeByFollowerId.getFollowInfos().size());
+            return ResponseEntity.ok().body(someFolloweeByFollowerId);
         }
         return ResponseEntity.status(404).build();
     }

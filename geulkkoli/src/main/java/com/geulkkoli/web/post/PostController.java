@@ -3,13 +3,12 @@ package com.geulkkoli.web.post;
 import com.geulkkoli.application.user.CustomAuthenticationPrinciple;
 import com.geulkkoli.domain.favorites.FavoriteService;
 import com.geulkkoli.domain.comment.CommentsService;
-import com.geulkkoli.domain.follow.Follow;
 import com.geulkkoli.domain.follow.service.FollowFindService;
 import com.geulkkoli.domain.post.service.PostService;
 import com.geulkkoli.domain.user.User;
 import com.geulkkoli.domain.user.service.UserFindService;
 import com.geulkkoli.web.comment.dto.CommentBodyDTO;
-import com.geulkkoli.web.follow.FollowResult;
+import com.geulkkoli.web.follow.dto.FollowResult;
 import com.geulkkoli.web.post.dto.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -29,9 +28,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
-import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Controller

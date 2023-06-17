@@ -5,17 +5,18 @@ import com.geulkkoli.application.follow.FollowInfos;
 import com.geulkkoli.application.user.CustomAuthenticationPrinciple;
 import com.geulkkoli.application.user.EmailService;
 import com.geulkkoli.application.user.PasswordService;
+import com.geulkkoli.domain.favorites.Favorites;
 import com.geulkkoli.domain.follow.service.FollowFindService;
+import com.geulkkoli.domain.post.Post;
 import com.geulkkoli.domain.social.SocialInfoFindService;
-import com.geulkkoli.domain.social.SocialInfoService;
 import com.geulkkoli.domain.user.User;
 import com.geulkkoli.domain.user.service.UserFindService;
 import com.geulkkoli.domain.user.service.UserService;
 import com.geulkkoli.web.mypage.dto.ConnectedSocialInfos;
-import com.geulkkoli.web.mypage.dto.FollowsCount;
+import com.geulkkoli.web.follow.dto.FollowsCount;
+import com.geulkkoli.web.post.dto.PostRequestDto;
 import com.geulkkoli.web.user.dto.EmailCheckForJoinDto;
 import com.geulkkoli.web.user.dto.JoinFormDto;
-import com.geulkkoli.web.user.dto.LoginFormDto;
 import com.geulkkoli.web.user.dto.edit.PasswordEditDto;
 import com.geulkkoli.web.user.dto.edit.UserInfoEditDto;
 import com.geulkkoli.web.user.dto.find.FindEmailFormDto;
@@ -40,6 +41,8 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Controller
 @RequiredArgsConstructor
@@ -58,8 +61,8 @@ public class UserController {
     public static final String REDIRECT_EDIT_INDEX = "redirect:/user/edit";
     private final UserService userService;
     private final UserFindService userFindService;
+
     private final PasswordService passwordService;
-    private final SocialInfoService socialInfoService;
     private final FollowFindService followFindService;
     private final SocialInfoFindService socialInfoFindService;
     private final EmailService emailService;
@@ -69,17 +72,17 @@ public class UserController {
     public ModelAndView getMyPage(@PathVariable("nickName") String nickName) {
         ConnectedSocialInfos connectedInfos = socialInfoFindService.findAllByNickName(nickName);
         User user = userFindService.findByNickName(nickName);
-        log.info("user: {}", user.getUserId());
         Integer followee = followFindService.countFolloweeByFollowerId(user.getUserId());
         Integer follower = followFindService.countFollowerByFolloweeId(user.getUserId());
         FollowsCount followsCount = FollowsCount.of(followee, follower);
         ModelAndView modelAndView = new ModelAndView("mypage/mypage", "connectedInfos", connectedInfos);
         modelAndView.addObject("followsCount", followsCount);
+
         return modelAndView;
     }
 
     @GetMapping("/{nickName}/followees")
-    public ModelAndView getFollowees(@PathVariable("nickName")String nickName,@PageableDefault(size = 10, sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
+    public ModelAndView getFollowees(@PathVariable("nickName") String nickName, @PageableDefault(size = 10, sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
         User user = userFindService.findByNickName(nickName);
         Integer followee = followFindService.countFolloweeByFollowerId(user.getUserId());
         FollowInfos followeeUserInfos = followFindService.findSomeFolloweeByFollowerId(user.getUserId(), null, pageable);
@@ -90,7 +93,7 @@ public class UserController {
     }
 
     @GetMapping("/{nickName}/followers")
-    public ModelAndView getFollowers(@PathVariable("nickName")String nickName,@PageableDefault(size = 10, sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
+    public ModelAndView getFollowers(@PathVariable("nickName") String nickName, @PageableDefault(size = 10, sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
         User user = userFindService.findByNickName(nickName);
         Integer follower = followFindService.countFollowerByFolloweeId(user.getUserId());
         List<FollowInfo> followerUserInfos = followFindService.findSomeFollowerByFolloweeId(user.getUserId(), null, pageable);
@@ -98,10 +101,36 @@ public class UserController {
         List<Long> userIdByFollowedEachOther = followFindService.findUserIdByFollowedEachOther(followInfos.userIds(), user.getUserId(), pageable.getPageSize());
         followInfos.checkSubscribe(userIdByFollowedEachOther);
 
-        log.info("followInfos: {}", followInfos.getFollowInfos());
-
         ModelAndView modelAndView = new ModelAndView("mypage/followerdetail", "followers", followInfos);
         modelAndView.addObject("allCount", follower);
+
+        return modelAndView;
+    }
+
+    @GetMapping("{nickName}/read")
+    public ModelAndView getRead(@PathVariable("nickName") String nickName) {
+        User user = userFindService.findByNickName(nickName);
+        Set<Post> posts = user.getPosts();
+        log.info("posts : {}", posts);
+        List<PostRequestDto> readInfos = posts.stream()
+                .map(post -> new PostRequestDto(post.getTitle(), post.getPostBody(), post.getNickName()))
+                .collect(Collectors.toUnmodifiableList());
+        ModelAndView modelAndView = new ModelAndView("mypage/read", "readInfos", readInfos);
+
+        return modelAndView;
+    }
+
+
+    @GetMapping("{nickName}/favorite")
+    public ModelAndView getFavorite(@PathVariable("nickName") String nickName) {
+        User user = userFindService.findByNickName(nickName);
+        Set<Favorites> favorites = user.getFavorites();
+
+        List<Post> collect = favorites.stream().map(favorite -> favorite.getPost()).collect(Collectors.toList());
+        List<PostRequestDto> readInfos = collect.stream()
+                .map(post -> new PostRequestDto(post.getTitle(), post.getPostBody(), post.getNickName()))
+                .collect(Collectors.toUnmodifiableList());
+        ModelAndView modelAndView = new ModelAndView("mypage/read", "readInfos", readInfos);
 
         return modelAndView;
     }
@@ -186,8 +215,6 @@ public class UserController {
 
     @PostMapping("/join")
     public String userJoin(@Validated @ModelAttribute("joinForm") JoinFormDto form, BindingResult bindingResult, HttpServletRequest request) {
-        log.info("join Method={}", this);
-
         if (userService.isNickNameDuplicate(form.getNickName())) {
             bindingResult.rejectValue("nickName", "Duple.nickName");
         }
@@ -223,7 +250,6 @@ public class UserController {
     @PostMapping("/checkEmail")
     @ResponseBody
     public ResponseMessage checkEmail(@RequestBody EmailCheckForJoinDto form, HttpServletRequest request) {
-
 
         if (form.getEmail().isEmpty()) {
             return ResponseMessage.NULL_OR_BLANK_EMAIL;
@@ -264,6 +290,8 @@ public class UserController {
         UserInfoEditDto userInfoEditDto = UserInfoEditDto.from(authUser.getUserRealName(), authUser.getNickName(), authUser.getPhoneNo(), authUser.getGender());
         ModelAndView modelAndView = new ModelAndView().addObject("editForm", userInfoEditDto);
         modelAndView.addObject("connectedInfos", connectedInfos);
+
+        modelAndView.setViewName(EDIT_FORM);
 
         return modelAndView;
     }

@@ -2,19 +2,25 @@ let backButton = document.querySelector("button.btn-back_text_hide");
 backButton.addEventListener("click", function () {
     window.history.back();
 });
-var lastId = document.querySelector('ul li:last-child span#follow-id').innerText;
-console.log(lastId);
-URL = "/api/followees/" + lastId;
+
 let isFetching = false;
+const allCountText = document.querySelector('span#all-count').innerText;
+const allCount = parseInt(allCountText,10);
 const getList = () => {
+    var lastId = document.querySelector('ul li:last-child span#follow-id').innerText;
+    console
+    URL = "/api/followees/" + lastId;
+    console.log(URL);
+    console.log('getList()');
     isFetching = true;
     fetch(URL, {
         method: "GET",
-    }).then(response => response.json())
+    }).then(response => response.ok ? response.json() : Promise.reject(response))
         .then(data => {
             console.log(data);
             drawList(data);
         });
+    isFetching = false;
 }
 // 스크롤 이벤트 시 실행할 구독하는 사람 목록 구독 취소 버튼과과 각 구독하는 사람의 구독 취소 버튼에 이벤트를 추가하는 함수
 const drawList = (data) => {
@@ -73,7 +79,6 @@ function getNewId(buttonId) {
 }
 
 function followButtonHandler(buttonId) {
-    console.log(buttonId)
     var followButton = document.getElementById(buttonId);
     console.log(followButton)
     if (followButton) {
@@ -178,8 +183,12 @@ window.addEventListener("scroll", () => {
     let scrollHeight = window.scrollY;
     let innerHeight = window.innerHeight;
     let offsetHeight = document.body.offsetHeight;
+    let elementById = document.getElementById('ul-follow');
+    let length = elementById.getElementsByTagName('li').length;
+    console.log(length)
+    console.log(allCount)
     const Is_END = scrollHeight + innerHeight > offsetHeight - 10;
-    if (Is_END && !isFetching) {
+    if (Is_END && !isFetching && length < allCount) {
         console.log('list')
         getList();
     }

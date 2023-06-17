@@ -1,4 +1,4 @@
-package com.geulkkoli.web.follow;
+package com.geulkkoli.web.follow.dto;
 
 public class FollowResult {
     private boolean mine;

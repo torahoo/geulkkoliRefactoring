@@ -1,13 +1,13 @@
 spring:
   config:
     activate:
-      on-profile: default
+      on-profile: test
 
   datasource:
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    url: ${spring.datasource.url}
-    username: ${spring.datasource.username}
-    password: ${spring.datasource.password}
+    driver-class-name: org.h2.Driver
+    url: jdbc:h2:mem:testdb;mode=MySQL;
+    username: sa
+    password:
 
   jpa:
     hibernate:
@@ -75,8 +75,8 @@ spring:
   mail:
     host: smtp.gmail.com # 서버 호스트
     port: 587 # 서버 포트
-    username: ${spring.mail.username} # 보내는 사람 이메일
-    password: ${spring.mail.password}   # 실제 비밀번호가 아니라 앱 서비스용 비밀번호라 구글 로그인은 안 됨
+    username:  # 보내는 사람 이메일
+    password:    # 실제 비밀번호가 아니라 앱 서비스용 비밀번호라 구글 로그인은 안 됨
     properties:
       mail:
         smtp:

@@ -1,4 +1,4 @@
-package com.geulkkoli.web.mypage.dto;
+package com.geulkkoli.web.follow.dto;
 
 public class FollowsCount {
     private final Integer followeeCount;

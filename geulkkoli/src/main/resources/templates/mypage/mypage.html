@@ -8,17 +8,13 @@
     <title>마이페이지</title>
     <link th:href="@{/css/styles.css}" rel="stylesheet">
     <link rel="stylesheet" href="/css/mypage.css">
+    <link rel="stylesheet" href="/css/nav.css">
+    <link rel="stylesheet" href="/css/header.css">
 </head>
-<nav id="sidenav">
-    <ul>
-        <li>좋아요 누른 작품</a></li>
-        <li>내 작품</li>
-    </ul>
-</nav>
 <body>
 <header id="header" th:include="header"></header>
+<span style="text-align: center"><strong>개인 페이지</strong></span>
 <aside>
-    <span><strong style="text-align: center">개인 페이지</strong></span>
     <section style="text-align: center">
         <a class="following-link"
            th:attr="data-url='/user/'+${#authentication.principal.nickName} + '/followers'"
@@ -47,36 +43,36 @@
 
     </section>
 </aside>
+<main>
+    <div style="text-align: center">
+        달력 위치
+    </div>
+</main>
+
+<div class="side-nav">
+    <ul>
+        <li style="list-style: none">
+            <a class=""
+               th:attr="data-url='/user/'+${#authentication.principal.nickName} + '/read'"
+               onclick="location.href=this.getAttribute('data-url')">
+                <em>내가 쓴 글</em>
+            </a>
+        </li>
+        <li style="list-style: none">
+            <a class=""
+               th:attr="data-url='/user/'+${#authentication.principal.nickName} + '/favorite'"
+               onclick="location.href=this.getAttribute('data-url')">
+                <em>좋아요 한 글</em>
+            </a>
+        </li>
+    </ul>
+</div>
+
 <main style="text-align: center">
 
 </main>
 
-<section class="col" style="text-align: center">
-    <a th:if="${connectedInfos.isKakaoConnected()}"
-       th:href="@{/social/disconnect/socialType(type=kakao)}" class="btn btn-block">
-        카카오 계정 연동 취소
-    </a>
-    <a th:unless="${connectedInfos.isKakaoConnected()}"
-       th:href="@{/social/kakao/login}" class="btn btn-block">
-        카카오 계정 연결하기
-    </a>
-    <a th:if="${connectedInfos.isNaverConnected()}"
-       th:href="@{/social/disconnect/socialType(type=naver)}" class="btn btn-block">
-        네이버 계정 연동 취소
-    </a>
-    <a th:unless="${connectedInfos.isNaverConnected()}"
-       th:href="@{/social/naver/login}" class="btn btn-block">
-        네이버 계정 연결하기
-    </a>
-
-    <a th:if="${connectedInfos.isGoogleConnected()}"
-       th:href="@{/social/disconnect/socialType(type=google)}" class="btn btn-block">
-        구글 계정 연동 취소
-    </a>
-    <a th:unless="${connectedInfos.isGoogleConnected()}"
-       th:href="@{/social/google/login}" class="btn btn-block">
-        구글 계정 연결하기
-    </a>
-</section>
 </body>
+<div th:include="footer"></div>
+<script src="/js/nav.js"></script>
 </html>

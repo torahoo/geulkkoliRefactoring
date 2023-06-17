@@ -2,30 +2,19 @@ package com.geulkkoli.domain.post.service;
 
 import com.geulkkoli.domain.post.Post;
 import com.geulkkoli.domain.post.PostRepository;
-import com.geulkkoli.domain.user.User;
 import com.geulkkoli.domain.user.UserRepository;
-import com.geulkkoli.web.post.dto.AddDTO;
-import com.geulkkoli.web.post.dto.EditDTO;
 import com.geulkkoli.web.post.dto.ListDTO;
-import lombok.extern.slf4j.Slf4j;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.*;
+import java.util.NoSuchElementException;
 
-@Slf4j
-@Service
-public class PostService {
-
+@RequiredArgsConstructor
+public class PostFindService {
     private final PostRepository postRepository;
     private final UserRepository userRepository;
-
-    public PostService(PostRepository postRepository, UserRepository userRepository) {
-        this.postRepository = postRepository;
-        this.userRepository = userRepository;
-    }
 
     @Transactional(readOnly = true)
     public Post findById(Long postId) {
@@ -78,38 +67,5 @@ public class PostService {
                 post.getUpdatedAt(),
                 post.getPostHits()
         ));
-    }
-
-    @Transactional
-    public Post savePost(AddDTO post, User user) {
-        Post writePost = user.writePost(post);
-        return postRepository.save(writePost);
-    }
-
-    @Transactional
-
-    public void updatePost(Long postId, EditDTO updateParam) {
-        Post post = findById(postId)
-                .getUser()
-                .editPost(postId, updateParam);
-        postRepository.save(post);
-    }
-
-    @Transactional
-    public void deletePost(Long postId, String nickName) {
-        Post post = postRepository.findById(postId)
-                .orElseThrow(() -> new NoSuchElementException("No post found id matches:" + postId));
-        Optional<User> byNickName = userRepository.findByNickName(nickName);
-        if (byNickName.isPresent() && post.getUser().equals(byNickName.get())) {
-            User user = byNickName.get();
-            user.deletePost(post);
-        }
-
-        postRepository.delete(post);
-    }
-
-    @Transactional
-    public void deleteAll() {
-        postRepository.deleteAll();
     }
 }

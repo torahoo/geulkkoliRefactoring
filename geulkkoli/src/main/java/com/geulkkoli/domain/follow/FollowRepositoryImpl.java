@@ -55,6 +55,6 @@ public class FollowRepositoryImpl implements FollowRepositoryCustom {
         if (lastFollowId == null) {
             return null;
         }
-        return follow.id.lt(lastFollowId);
+        return follow.id.lt(lastFollowId); //lt : less than , <- and와 같다, id가 lastId보다 작은 것
     }
 }

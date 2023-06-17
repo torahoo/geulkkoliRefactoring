@@ -4,46 +4,47 @@
 <body>
 <header th:fragment="header" class="p-3 bg-white text-white">
     <div class="header-buttons">
+        <button type="button"
+                onclick="location.href='/loginPage'"
+                sec:authorize="isAnonymous()"
+                class="btn btn-primary btn-sm fixed-width">Login
+        </button>
+
+        <button type="button"
+                onclick="location.href='/join'"
+                sec:authorize="isAnonymous()"
+                class="btn btn-outline-primary btn-sm fixed-width">Sign-up
+        </button>
+
+        <div th:if="${#request.getAttribute('loginError') != null}">
             <button type="button"
                     onclick="location.href='/loginPage'"
-                    sec:authorize="isAnonymous()"
-                    class="btn btn-primary">Login
+                    class="btn btn-primary btn-sm fixed-width">Login
             </button>
 
             <button type="button"
                     onclick="location.href='/join'"
-                    sec:authorize="isAnonymous()"
-                    class="btn btn-outline-primary">Sign-up
+                    class="btn btn-outline-primary btn-sm fixed-width">Sign-up
             </button>
-            <button th:if="${#request.getAttribute('loginError')!= null}" type="button"
-                    onclick="location.href='/loginPage'"
-                    class="btn btn-primary">Login
-            </button>
+        </div>
 
-            <button th:if="${#request.getAttribute('loginError')!= null}" type="button"
-                    onclick="location.href='/join'"
-                    class="btn btn-outline-primary">Sign-up
-            </button>
+        <div th:if="${#authentication.principal != null}" class="account-options">
             <button type="button"
-                    onclick="location.href='/admin/'"
-                    sec:authorize="hasRole('ADMIN')"
-                    class="btn btn-primary">admin
-            </button>
-
-            <button type="button"
-                    sec:authorize="hasRole('USER')"
-                    th:if="${#authentication.principal != null}"
+                    sec:authorize="hasAnyRole('USER')"
                     th:attr="data-url='/user/'+${#authentication.principal.nickName}"
                     onclick="location.href=this.getAttribute('data-url')"
-                    class="btn btn-primary">mypage
+                    class="btn btn-primary btn-sm fixed-width">Account profile
             </button>
-
+            <button type="button"
+                    sec:authorize="hasAnyRole('USER')"
+                    onclick="location.href='/user/edit'"
+                    class="btn btn-primary btn-sm fixed-width">Account Settings
+            </button>
             <button type="button"
                     onclick="location.href='/logout'"
-                    sec:authorize="hasAnyRole('USER','ADMIN','GUEST')"
-                    class="btn btn-outline-primary">logout
+                    sec:authorize="hasAnyRole('USER','ADMIN')"
+                    class="btn btn-outline-primary btn-sm fixed-width">Logout
             </button>
-
         </div>
 </header>
 </body>
