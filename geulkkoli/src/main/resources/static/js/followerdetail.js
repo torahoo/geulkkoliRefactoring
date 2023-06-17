@@ -5,10 +5,9 @@ backButton.addEventListener("click", function () {
 
 let isFetching = false;
 const allCountText = document.querySelector('span#all-count').innerText;
-const allCount = parseInt(allCountText,10);
+const allCount = parseInt(allCountText, 10);
 const getList = () => {
     var lastId = document.querySelector('ul li:last-child span#follow-id').innerText;
-    console
     URL = "/api/followers/" + lastId;
     console.log(URL);
     console.log('getList()');
@@ -19,13 +18,14 @@ const getList = () => {
         .then(data => {
             console.log(data);
             drawList(data);
+            isFetching = false;
         });
-    isFetching = false;
 }
 // 스크롤 이벤트 시 실행할 구독하는 사람 목록 구독 취소 버튼과과 각 구독하는 사람의 구독 취소 버튼에 이벤트를 추가하는 함수
 const drawList = (data) => {
     const list = document.querySelector('ul.list_follow');
-    data.followInfos.forEach((followInfo, index) => {
+    for (const followInfo of data.followInfos) {
+        const index = data.followInfos.indexOf(followInfo);
         console.log(followInfo)
         const li = document.createElement('li');
         const span = document.createElement('span');
@@ -49,27 +49,37 @@ const drawList = (data) => {
         span4.id = 'userId';
         li.appendChild(span4);
         const button = document.createElement('button');
-        const uniqueId = 'btn-unfollow-' + followInfo.id;
-        button.id = uniqueId;
-        button.className = 'btn-subscribe';
-        button.setAttribute('type', 'button');
-        const buttonInnerSpan = document.createElement('span');
-        buttonInnerSpan.classList.add('txt_default');
-        buttonInnerSpan.innerText = '구독중';
-        button.appendChild(buttonInnerSpan);
-        const buttonInnerSpan2 = document.createElement('span');
-        buttonInnerSpan2.classList.add('txt_on');
-        buttonInnerSpan2.innerText = '구독 취소';
-        button.appendChild(buttonInnerSpan2);
-
+        if (followInfo.subscribed) {
+            button.id = 'btn-unfollow-' + followInfo.id;
+            button.className = 'btn-subscribe';
+            button.setAttribute('type', 'button');
+            const buttonInnerSpan = document.createElement('span');
+            buttonInnerSpan.classList.add('txt_default');
+            buttonInnerSpan.innerText = '구독중';
+            button.appendChild(buttonInnerSpan);
+            const buttonInnerSpan2 = document.createElement('span');
+            buttonInnerSpan2.classList.add('txt_on');
+            buttonInnerSpan2.innerText = '구독 취소';
+            button.appendChild(buttonInnerSpan2);
+        } else {
+            button.id = 'btn-follow-' + followInfo.id;
+            button.className = 'btn-subscribe';
+            button.setAttribute('type', 'button');
+            const buttonInnerSpan = document.createElement('span');
+            buttonInnerSpan.innerText = '구독하기';
+            button.appendChild(buttonInnerSpan);
+        }
         li.appendChild(button);
-
         list.appendChild(li);
         if (index === data.length - 1) {
             lastId = followInfo.id;
         }
-        unFollowButtonHandler(uniqueId);
-    });
+        if (followInfo.subscribed) {
+            unFollowButtonHandler(button.id);
+        } else {
+            followButtonHandler(button.id);
+        }
+    }
 }
 
 function getNewId(buttonId) {
@@ -141,7 +151,6 @@ function unFollowButtonHandler(buttonId) {
                         followButton.className = 'btn-subscribe';
                         followButton.setAttribute('type', 'button');
                         const buttonInnerSpan = document.createElement('span');
-                        buttonInnerSpan.classList.add('txt_default');
                         buttonInnerSpan.innerText = '구독하기';
                         followButton.appendChild(buttonInnerSpan);
                         var parentElement = unfollowButton.parentNode;

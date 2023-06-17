@@ -82,6 +82,8 @@ public class FollowApiController {
             User user = byEmail.get();
             FollowInfos someFollowerByFolloweeId = followFindService.findSomeFollowerByFolloweeId(user.getUserId(), Long.parseLong(lastFollowId), pageable);
             log.info("someFollowerByFolloweeId: {}", someFollowerByFolloweeId.getFollowInfos().size());
+            List<Long> userIds = followFindService.findUserIdByFollowedEachOther(someFollowerByFolloweeId.userIds(), user.getUserId(), pageable.getPageSize());
+            someFollowerByFolloweeId.checkSubscribe(userIds);
             return ResponseEntity.ok().body(someFollowerByFolloweeId);
         }
         return ResponseEntity.status(404).build();

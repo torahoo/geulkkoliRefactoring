@@ -141,7 +141,6 @@ function unFollowButtonHandler(buttonId) {
                         followButton.className = 'btn-subscribe';
                         followButton.setAttribute('type', 'button');
                         const buttonInnerSpan = document.createElement('span');
-                        buttonInnerSpan.classList.add('txt_default');
                         buttonInnerSpan.innerText = '구독하기';
                         followButton.appendChild(buttonInnerSpan);
                         var parentElement = unfollowButton.parentNode;
