@@ -42,13 +42,14 @@ public class PostService {
 
     @Transactional(readOnly = true)
     //게시글 상세보기만을 담당하는 메서드
-    public Post showDetailPost (Long postId) {
+    public Post showDetailPost(Long postId) {
         postRepository.updateHits(postId);
         return postRepository.findById(postId)
                 .orElseThrow(() -> new NoSuchElementException("No post found id matches:" + postId));
     }
-@Transactional(readOnly = true)
-    public Page<ListDTO> findAll (Pageable pageable) {
+
+    @Transactional(readOnly = true)
+    public Page<ListDTO> findAll(Pageable pageable) {
         Page<Post> posts = postRepository.findAll(pageable);
         return posts.map(post -> new ListDTO(
                 post.getPostId(),
@@ -65,16 +66,16 @@ public class PostService {
         Page<Post> posts;
         switch (searchType) {
             case "제목":
-                posts=postRepository.findPostsByTitleContaining(pageable, searchWords);
+                posts = postRepository.findPostsByTitleContaining(pageable, searchWords);
                 break;
             case "본문":
-                posts=postRepository.findPostsByPostBodyContaining(pageable, searchWords);
+                posts = postRepository.findPostsByPostBodyContaining(pageable, searchWords);
                 break;
             case "닉네임":
-                posts=postRepository.findPostsByNickNameContaining(pageable, searchWords);
+                posts = postRepository.findPostsByNickNameContaining(pageable, searchWords);
                 break;
             default:
-                posts=postRepository.findAll(pageable);
+                posts = postRepository.findAll(pageable);
                 break;
         }
         return posts.map(post -> new ListDTO(
@@ -90,14 +91,13 @@ public class PostService {
     public Post savePost(AddDTO post, User user) {
         Post writePost = user.writePost(post);
         Post save = postRepository.save(writePost);
-        if (post.getTagListString()!=null && !post.getTagListString().equals("")) {
-            List<HashTag> hashTags = postHashTagService.hashTagSeparator(post.getTagListString()+post.getTagCategory()+post.getTagStatus()+"#일반글");
-            postHashTagService.validatePostHasType(hashTags);
-            postHashTagService.addHashTagsToPost(save, hashTags);
-        }
+        List<HashTag> hashTags = postHashTagService.hashTagSeparator("#일반글" + post.getTagListString() + post.getTagCategory() + post.getTagStatus());
+        postHashTagService.validatePostHasType(hashTags);
+        postHashTagService.addHashTagsToPost(save, hashTags);
 
         return save;
     }
+
     @Transactional
 
     public void updatePost(Long postId, EditDTO updateParam) {
@@ -105,17 +105,18 @@ public class PostService {
                 .getUser()
                 .editPost(postId, updateParam);
         ArrayList<PostHashTag> postHashTags = new ArrayList<>(post.getPostHashTags());
-        if (updateParam.getTagListString()!=null && updateParam.getTagListString()!="") {
-            for(int i=0; i<postHashTags.size(); i++) {
+        if (updateParam.getTagListString() != null && updateParam.getTagListString() != "") {
+            for (int i = 0; i < postHashTags.size(); i++) {
                 post.deletePostHashTag(postHashTags.get(i).getPostHashTagId());
             }
-            List<HashTag> hashTags = postHashTagService.hashTagSeparator(updateParam.getTagListString()+"#일반글");
+            List<HashTag> hashTags = postHashTagService.hashTagSeparator(updateParam.getTagListString() + "#일반글");
             postHashTagService.addHashTagsToPost(post, hashTags);
         }
         postRepository.save(post);
     }
+
     @Transactional
-    public void deletePost(Long postId , String nickName) {
+    public void deletePost(Long postId, String nickName) {
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new NoSuchElementException("No post found id matches:" + postId));
         Optional<User> byNickName = userRepository.findByNickName(nickName);
@@ -123,7 +124,7 @@ public class PostService {
         if (byNickName.isPresent() && post.getUser().equals(byNickName.get())) {
             User user = byNickName.get();
             user.deletePost(post);
-            for(int i=0; i<postHashTags.size(); i++) {
+            for (int i = 0; i < postHashTags.size(); i++) {
                 post.deletePostHashTag(postHashTags.get(i).getPostHashTagId());
             }
         }

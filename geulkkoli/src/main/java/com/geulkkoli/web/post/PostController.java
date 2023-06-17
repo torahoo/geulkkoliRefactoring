@@ -96,8 +96,6 @@ public class PostController {
     public String postAdd(@Validated @ModelAttribute AddDTO post, BindingResult bindingResult,
                           RedirectAttributes redirectAttributes, HttpServletResponse response, HttpServletRequest request)
             throws UnsupportedEncodingException {
-
-
         redirectAttributes.addAttribute("page", request.getSession().getAttribute("pageNumber"));
 
         User user = userService.findById(post.getAuthorId());
@@ -114,9 +112,9 @@ public class PostController {
             bindingResult.rejectValue("tagListString", "Tag.Denied", new String[]{e.getMessage()},e.toString());
             e.getStackTrace();
         }
-//        if (bindingResult.hasErrors()) {
-//            return "/post/postAddForm";
-//        }
+        if (bindingResult.hasErrors()) {
+            return "/post/postAddForm";
+        }
         redirectAttributes.addAttribute("postId",postId);
         response.addCookie(new Cookie(URLEncoder.encode(post.getNickName(), "UTF-8"), "done"));
         return "redirect:/post/read/{postId}";
