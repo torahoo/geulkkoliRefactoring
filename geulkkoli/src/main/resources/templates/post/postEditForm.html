@@ -31,6 +31,23 @@
           <div class="field-error" th:errors="*{title}"></div>
         </div>
 
+        <div class="mb=3">
+          <label for="tag-category" th:text="분류">category</label>
+          <select th:field="*{tagCategory}" class="form-select" id="tag-category" name="tag-category">
+            <option th:value="'#시'" th:selected="${tagCategory}=='#시'">시</option>
+            <option th:value="'#수필'" th:selected="${tagCategory}=='#수필'">수필</option>
+            <option th:value="'#소설'" th:selected="${tagCategory}=='#소설'">소설</option>
+          </select>
+        </div>
+        <div class="mb=3">
+          <label for="tag-status" th:text="상태">status</label>
+          <select th:field="*{tagStatus}" class="form-select" id="tag-status" name="tag-status">
+            <option th:value="'#단편'" th:selected="${tagStatus}=='#단편'">단편</option>
+            <option th:value="'#연재'" th:selected="${tagStatus}=='#연재'">연재</option>
+            <option th:value="'#완결'" th:selected="${tagStatus}=='#완결'">완결</option>
+          </select>
+        </div>
+
         <div class="mb-3">
           <label th:text="내용">내용</label>
           <textarea class="form-control"

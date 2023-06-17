@@ -183,8 +183,6 @@ public class PostController {
         if (bindingResult.hasErrors()) {
             return "/post/postEditForm";
         }
-
-        updateParam.setTagListString(updateParam.getTagListString()+"#일반글");
         postService.updatePost(postId, updateParam);
 
         redirectAttributes.addAttribute("updateStatus", true);

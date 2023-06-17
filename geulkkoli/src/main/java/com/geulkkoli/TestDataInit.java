@@ -110,7 +110,7 @@ public class TestDataInit {
                 .hashTagType(HashTagType.STATUS)
                 .build();
         HashTag hashTagStatus2 = HashTag.builder()
-                .hashTagName("연재중")
+                .hashTagName("연재")
                 .hashTagType(HashTagType.STATUS)
                 .build();
         HashTag hashTagStatus3 = HashTag.builder()
@@ -161,7 +161,7 @@ public class TestDataInit {
                     .nickName(user01.getNickName())
                     .tagListString("#testTag2 #일반글")
                     .tagCategory("#시")
-                    .tagStatus("#연재중")
+                    .tagStatus("#연재")
                     .build();
             postService.savePost(addDTO2, user01);
 
@@ -171,7 +171,7 @@ public class TestDataInit {
                     .nickName(user02.getNickName())
                     .tagListString("#testTag2 #일반글")
                     .tagCategory("#수필")
-                    .tagStatus("#연재중")
+                    .tagStatus("#연재")
                     .build();
             postService.savePost(addDTO3, user02);
         }
