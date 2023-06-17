@@ -111,6 +111,7 @@ public class PostService {
             }
             List<HashTag> hashTags = postHashTagService.hashTagSeparator("#일반글"
                     +updateParam.getTagListString()+updateParam.getTagCategory()+updateParam.getTagStatus());
+            postHashTagService.validatePostHasType(hashTags);
             postHashTagService.addHashTagsToPost(post, hashTags);
         }
         postRepository.save(post);

@@ -180,11 +180,21 @@ public class PostController {
                              @PathVariable Long postId, RedirectAttributes redirectAttributes, HttpServletRequest request,
                              @RequestParam(defaultValue = "") String searchType,
                              @RequestParam(defaultValue = "") String searchWords) {
+        try {
+            if (bindingResult.hasErrors()) {
+                return "/post/postEditForm";
+            }
+            postService.updatePost(postId, updateParam);
+        } catch (IllegalArgumentException e) {
+            bindingResult.rejectValue("tagCategory", "Tag.Required", new String[]{e.getMessage()},e.toString());
+            e.getStackTrace();
+        } catch (AdminTagAccessDenied e) {
+            bindingResult.rejectValue("tagListString", "Tag.Denied", new String[]{e.getMessage()},e.toString());
+            e.getStackTrace();
+        }
         if (bindingResult.hasErrors()) {
             return "/post/postEditForm";
         }
-        postService.updatePost(postId, updateParam);
-
         redirectAttributes.addAttribute("updateStatus", true);
         redirectAttributes.addAttribute("page", request.getSession().getAttribute("pageNumber"));
         redirectAttributes.addAttribute("searchType", searchType);
