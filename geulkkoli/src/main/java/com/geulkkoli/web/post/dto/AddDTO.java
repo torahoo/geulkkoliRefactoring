@@ -28,13 +28,22 @@ public class AddDTO {
 
     private String tagListString;
 
+    @NotBlank
+    private String tagCategory;
+
+    @NotBlank
+    private String tagStatus;
+
     @Builder
-    public AddDTO(Long authorId, String title, String postBody, String nickName, String tagListString) {
+    public AddDTO(Long authorId, String title, String postBody
+            , String nickName, String tagListString, String tagCategory, String tagStatus) {
         this.authorId = authorId;
         this.title = title;
         this.postBody = postBody;
         this.nickName = nickName;
         this.tagListString = tagListString;
+        this.tagCategory = tagCategory;
+        this.tagStatus = tagStatus;
     }
 
 }

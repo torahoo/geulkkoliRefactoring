@@ -98,23 +98,25 @@ public class PostController {
             throws UnsupportedEncodingException {
 
 
-        post.setTagListString(post.getTagListString() + "#일반글");
         redirectAttributes.addAttribute("page", request.getSession().getAttribute("pageNumber"));
 
         User user = userService.findById(post.getAuthorId());
         long postId = 0;
         try {
+            if (bindingResult.hasErrors()) {
+                return "/post/postAddForm";
+            }
              postId=postService.savePost(post, user).getPostId();
         } catch (IllegalArgumentException e) {
-            bindingResult.rejectValue("title", "Tag.Required", new String[]{e.getMessage()},e.toString());
+            bindingResult.rejectValue("tagCategory", "Tag.Required", new String[]{e.getMessage()},e.toString());
+            e.getStackTrace();
         } catch (AdminTagAccessDenied e) {
             bindingResult.rejectValue("tagListString", "Tag.Denied", new String[]{e.getMessage()},e.toString());
+            e.getStackTrace();
         }
-
-        if (bindingResult.hasErrors()) {
-            return "/post/postAddForm";
-        }
-
+//        if (bindingResult.hasErrors()) {
+//            return "/post/postAddForm";
+//        }
         redirectAttributes.addAttribute("postId",postId);
         response.addCookie(new Cookie(URLEncoder.encode(post.getNickName(), "UTF-8"), "done"));
         return "redirect:/post/read/{postId}";

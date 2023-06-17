@@ -91,9 +91,8 @@ public class PostService {
         Post writePost = user.writePost(post);
         Post save = postRepository.save(writePost);
         if (post.getTagListString()!=null && !post.getTagListString().equals("")) {
-            List<HashTag> hashTags = postHashTagService.hashTagSeparator(post.getTagListString());
+            List<HashTag> hashTags = postHashTagService.hashTagSeparator(post.getTagListString()+post.getTagCategory()+post.getTagStatus()+"#일반글");
             postHashTagService.validatePostHasType(hashTags);
-
             postHashTagService.addHashTagsToPost(save, hashTags);
         }
 

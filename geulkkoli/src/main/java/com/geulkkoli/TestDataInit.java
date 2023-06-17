@@ -139,7 +139,9 @@ public class TestDataInit {
                     .title("여러분")
                     .postBody("나는 멋지고 섹시한 개발자")
                     .nickName(user01.getNickName())
-                    .tagListString("#testTag1 #일반글 #단편 #시")
+                    .tagListString("#testTag1 #일반글")
+                    .tagCategory("#시")
+                    .tagStatus("#단편")
                     .build();
             postService.savePost(addDTO, user01);
 
@@ -147,7 +149,9 @@ public class TestDataInit {
                     .title("testTitle01")
                     .postBody("test postbody 01")
                     .nickName(user01.getNickName())
-                    .tagListString("#testTag1 #일반글 #완결 #소설")
+                    .tagListString("#testTag1 #일반글")
+                    .tagCategory("#소설")
+                    .tagStatus("#완결")
                     .build();
             postService.savePost(addDTO1, user01);
 
@@ -155,7 +159,9 @@ public class TestDataInit {
                     .title("testTitle02")
                     .postBody("test postbody 02")
                     .nickName(user01.getNickName())
-                    .tagListString("#testTag2 #일반글 #시 #연재중")
+                    .tagListString("#testTag2 #일반글")
+                    .tagCategory("#시")
+                    .tagStatus("#연재중")
                     .build();
             postService.savePost(addDTO2, user01);
 
@@ -163,7 +169,9 @@ public class TestDataInit {
                     .title("testTitle03")
                     .postBody("test postbody 03")
                     .nickName(user02.getNickName())
-                    .tagListString("#testTag2 #일반글 #수필 #연재중")
+                    .tagListString("#testTag2 #일반글")
+                    .tagCategory("#수필")
+                    .tagStatus("#연재중")
                     .build();
             postService.savePost(addDTO3, user02);
         }
