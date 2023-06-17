@@ -1,10 +1,10 @@
 package com.geulkkoli.web.user;
 
-import com.geulkkoli.application.user.UserSecurityService;
 import com.geulkkoli.application.user.CustomAuthenticationPrinciple;
 import com.geulkkoli.application.user.EmailService;
 import com.geulkkoli.application.user.PasswordService;
 import com.geulkkoli.domain.user.User;
+import com.geulkkoli.domain.user.service.UserFindService;
 import com.geulkkoli.domain.user.service.UserService;
 import com.geulkkoli.web.user.dto.EmailCheckForJoinDto;
 import com.geulkkoli.web.user.dto.JoinFormDto;
@@ -45,7 +45,7 @@ public class UserController {
     public static final String REDIRECT_INDEX = "redirect:/";
     public static final String REDIRECT_EDIT_INDEX = "redirect:/user/edit";
     private final UserService userService;
-    private final UserSecurityService userSecurityService;
+    private final UserFindService userFindService;
     private final PasswordService passwordService;
     private final EmailService emailService;
 
@@ -62,7 +62,7 @@ public class UserController {
     @PostMapping("/findEmail")
     public String userFindEmail(@Validated @ModelAttribute("findEmailForm") FindEmailFormDto form, BindingResult bindingResult, Model model) {
 
-        Optional<User> user = userService.findByUserNameAndPhoneNo(form.getUserName(), form.getPhoneNo());
+        Optional<User> user = userFindService.findByUserNameAndPhoneNo(form.getUserName(), form.getPhoneNo());
 
         if (user.isEmpty()) {
             bindingResult.addError(new ObjectError("empty", "Check.findContent"));
@@ -91,7 +91,7 @@ public class UserController {
     @PostMapping("/findPassword")
     public String userFindPassword(@Validated @ModelAttribute("findPasswordForm") FindPasswordFormDto form, BindingResult bindingResult, HttpServletRequest request) {
 
-        Optional<User> user = userService.findByEmailAndUserNameAndPhoneNo(form.getEmail(), form.getUserName(), form.getPhoneNo());
+        Optional<User> user = userFindService.findByEmailAndUserNameAndPhoneNo(form.getEmail(), form.getUserName(), form.getPhoneNo());
 
         if (user.isEmpty()) {
             bindingResult.addError(new ObjectError("empty", "Check.findContent"));
@@ -113,7 +113,7 @@ public class UserController {
     @GetMapping("/tempPassword")
     public String userTempPassword(HttpServletRequest request, Model model) {
         String email = (String) request.getSession().getAttribute("email");
-        Optional<User> user = userService.findByEmail(email);
+        Optional<User> user = userFindService.findByEmail(email);
 
         int length = passwordService.setLength(8, 20);
         String tempPassword = passwordService.createTempPassword(length);
@@ -133,7 +133,7 @@ public class UserController {
     }
 
     @PostMapping("/join")
-    public String userJoin(@Validated @ModelAttribute("joinForm") JoinFormDto form, BindingResult bindingResult, Model model, HttpServletRequest request) {
+    public String userJoin(@Validated @ModelAttribute("joinForm") JoinFormDto form, BindingResult bindingResult, HttpServletRequest request) {
         log.info("join Method={}", this);
 
         if (userService.isNickNameDuplicate(form.getNickName())) {
@@ -162,9 +162,6 @@ public class UserController {
         if (!bindingResult.hasErrors()) {
             userService.signUp(form);
 
-            log.info("joinModel = {}", model);
-            log.info("joinForm = {}", form);
-
             return REDIRECT_INDEX;
         } else {
             return JOIN_FORM;
@@ -173,24 +170,22 @@ public class UserController {
 
     @PostMapping("/checkEmail")
     @ResponseBody
-    public String checkEmail(@RequestBody EmailCheckForJoinDto form, HttpServletRequest request) {
+    public ResponseMessage checkEmail(@RequestBody EmailCheckForJoinDto form, HttpServletRequest request) {
 
-        String responseMessage;
 
         if (form.getEmail().isEmpty()) {
-            responseMessage = "nullOrBlank";
-        } else if (userService.isEmailDuplicate(form.getEmail())) {
-            responseMessage = "emailDuplicated";
-        } else {
-            int length = 6;
-            String authenticationNumber = passwordService.authenticationNumber(length);
-            request.getSession().setAttribute("authenticationNumber", authenticationNumber);
-            emailService.sendAuthenticationNumberEmail(form.getEmail(), authenticationNumber);
-            log.info("email 발송");
-            responseMessage = "sendAuthenticationNumberEmail";
+            return ResponseMessage.NULL_OR_BLANK_EMAIL;
         }
+        if (userService.isEmailDuplicate(form.getEmail())) {
+            return ResponseMessage.EMAIL_DUPLICATION;
+        }
+        int length = 6;
+        String authenticationNumber = passwordService.authenticationNumber(length);
+        request.getSession().setAttribute("authenticationNumber", authenticationNumber);
+        emailService.sendAuthenticationNumberEmail(form.getEmail(), authenticationNumber);
+        log.info("email 발송");
 
-        return responseMessage;
+        return ResponseMessage.SEND_AUTHENTICATION_NUMBER_SUCCESS;
     }
 
     @PostMapping("/checkAuthenticationNumber")
@@ -211,7 +206,7 @@ public class UserController {
     }
 
     @GetMapping("user/edit")
-    public String editForm(@AuthenticationPrincipal CustomAuthenticationPrinciple authUser, Model model) {
+    public String editUserInfo(@AuthenticationPrincipal CustomAuthenticationPrinciple authUser, Model model) {
         log.info("authUser : {}", authUser.getNickName());
         UserInfoEditDto userInfoEditDto = UserInfoEditDto.from(authUser.getUserRealName(), authUser.getNickName(), authUser.getPhoneNo(), authUser.getGender());
         model.addAttribute("editForm", userInfoEditDto);
@@ -222,7 +217,7 @@ public class UserController {
      * authUser가 기존의 세션 저장 방식을 대체한다
      * */
     @PostMapping("user/edit")
-    public String editForm(@Validated @ModelAttribute("editForm") UserInfoEditDto userInfoEditDto, BindingResult bindingResult, @AuthenticationPrincipal CustomAuthenticationPrinciple authUser) {
+    public String editUserInfo(@Validated @ModelAttribute("editForm") UserInfoEditDto userInfoEditDto, BindingResult bindingResult, @AuthenticationPrincipal CustomAuthenticationPrinciple authUser) {
         log.info("editForm : {}", userInfoEditDto.toString());
         // 닉네임 중복 검사 && 본인의 기존 닉네임과 일치해도 중복이라고 안 뜨게
         if (userService.isNickNameDuplicate(userInfoEditDto.getNickName()) && !userInfoEditDto.getNickName().equals(authUser.getNickName())) {
@@ -256,7 +251,7 @@ public class UserController {
 
     @PostMapping("user/edit/editPassword")
     public String editPassword(@Validated @ModelAttribute("editPasswordForm") PasswordEditDto form, BindingResult bindingResult, @AuthenticationPrincipal CustomAuthenticationPrinciple authUser, RedirectAttributes redirectAttributes) {
-        User user = userService.findById(parseLong(authUser));
+        User user = userFindService.findById(parseLong(authUser));
         if (!passwordService.isPasswordVerification(user, form)) {
             bindingResult.rejectValue("oldPassword", "Check.password");
         }
@@ -283,7 +278,7 @@ public class UserController {
     @DeleteMapping("user/edit/unsubscribe/{userId}")
     public String unsubscribe(@PathVariable("userId") Long userId) {
         try {
-            User findUser = userService.findById(userId);
+            User findUser = userFindService.findById(userId);
             userService.delete(findUser);
         } catch (Exception e) {
             //만약 findUser가 null이라면? 다른 에러페이지를 보여줘야하지 않을까?

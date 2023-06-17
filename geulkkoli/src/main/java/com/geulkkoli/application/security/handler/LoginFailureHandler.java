@@ -10,7 +10,9 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
+import org.springframework.security.web.authentication.AuthenticationFilter;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler;
 import org.springframework.stereotype.Component;
@@ -34,8 +36,7 @@ public class LoginFailureHandler implements  AuthenticationFailureHandler {
 
     @Override
     public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception) throws IOException, ServletException {
-
-        log.info("exception = {}", exception.getMessage());
+        log.info("exception = {}", exception);
         String errorMessage;
         if (exception instanceof BadCredentialsException) {  // 비밀번호 틀렸을 때
             errorMessage = messageSource.getMessage("error.BadCredentialsException", null, Locale.KOREA);
@@ -47,7 +48,11 @@ public class LoginFailureHandler implements  AuthenticationFailureHandler {
             errorMessage = messageSource.getMessage("error.AuthenticationCredentialsNotFoundException", null, Locale.KOREA);
         } else if (exception instanceof LockedException) {
             errorMessage = messageSource.getMessage("error.LockedException", null, Locale.KOREA);
-        } else {
+        } else if (exception instanceof OAuth2AuthenticationException){
+            errorMessage = messageSource.getMessage("error.OAuth2AuthenticationException", null, Locale.KOREA);
+        }
+
+        else {
             errorMessage = messageSource.getMessage("error.OtherException", null, Locale.KOREA);
         }
 

@@ -18,7 +18,7 @@ import java.util.Objects;
  */
 @Getter
 @Entity
-@Table(uniqueConstraints = {@UniqueConstraint(name = "REPORTER_REPORTED_POST", columnNames = {"reported_post_id", "reporter_id"})})
+@Table(uniqueConstraints = {@UniqueConstraint(name = "unique_report", columnNames = {"reported_post_id", "reporter_id"})})
 public class Report {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
