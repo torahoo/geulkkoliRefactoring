@@ -20,6 +20,7 @@ import org.springframework.validation.BindingResult;
 import javax.transaction.Transactional;
 import java.nio.file.AccessDeniedException;
 import java.util.*;
+import java.util.Comparator;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -91,7 +92,8 @@ public class PostHashTagService {
     }
 
     //searchPostsListByHashTag의 페이징 처리를 위해, 페이징 값을 반환해줍니다.
-    private static Page<Post> getPosts(Pageable pageable, List<Post> resultList) {
+    private Page<Post> getPosts(Pageable pageable, List<Post> resultList) {
+        resultList.sort(Comparator.comparing(Post::getUpdatedAt).reversed());
         int start = (int) pageable.getOffset();
         int end = Math.min((start + pageable.getPageSize()), resultList.size());
         return new PageImpl<>(resultList.subList(start,end), pageable, resultList.size());

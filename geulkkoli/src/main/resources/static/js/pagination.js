@@ -55,7 +55,8 @@ function makeURI(page, size) {
     if (type != null) {
         uri += '&searchType=' + type;
         if (words != null) {
-            uri += '&searchWords=' + words;
+            let encodedWords = encodeURIComponent(words);
+            uri += '&searchWords=' + encodedWords;
         }
     }
 
