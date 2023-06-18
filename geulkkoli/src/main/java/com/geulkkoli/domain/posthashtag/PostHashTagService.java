@@ -6,6 +6,7 @@ import com.geulkkoli.domain.hashtag.HashTagType;
 import com.geulkkoli.domain.post.AdminTagAccessDenied;
 import com.geulkkoli.domain.post.Post;
 import com.geulkkoli.domain.post.PostRepository;
+import com.geulkkoli.domain.post.PostRepositoryCustom;
 import com.geulkkoli.web.post.dto.ListDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -30,26 +31,20 @@ public class PostHashTagService {
     private final HashTagRepository hashTagRepository;
     private final PostHashTagRepository postHashTagRepository;
 
+    //게시글에 해시태그 1개를 추가합니다
     public Long addHashTagToPost(Post post, HashTag tag) {
         return postHashTagRepository.save(post.addHashTag(tag)).getPostHashTagId();
     }
 
+
+    //게시글에 다수의 해시태그를 추가합니다
     public void addHashTagsToPost(Post post, List<HashTag> tags) {
         for (HashTag tag : tags) {
             addHashTagToPost(post, tag);
         }
     }
 
-    public PostHashTag findByPostHashTagId(Long postHashTagId) {
-        return postHashTagRepository.findById(postHashTagId).orElseThrow(
-                () -> new NoSuchElementException("no such postHashTag by Id:" + postHashTagId)
-        );
-    }
-
-    public HashTag findByHashTagId(Long hashTagId){
-        return hashTagRepository.findHashTagByHashTagId(hashTagId);
-    }
-
+    //게시판을 들어갔을 때, 게시글을 검색할 때 등 게시글을 가져오는 모든 경우에 쓰입니다.
     public Page<ListDTO> searchPostsListByHashTag(Pageable pageable, String searchType, String searchWords) {
 
         String searchWord = searchWordExtractor(searchWords);
@@ -57,7 +52,7 @@ public class PostHashTagService {
 
         List<Post> posts = searchPostContainAllHashTags(tags);
 
-        List<Post> resultList = new ArrayList<>();
+        List<Post> resultList;
 
         switch (searchType) {
             case "제목":
@@ -76,32 +71,17 @@ public class PostHashTagService {
                         .collect(Collectors.toList());
                 break;
             case "해시태그":
-                List<HashTag> tagsList = hashTagRepository.findHashTagsByHashTagNameContaining(searchWord);
-                List<PostHashTag> postHashTagsList = new ArrayList<>();
-                for (HashTag hashTag : tagsList) {
-                    List<PostHashTag> allByHashTag = postHashTagRepository.findAllByHashTag(hashTag);
-                    postHashTagsList.addAll(allByHashTag);
-                }
-                Set<Post> postsSet = new LinkedHashSet<>();
-                for (Post post : posts) {
-                    for (PostHashTag postHashTag : postHashTagsList) {
-                        List<PostHashTag> list = new ArrayList<>(post.getPostHashTags());
-                        if (list.contains(postHashTag)) {
-                            postsSet.add(post);
-                        }
-                    }
-                }
-                resultList = new ArrayList<>(postsSet);
-
+                resultList = posts.stream()
+                        .filter(post -> post.getPostHashTags().stream()
+                                .anyMatch(postHashTag -> postHashTag.getHashTag().getHashTagName().contains(searchWord)))
+                        .collect(Collectors.toList());
                 break;
             default:
                 resultList = new ArrayList<>(posts);
                 break;
         }
 
-
-        Page<Post> finalPostsList = new PageImpl<>(resultList, pageable, resultList.size());
-        return finalPostsList.map(post -> new ListDTO(
+        return getPosts(pageable, resultList).map(post -> new ListDTO(
                 post.getPostId(),
                 post.getTitle(),
                 post.getNickName(),
@@ -110,7 +90,14 @@ public class PostHashTagService {
         ));
     }
 
+    //searchPostsListByHashTag의 페이징 처리를 위해, 페이징 값을 반환해줍니다.
+    private static Page<Post> getPosts(Pageable pageable, List<Post> resultList) {
+        int start = (int) pageable.getOffset();
+        int end = Math.min((start + pageable.getPageSize()), resultList.size());
+        return new PageImpl<>(resultList.subList(start,end), pageable, resultList.size());
+    }
 
+    //웹에서 받은 문자열로 하여금 해시태그로 나눠줍니다.
     public List<HashTag> hashTagSeparator(String searchWords) {
         Set<HashTag> hashTags = new LinkedHashSet<>();
         String[] splitter = searchWords.split("#");
@@ -130,14 +117,18 @@ public class PostHashTagService {
         return new ArrayList<>(hashTags);
     }
 
+    //웹에서 받은 문자열중 검색어를 추출해냅니다.
     public String searchWordExtractor(String searchWords) {
         String[] splitter = searchWords.split("#");
         return splitter[0].strip();
     }
 
+    //해당 태그를 가진 게시글을 찾아냅니다.
     public List<Post> searchPostContainAllHashTags(List<HashTag> tags) {
-        HashTag tag = tags.get(0);
+        HashTag tag = tags.isEmpty() ? hashTagRepository.findHashTagByHashTagName("일반글") : tags.get(0);
+
         List<Post> posts = new ArrayList<>();
+
         List<PostHashTag> postHashTagList = postHashTagRepository.findAllByHashTag(tag);
 
         for (PostHashTag postHashTag : postHashTagList) {
@@ -156,7 +147,7 @@ public class PostHashTagService {
         return posts;
     }
 
-    //Validation Post has "분류", "상태" Type and Not Include "관리"
+    //웹에서 분류나 상태값을 받아오지 못하거나 관리 태그에 접근하려 하는 경우, 이를 막습니다.
     public void validatePostHasType(List<HashTag> tags) {
         if(tags.stream().noneMatch(a -> a.getHashTagType().equals(HashTagType.CATEGORY))){
             throw new IllegalArgumentException("분류");

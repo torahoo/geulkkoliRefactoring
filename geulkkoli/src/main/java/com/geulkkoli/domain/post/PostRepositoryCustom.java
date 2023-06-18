@@ -12,5 +12,4 @@ public interface PostRepositoryCustom {
     List<Post> allPostsMultiHashTags(List<String> hashTagNames);
 
     List<Post> allPostsTitleAndMultiPosts(String title, List<String> hashTagNames);
-
 }

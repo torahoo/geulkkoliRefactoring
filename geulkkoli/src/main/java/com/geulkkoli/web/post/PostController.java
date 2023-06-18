@@ -63,22 +63,7 @@ public class PostController {
                            Model model,
                            @RequestParam(defaultValue = "") String searchType,
                            @RequestParam(defaultValue = "") String searchWords) {
-        PagingDTO pagingDTO = PagingDTO.listDTOtoPagingDTO(postService.searchPostFindAll(pageable, searchType, searchWords));
-        model.addAttribute("page", pagingDTO);
-        searchDefault(model, searchType, searchWords);
-        return "/post/postList";
-    }
-
-    @GetMapping("/list/{tagId}")
-    public String postListWithBoardId(@PageableDefault(size = 5, sort = "postId", direction = Sort.Direction.DESC) Pageable pageable,
-                                      Model model,
-                                      @RequestParam(defaultValue = "") String searchType,
-                                      @RequestParam(defaultValue = "") String searchWords,
-                                      @PathVariable Long tagId) {
-        searchWords += " #" + postHashTagService.findByHashTagId(tagId).getHashTagName();
-
         PagingDTO pagingDTO = PagingDTO.listDTOtoPagingDTO(postHashTagService.searchPostsListByHashTag(pageable, searchType, searchWords));
-
         model.addAttribute("page", pagingDTO);
         searchDefault(model, searchType, searchWords);
         return "/post/postList";
