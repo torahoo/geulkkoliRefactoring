@@ -17,7 +17,7 @@
 <br>
 <br>
 
-<form action th:action="@{/user/edit}" th:object="${editForm}" method="post">
+<form action th:action th:object="${userInfoEditForm}" method="post">
   <div class="mb-3">
     <label for="userName">
       <h4>이름</h4>
@@ -59,7 +59,7 @@
     <h5 th:if="${param.status}" th:text="'비밀번호 변경 완료'" class="pwChangeMessage"></h5>
     <br>
       <input type="button" name="password" id="password" value="비밀번호 재설정"
-             class="btn btn-primary form-control-lg" onclick="location.href='/user/edit/editPassword'">
+             class="btn btn-primary form-control-lg" onclick="location.href='/myPage/editPassword'">
   </div>
 
   <div class="mb-3">
@@ -77,18 +77,19 @@
   <div class="mb-3">
     <h4>성별</h4>
     <div class="form-check form-check-inline">
-      <input type="radio" name="gender" id="male" value="male" checked>
+      <input type="radio" name="gender" id="male" value="male" th:checked="${userInfoEditForm.getGender() == 'male'}">
       <label for="male">남자</label>
     </div>
     <div class="form-check form-check-inline">
-      <input type="radio" name="gender" id="female" value="female">
+      <input type="radio" name="gender" id="female" value="female" th:checked="${userInfoEditForm.getGender() == 'female'}">
       <label for="female">여자</label>
     </div>
     <div class="form-check form-check-inline">
-      <input type="radio" name="gender" id="non" value="non">
+      <input type="radio" name="gender" id="non" value="non" th:checked="${userInfoEditForm.getGender() == 'non'}">
       <label for="non">밝히고 싶지 않음</label>
     </div>
   </div>
+
 
   <br>
   <br>
@@ -99,7 +100,9 @@
   </div>
 
 </form>
+
 <div id="footer" th:include="footer"></div>
+
 </body>
 
 </html>

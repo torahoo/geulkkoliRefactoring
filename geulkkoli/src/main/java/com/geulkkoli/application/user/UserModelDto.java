@@ -4,6 +4,8 @@ import com.geulkkoli.domain.user.User;
 import lombok.Builder;
 import lombok.Getter;
 
+import java.io.Serializable;
+
 @Getter
 public class UserModelDto {
 

@@ -24,7 +24,7 @@ public class HomeController {
     private final PostService postService;
 
     @GetMapping
-    public String home(@PageableDefault(size = 5, sort = "postId", direction = Sort.Direction.DESC) Pageable pageable,
+    public String home(@PageableDefault(size = 5, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable,
                        Model model,
                        @RequestParam(defaultValue = "7") String searchType,
                        @RequestParam(defaultValue = "7") String searchWords) {

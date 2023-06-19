@@ -13,7 +13,14 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.*;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -40,6 +47,7 @@ public class PostService {
         return postRepository.findById(postId)
                 .orElseThrow(() -> new NoSuchElementException("No post found id matches:" + postId));
     }
+
 @Transactional(readOnly = true)
     public Page<ListDTO> findAll (Pageable pageable) {
         Page<Post> posts = postRepository.findAll(pageable);
@@ -58,16 +66,16 @@ public class PostService {
         Page<Post> posts;
         switch (searchType) {
             case "제목":
-                posts=postRepository.findPostsByTitleContaining(pageable, searchWords);
+                posts = postRepository.findPostsByTitleContaining(pageable, searchWords);
                 break;
             case "본문":
-                posts=postRepository.findPostsByPostBodyContaining(pageable, searchWords);
+                posts = postRepository.findPostsByPostBodyContaining(pageable, searchWords);
                 break;
             case "닉네임":
-                posts=postRepository.findPostsByNickNameContaining(pageable, searchWords);
+                posts = postRepository.findPostsByNickNameContaining(pageable, searchWords);
                 break;
             default:
-                posts=postRepository.findAll(pageable);
+                posts = postRepository.findAll(pageable);
                 break;
         }
         return posts.map(post -> new ListDTO(
@@ -84,14 +92,15 @@ public class PostService {
         Post writePost = user.writePost(post);
         return postRepository.save(writePost);
     }
-    @Transactional
 
+    @Transactional
     public void updatePost(Long postId, EditDTO updateParam) {
         Post post = findById(postId)
                 .getUser()
                 .editPost(postId, updateParam);
         postRepository.save(post);
     }
+
     @Transactional
     public void deletePost(Long postId , String nickName) {
         Post post = postRepository.findById(postId)
@@ -109,4 +118,14 @@ public class PostService {
     public void deleteAll() {
         postRepository.deleteAll();
     }
+
+    @Transactional(readOnly = true)
+    public List<LocalDate> getCreatedAts(User user) {
+        Set<String> createdAt = postRepository.findCreatedAt(user.getUserId());
+        return createdAt.stream()
+                .map(postingDate -> LocalDateTime.parse(postingDate, DateTimeFormatter.ofPattern("yyyy. MM. dd a hh:mm:ss")))
+                .map(LocalDateTime::toLocalDate)
+                .collect(Collectors.toList());
+    }
+
 }

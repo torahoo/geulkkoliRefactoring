@@ -52,7 +52,7 @@ public class SocialInfoService {
 
     @Transactional(readOnly = true)
     public ConnectedSocialInfos findConnectedInfos(String email) {
-        List<SocialInfo> allByUserEmail = findAllByUser_eamil(email);
+        List<SocialInfo> allByUserEmail = findAllByUser_email(email);
         if (allByUserEmail.isEmpty()) {
             return new ConnectedSocialInfos(List.of());
         }
@@ -67,7 +67,7 @@ public class SocialInfoService {
     }
 
     @Transactional(readOnly = true)
-    public List<SocialInfo> findAllByUser_eamil(String email) {
+    public List<SocialInfo> findAllByUser_email(String email) {
         return socialInfoRepository.findAllByUser_Email(email);
     }
 

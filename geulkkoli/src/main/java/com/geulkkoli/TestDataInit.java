@@ -1,12 +1,12 @@
 package com.geulkkoli;
 
-import com.geulkkoli.application.user.UserSecurityService;
 import com.geulkkoli.domain.admin.Report;
 import com.geulkkoli.domain.admin.ReportRepository;
 import com.geulkkoli.domain.admin.service.AdminServiceImpl;
 import com.geulkkoli.domain.post.Post;
 import com.geulkkoli.domain.post.PostRepository;
 import com.geulkkoli.domain.user.User;
+import com.geulkkoli.domain.user.service.UserFindService;
 import com.geulkkoli.domain.user.service.UserService;
 import com.geulkkoli.web.post.dto.AddDTO;
 import com.geulkkoli.web.user.dto.JoinFormDto;
@@ -18,6 +18,9 @@ import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+
 @Slf4j
 @RequiredArgsConstructor
 @Component
@@ -28,6 +31,7 @@ public class TestDataInit {
     private final ReportRepository reportRepository;
     private final AdminServiceImpl adminServiceImpl;
     private final UserService userService;
+    private final UserFindService userFindService;
 
     /**
      * 확인용 초기 데이터 추가
@@ -55,15 +59,6 @@ public class TestDataInit {
         User user = userService.signUp(joinForm);
 
 
-//        JoinFormDto joinForm1 = new JoinFormDto();
-//        joinForm1.setEmail("kimpjh1@naver.com");
-//        joinForm1.setUserName("김");
-//        joinForm1.setNickName("바나나121");
-//        joinForm1.setPhoneNo("9290232333");
-//        joinForm1.setGender("male");
-//        joinForm1.setPassword("123");
-//        userService.signUp(joinForm1);
-
         JoinFormDto joinForm2 = new JoinFormDto();
         joinForm2.setEmail("test01@naver.com");
         joinForm2.setUserName("테스트유저");
@@ -73,6 +68,15 @@ public class TestDataInit {
         joinForm2.setPassword("123");
         userService.signUp(joinForm2);
 
+        JoinFormDto joinForm3 = new JoinFormDto();
+        joinForm3.setEmail("cheese@naver.com");
+        joinForm3.setUserName("비밀");
+        joinForm3.setNickName("김륜환만세");
+        joinForm3.setPhoneNo("01099995555");
+        joinForm3.setGender("female");
+        joinForm3.setPassword("123");
+        userService.signUp(joinForm3);
+
         joinForm.setEmail("admin");
         joinForm.setUserName("타코다치");
         joinForm.setNickName("우무문어");
@@ -81,9 +85,18 @@ public class TestDataInit {
         joinForm.setPassword("123");
         userService.signUpAdmin(joinForm);
 
-        User user01 = userService.findById(1L);
+        JoinFormDto joinForm4 = new JoinFormDto();
+        joinForm4.setEmail("calendar@naver.com");
+        joinForm4.setUserName("김캘린");
+        joinForm4.setNickName("캘린더");
+        joinForm4.setPhoneNo("01098765432");
+        joinForm4.setGender("female");
+        joinForm4.setPassword("123");
+        LocalDate signUpDate = LocalDate.of(2022, 1, 1);
+        User user4 = userService.signUp(joinForm4, signUpDate);
 
-        for (int i = 0; i < 100; ++i) {
+        User user01 = userFindService.findById(1L);
+        for (int i = 0; i < 4; ++i) {
 
             AddDTO addDTO = AddDTO.builder()
                     .title("여러분")
@@ -117,8 +130,32 @@ public class TestDataInit {
             Post post3 = user01.writePost(addDTO3);
             postRepository.save(post3);
         }
+
+        for (int i = 7; i <= 12; i++) {
+            AddDTO addDTO = AddDTO.builder()
+                    .title("달력 테스트")
+                    .postBody("햄버거")
+                    .nickName(user4.getNickName())
+                    .build();
+            LocalDateTime createAt = LocalDateTime.of(2022, i, i, 1, 1);
+            Post post4 = user4.writePost(addDTO, createAt);
+            postRepository.save(post4);
+        }
+
+        for (int i = 1; i <= 6; i++) {
+            AddDTO addDTO = AddDTO.builder()
+                    .title("달력 테스트")
+                    .postBody("햄버거")
+                    .nickName(user4.getNickName())
+                    .build();
+            LocalDateTime createAt = LocalDateTime.of(2023, i, i, 1, 1);
+            Post post4 = user4.writePost(addDTO, createAt);
+            postRepository.save(post4);
+        }
+
+
         /**
-          신고받은 게시물 더미 데이터를 리팩토링한 방식으로 다시 작성해봤습니다.
+         * 신고받은 게시물 더미 데이터를 리팩토링한 방식으로 다시 작성해봤습니다.
          */
         Report report = user.writeReport(postRepository.findById(2L).get(), "욕설");
         Report report1 = user.writeReport(postRepository.findById(1L).get(), "비 협조적");
@@ -126,6 +163,8 @@ public class TestDataInit {
         reportRepository.save(report);
         reportRepository.save(report1);
         reportRepository.save(report2);
+
     }
+
 
 }

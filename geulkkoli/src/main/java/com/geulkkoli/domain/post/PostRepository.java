@@ -1,8 +1,5 @@
 package com.geulkkoli.domain.post;
 
-import com.geulkkoli.domain.post.Post;
-
-import com.geulkkoli.domain.post.PostRepositoryCustom;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -11,10 +8,10 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
+import java.util.Set;
 
 @Repository
-public interface PostRepository extends JpaRepository<Post,Long>, PostRepositoryCustom {
+public interface PostRepository extends JpaRepository<Post, Long>, PostRepositoryCustom {
 
     Page<Post> findAll(Pageable pageable);
 
@@ -26,4 +23,6 @@ public interface PostRepository extends JpaRepository<Post,Long>, PostRepository
     Page<Post> findPostsByNickNameContaining(Pageable pageable, String searchWords);
     Page<Post> findPostsByPostBodyContaining(Pageable pageable, String searchWords);
 
+    @Query("select p.createdAt from Post p where p.user.userId=:userId")
+    Set<String> findCreatedAt(@Param("userId") Long userId);
 }
