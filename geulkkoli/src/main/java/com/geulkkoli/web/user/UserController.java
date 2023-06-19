@@ -1,9 +1,8 @@
 package com.geulkkoli.web.user;
 
-import com.geulkkoli.application.follow.FollowInfo;
 import com.geulkkoli.application.follow.FollowInfos;
 import com.geulkkoli.application.user.CustomAuthenticationPrinciple;
-import com.geulkkoli.application.user.EmailService;
+import com.geulkkoli.application.EmailService;
 import com.geulkkoli.application.user.PasswordService;
 import com.geulkkoli.domain.favorites.Favorites;
 import com.geulkkoli.domain.follow.service.FollowFindService;
