@@ -1,6 +1,6 @@
 header{
     position: fixed;
-    top: 0;
+    top: 0.6%;
     right: 0;
     width: 349.25px;
     height: 64px;
@@ -11,9 +11,18 @@ header{
     padding: 0 20px;
     box-sizing: border-box;
 }
+#btn-all{
+    margin-top: 15px;
+}
+
 .header-buttons {
     display: flex;
     gap: 10px;
+}
+
+button{
+    margin-bottom: 2px;
+    margin-top: 2px;
 }
 
  .header-buttons .list-group {
@@ -32,7 +41,7 @@ header{
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    margin-top: 10px;
+    margin-top: 5%;
 }
 
 .fixed-width {

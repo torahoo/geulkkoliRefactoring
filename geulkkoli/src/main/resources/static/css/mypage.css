@@ -1,8 +1,52 @@
-.following-link{
+.following-link {
     text-decoration: none;
-    color: inherit;
+    color: #000;
+    display: inline-block;
+}
+
+#wrap{
+    display: flex;
 }
 
 .following-link em {
     font-style: normal !important;
+}
+
+.side-nav {
+    flex-direction: column-reverse;
+}
+
+li {
+    list-style: none;
+}
+
+main {
+    display: inline;
+}
+
+.follow-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 20px;
+}
+
+aside{
+    margin-top: 10px;
+}
+
+.default-profile {
+    top: 70%;
+    left: 50%;
+    height: 10%;
+    transform: translate(-50%, 0%);
+    width: 5%;
+    margin: 0;
+}
+.private-page-name{
+    text-align: center;
+    width: 100%;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    margin-left: 45%
 }
