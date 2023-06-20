@@ -77,6 +77,16 @@
                   th:text="${post.postBody}" rows="8" readonly></textarea>
     </div>
 
+    <div class="mb-3">
+        <label for="postHashTag" >해시태그</label>
+        <table style="border: 1px solid #000000;
+                      border-collapse: collapse;">
+            <td style="border: 1px solid #000000" id="postHashTag" th:each="hashTag : ${post.getTagList()}">
+                <p style="padding: 10px;" th:text="${hashTag.getHashTagName()}">tagName</p>
+            </td>
+        </table>
+    </div>
+
     <hr class="my-4">
     <div class="row">
         <div sec:authorize="hasRole('USER')"
@@ -171,8 +181,7 @@
 
 </div> <!-- /container -->
 
-<footer id="footer"></footer>
-<div th:include="footer"></div>
+<footer id="footer" th:include="footer"></footer>
 
 <script th:inline="javascript">
 
@@ -190,8 +199,6 @@
         const postId = [[${post.postId}]];
         const userNickName = validName;
         const compareTitle = document.getElementById("post-Compare").value;
-        console.log(compareTitle);
-        console.log(deleteTitle)
         let params = {
             postId: postId,
             userNickName: userNickName
@@ -272,8 +279,11 @@
     document.getElementById("deletePostButton").addEventListener("click", deletePost);
 
 </script>
-<a href="https://www.flaticon.com/kr/free-icons/" title="처럼 아이콘">처럼 아이콘 제작자: Karacis - Flaticon</a>
+
 <script type="text/javascript" src="/js/comment.js"></script>
 <script type="text/javascript" src="/js/follow.js"></script>
+<a href="https://www.flaticon.com/kr/free-icons/" title="처럼 아이콘">처럼 아이콘 제작자: Karacis - Flaticon</a>
+<br>
+<br>
 </body>
 </html>

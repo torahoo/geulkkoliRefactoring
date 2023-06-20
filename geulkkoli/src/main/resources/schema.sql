@@ -6,6 +6,8 @@ drop table if exists favorites;
 drop table if exists post;
 drop table if exists users;
 drop table if exists topic_tags;
+drop table if exists hashtag;
+drop sequence if exists hashtag_seq;
 
 CREATE table if not exists users
 (
@@ -16,6 +18,7 @@ CREATE table if not exists users
     nick_name varchar(20)  not null,
     phone_no  varchar(20)  not null,
     gender    varchar(10)  not null,
+    sign_up_date        TIMESTAMP      NOT NULL DEFAULT CURRENT_TIMESTAMP,
     CONSTRAINT unique_email_nick_name_phone_no UNIQUE (email, nick_name, phone_no)
 );
 create table if not exists topic_tags
@@ -51,6 +54,7 @@ create table if not exists comments
     CONSTRAINT fk_comment_author FOREIGN KEY (author_id) REFERENCES users (user_id) ON DELETE CASCADE,
     CONSTRAINT fk_comment_post FOREIGN KEY (post_id) REFERENCES post (post_id) ON DELETE CASCADE
 );
+
 create table if not exists favorites
 (
     favorites_id      BIGINT primary key AUTO_INCREMENT,
@@ -59,6 +63,7 @@ create table if not exists favorites
     constraint fk_like_user FOREIGN KEY (favorites_user_id) REFERENCES users (user_id) ON DELETE cascade,
     constraint fk_like_post FOREIGN KEY (post_id) REFERENCES post (post_id) ON DELETE CASCADE
 );
+
 CREATE TABLE IF NOT EXISTS user_followings
 (
     followings_id bigint primary key AUTO_INCREMENT,
@@ -68,6 +73,7 @@ CREATE TABLE IF NOT EXISTS user_followings
     CONSTRAINT fk_followee FOREIGN KEY (followee_id) REFERENCES users (user_id) ON DELETE CASCADE,
     Constraint unique_following unique (follower_id, followee_id)
 );
+
 
 create table if not exists roles
 (
@@ -99,6 +105,13 @@ create table if not exists social_info
     is_connected boolean default true,
     constraint fk_social_info_user foreign key (user_id) references users (user_id),
     constraint unique_social_info unique (social_id, social_type)
+);
+
+create table if not exists hashtag
+(
+    hashtag_id bigint primary key,
+    hashtag_name varchar(20) not null,
+    hashtag_type  varchar(20) not null
 );
 
 create table if not exists account_lock

@@ -1,7 +1,10 @@
 package com.geulkkoli.domain.post.service;
 
+import com.geulkkoli.domain.hashtag.HashTag;
 import com.geulkkoli.domain.post.Post;
 import com.geulkkoli.domain.post.PostRepository;
+import com.geulkkoli.domain.posthashtag.PostHashTag;
+import com.geulkkoli.domain.posthashtag.PostHashTagService;
 import com.geulkkoli.domain.user.User;
 import com.geulkkoli.domain.user.UserRepository;
 import com.geulkkoli.web.post.dto.AddDTO;
@@ -12,8 +15,13 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.BindingResult;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -21,10 +29,12 @@ public class PostService {
 
     private final PostRepository postRepository;
     private final UserRepository userRepository;
+    private final PostHashTagService postHashTagService;
 
-    public PostService(PostRepository postRepository, UserRepository userRepository) {
+    public PostService(PostRepository postRepository, UserRepository userRepository, PostHashTagService postHashTagService) {
         this.postRepository = postRepository;
         this.userRepository = userRepository;
+        this.postHashTagService = postHashTagService;
     }
 
     @Transactional(readOnly = true)
@@ -40,8 +50,9 @@ public class PostService {
         return postRepository.findById(postId)
                 .orElseThrow(() -> new NoSuchElementException("No post found id matches:" + postId));
     }
-@Transactional(readOnly = true)
-    public Page<ListDTO> findAll (Pageable pageable) {
+
+    @Transactional(readOnly = true)
+    public Page<ListDTO> findAll(Pageable pageable) {
         Page<Post> posts = postRepository.findAll(pageable);
         return posts.map(post -> new ListDTO(
                 post.getPostId(),
@@ -58,16 +69,16 @@ public class PostService {
         Page<Post> posts;
         switch (searchType) {
             case "제목":
-                posts=postRepository.findPostsByTitleContaining(pageable, searchWords);
+                posts = postRepository.findPostsByTitleContaining(pageable, searchWords);
                 break;
             case "본문":
-                posts=postRepository.findPostsByPostBodyContaining(pageable, searchWords);
+                posts = postRepository.findPostsByPostBodyContaining(pageable, searchWords);
                 break;
             case "닉네임":
-                posts=postRepository.findPostsByNickNameContaining(pageable, searchWords);
+                posts = postRepository.findPostsByNickNameContaining(pageable, searchWords);
                 break;
             default:
-                posts=postRepository.findAll(pageable);
+                posts = postRepository.findAll(pageable);
                 break;
         }
         return posts.map(post -> new ListDTO(
@@ -82,24 +93,44 @@ public class PostService {
     @Transactional
     public Post savePost(AddDTO post, User user) {
         Post writePost = user.writePost(post);
-        return postRepository.save(writePost);
-    }
-    @Transactional
+        Post save = postRepository.save(writePost);
+        List<HashTag> hashTags = postHashTagService.hashTagSeparator("#일반글" + post.getTagListString() + post.getTagCategory() + post.getTagStatus());
+        postHashTagService.validatePostHasType(hashTags);
+        postHashTagService.addHashTagsToPost(save, hashTags);
 
+        return save;
+    }
+
+    @Transactional
     public void updatePost(Long postId, EditDTO updateParam) {
         Post post = findById(postId)
                 .getUser()
                 .editPost(postId, updateParam);
+        ArrayList<PostHashTag> postHashTags = new ArrayList<>(post.getPostHashTags());
+        if (updateParam.getTagListString() != null && updateParam.getTagListString() != "") {
+            for (int i = 0; i < postHashTags.size(); i++) {
+                post.deletePostHashTag(postHashTags.get(i).getPostHashTagId());
+            }
+            List<HashTag> hashTags = postHashTagService.hashTagSeparator("#일반글"
+                    +updateParam.getTagListString()+updateParam.getTagCategory()+updateParam.getTagStatus());
+            postHashTagService.validatePostHasType(hashTags);
+            postHashTagService.addHashTagsToPost(post, hashTags);
+        }
         postRepository.save(post);
     }
+
     @Transactional
-    public void deletePost(Long postId , String nickName) {
+    public void deletePost(Long postId, String nickName) {
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new NoSuchElementException("No post found id matches:" + postId));
         Optional<User> byNickName = userRepository.findByNickName(nickName);
+        ArrayList<PostHashTag> postHashTags = new ArrayList<>(post.getPostHashTags());
         if (byNickName.isPresent() && post.getUser().equals(byNickName.get())) {
             User user = byNickName.get();
             user.deletePost(post);
+            for (int i = 0; i < postHashTags.size(); i++) {
+                post.deletePostHashTag(postHashTags.get(i).getPostHashTagId());
+            }
         }
 
         postRepository.delete(post);
@@ -109,4 +140,14 @@ public class PostService {
     public void deleteAll() {
         postRepository.deleteAll();
     }
+
+    @Transactional(readOnly = true)
+    public List<LocalDate> getCreatedAts(User user) {
+        Set<String> createdAt = postRepository.findCreatedAt(user.getUserId());
+        return createdAt.stream()
+                .map(postingDate -> LocalDateTime.parse(postingDate, DateTimeFormatter.ofPattern("yyyy. MM. dd a hh:mm:ss")))
+                .map(LocalDateTime::toLocalDate)
+                .collect(Collectors.toList());
+    }
+
 }

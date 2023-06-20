@@ -9,19 +9,17 @@ const calendar = document.querySelector('.calendar');
 
 const writtenPosts = [
   {
-   
     createdAt: '2023-05-13T10:30:00'
-    
   },
   {
-    
     createdAt: '2023-05-16T10:30:00'
-    
   },
 ];
 
 
-for (let date = new Date(firstDayOfMonth); date <= lastDayOfMonth; date.setDate(date.getDate() + 1)) {
+for (let date = new Date(firstDayOfMonth);
+  date <= lastDayOfMonth;
+  date.setDate(date.getDate() + 1)) {
   const day = document.createElement('div');
   day.className = 'day';
   day.textContent = date.getDate();

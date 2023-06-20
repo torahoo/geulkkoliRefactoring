@@ -3,7 +3,8 @@ package com.geulkkoli.domain.post;
 import com.geulkkoli.domain.admin.Report;
 import com.geulkkoli.domain.comment.Comments;
 import com.geulkkoli.domain.favorites.Favorites;
-import com.geulkkoli.domain.hashtag.HashTags;
+import com.geulkkoli.domain.hashtag.HashTag;
+import com.geulkkoli.domain.posthashtag.PostHashTag;
 import com.geulkkoli.domain.user.NoSuchCommnetException;
 import com.geulkkoli.domain.user.User;
 import com.geulkkoli.web.post.dto.AddDTO;
@@ -13,6 +14,7 @@ import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 import java.util.LinkedHashSet;
+import java.util.NoSuchElementException;
 import java.util.Objects;
 import java.util.Set;
 
@@ -59,7 +61,7 @@ public class Post extends ConfigDate {
 
     //해시태그의 게시글 매핑
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
-    private Set<HashTags> hashTags = new LinkedHashSet<>();
+    private Set<PostHashTag> postHashTags = new LinkedHashSet<>();
 
     @OneToMany(mappedBy = "reportedPost", orphanRemoval = true)
     @OnDelete(action = OnDeleteAction.CASCADE)
@@ -71,16 +73,6 @@ public class Post extends ConfigDate {
         this.postBody = postBody;
         this.nickName = nickName;
         this.user = user;
-    }
-    @Override
-    public boolean equals(Object o) {
-        Post post = (Post) o;
-        return getPostId() != null && Objects.equals(getPostId(), post.getPostId());
-    }
-
-    @Override
-    public int hashCode() {
-        return getClass().hashCode();
     }
 
     //==연관관계 메서드==//
@@ -98,12 +90,6 @@ public class Post extends ConfigDate {
     //별명을 바꾼다.
     public void changeNickName(String nickName) {
         this.nickName = nickName;
-    }
-
-    //해당 게시글에 들어가 있는 해시태그
-    public void addHashTag (HashTags hashTag) {
-        hashTag.addPost(this);
-        hashTags.add(hashTag);
     }
 
     //조회수를 바꾼다.
@@ -133,5 +119,41 @@ public class Post extends ConfigDate {
                 .orElseThrow(()->new NoSuchCommnetException("해당 좋아요가 없습니다."));
     }
 
+    /**
+     * 게시글 작성 시 해시태그
+     */
+    public PostHashTag addHashTag (HashTag hashTag) {
+        PostHashTag postHashTag = new PostHashTag(this, hashTag);
+        this.getPostHashTags().add(postHashTag);
+        hashTag.getPostHashTags().add(postHashTag);
+        return postHashTag;
+    }
+
+    private PostHashTag findPostHashTag (Long postHashTagId) {
+        return this.postHashTags.stream()
+                .filter(postHashTag -> postHashTag.getPostHashTagId().equals(postHashTagId))
+                .findFirst()
+                .orElseThrow(() -> new NoSuchElementException("해당 게시글해시태그가 없습니다."));
+    }
+
+    public PostHashTag deletePostHashTag (Long postHashTagId) {
+        PostHashTag deletePostHashTag = findPostHashTag(postHashTagId);
+        postHashTags.remove(deletePostHashTag);
+        deletePostHashTag.getHashTag().getPostHashTags().remove(deletePostHashTag);
+        return deletePostHashTag;
+    }
+
+    public void deleteAllPostHashTag () {
+        this.postHashTags.removeAll(postHashTags);
+    }
+
+    @Override
+    public String toString() {
+        return "Post{" +
+                "title='" + title + '\'' +
+                ", postBody='" + postBody + '\'' +
+                ", nickName='" + nickName + '\'' +
+                '}';
+    }
 }
 

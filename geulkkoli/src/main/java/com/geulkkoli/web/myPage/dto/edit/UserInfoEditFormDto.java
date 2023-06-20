@@ -1,6 +1,5 @@
-package com.geulkkoli.web.user.dto.edit;
+package com.geulkkoli.web.mypage.dto.edit;
 
-import lombok.Builder;
 import lombok.Getter;
 import lombok.ToString;
 import org.hibernate.validator.constraints.Length;
@@ -10,7 +9,7 @@ import javax.validation.constraints.Pattern;
 
 @Getter
 @ToString
-public class UserInfoEditDto {
+public class UserInfoEditFormDto {
 
     @NotEmpty
     private String userName;
@@ -28,14 +27,14 @@ public class UserInfoEditDto {
     @NotEmpty
     private String gender;
 
-    private UserInfoEditDto(String userName, String nickName, String phoneNo, String gender) {
+    private UserInfoEditFormDto(String userName, String nickName, String phoneNo, String gender) {
         this.userName = userName;
         this.nickName = nickName;
         this.phoneNo = phoneNo;
         this.gender = gender;
     }
 
-    public static UserInfoEditDto from(String userName, String nickName, String phoneNo, String gender) {
-      return new UserInfoEditDto(userName, nickName, phoneNo, gender);
+    public static UserInfoEditFormDto form(String userName, String nickName, String phoneNo, String gender) {
+      return new UserInfoEditFormDto(userName, nickName, phoneNo, gender);
     }
 }
