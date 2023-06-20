@@ -17,11 +17,14 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
-@Transactional
 public class PostService {
 
     private final PostRepository postRepository;
@@ -42,7 +45,7 @@ public class PostService {
 
     @Transactional(readOnly = true)
     //게시글 상세보기만을 담당하는 메서드
-    public Post showDetailPost(Long postId) {
+    public Post showDetailPost (Long postId) {
         postRepository.updateHits(postId);
         return postRepository.findById(postId)
                 .orElseThrow(() -> new NoSuchElementException("No post found id matches:" + postId));
@@ -99,7 +102,6 @@ public class PostService {
     }
 
     @Transactional
-
     public void updatePost(Long postId, EditDTO updateParam) {
         Post post = findById(postId)
                 .getUser()
@@ -138,4 +140,14 @@ public class PostService {
     public void deleteAll() {
         postRepository.deleteAll();
     }
+
+    @Transactional(readOnly = true)
+    public List<LocalDate> getCreatedAts(User user) {
+        Set<String> createdAt = postRepository.findCreatedAt(user.getUserId());
+        return createdAt.stream()
+                .map(postingDate -> LocalDateTime.parse(postingDate, DateTimeFormatter.ofPattern("yyyy. MM. dd a hh:mm:ss")))
+                .map(LocalDateTime::toLocalDate)
+                .collect(Collectors.toList());
+    }
+
 }

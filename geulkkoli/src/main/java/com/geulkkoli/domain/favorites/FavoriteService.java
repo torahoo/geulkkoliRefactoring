@@ -43,7 +43,7 @@ public class FavoriteService {
         favoritesRepository.delete(deleteFavorite);
     }
 
-    public Optional<Favorites> favoriteCheck (Post post, User user) {
+    public Optional<Favorites> checkFavorite(Post post, User user) {
         return favoritesRepository.findByUserAndPost(user, post);
     }
 }

@@ -1,4 +1,6 @@
-package com.geulkkoli.web.mypage;
+package com.geulkkoli.web.mypage.dto;
+
+import com.geulkkoli.web.mypage.dto.ConnectSocialInfo;
 
 public class KaKaoConnectedSocialInfo implements ConnectSocialInfo {
     private String socialType;

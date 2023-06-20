@@ -6,7 +6,6 @@ import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
@@ -24,17 +23,27 @@ public abstract class ConfigDate {
     @LastModifiedDate
     private String updatedAt;
 
+    // 추후 제거
+    @Transient
+    private LocalDateTime calendarData;
+
     @PrePersist
-    public void onPrePersist () {
-        this.createdAt = LocalDateTime.now()
-                .format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM));
+    public void onPrePersist() {
+        if (calendarData != null) {
+            this.createdAt = calendarData.format(DateTimeFormatter.ofPattern("yyyy. MM. dd a hh:mm:ss"));
+        } else {
+            this.createdAt = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy. MM. dd a hh:mm:ss"));
+        }
         this.updatedAt = createdAt;
     }
 
     @PreUpdate
-    public void onPreUpdate () {
-        this.updatedAt = LocalDateTime.now()
-                .format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM));
+    public void onPreUpdate() {
+        this.updatedAt = LocalDateTime.now().format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM));
     }
 
+    // 달력 잔디 심기용 각 다른 날짜의 게시물들 필요 (추후 제거)
+    public void setCreatedAtForCalendarTest(LocalDateTime localDateTime) {
+        calendarData = localDateTime;
+    }
 }

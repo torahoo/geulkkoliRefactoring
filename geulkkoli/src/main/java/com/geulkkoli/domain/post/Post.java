@@ -94,7 +94,7 @@ public class Post extends ConfigDate {
      *  게시글로 부터 댓글
      */
     // 게시글에서 댓글 찾기
-    public Comments bringComment (Long commentId) {
+    private Comments bringComment (Long commentId) {
         return this.comments.stream()
                 .filter(comment -> comment.getCommentId().equals(commentId))
                 .findFirst()
@@ -105,7 +105,7 @@ public class Post extends ConfigDate {
      *  게시글로 부터 좋아요
      */
     // 게시글에서 누른 좋아요 찾기
-    public Favorites bringFavorite (Long favoriteId) {
+    private Favorites bringFavorite (Long favoriteId) {
         return this.favorites.stream()
                 .filter(favorite -> favorite.getFavoritesId().equals(favoriteId))
                 .findFirst()

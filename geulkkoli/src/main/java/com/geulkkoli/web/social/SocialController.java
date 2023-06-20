@@ -21,7 +21,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 
-import javax.crypto.spec.SecretKeySpec;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -97,7 +96,7 @@ public class SocialController {
         User user = userService.signUp(signUpDto);
 
         SocialInfoDto socialInfoDto = new SocialInfoDto(signUpDto.getAuthorizationServerId(), signUpDto.getClientregistrationName(), user);
-        socialService.save(socialInfoDto);
+        socialService.connect(socialInfoDto);
         UserModelDto dto = UserModelDto.toDto(user);
 
         CustomAuthenticationPrinciple principle = autoLogin(user, dto);
@@ -131,7 +130,7 @@ public class SocialController {
     public RedirectView disconnect(@RequestParam("type") String socialType, @AuthenticationPrincipal CustomAuthenticationPrinciple authUser) {
         log.info("소셜 연동 해제");
         socialService.disconnect(authUser.getUsername(), socialType);
-        return new RedirectView("/my-page");
+        return new RedirectView("/myPage");
     }
 
     private CustomAuthenticationPrinciple autoLogin(User user, UserModelDto dto) {

@@ -5,6 +5,7 @@ import com.geulkkoli.application.security.Role;
 import com.geulkkoli.application.security.RoleEntity;
 import com.geulkkoli.domain.admin.AccountLock;
 import com.geulkkoli.domain.admin.Report;
+import com.geulkkoli.domain.follow.Follow;
 import com.geulkkoli.domain.post.Post;
 import com.geulkkoli.domain.comment.Comments;
 import com.geulkkoli.domain.favorites.Favorites;
@@ -25,7 +26,7 @@ import java.util.*;
 @Entity
 @Getter
 @Table(name = "users")
-public class User {
+public class User extends ConfigDate {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long userId;
@@ -75,6 +76,9 @@ public class User {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Favorites> favorites = new LinkedHashSet<>();
 
+    @OneToMany(mappedBy = "followee", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<Follow> followees = new LinkedHashSet<>();
+
     @Builder
     public User(String userName, String password, String nickName, String email, String phoneNo, String gender) {
         this.userName = userName;
@@ -101,6 +105,19 @@ public class User {
                 .nickName(addDTO.getNickName())
                 .build();
 
+        this.posts.add(post);
+        return post;
+    }
+
+    //달력 잔디 심기용 각 다른 날짜의 게시물들 필요 (추후 제거)
+    public Post writePost(AddDTO addDTO, LocalDateTime localDateTime) {
+        Post post = Post.builder()
+                .title(addDTO.getTitle())
+                .postBody(addDTO.getPostBody())
+                .user(this)
+                .nickName(addDTO.getNickName())
+                .build();
+        post.setCreatedAtForCalendarTest(localDateTime);
         this.posts.add(post);
         return post;
     }
@@ -266,26 +283,35 @@ public class User {
         return roleEntity;
     }
 
+    public Follow follow(User followee) {
+        Follow follow = Follow.of(followee, this);
+        this.followees.add(follow);
+        return follow;
+    }
+
+    public Follow unfollow(User followee) {
+        Follow follow = findFollow(followee);
+        this.followees.remove(follow);
+        return follow;
+    }
+
+    public Follow unfollow(Follow follow) {
+        this.followees.remove(follow);
+        return follow;
+    }
+
+    private Follow findFollow(User followee) {
+        return this.followees.stream()
+                .filter(follow -> follow.isFollowee(followee))
+                .findFirst()
+                .orElseThrow(() -> new NoSuchFollowException("해당 팔로우가 없습니다."));
+    }
     public RoleEntity getRole() {
         return role;
     }
 
     public String roleName() {
         return role.getRole().getRoleName();
-    }
-
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof User)) return false;
-        User user = (User) o;
-        return Objects.equals(userId, user.userId);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(userId);
     }
 
     public Boolean isGuest() {
@@ -306,8 +332,21 @@ public class User {
     }
 
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof User)) return false;
+        User user = (User) o;
+        return Objects.equals(userId, user.userId);
+    }
 
+    @Override
+    public int hashCode() {
+        return Objects.hash(userId);
+    }
 }
+
+
 
 
 
