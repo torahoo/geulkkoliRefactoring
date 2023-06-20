@@ -3,6 +3,7 @@ package com.geulkkoli.web.post;
 import com.geulkkoli.application.user.CustomAuthenticationPrinciple;
 import com.geulkkoli.domain.comment.CommentsService;
 import com.geulkkoli.domain.favorites.FavoriteService;
+import com.geulkkoli.domain.follow.service.FollowFindService;
 import com.geulkkoli.domain.post.AdminTagAccessDenied;
 import com.geulkkoli.domain.post.service.PostService;
 import com.geulkkoli.domain.posthashtag.PostHashTagService;
@@ -91,7 +92,7 @@ public class PostController {
             throws UnsupportedEncodingException {
         redirectAttributes.addAttribute("page", request.getSession().getAttribute("pageNumber"));
 
-        User user = userService.findById(post.getAuthorId());
+        User user = userFindService.findById(post.getAuthorId());
         long postId = 0;
         try {
             if (bindingResult.hasErrors()) {
@@ -105,8 +106,6 @@ public class PostController {
             bindingResult.rejectValue("tagListString", "Tag.Denied", new String[]{e.getMessage()},e.toString());
             e.getStackTrace();
         }
-        User user = userFindService.findById(post.getAuthorId());
-        long postId = postService.savePost(post, user).getPostId();
         redirectAttributes.addAttribute("postId", postId);
         response.addCookie(new Cookie(URLEncoder.encode(post.getNickName(), "UTF-8"), "done"));
         return "redirect:/post/read/{postId}";

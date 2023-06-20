@@ -1,6 +1,5 @@
 package com.geulkkoli;
 
-import com.geulkkoli.application.user.UserSecurityService;
 import com.geulkkoli.domain.admin.Report;
 import com.geulkkoli.domain.admin.ReportRepository;
 import com.geulkkoli.domain.admin.service.AdminServiceImpl;
@@ -92,8 +91,8 @@ public class TestDataInit {
         joinForm.setPassword("123");
         userService.signUpAdmin(joinForm);
 
-        User user01 = userService.findById(1L);
-        User user02 = userService.findById(2L);
+        User user01 = userFindService.findById(1L);
+        User user02 = userFindService.findById(2L);
 
 
         HashTag hashTagCategory1 = HashTag.builder()
@@ -147,8 +146,7 @@ public class TestDataInit {
         LocalDate signUpDate = LocalDate.of(2022, 1, 1);
         User user4 = userService.signUp(joinForm4, signUpDate);
 
-        User user01 = userFindService.findById(1L);
-        for (int i = 0; i < 4; ++i) {
+        for (int i = 0; i < 16; ++i) {
 
             AddDTO addDTO = AddDTO.builder()
                     .title("여러분")

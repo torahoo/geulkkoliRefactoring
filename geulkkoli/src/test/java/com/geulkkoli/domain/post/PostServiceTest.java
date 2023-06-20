@@ -49,7 +49,7 @@ class PostServiceTest {
 
         userRepository.save(user1);
 
-        AddDTO addDTO = new AddDTO(1L, "title", "body", "nick", "#testTag");
+        AddDTO addDTO = new AddDTO(1L, "title", "body", "nick", "#testTag", "소설", "완결");
         Post save = postService.savePost(addDTO, user1);
 
         Post post = postService.findById(save.getPostId());
@@ -104,8 +104,8 @@ class PostServiceTest {
         userRepository.save(user1);
 
 
-        Post post= postService.savePost(new AddDTO(1L, "title", "body", "nick", "#testTag"), user1);
-        EditDTO editDTO = new EditDTO(post.getPostId(),"title update", "body update", "nick update", "#수정test");
+        Post post= postService.savePost(new AddDTO(1L, "title", "body", "nick", "#testTag", "소설", "완결"), user1);
+        EditDTO editDTO = new EditDTO(post.getPostId(),"title update", "body update", "nick update", "#수정test", "소설", "완결");
         postService.updatePost(post.getPostId(), editDTO);
 
         Post one = postService.findById(post.getPostId());
@@ -127,7 +127,7 @@ class PostServiceTest {
 
         userRepository.save(user1);
 
-        Post post = postService.savePost(new AddDTO(1L, "title", "body", user1.getNickName(), "#testTag"), user1);
+        Post post = postService.savePost(new AddDTO(1L, "title", "body", user1.getNickName(), "#testTag", "소설", "완결"), user1);
 
         postService.deletePost(post.getPostId(), user1.getNickName());
 

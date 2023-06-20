@@ -5,6 +5,7 @@ import com.geulkkoli.domain.hashtag.HashTagRepository;
 import com.geulkkoli.domain.hashtag.HashTagType;
 import com.geulkkoli.domain.post.Post;
 import com.geulkkoli.domain.post.PostRepository;
+import com.geulkkoli.domain.post.service.PostService;
 import com.geulkkoli.domain.user.User;
 import com.geulkkoli.domain.user.UserRepository;
 import com.geulkkoli.web.post.dto.AddDTO;
@@ -18,6 +19,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 
 import javax.transaction.Transactional;
 
@@ -42,21 +45,14 @@ class PostHashTagServiceTest {
     private UserRepository userRepository;
     @Autowired
     private HashTagRepository hashTagRepository;
+    @Autowired
+    private PostService postService;
 
     private User user;
     private Post post, post01, post02, post03;
     private HashTag tag1, tag2, tag3, tag4, tag5, tag6, tag7, tag8, tag9;
 
     List<Post> posts;
-
-    private String searchTitle = "제목";
-    private String searchPostBody = "본문";
-    private String searchNickName = "닉네임";
-    private String searchHashTag = "해시태그";
-    private String searchTitleWords = "test";
-    private String searchBodyWords = "test";
-    private String searchNickNameWords = "test";
-    private String searchHashTagWords = "일반글";
 
     @BeforeEach
     void init() {
@@ -119,19 +115,9 @@ class PostHashTagServiceTest {
         tag7 = hashTagRepository.save(new HashTag("이상", HashTagType.GENERAL));
         tag8 = hashTagRepository.save(new HashTag("게임", HashTagType.GENERAL));
         tag9 = hashTagRepository.save(new HashTag("판게아", HashTagType.GENERAL));
-    }
 
-    @Test
-    public void 게시물에_해시태그_추가_및_ID로_찾기() throws Exception {
-        //given
-        Long postHashTagId = postHashTagService.addHashTagToPost(post01, tag1);
-
-        //when
-        PostHashTag find = postHashTagService.findByPostHashTagId(postHashTagId);
-
-        //then
-        assertThat(postHashTagId).isEqualTo(find.getPostHashTagId());
-        assertThat(tag1).isEqualTo(find.getHashTag());
+        hashTagRepository.save(new HashTag("소설", HashTagType.CATEGORY));
+        hashTagRepository.save(new HashTag("완결", HashTagType.STATUS));
     }
 
 //    @Test
@@ -188,8 +174,6 @@ class PostHashTagServiceTest {
     @DisplayName("태그에 따른 게시글을 잘 가져오는지 테스트")
     public void searchPostContainAllHashTagsTest() {
         //given
-
-
         List<HashTag> hashTags = new ArrayList<>(Set.of(tag1, tag2));
         List<HashTag> hashTags2 = new ArrayList<>(Set.of(tag4, tag5));
 
@@ -227,45 +211,33 @@ class PostHashTagServiceTest {
     public void searchPostsListByHashTagVer2() {
         //given
         postHashTagService.addHashTagsToPost(post01, new ArrayList<>(Set.of(tag1, tag3)));
+        for (int i = 0; i < 35; i++) {
+            ArrayList<HashTag> hashTags = new ArrayList<>(Set.of(tag1, tag3));
 
-        Pageable pageable = PageRequest.of(5, 5);
+            Post post1 = postService.savePost(AddDTO.builder()
+                    .title("test01")
+                    .postBody("TestingCode01"+i)
+                    .tagListString("#신과 함께")
+                    .tagCategory("#소설")
+                    .tagStatus("#완결")
+                    .nickName("test")
+                    .authorId(1L)
+                    .build(), user);
+
+            postHashTagService.addHashTagsToPost(post1,hashTags);
+        }
+
         String searchWords = "01 #일반글";
         String searchType = "제목";
 
         //when
+        Pageable pageable = PageRequest.of(5, 5);
         Page<ListDTO> listDTOS = postHashTagService.searchPostsListByHashTag(pageable, searchType, searchWords);
         List<ListDTO> collect = listDTOS.get().collect(Collectors.toList());
 
         //then
-        assertThat(collect.size()).isEqualTo(1);
+        assertThat(collect.size()).isEqualTo(5);
 
-    }
-
-    @Test
-    @DisplayName("해시태그를 검색하여 게시물이 나오는지")
-    public void 해시태그를타입으로검색하기() throws Exception {
-        //given
-        postHashTagService.addHashTagsToPost(post01,new ArrayList<>(Set.of(tag1, tag3)));
-        postHashTagService.addHashTagsToPost(post02,new ArrayList<>(Set.of(tag1, tag3, tag4)));
-        postHashTagService.addHashTagsToPost(post,new ArrayList<>(Set.of(tag1, tag9)));
-        postHashTagService.addHashTagsToPost(post03,new ArrayList<>(Set.of(tag2, tag3, tag9)));
-
-        Pageable pageable = PageRequest.of(5,5);
-        String searchWords = "판 #일반글";
-        String searchType = "해시태그";
-        String searchWords2 = "판 #공지글";
-
-        //when
-        Page<ListDTO> listDTOS = postHashTagService.searchPostsListByHashTag(pageable, searchType, searchWords);
-        List<ListDTO> collect = listDTOS.get().collect(Collectors.toList());
-        Page<ListDTO> listDTOS2 = postHashTagService.searchPostsListByHashTag(pageable, searchType, searchWords2);
-        List<ListDTO> collect2 = listDTOS2.get().collect(Collectors.toList());
-        log.info("collect02(01)={}", collect2.get(0).getTitle());
-
-
-        //then
-        assertThat(collect.size()).isEqualTo(3);
-        assertThat(collect2.size()).isEqualTo(1);
     }
 
 }

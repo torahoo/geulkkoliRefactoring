@@ -94,9 +94,11 @@ public class PostHashTagService {
     //searchPostsListByHashTag의 페이징 처리를 위해, 페이징 값을 반환해줍니다.
     private Page<Post> getPosts(Pageable pageable, List<Post> resultList) {
         resultList.sort(Comparator.comparing(Post::getUpdatedAt).reversed());
+
+//        int start = resultList.size()>=25 ? (int) pageable.getOffset() : resultList.size();
         int start = (int) pageable.getOffset();
         int end = Math.min((start + pageable.getPageSize()), resultList.size());
-        return new PageImpl<>(resultList.subList(start,end), pageable, resultList.size());
+        return new PageImpl<>(resultList.subList(start, end), pageable, resultList.size());
     }
 
     //웹에서 받은 문자열로 하여금 해시태그로 나눠줍니다.
