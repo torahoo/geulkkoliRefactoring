@@ -94,15 +94,6 @@ public class TestDataInit {
         joinForm3.setPassword("123");
         userService.signUp(joinForm3);
 
-        JoinFormDto joinForm3 = new JoinFormDto();
-        joinForm3.setEmail("cheese@naver.com");
-        joinForm3.setUserName("비밀");
-        joinForm3.setNickName("김륜환만세");
-        joinForm3.setPhoneNo("01099995555");
-        joinForm3.setGender("female");
-        joinForm3.setPassword("123");
-        userService.signUp(joinForm3);
-
         joinForm.setEmail("admin");
         joinForm.setUserName("타코다치");
         joinForm.setNickName("우무문어");
@@ -217,11 +208,7 @@ public class TestDataInit {
                     .title("달력 테스트")
                     .postBody("햄버거")
                     .nickName(user4.getNickName())
-                    .postBody("test postbody 03")//채&훈
-                    .nickName(user2.getNickName())
                     .build();
-            Post post3 = user2.writePost(addDTO3);
-            postRepository.save(post3);
             LocalDateTime createAt = LocalDateTime.of(2022, i, i, 1, 1);
             Post post4 = user4.writePost(addDTO, createAt);
             postRepository.save(post4);

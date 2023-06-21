@@ -5,9 +5,11 @@ drop table if exists comments;
 drop table if exists favorites;
 drop table if exists post;
 drop table if exists users;
-drop table if exists topic_tags;
+drop table if exists topic;
 drop table if exists hashtag;
+drop table if exists account_lock;
 drop table if exists post_hashtag;
+
 
 CREATE table if not exists users
 (
@@ -21,11 +23,13 @@ CREATE table if not exists users
     sign_up_date        TIMESTAMP      NOT NULL DEFAULT CURRENT_TIMESTAMP,
     CONSTRAINT unique_email_nick_name_phone_no UNIQUE (email, nick_name, phone_no)
 );
-create table if not exists topic_tags
+
+create table if not exists topic
 (
     topic_id   bigint primary key auto_increment,
     topic_body varchar(255) not null unique
 );
+
 create table if not exists post
 (
     post_id           BIGINT PRIMARY KEY AUTO_INCREMENT,
@@ -35,12 +39,11 @@ create table if not exists post
     nick_name         varchar(20)    not null,
     post_hits         BIGINT,
     image_upload_name varchar(255),
-    post_topic        Bigint         not null,
     created_at        TIMESTAMP      NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at        TIMESTAMP      NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    CONSTRAINT fk_users foreign key (author_id) REFERENCES users (user_id) ON DELETE CASCADE,
-    CONSTRAINT fk_post_hashtag foreign key (post_hashtag) references post_hashtag (postHashtag_id) ON DELETE CASCADE
+    CONSTRAINT fk_users foreign key (author_id) REFERENCES users (user_id) ON DELETE CASCADE
 );
+
 
 create table if not exists comments
 (
@@ -130,5 +133,5 @@ create table if not exists post_hashtag
     post_id                 BIGINT NOT NULL,
     hashtag_id              BIGINT NOT NULL,
     constraint fk_post foreign key (post_id) references post (post_id) on delete cascade,
-    constraint fk_hashtag foreign key (hashtag_id) references post (hashtag_id) on delete cascade,
+    constraint fk_hashtag foreign key (hashtag_id) references hashtag (hashtag_id) on delete cascade,
     )
