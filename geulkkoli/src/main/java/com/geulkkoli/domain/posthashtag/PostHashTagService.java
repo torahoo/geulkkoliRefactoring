@@ -129,22 +129,29 @@ public class PostHashTagService {
 
     //해당 태그를 가진 게시글을 찾아냅니다.
     public List<Post> searchPostContainAllHashTags(List<HashTag> tags) {
-        HashTag tag = tags.isEmpty() ? hashTagRepository.findHashTagByHashTagName("일반글") : tags.get(0);
-
         List<Post> posts = new ArrayList<>();
 
-        List<PostHashTag> postHashTagList = postHashTagRepository.findAllByHashTag(tag);
+        if (tags.isEmpty()) {
+            List<PostHashTag> allList = postHashTagRepository.findAll();
+            Set<Post> setPostList = new LinkedHashSet<>();
+            for (PostHashTag postHashTag : allList) {
+                setPostList.add(postHashTag.getPost());
+            }
+            posts = new ArrayList<>(setPostList);
+        } else {
+            HashTag tag = tags.get(0);
+            List<PostHashTag> postHashTagList = postHashTagRepository.findAllByHashTag(tag);
+            for (PostHashTag postHashTag : postHashTagList) {
+                Set<HashTag> postHashTags = postHashTag.
+                        getPost().
+                        getPostHashTags().
+                        stream().
+                        map(PostHashTag::getHashTag).
+                        collect(Collectors.toSet());
 
-        for (PostHashTag postHashTag : postHashTagList) {
-            Set<HashTag> postHashTags = postHashTag.
-                    getPost().
-                    getPostHashTags().
-                    stream().
-                    map(PostHashTag::getHashTag).
-                    collect(java.util.stream.Collectors.toSet());
-
-            if (postHashTags.containsAll(tags)) {
-                posts.add(postHashTag.getPost());
+                if (postHashTags.containsAll(tags)) {
+                    posts.add(postHashTag.getPost());
+                }
             }
         }
 
@@ -153,16 +160,16 @@ public class PostHashTagService {
 
     //웹에서 분류나 상태값을 받아오지 못하거나 관리 태그에 접근하려 하는 경우, 이를 막습니다.
     public void validatePostHasType(List<HashTag> tags) {
-        if(tags.stream().noneMatch(a -> a.getHashTagType().equals(HashTagType.CATEGORY))){
+        if (tags.stream().noneMatch(a -> a.getHashTagType().equals(HashTagType.CATEGORY))) {
             throw new IllegalArgumentException("분류");
         }
-        if(tags.stream().noneMatch(a -> a.getHashTagType().equals(HashTagType.STATUS))){
+        if (tags.stream().noneMatch(a -> a.getHashTagType().equals(HashTagType.STATUS))) {
             throw new IllegalArgumentException("상태");
         }
 
         String managementTag = tags.stream().filter(a -> a.getHashTagType().equals(HashTagType.MANAGEMENT)).findAny().orElseGet(HashTag::new).getHashTagName();
 
-        if(tags.stream().anyMatch(a -> a.getHashTagType().equals(HashTagType.MANAGEMENT))){
+        if (tags.stream().anyMatch(a -> a.getHashTagType().equals(HashTagType.MANAGEMENT))) {
             throw new AdminTagAccessDenied(managementTag);
         }
 

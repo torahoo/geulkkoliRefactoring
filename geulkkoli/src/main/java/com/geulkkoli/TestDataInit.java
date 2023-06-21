@@ -104,6 +104,8 @@ public class TestDataInit {
 
         User user01 = userFindService.findById(1L);
         User user02 = userFindService.findById(2L);
+        User user03 = userFindService.findById(3L);
+        User user04 = userFindService.findById(4L);
 
 
         HashTag hashTagCategory1 = HashTag.builder()
@@ -160,10 +162,10 @@ public class TestDataInit {
         AddDTO addDTONotice = AddDTO.builder()
                 .title("공지사항입니다")
                 .postBody("나는 멋지고 섹시한 개발자")
-                .nickName(user01.getNickName())
+                .nickName(user04.getNickName())
                 .tagListString("#testTag1 #공지글")
                 .build();
-        adminServiceImpl.saveNotice(addDTONotice, user01);
+        adminServiceImpl.saveNotice(addDTONotice, user04);
 
         for (int i = 0; i < 16; ++i) {
 
