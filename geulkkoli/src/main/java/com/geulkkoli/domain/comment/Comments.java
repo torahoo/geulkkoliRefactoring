@@ -47,10 +47,10 @@ public class Comments extends ConfigDate{
         this.commentBody = commentBody;
     }
 
-    public Comments (User user, Post post, Comments comment) {
+    public Comments (User user, Post post, String commentBody) {
         this.user = user;
         this.post = post;
-        this.commentBody = comment.getCommentBody();
+        this.commentBody = commentBody;
     }
 
     //댓글 수정

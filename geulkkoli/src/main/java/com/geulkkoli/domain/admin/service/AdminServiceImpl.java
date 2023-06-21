@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @Service
 @Transactional
@@ -52,7 +53,10 @@ public class AdminServiceImpl implements AdminService {
         return post.getUser();
     }
 
+    @Override
     public void deletePost(Long postId) {
-        postRepository.delete(postId);
+        Post post = postRepository.findById(postId)
+                .orElseThrow(() -> new NoSuchElementException("no such postId :" + postId));
+        postRepository.delete(post);
     }
 }

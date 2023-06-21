@@ -1,4 +1,3 @@
-drop table if exists social_info;
 drop table if exists report;
 drop table if exists user_followings;
 drop table if exists comments;
@@ -22,12 +21,6 @@ CREATE table if not exists users
     gender    varchar(10)  not null,
     sign_up_date        TIMESTAMP      NOT NULL DEFAULT CURRENT_TIMESTAMP,
     CONSTRAINT unique_email_nick_name_phone_no UNIQUE (email, nick_name, phone_no)
-);
-
-create table if not exists topic
-(
-    topic_id   bigint primary key auto_increment,
-    topic_body varchar(255) not null unique
 );
 
 create table if not exists post
@@ -133,5 +126,13 @@ create table if not exists post_hashtag
     post_id                 BIGINT NOT NULL,
     hashtag_id              BIGINT NOT NULL,
     constraint fk_post foreign key (post_id) references post (post_id) on delete cascade,
-    constraint fk_hashtag foreign key (hashtag_id) references hashtag (hashtag_id) on delete cascade,
-    )
+    constraint fk_hashtag foreign key (hashtag_id) references hashtag (hashtag_id) on delete cascade
+);
+
+create table if not exists topic
+(
+    topic_id   bigint primary key auto_increment,
+    topic_name varchar(255) not null unique,
+    useDate    date not null default '2000-01-01',
+    upComingDate date not null default '2000-01-01'
+);

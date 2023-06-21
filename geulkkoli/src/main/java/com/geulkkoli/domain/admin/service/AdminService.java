@@ -1,5 +1,6 @@
 package com.geulkkoli.domain.admin.service;
 
+import com.geulkkoli.domain.post.Post;
 import com.geulkkoli.domain.user.User;
 import com.geulkkoli.web.admin.ReportDto;
 
