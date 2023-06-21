@@ -2,11 +2,17 @@ package com.geulkkoli.domain.admin.service;
 
 import com.geulkkoli.domain.admin.AccountLockRepository;
 import com.geulkkoli.domain.admin.ReportRepository;
+import com.geulkkoli.domain.hashtag.HashTag;
 import com.geulkkoli.domain.post.Post;
 import com.geulkkoli.domain.post.PostRepository;
+import com.geulkkoli.domain.post.service.PostService;
+import com.geulkkoli.domain.posthashtag.PostHashTag;
+import com.geulkkoli.domain.posthashtag.PostHashTagService;
 import com.geulkkoli.domain.user.User;
 import com.geulkkoli.domain.user.UserRepository;
 import com.geulkkoli.web.admin.ReportDto;
+import com.geulkkoli.web.post.dto.AddDTO;
+import com.geulkkoli.web.post.dto.EditDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,7 +35,9 @@ public class AdminServiceImpl implements AdminService {
 
     private final AccountLockRepository accountLockRepository;
 
-    public void lockUser(Long userId, String reason, Long lockDate){
+    private final PostHashTagService postHashTagService;
+
+    public void lockUser(Long userId, String reason, Long lockDate) {
         User user = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("해당 유저가 존재하지 않습니다."));
         LocalDateTime lockUntil = LocalDateTime.now().plusDays(lockDate);
         accountLockRepository.save(user.lock(reason, lockUntil));
@@ -56,7 +64,41 @@ public class AdminServiceImpl implements AdminService {
     @Override
     public void deletePost(Long postId) {
         Post post = postRepository.findById(postId)
-                .orElseThrow(() -> new NoSuchElementException("no such postId :" + postId));
+                .orElseThrow(() -> new NoSuchElementException("No post found id matches:" + postId));
         postRepository.delete(post);
+    }
+
+    @Transactional
+    public Post saveNotice(AddDTO post, User user) {
+        Post writePost = user.writePost(post);
+        Post save = postRepository.save(writePost);
+        List<HashTag> hashTags = postHashTagService.hashTagSeparator("#공지글" + post.getTagListString());
+        postHashTagService.addHashTagsToPost(save, hashTags);
+
+        return save;
+    }
+
+    @Transactional
+    public void updateNotice(Long postId, EditDTO updateParam) {
+        Post post = findById(postId)
+                .getUser()
+                .editPost(postId, updateParam);
+        ArrayList<PostHashTag> postHashTags = new ArrayList<>(post.getPostHashTags());
+
+        for (PostHashTag postHashTag : postHashTags) {
+            post.deletePostHashTag(postHashTag.getPostHashTagId());
+        }
+
+        List<HashTag> hashTags = postHashTagService.hashTagSeparator("#공지글"
+                + updateParam.getTagListString());
+        postHashTagService.addHashTagsToPost(post, hashTags);
+
+        postRepository.save(post);
+    }
+
+    @Transactional(readOnly = true)
+    public Post findById(Long postId) {
+        return postRepository.findById(postId)
+                .orElseThrow(() -> new NoSuchElementException("No post found id matches:" + postId));
     }
 }

@@ -1,3 +1,4 @@
+drop table if exists social_info;
 drop table if exists report;
 drop table if exists user_followings;
 drop table if exists comments;
@@ -12,14 +13,14 @@ drop table if exists post_hashtag;
 
 CREATE table if not exists users
 (
-    user_id   BIGINT PRIMARY KEY AUTO_INCREMENT,
-    email     varchar(255) not null,
-    password  varchar(255) not null,
-    name      varchar(20)  not null,
-    nick_name varchar(20)  not null,
-    phone_no  varchar(20)  not null,
-    gender    varchar(10)  not null,
-    sign_up_date        TIMESTAMP      NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    user_id      BIGINT PRIMARY KEY AUTO_INCREMENT,
+    email        varchar(255) not null,
+    password     varchar(255) not null,
+    name         varchar(20)  not null,
+    nick_name    varchar(20)  not null,
+    phone_no     varchar(20)  not null,
+    gender       varchar(10)  not null,
+    sign_up_date TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP,
     CONSTRAINT unique_email_nick_name_phone_no UNIQUE (email, nick_name, phone_no)
 );
 
@@ -72,19 +73,19 @@ CREATE TABLE IF NOT EXISTS user_followings
 
 create table if not exists roles
 (
-    role_id bigint primary key auto_increment,
+    role_id   bigint primary key auto_increment,
     role_name varchar(255) not null unique,
-    user_id bigint not null,
+    user_id   bigint       not null,
     constraint fk_role_user foreign key (user_id) references users (user_id)
 );
 
 create table if not exists report
 (
-    report_id bigint primary key auto_increment,
-    reported_post_id bigint not null,
-    reporter_id bigint not null,
-    reported_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    reason varchar(100) not null,
+    report_id        bigint primary key auto_increment,
+    reported_post_id bigint       not null,
+    reporter_id      bigint       not null,
+    reported_at      TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    reason           varchar(100) not null,
     constraint fk_reported_post foreign key (reported_post_id) references post (post_id),
     constraint fk_reporter foreign key (reporter_id) references users (user_id),
     constraint unique_report unique (reported_post_id, reporter_id)
@@ -92,39 +93,39 @@ create table if not exists report
 
 create table if not exists social_info
 (
-    social_info_id bigint primary key auto_increment,
-    user_id bigint not null,
-    social_id varchar(255) not null,
-    social_type varchar(255) not null,
-    social_connect_date TIMESTAMP Null,
-    is_connected boolean default true,
+    social_info_id      bigint primary key auto_increment,
+    user_id             bigint       not null,
+    social_id           varchar(255) not null,
+    social_type         varchar(255) not null,
+    social_connect_date TIMESTAMP    Null,
+    is_connected        boolean default true,
     constraint fk_social_info_user foreign key (user_id) references users (user_id),
     constraint unique_social_info unique (social_id, social_type)
 );
 
 create table if not exists hashtag
 (
-    hashtag_id bigint primary key,
+    hashtag_id   bigint primary key,
     hashtag_name varchar(20) not null,
-    hashtag_type  varchar(20) not null
+    hashtag_type varchar(20) not null
 );
 
 create table if not exists account_lock
 (
     account_lock_id bigint primary key auto_increment,
-    user_id bigint not null,
-    reason varchar(200) not null,
-    lock_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    lock_until TIMESTAMP NOT NULL,
+    user_id         bigint       not null,
+    reason          varchar(200) not null,
+    lock_at         TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    lock_until      TIMESTAMP    NOT NULL,
     constraint fk_account_lock_user foreign key (user_id) references users (user_id)
 );
 
 
 create table if not exists post_hashtag
 (
-    postHashtag_id          BIGINT PRIMARY KEY AUTO_INCREMENT,
-    post_id                 BIGINT NOT NULL,
-    hashtag_id              BIGINT NOT NULL,
+    postHashtag_id BIGINT PRIMARY KEY AUTO_INCREMENT,
+    post_id        BIGINT NOT NULL,
+    hashtag_id     BIGINT NOT NULL,
     constraint fk_post foreign key (post_id) references post (post_id) on delete cascade,
     constraint fk_hashtag foreign key (hashtag_id) references hashtag (hashtag_id) on delete cascade
 );

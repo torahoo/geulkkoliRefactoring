@@ -157,6 +157,14 @@ public class TestDataInit {
         LocalDate signUpDate = LocalDate.of(2022, 1, 1);
         User user4 = userService.signUp(joinForm4, signUpDate);
 
+        AddDTO addDTONotice = AddDTO.builder()
+                .title("공지사항입니다")
+                .postBody("나는 멋지고 섹시한 개발자")
+                .nickName(user01.getNickName())
+                .tagListString("#testTag1 #공지글")
+                .build();
+        adminServiceImpl.saveNotice(addDTONotice, user01);
+
         for (int i = 0; i < 16; ++i) {
 
             AddDTO addDTO = AddDTO.builder()

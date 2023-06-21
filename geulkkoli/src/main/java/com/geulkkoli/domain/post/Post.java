@@ -61,6 +61,7 @@ public class Post extends ConfigDate {
 
     //해시태그의 게시글 매핑
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Set<PostHashTag> postHashTags = new LinkedHashSet<>();
 
     @OneToMany(mappedBy = "reportedPost", orphanRemoval = true)

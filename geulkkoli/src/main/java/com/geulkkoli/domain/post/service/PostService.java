@@ -119,6 +119,8 @@ public class PostService {
         postRepository.save(post);
     }
 
+
+
     @Transactional
     public void deletePost(Long postId, Long loggingUserId) {
         Post post = postRepository.findById(postId)
@@ -128,8 +130,8 @@ public class PostService {
         if (loggingUser.isPresent() && post.getUser().equals(loggingUser.get())) {
             User user = loggingUser.get();
             user.deletePost(post);
-            for (int i = 0; i < postHashTags.size(); i++) {
-                post.deletePostHashTag(postHashTags.get(i).getPostHashTagId());
+            for (PostHashTag postHashTag : postHashTags) {
+                post.deletePostHashTag(postHashTag.getPostHashTagId());
             }
         }
 

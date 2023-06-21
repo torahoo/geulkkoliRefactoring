@@ -35,11 +35,11 @@ public class EditDTO {
 
     private final String nickName;
 
-    @NotBlank
-    private String tagCategory;
 
-    @NotBlank
-    private String tagStatus;
+    private final String tagCategory;
+
+
+    private final String tagStatus;
 
     @Builder
     public EditDTO(Long postId, String title, String postBody,
