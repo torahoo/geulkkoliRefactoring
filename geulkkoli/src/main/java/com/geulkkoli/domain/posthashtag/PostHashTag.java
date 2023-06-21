@@ -13,6 +13,7 @@ import java.util.Objects;
 @Getter
 @NoArgsConstructor
 @Entity
+@Table(name = "post_hashtag")
 public class PostHashTag extends ConfigDate {
 
     @Id @Column(name = "postHashtag_id")

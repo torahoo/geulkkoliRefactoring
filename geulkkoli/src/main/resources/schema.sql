@@ -7,7 +7,7 @@ drop table if exists post;
 drop table if exists users;
 drop table if exists topic_tags;
 drop table if exists hashtag;
-drop sequence if exists hashtag_seq;
+drop table if exists post_hashtag;
 
 CREATE table if not exists users
 (
@@ -39,9 +39,8 @@ create table if not exists post
     created_at        TIMESTAMP      NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at        TIMESTAMP      NOT NULL DEFAULT CURRENT_TIMESTAMP,
     CONSTRAINT fk_users foreign key (author_id) REFERENCES users (user_id) ON DELETE CASCADE,
-    CONSTRAINT fk_post_topic foreign key (post_topic) references topic_tags (topic_id) ON DELETE CASCADE
+    CONSTRAINT fk_post_hashtag foreign key (post_hashtag) references post_hashtag (postHashtag_id) ON DELETE CASCADE
 );
-drop table if exists comments;
 
 create table if not exists comments
 (
@@ -123,3 +122,13 @@ create table if not exists account_lock
     lock_until TIMESTAMP NOT NULL,
     constraint fk_account_lock_user foreign key (user_id) references users (user_id)
 );
+
+
+create table if not exists post_hashtag
+(
+    postHashtag_id          BIGINT PRIMARY KEY AUTO_INCREMENT,
+    post_id                 BIGINT NOT NULL,
+    hashtag_id              BIGINT NOT NULL,
+    constraint fk_post foreign key (post_id) references post (post_id) on delete cascade,
+    constraint fk_hashtag foreign key (hashtag_id) references post (hashtag_id) on delete cascade,
+    )

@@ -15,15 +15,11 @@ import java.util.Set;
 @Entity
 @NoArgsConstructor
 @Getter
-@SequenceGenerator(
-        name = "hashtag_seq_generator",
-        sequenceName = "hashtag_seq")
 @Table(name = "hashtag")
 public class HashTag extends ConfigDate {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE,
-            generator = "hashtag_seq_generator")
+    @Id @Column(name = "hashTag_Id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long hashTagId;
 
     @Column(nullable = false)
