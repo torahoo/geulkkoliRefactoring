@@ -15,45 +15,39 @@
 <body>
 <div id="wrap">
     <header id="header" th:include="header"></header>
-    <span class="private-page-name"><strong th:text="|${#authentication.principal.nickName + ' 의 페이지'}|"> </strong></span>
-    <aside>
-        <section class="follow-section">
-            <img class="default-profile" src="/images/defaultProfile.png" alt="default Profile Image">
-            <div class="profile-info">
-                <a class="following-link"
-                   th:attr="data-url='/user/'+${#authentication.principal.nickName} + '/followers'"
-                   onclick="location.href=this.getAttribute('data-url')"
-                   th:if="${followsCount.getFollowerCount() > 0}">
-                    <em>구독자</em>
-                    <span th:text="${followsCount.getFollowerCount()}"></span>
-                </a>
-                <a class="following-link" href="#" th:unless="${followsCount.getFollowerCount() > 0}">
-                    <em>구독자</em>
-                    <span th:text="${followsCount.getFollowerCount()}"></span>
-                </a>
-
-
-                <a class="following-link"
-                   th:attr="data-url='/user/'+${#authentication.principal.nickName} + '/followees'"
-                   onclick="location.href=this.getAttribute('data-url')"
-                   th:if="${followsCount.getFolloweeCount() > 0}">
-                    <em>작가</em>
-                    <span th:text="${followsCount.getFolloweeCount()}"></span>
-                </a>
-                <a class="following-link" href="#" th:unless="${followsCount.getFolloweeCount() > 0}">
-                    <em>작가</em>
-                    <span th:text="${followsCount.getFolloweeCount()}"></span>
-                </a>
-            </div>
-        </section>
-    </aside>
-    <main>
-        <!--    <div class="calendar">-->
-
-        <!--    </div>-->
-    </main>
-
+    <span class="private-page-name"><strong
+            th:text="|${#authentication.principal.nickName + ' 의 페이지'}|"> </strong></span>
     <div class="side-nav">
+        <div class="div-aside">
+            <section class="follow-section">
+                <img class="default-profile" src="/images/defaultProfile.png" alt="default Profile Image">
+                <div class="profile-info">
+                    <a class="following-link"
+                       th:attr="data-url='/user/'+${#authentication.principal.nickName} + '/followers'"
+                       onclick="location.href=this.getAttribute('data-url')"
+                       th:if="${followsCount.getFollowerCount() > 0}">
+                        <em>구독자</em>
+                        <span th:text="${followsCount.getFollowerCount()}"></span>
+                    </a>
+                    <a class="following-link" href="#" th:unless="${followsCount.getFollowerCount() > 0}">
+                        <em>구독자</em>
+                        <span th:text="${followsCount.getFollowerCount()}"></span>
+                    </a>
+                    <a class="following-link"
+                       th:attr="data-url='/user/'+${#authentication.principal.nickName} + '/followees'"
+                       onclick="location.href=this.getAttribute('data-url')"
+                       th:if="${followsCount.getFolloweeCount() > 0}">
+                        <em>작가</em>
+                        <span th:text="${followsCount.getFolloweeCount()}"></span>
+                    </a>
+                    <a class="following-link" href="#" th:unless="${followsCount.getFolloweeCount() > 0}">
+                        <em>작가</em>
+                        <span th:text="${followsCount.getFolloweeCount()}"></span>
+                    </a>
+                </div>
+            </section>
+        </div>
+    </div>
         <ul>
             <li>
                 <a class=""
@@ -69,8 +63,14 @@
                     <em>좋아요 한 글</em>
                 </a>
             </li>
+
         </ul>
     </div>
+    <main>
+        <!--    <div class="calendar">-->
+        <!--    </div>-->
+    </main>
+
 
 </div>
 </body>

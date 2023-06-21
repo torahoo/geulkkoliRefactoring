@@ -11,7 +11,7 @@ import javax.validation.constraints.NotBlank;
 @Getter
 @Setter
 @ToString
-public class ListDTO {
+public class PostRequestListDTO {
 
     @NotBlank
     private Long postId;
@@ -29,7 +29,7 @@ public class ListDTO {
     private int postHits;
 
     @Builder
-    public ListDTO(Long postId, String title, String nickName, String date, int postHits) {
+    public PostRequestListDTO(Long postId, String title, String nickName, String date, int postHits) {
         this.postId = postId;
         this.title = title;
         this.nickName = nickName;
@@ -38,8 +38,8 @@ public class ListDTO {
 
     }
 
-    public static ListDTO toDTO (Post post) {
-        return ListDTO.builder()
+    public static PostRequestListDTO toDTO (Post post) {
+        return PostRequestListDTO.builder()
                 .postId(post.getPostId())
                 .title(post.getTitle())
                 .nickName(post.getNickName())

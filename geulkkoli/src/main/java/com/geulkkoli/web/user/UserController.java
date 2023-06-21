@@ -7,13 +7,18 @@ import com.geulkkoli.application.user.PasswordService;
 import com.geulkkoli.domain.favorites.Favorites;
 import com.geulkkoli.domain.follow.service.FollowFindService;
 import com.geulkkoli.domain.post.Post;
+import com.geulkkoli.domain.post.service.PostFindService;
 import com.geulkkoli.domain.social.SocialInfoFindService;
 import com.geulkkoli.domain.user.User;
 import com.geulkkoli.domain.user.service.UserFindService;
 import com.geulkkoli.domain.user.service.UserService;
+import com.geulkkoli.web.comment.dto.CommentBodyDTO;
+import com.geulkkoli.web.follow.dto.FollowResult;
 import com.geulkkoli.web.mypage.dto.ConnectedSocialInfos;
 import com.geulkkoli.web.follow.dto.FollowsCount;
-import com.geulkkoli.web.post.dto.PostRequestDto;
+import com.geulkkoli.web.post.UserProfileDTO;
+import com.geulkkoli.web.post.dto.PageDTO;
+import com.geulkkoli.web.post.dto.PostRequestListDTO;
 import com.geulkkoli.web.user.dto.EmailCheckForJoinDto;
 import com.geulkkoli.web.user.dto.JoinFormDto;
 import com.geulkkoli.web.user.dto.edit.PasswordEditDto;
@@ -41,7 +46,8 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
-import java.util.stream.Collectors;
+
+import static java.util.stream.Collectors.*;
 
 @Controller
 @RequiredArgsConstructor
@@ -60,7 +66,7 @@ public class UserController {
     public static final String REDIRECT_EDIT_INDEX = "redirect:/user/edit";
     private final UserService userService;
     private final UserFindService userFindService;
-
+    private final PostFindService postFindService;
     private final PasswordService passwordService;
     private final FollowFindService followFindService;
     private final SocialInfoFindService socialInfoFindService;
@@ -106,15 +112,33 @@ public class UserController {
     }
 
     @GetMapping("{nickName}/read")
-    public ModelAndView getRead(@PathVariable("nickName") String nickName) {
+    public ModelAndView getPostList(@PathVariable("nickName") String nickName) {
         User user = userFindService.findByNickName(nickName);
         Set<Post> posts = user.getPosts();
         log.info("posts : {}", posts);
-        List<PostRequestDto> readInfos = posts.stream()
-                .map(post -> new PostRequestDto(post.getTitle(), post.getPostBody(), post.getNickName()))
-                .collect(Collectors.toUnmodifiableList());
-        ModelAndView modelAndView = new ModelAndView("mypage/read", "readInfos", readInfos);
+        List<PostRequestListDTO> readInfos = posts.stream()
+                .map(post -> new PostRequestListDTO(post.getPostId(), post.getTitle(), post.getNickName(),post.getUpdatedAt(),post.getPostHits()))
+                .collect(toUnmodifiableList());
+        ModelAndView modelAndView = new ModelAndView("user/read/read", "readInfos", readInfos);
 
+        return modelAndView;
+    }
+
+
+    @GetMapping("{nickName}/read/{postId}")
+    public ModelAndView readPost(@PathVariable("nickName") String nickName, @PathVariable("postId") Long postId) {
+        Post byId = postFindService.findById(postId);
+        PageDTO post = PageDTO.toDTO(byId);
+
+        FollowResult followResult = new FollowResult(true, true);
+
+        UserProfileDTO authorUser = UserProfileDTO.toDTO(byId.getUser());
+        ModelAndView modelAndView = new ModelAndView("/post/postPage");
+        modelAndView.addObject("post", post);
+        modelAndView.addObject("authorUser", authorUser);
+        modelAndView.addObject("followResult", followResult);
+        modelAndView.addObject("commentList",post.getCommentList());
+        modelAndView.addObject("comments",new CommentBodyDTO());
         return modelAndView;
     }
 
@@ -124,10 +148,10 @@ public class UserController {
         User user = userFindService.findByNickName(nickName);
         Set<Favorites> favorites = user.getFavorites();
 
-        List<Post> collect = favorites.stream().map(favorite -> favorite.getPost()).collect(Collectors.toList());
-        List<PostRequestDto> readInfos = collect.stream()
-                .map(post -> new PostRequestDto(post.getTitle(), post.getPostBody(), post.getNickName()))
-                .collect(Collectors.toUnmodifiableList());
+        List<Post> collect = favorites.stream().map(favorite -> favorite.getPost()).collect(toList());
+        List<PostRequestListDTO> readInfos = collect.stream()
+                .map(post -> new PostRequestListDTO(post.getPostId(), post.getTitle(), post.getNickName(),post.getUpdatedAt(),post.getPostHits()))
+                .collect(toUnmodifiableList());
         ModelAndView modelAndView = new ModelAndView("mypage/read", "readInfos", readInfos);
 
         return modelAndView;

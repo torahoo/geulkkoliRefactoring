@@ -5,7 +5,7 @@ import com.geulkkoli.domain.user.User;
 import com.geulkkoli.domain.user.UserRepository;
 import com.geulkkoli.web.post.dto.AddDTO;
 import com.geulkkoli.web.post.dto.EditDTO;
-import com.geulkkoli.web.post.dto.ListDTO;
+import com.geulkkoli.web.post.dto.PostRequestListDTO;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -124,7 +124,7 @@ class PostServiceTest {
         String searchType = "";
         String searchWords = "";
 
-        List<ListDTO> all = postService.searchPostFindAll(PageRequest.of(5, 5), searchType, searchWords).toList();
+        List<PostRequestListDTO> all = postService.searchPostFindAll(PageRequest.of(5, 5), searchType, searchWords).toList();
         assertThat(all.size()).isEqualTo(0);
     }
 }

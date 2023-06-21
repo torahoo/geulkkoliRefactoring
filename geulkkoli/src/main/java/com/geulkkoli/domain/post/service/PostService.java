@@ -6,7 +6,7 @@ import com.geulkkoli.domain.user.User;
 import com.geulkkoli.domain.user.UserRepository;
 import com.geulkkoli.web.post.dto.AddDTO;
 import com.geulkkoli.web.post.dto.EditDTO;
-import com.geulkkoli.web.post.dto.ListDTO;
+import com.geulkkoli.web.post.dto.PostRequestListDTO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -42,9 +42,9 @@ public class PostService {
     }
 
     @Transactional(readOnly = true)
-    public Page<ListDTO> findAll(Pageable pageable) {
+    public Page<PostRequestListDTO> findAll(Pageable pageable) {
         Page<Post> posts = postRepository.findAll(pageable);
-        return posts.map(post -> new ListDTO(
+        return posts.map(post -> new PostRequestListDTO(
                 post.getPostId(),
                 post.getTitle(),
                 post.getNickName(),
@@ -55,7 +55,7 @@ public class PostService {
 
     @Transactional(readOnly = true)
     //전체 게시글 리스트 & 조회 기능 포함
-    public Page<ListDTO> searchPostFindAll(Pageable pageable, String searchType, String searchWords) {
+    public Page<PostRequestListDTO> searchPostFindAll(Pageable pageable, String searchType, String searchWords) {
         Page<Post> posts;
         switch (searchType) {
             case "제목":
@@ -71,7 +71,7 @@ public class PostService {
                 posts = postRepository.findAll(pageable);
                 break;
         }
-        return posts.map(post -> new ListDTO(
+        return posts.map(post -> new PostRequestListDTO(
                 post.getPostId(),
                 post.getTitle(),
                 post.getNickName(),

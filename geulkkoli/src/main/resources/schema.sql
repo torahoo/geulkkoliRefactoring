@@ -66,7 +66,7 @@ create table if not exists favorites
 (
     favorites_id      BIGINT primary key AUTO_INCREMENT,
     post_id           BIGINT not null,
-    favorites_user_id BIGINT not null unique,
+    favorites_user_id BIGINT not null,
     constraint fk_like_user FOREIGN KEY (favorites_user_id) REFERENCES users (user_id) ON DELETE cascade,
     constraint fk_like_post FOREIGN KEY (post_id) REFERENCES post (post_id) ON DELETE CASCADE
 );

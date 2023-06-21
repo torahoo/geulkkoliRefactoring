@@ -118,9 +118,7 @@ public class PostController {
         Boolean follow = followFindService.checkFollow(loggingUser, authorUser);
         FollowResult followResult = new FollowResult(mine, follow);
 
-        log.info("followResult={}", followResult.isFollow());
-        log.info("mine={}", followResult.isMine());
-        log.info("checkFavorite={}", checkFavorite);
+
         model.addAttribute("followResult", followResult);
         model.addAttribute("post", postPage);
         model.addAttribute("commentList", postPage.getCommentList());

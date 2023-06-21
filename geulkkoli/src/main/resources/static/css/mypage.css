@@ -1,11 +1,12 @@
 .following-link {
     text-decoration: none;
     color: #000;
-    display: inline-block;
-}
+    font-size: 1.0rem;}
 
 #wrap{
     display: flex;
+    flex-direction: column;
+    align-items: flex-start;
 }
 
 .following-link em {
@@ -13,7 +14,8 @@
 }
 
 .side-nav {
-    flex-direction: column-reverse;
+    flex-direction: column;
+    align-items: center;
 }
 
 li {
@@ -31,8 +33,9 @@ main {
     margin-top: 20px;
 }
 
-aside{
+.div-aside{
     margin-top: 10px;
+    display: inline-block;
 }
 
 .default-profile {
@@ -44,9 +47,19 @@ aside{
     margin: 0;
 }
 .private-page-name{
-    text-align: center;
-    width: 100%;
-    margin-top: 20px;
-    margin-bottom: 20px;
-    margin-left: 45%
+    margin-left: 42%;
+    display: flex;
+    flex-direction: column;
+}
+
+@media (max-width: 981px) {
+    .side-nav {
+        flex-direction: row;
+        align-items: flex-start;
+    }
+
+    .following-link {
+        font-size: 0.8rem;
+    }
+
 }

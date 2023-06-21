@@ -3,14 +3,15 @@ package com.geulkkoli.domain.post.service;
 import com.geulkkoli.domain.post.Post;
 import com.geulkkoli.domain.post.PostRepository;
 import com.geulkkoli.domain.user.UserRepository;
-import com.geulkkoli.web.post.dto.ListDTO;
+import com.geulkkoli.web.post.dto.PostRequestListDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.NoSuchElementException;
-
+@Service
 @RequiredArgsConstructor
 public class PostFindService {
     private final PostRepository postRepository;
@@ -31,9 +32,9 @@ public class PostFindService {
     }
 
     @Transactional(readOnly = true)
-    public Page<ListDTO> findAll(Pageable pageable) {
+    public Page<PostRequestListDTO> findAll(Pageable pageable) {
         Page<Post> posts = postRepository.findAll(pageable);
-        return posts.map(post -> new ListDTO(
+        return posts.map(post -> new PostRequestListDTO(
                 post.getPostId(),
                 post.getTitle(),
                 post.getNickName(),
@@ -44,7 +45,7 @@ public class PostFindService {
 
     @Transactional(readOnly = true)
     //전체 게시글 리스트 & 조회 기능 포함
-    public Page<ListDTO> searchPostFindAll(Pageable pageable, String searchType, String searchWords) {
+    public Page<PostRequestListDTO> searchPostFindAll(Pageable pageable, String searchType, String searchWords) {
         Page<Post> posts;
         switch (searchType) {
             case "제목":
@@ -60,7 +61,7 @@ public class PostFindService {
                 posts = postRepository.findAll(pageable);
                 break;
         }
-        return posts.map(post -> new ListDTO(
+        return posts.map(post -> new PostRequestListDTO(
                 post.getPostId(),
                 post.getTitle(),
                 post.getNickName(),

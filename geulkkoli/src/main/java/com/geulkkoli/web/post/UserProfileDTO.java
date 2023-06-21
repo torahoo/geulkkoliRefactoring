@@ -15,4 +15,12 @@ public class UserProfileDTO {
     public static UserProfileDTO toDTO(User authorUser) {
         return new UserProfileDTO(authorUser.getNickName(), authorUser.getUserId());
     }
+
+    public String getNickName() {
+        return nickName;
+    }
+
+    public Long getUserId() {
+        return userId;
+    }
 }

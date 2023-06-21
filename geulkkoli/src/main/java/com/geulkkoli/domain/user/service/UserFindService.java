@@ -9,6 +9,7 @@ import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @Service
+@Transactional(readOnly = true)
 public class UserFindService {
     private final UserRepository userRepository;
 
@@ -16,33 +17,27 @@ public class UserFindService {
         this.userRepository = userRepository;
     }
 
-    @Transactional(readOnly = true)
     public User findById(Long id) {
         return userRepository.findById(id)
                 .orElseThrow(() -> new NoSuchElementException("No user found id matches:" + id));
     }
 
-    @Transactional(readOnly = true)
     public Optional<User> findByEmail(String email) {
         return userRepository.findByEmail(email);
     }
 
-    @Transactional(readOnly = true)
     public User findUserByEmail(String email) {
         return userRepository.findByEmail(email).orElseThrow(() -> new NoSuchElementException("No user found email matches:" + email));
     }
 
-    @Transactional(readOnly = true)
     public User findByNickName(String nickName){
         return userRepository.findByNickName(nickName).orElseThrow(() -> new NoSuchElementException("No user found nickname matches:" + nickName));
     }
 
-    @Transactional(readOnly = true)
     public Optional<User> findByUserNameAndPhoneNo(String userName, String phoneNo) {
         return userRepository.findByUserNameAndPhoneNo(userName, phoneNo);
     }
 
-    @Transactional(readOnly = true)
     public Optional<User> findByEmailAndUserNameAndPhoneNo(String email, String userName, String phoneNo) {
         return userRepository.findByEmailAndUserNameAndPhoneNo(email, userName, phoneNo);
     }

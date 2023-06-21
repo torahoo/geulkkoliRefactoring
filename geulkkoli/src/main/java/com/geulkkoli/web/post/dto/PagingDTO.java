@@ -12,7 +12,7 @@ import java.util.List;
 @ToString
 public class PagingDTO {
 
-    private List<ListDTO> list;
+    private List<PostRequestListDTO> list;
 
     private int number;
 
@@ -24,7 +24,7 @@ public class PagingDTO {
 
     private int size;
 
-    public PagingDTO(List<ListDTO> list, int number, boolean first, boolean last, int totalPages, int size) {
+    public PagingDTO(List<PostRequestListDTO> list, int number, boolean first, boolean last, int totalPages, int size) {
         this.list = list;
         this.number = number;
         this.first = first;
@@ -33,7 +33,7 @@ public class PagingDTO {
         this.size = size;
     }
 
-    public static PagingDTO listDTOtoPagingDTO (Page<ListDTO> page) {
+    public static PagingDTO listDTOtoPagingDTO (Page<PostRequestListDTO> page) {
         return new PagingDTO(
                 page.toList(),
                 page.getNumber(),
