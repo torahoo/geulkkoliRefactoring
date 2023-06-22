@@ -6,6 +6,7 @@ import lombok.ToString;
 import org.springframework.data.domain.Page;
 
 import java.util.List;
+import java.util.Objects;
 
 @Getter
 @Setter
@@ -42,5 +43,18 @@ public class PagingDTO {
                 page.getTotalPages(),
                 page.getSize()
         );
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof PagingDTO)) return false;
+        PagingDTO pagingDTO = (PagingDTO) o;
+        return number == pagingDTO.number && first == pagingDTO.first && last == pagingDTO.last && totalPages == pagingDTO.totalPages && size == pagingDTO.size && Objects.equals(list, pagingDTO.list);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(list, number, first, last, totalPages, size);
     }
 }

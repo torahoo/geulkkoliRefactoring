@@ -54,9 +54,8 @@ public class PostController {
     // 게시판 리스트 html로 이동
     @GetMapping("/list")
     public String postList(@PageableDefault(size = 5, sort = "postId", direction = Sort.Direction.DESC) Pageable pageable,
-                           Model model,
                            @RequestParam(defaultValue = "") String searchType,
-                           @RequestParam(defaultValue = "") String searchWords) {
+                           @RequestParam(defaultValue = "") String searchWords, Model model) {
         PagingDTO pagingDTO = PagingDTO.listDTOtoPagingDTO(postService.searchPostFindAll(pageable, searchType, searchWords));
         model.addAttribute("page", pagingDTO);
         searchDefault(model, searchType, searchWords);
@@ -87,20 +86,22 @@ public class PostController {
 
     //게시글 읽기 Page로 이동
     @GetMapping("/read/{postId}")
-    public String readPost(Model model, @PathVariable Long postId, HttpServletRequest request,
+    public String readPost(Model model, @PathVariable Long postId,
+                           @RequestParam(defaultValue = "0") String page,
                            @RequestParam(defaultValue = "") String searchType,
                            @RequestParam(defaultValue = "") String searchWords,
                            @AuthenticationPrincipal CustomAuthenticationPrinciple authUser) {
         PageDTO postPage = PageDTO.toDTO(postService.showDetailPost(postId));
         User authorUser = userFindService.findById(postPage.getAuthorId());
         UserProfileDTO userProfile = UserProfileDTO.toDTO(authorUser);
-        request.getSession().setAttribute("pageNumber", request.getParameter("page"));
+
 
         String checkFavorite = "never clicked";
 
         if (Objects.isNull(authUser)) {
             log.info("로그인을 안한 사용자 접속");
             model.addAttribute("post", postPage);
+            model.addAttribute("pageNumber",page);
             model.addAttribute("commentList", postPage.getCommentList());
             model.addAttribute("authorUser", userProfile);
             model.addAttribute("checkFavorite", checkFavorite);
@@ -121,8 +122,9 @@ public class PostController {
 
         model.addAttribute("followResult", followResult);
         model.addAttribute("post", postPage);
+        model.addAttribute("pageNumber",page);
         model.addAttribute("commentList", postPage.getCommentList());
-        model.addAttribute("authorUser", authorUser);
+        model.addAttribute("authorUser", userProfile);
         model.addAttribute("checkFavorite", checkFavorite);
         model.addAttribute("loginUserId", authUser.getUserId());
         model.addAttribute("comments", new CommentBodyDTO());

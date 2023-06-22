@@ -1,9 +1,10 @@
 package com.geulkkoli.web.user;
 
+import com.geulkkoli.application.EmailService;
 import com.geulkkoli.application.follow.FollowInfos;
 import com.geulkkoli.application.user.CustomAuthenticationPrinciple;
-import com.geulkkoli.application.EmailService;
 import com.geulkkoli.application.user.PasswordService;
+import com.geulkkoli.domain.favorites.FavoriteService;
 import com.geulkkoli.domain.favorites.Favorites;
 import com.geulkkoli.domain.follow.service.FollowFindService;
 import com.geulkkoli.domain.post.Post;
@@ -14,10 +15,11 @@ import com.geulkkoli.domain.user.service.UserFindService;
 import com.geulkkoli.domain.user.service.UserService;
 import com.geulkkoli.web.comment.dto.CommentBodyDTO;
 import com.geulkkoli.web.follow.dto.FollowResult;
-import com.geulkkoli.web.mypage.dto.ConnectedSocialInfos;
 import com.geulkkoli.web.follow.dto.FollowsCount;
+import com.geulkkoli.web.mypage.dto.ConnectedSocialInfos;
 import com.geulkkoli.web.post.UserProfileDTO;
 import com.geulkkoli.web.post.dto.PageDTO;
+import com.geulkkoli.web.post.dto.PagingDTO;
 import com.geulkkoli.web.post.dto.PostRequestListDTO;
 import com.geulkkoli.web.user.dto.EmailCheckForJoinDto;
 import com.geulkkoli.web.user.dto.JoinFormDto;
@@ -28,8 +30,7 @@ import com.geulkkoli.web.user.dto.find.FindPasswordFormDto;
 import com.geulkkoli.web.user.dto.find.FoundEmailFormDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.*;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -43,11 +44,12 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
-import static java.util.stream.Collectors.*;
+import static java.util.stream.Collectors.toList;
+import static java.util.stream.Collectors.toUnmodifiableList;
 
 @Controller
 @RequiredArgsConstructor
@@ -68,6 +70,7 @@ public class UserController {
     private final UserFindService userFindService;
     private final PostFindService postFindService;
     private final PasswordService passwordService;
+    private final FavoriteService favoriteService;
     private final FollowFindService followFindService;
     private final SocialInfoFindService socialInfoFindService;
     private final EmailService emailService;
@@ -104,56 +107,90 @@ public class UserController {
         FollowInfos followInfos = followFindService.findSomeFollowerByFolloweeId(user.getUserId(), null, pageable);
         List<Long> userIdByFollowedEachOther = followFindService.findUserIdByFollowedEachOther(followInfos.userIds(), user.getUserId(), pageable.getPageSize());
         followInfos.checkSubscribe(userIdByFollowedEachOther);
-
         ModelAndView modelAndView = new ModelAndView("mypage/followerdetail", "followers", followInfos);
         modelAndView.addObject("allCount", follower);
 
         return modelAndView;
     }
 
-    @GetMapping("{nickName}/read")
-    public ModelAndView getPostList(@PathVariable("nickName") String nickName) {
+    @GetMapping("{nickName}/write-posts")
+    public ModelAndView getPostList(@PathVariable("nickName") String nickName, @PageableDefault(size = 5, sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
         User user = userFindService.findByNickName(nickName);
-        Set<Post> posts = user.getPosts();
-        log.info("posts : {}", posts);
-        List<PostRequestListDTO> readInfos = posts.stream()
-                .map(post -> new PostRequestListDTO(post.getPostId(), post.getTitle(), post.getNickName(),post.getUpdatedAt(),post.getPostHits()))
-                .collect(toUnmodifiableList());
-        ModelAndView modelAndView = new ModelAndView("user/read/read", "readInfos", readInfos);
+        List<Post> posts = user.getPosts().stream().collect(toUnmodifiableList());
+        List<Post> subPost = posts.subList(pageable.getPageNumber() * pageable.getPageSize(), Math.min((pageable.getPageNumber() + 1) * pageable.getPageSize(), posts.size()));
+        PageRequest pageRequest = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), Sort.by("id").descending());
+        int totalPosts = posts.size();
+        Page<Post> pagePost = new PageImpl<>(subPost, pageRequest, totalPosts);
+        Page<PostRequestListDTO> readInfos = pagePost.map(PostRequestListDTO::toDTO);
+        PagingDTO pagingDTO = PagingDTO.listDTOtoPagingDTO(readInfos);
+
+
+        ModelAndView modelAndView = new ModelAndView("user/writepost", "pagingResponses", pagingDTO);
+        modelAndView.addObject("loggingNickName", nickName);
 
         return modelAndView;
     }
 
 
-    @GetMapping("{nickName}/read/{postId}")
+    @GetMapping("{nickName}/write-posts/{postId}")
     public ModelAndView readPost(@PathVariable("nickName") String nickName, @PathVariable("postId") Long postId) {
         Post byId = postFindService.findById(postId);
         PageDTO post = PageDTO.toDTO(byId);
 
-        FollowResult followResult = new FollowResult(true, true);
+        FollowResult followResult = new FollowResult(true, false);
+        String checkFavorite = "none";
+
 
         UserProfileDTO authorUser = UserProfileDTO.toDTO(byId.getUser());
         ModelAndView modelAndView = new ModelAndView("/post/postPage");
         modelAndView.addObject("post", post);
         modelAndView.addObject("authorUser", authorUser);
         modelAndView.addObject("followResult", followResult);
-        modelAndView.addObject("commentList",post.getCommentList());
-        modelAndView.addObject("comments",new CommentBodyDTO());
+        modelAndView.addObject("checkFavorite", checkFavorite);
+        modelAndView.addObject("commentList", post.getCommentList());
+        modelAndView.addObject("comments", new CommentBodyDTO());
         return modelAndView;
     }
 
 
-    @GetMapping("{nickName}/favorite")
-    public ModelAndView getFavorite(@PathVariable("nickName") String nickName) {
+    @GetMapping("/{nickName}/favorites")
+    public ModelAndView getFavorite(@PathVariable("nickName") String nickName, @PageableDefault(size = 5,sort = "postId",direction = Sort.Direction.DESC) Pageable pageable) {
+        log.info("nickName = {}", nickName);
         User user = userFindService.findByNickName(nickName);
-        Set<Favorites> favorites = user.getFavorites();
+        List<Favorites> favorites = user.getFavorites().stream().collect(toUnmodifiableList());
+        List<Post> favoritePosts = favorites.stream().sorted(Comparator.comparing(Favorites::getFavoritesId).reversed()).map(Favorites::getPost).collect(toList());
 
-        List<Post> collect = favorites.stream().map(favorite -> favorite.getPost()).collect(toList());
-        List<PostRequestListDTO> readInfos = collect.stream()
-                .map(post -> new PostRequestListDTO(post.getPostId(), post.getTitle(), post.getNickName(),post.getUpdatedAt(),post.getPostHits()))
-                .collect(toUnmodifiableList());
-        ModelAndView modelAndView = new ModelAndView("mypage/read", "readInfos", readInfos);
+        int totalFavoritePosts = favoritePosts.size();
+        int startIndex = pageable.getPageNumber() * pageable.getPageSize();
+        int endIndex = Math.min(startIndex + pageable.getPageSize(), totalFavoritePosts);
+        List<Post> subPosts = favoritePosts.subList(startIndex, endIndex);
 
+        Page<Post> favoritsPost = new PageImpl<>(subPosts, pageable, favoritePosts.size());
+        Page<PostRequestListDTO> readInfos = favoritsPost.map(PostRequestListDTO::toDTO);
+        PagingDTO pagingDTO = PagingDTO.listDTOtoPagingDTO(readInfos);
+        log.info("pagingDTO = {}", pagingDTO);
+        ModelAndView modelAndView = new ModelAndView("user/favorites", "pagingResponses", pagingDTO);
+        modelAndView.addObject("loggingNickName", nickName);
+
+        return modelAndView;
+    }
+
+    @GetMapping("{nickName}/favorites/{postId}")
+    public ModelAndView getFavoritePost(@PathVariable("nickName") String nickName, @PathVariable("postId") Long postId) {
+        User user = userFindService.findByNickName(nickName);
+        Post findPost = postFindService.findById(postId);
+        PageDTO post = PageDTO.toDTO(findPost);
+        FollowResult followResult = new FollowResult(false, followFindService.checkFollow(user, findPost.getUser()));
+        String checkFavorite = "exist";
+
+        UserProfileDTO authorUser = UserProfileDTO.toDTO(findPost.getUser());
+        ModelAndView modelAndView = new ModelAndView("/post/postPage");
+        modelAndView.addObject("post", post);
+        modelAndView.addObject("authorUser", authorUser);
+        modelAndView.addObject("followResult", followResult);
+        modelAndView.addObject("checkFavorite", checkFavorite);
+        modelAndView.addObject("commentList", post.getCommentList());
+        modelAndView.addObject("comments", new CommentBodyDTO());
         return modelAndView;
     }
 

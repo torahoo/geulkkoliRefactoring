@@ -7,6 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>마이페이지</title>
     <link th:href="@{/css/styles.css}" rel="stylesheet">
+    <link rel="stylesheet" href="/css/styles.css">
     <link rel="stylesheet" href="/css/mypage.css">
     <link rel="stylesheet" href="/css/nav.css">
     <link rel="stylesheet" href="/css/header.css">
@@ -51,14 +52,14 @@
         <ul>
             <li>
                 <a class=""
-                   th:attr="data-url='/user/'+${#authentication.principal.nickName} + '/read'"
+                   th:attr="data-url='/user/'+${#authentication.principal.nickName} + '/write-posts'"
                    onclick="location.href=this.getAttribute('data-url')">
                     <em>내가 쓴 글</em>
                 </a>
             </li>
             <li>
                 <a class=""
-                   th:attr="data-url='/user/'+${#authentication.principal.nickName} + '/favorite'"
+                   th:attr="data-url='/user/'+${#authentication.principal.nickName} + '/favorites'"
                    onclick="location.href=this.getAttribute('data-url')">
                     <em>좋아요 한 글</em>
                 </a>

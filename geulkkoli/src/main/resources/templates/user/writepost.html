@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>readPost</title>
+    <title>user-post</title>
     <link rel="stylesheet" href="/css/styles.css">
     <link rel="stylesheet" href="/css/header.css">
     <link rel="stylesheet" href="/css/read.css">
@@ -22,13 +22,13 @@
             </tr>
             </thead>
             <tbody>
-            <tr th:each="readInfo : ${readInfos}">
+            <tr th:each="page : ${pagingResponses.getList()}">
                 <td>
-                    <a th:href="@{|/user/${readInfo.nickName}/read/${readInfo.postId}}"
-                       th:text="${readInfo.title}"></a></td>
-                <td th:align="center" th:text="${readInfo.nickName}"></td>
-                <td th:align="center" th:text="${readInfo.date}"></td>
-                <td th:align="center" th:text="${readInfo.postHits}"></td>
+                    <a th:href="@{|/user/${loggingNickName}/write-posts/${page.postId}}"
+                       th:text="${page.title}"></a></td>
+                <td th:align="center" th:text="${page.nickName}"></td>
+                <td th:align="center" th:text="${page.date}"></td>
+                <td th:align="center" th:text="${page.postHits}"></td>
             </tr>
             </tbody>
         </table>
@@ -52,4 +52,13 @@
 </body>
 <footer id="footer"></footer>
 <div th:include="footer"></div>
+<script>
+    const currentPage = [[${pagingResponses.number}]];
+    const isFirst = [[${pagingResponses.first}]];
+    const isLast = [[${pagingResponses.last}]];
+    const endPage = [[${pagingResponses.totalPages}]];
+    const size = [[${pagingResponses.size}]];
+    const nickName = '[[${loggingNickName}]]';
+</script>
+<script src="/js/user-profile-pagination.js"></script>
 </html>

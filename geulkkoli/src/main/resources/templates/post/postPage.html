@@ -40,7 +40,7 @@
         <div sec:authorize="hasRole('USER')" th:if="${!followResult.isMine()}" class="lh-100"
              style="padding: 10px; margin: 10px;">
             <button id="btn-follow" th:unless="${followResult.isFollow()}" class="w-100 btn btn-primary"
-                    type="button">구독
+                    type="button">구독하기
             </button>
             <button id="btn-unfollow" th:if="${followResult.isFollow()}" class="w-100 btn btn-primary"
                     type="button">
@@ -124,7 +124,7 @@
 
     <div class="col">
         <button class="w-100 btn btn-secondary" onclick="location.href='postList.html'"
-                th:onclick="|location.href='@{/post/list(page=${session.pageNumber},searchType=${searchType},searchWords=${searchWords})}'|"
+                th:onclick="|location.href='@{/post/list(page=${pageNumber},searchType=${searchType},searchWords=${searchWords})}'|"
                 type="button">목록으로
         </button>
 

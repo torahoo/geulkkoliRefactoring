@@ -122,5 +122,12 @@ public class Post extends ConfigDate {
                 .orElseThrow(()->new NoSuchCommnetException("해당 좋아요가 없습니다."));
     }
 
+    public String toString() {
+        return "Post{" +
+                "title='" + title + '\'' +
+                ", postBody='" + postBody + '\'' +
+                ", nickName='" + nickName + '\'' +
+                '}';
+    }
 }
 
