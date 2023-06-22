@@ -6,7 +6,7 @@ import com.geulkkoli.domain.comment.CommentsService;
 import com.geulkkoli.domain.post.Post;
 import com.geulkkoli.domain.post.service.PostService;
 import com.geulkkoli.domain.user.User;
-import com.geulkkoli.domain.user.service.UserService;
+import com.geulkkoli.domain.user.service.UserFindService;
 import com.geulkkoli.web.comment.dto.CommentBodyDTO;
 import com.geulkkoli.web.comment.dto.CommentEditDTO;
 import com.geulkkoli.web.comment.dto.CommentListDTO;
@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-import static com.geulkkoli.domain.comment.CommentsService.*;
+import static com.geulkkoli.domain.comment.CommentsService.getCommentsList;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -30,7 +30,7 @@ public class CommentController {
 
     private final CommentsService commentsService;
     private final PostService postService;
-    private final UserService userService;
+    private final UserFindService userFindService;
 
     /**
      * 댓글 작성
@@ -78,7 +78,7 @@ public class CommentController {
     }
 
     public User findUser(CustomAuthenticationPrinciple authUser) {
-        return userService.findById(Long.valueOf(authUser.getUserId()));
+        return userFindService.findById(Long.valueOf(authUser.getUserId()));
     }
 
     public Post findPost(Long postId) {

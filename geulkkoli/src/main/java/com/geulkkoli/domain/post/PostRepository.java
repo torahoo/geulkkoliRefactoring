@@ -16,6 +16,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
 
+
 @Repository
 public interface PostRepository extends JpaRepository<Post, Long>, PostRepositoryCustom {
 
@@ -31,4 +32,6 @@ public interface PostRepository extends JpaRepository<Post, Long>, PostRepositor
 
     Page<Post> findPostsByPostBodyContaining(Pageable pageable, String searchWords);
 
+    @Query("select p.createdAt from Post p where p.user.userId=:userId")
+    Set<String> findCreatedAt(@Param("userId") Long userId);
 }

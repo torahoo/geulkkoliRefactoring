@@ -13,7 +13,14 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.*;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -87,7 +94,6 @@ public class PostService {
     }
 
     @Transactional
-
     public void updatePost(Long postId, EditDTO updateParam) {
         Post post = findById(postId)
                 .getUser()
@@ -112,4 +118,14 @@ public class PostService {
     public void deleteAll() {
         postRepository.deleteAll();
     }
+
+    @Transactional(readOnly = true)
+    public List<LocalDate> getCreatedAts(User user) {
+        Set<String> createdAt = postRepository.findCreatedAt(user.getUserId());
+        return createdAt.stream()
+                .map(postingDate -> LocalDateTime.parse(postingDate, DateTimeFormatter.ofPattern("yyyy. MM. dd a hh:mm:ss")))
+                .map(LocalDateTime::toLocalDate)
+                .collect(Collectors.toList());
+    }
+
 }

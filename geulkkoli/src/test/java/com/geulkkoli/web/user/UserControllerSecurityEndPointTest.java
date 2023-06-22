@@ -1,9 +1,9 @@
 package com.geulkkoli.web.user;
 
-import com.geulkkoli.application.user.UserSecurityService;
+import com.geulkkoli.application.user.service.UserSecurityService;
 import com.geulkkoli.domain.user.service.UserService;
 import com.geulkkoli.web.user.dto.JoinFormDto;
-import com.geulkkoli.web.user.dto.edit.UserInfoEditDto;
+import com.geulkkoli.web.mypage.dto.edit.UserInfoEditFormDto;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -89,8 +89,8 @@ class UserControllerSecurityEndPointTest {
     @Test
     @DisplayName("인증된 사용자가 /user/edit post로 정보를 올바르게 수정하면 user/edit으로 리다렉트한다.")
     void userinfoModifySuccess() throws Exception {
-        UserInfoEditDto userInfoEditDto =
-                UserInfoEditDto.from("tako99@naver.com","바나나11","9190232333","male");
+        UserInfoEditFormDto userInfoEditFormDto =
+                UserInfoEditFormDto.form("tako99@naver.com","바나나11","9190232333","male");
 
         JoinFormDto joinForm = new JoinFormDto();
         joinForm.setEmail("tako99@naver.com");
@@ -108,11 +108,11 @@ class UserControllerSecurityEndPointTest {
                 .build().perform(
                         post("/user/edit")
                                 .with(user(user))
-                                .param("userName", userInfoEditDto.getUserName())
-                                .param("nickName", userInfoEditDto.getNickName())
-                                .param("phoneNo", userInfoEditDto.getPhoneNo())
-                                .param("gender", userInfoEditDto.getGender())
-                                .content(userInfoEditDto.toString()));
+                                .param("userName", userInfoEditFormDto.getUserName())
+                                .param("nickName", userInfoEditFormDto.getNickName())
+                                .param("phoneNo", userInfoEditFormDto.getPhoneNo())
+                                .param("gender", userInfoEditFormDto.getGender())
+                                .content(userInfoEditFormDto.toString()));
 
 
         resultActions.andExpect(status().is(302))

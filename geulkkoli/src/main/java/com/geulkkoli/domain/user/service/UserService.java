@@ -14,6 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.NoSuchElementException;
 
 @Service
@@ -30,13 +31,11 @@ public class UserService {
     }
 
     @Transactional(readOnly = true)
-
     public boolean isNickNameDuplicate(String nickName) {
         return userRepository.findByNickName(nickName).isPresent();
     }
 
     @Transactional(readOnly = true)
-
     public boolean isPhoneNoDuplicate(String phoneNo) {
         return userRepository.findByPhoneNo(phoneNo).isPresent();
     }
@@ -55,6 +54,25 @@ public class UserService {
         return user;
     }
 
+    // 가입 날짜 임의 추가용 메소드 (추후 제거)
+    @Transactional
+    public User signUp(JoinFormDto form, LocalDate localDate) {
+        User user = form.toEntity(PasswordService.passwordEncoder);
+        user.setCreatedAtForCalendarTest(localDate);
+        userRepository.save(user);
+
+        RoleEntity roleEntity = user.Role(Role.USER);
+        roleRepository.save(roleEntity);
+        return user;
+    }
+
+    @Transactional
+    public User signUp(SocialSignUpDto signUpDto) {
+        User user = userRepository.save(signUpDto.toEntity(PasswordService.passwordEncoder));
+        RoleEntity roleEntity = user.Role(Role.USER);
+        roleRepository.save(roleEntity);
+        return user;
+    }
 
     /*
      * 관리자 실험을 위한 임시 관리자 계정 추가용 메서드*/

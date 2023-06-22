@@ -2,7 +2,7 @@ package com.geulkkoli.domain.user.service;
 
 import com.geulkkoli.domain.user.User;
 import com.geulkkoli.domain.user.UserRepository;
-import com.geulkkoli.web.user.dto.edit.UserInfoEditDto;
+import com.geulkkoli.web.mypage.dto.edit.UserInfoEditFormDto;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -59,7 +59,7 @@ class UserServiceTest {
     @DisplayName("회원정보 수정 성공")
     void updateTest() {
         //given
-        UserInfoEditDto preupdateUser = UserInfoEditDto.from("김2","바나나155","01055554646","female");
+        UserInfoEditFormDto preupdateUser = UserInfoEditFormDto.form("김2","바나나155","01055554646","female");
 
         //when
         userService.edit(saveUser.getUserId(), preupdateUser);

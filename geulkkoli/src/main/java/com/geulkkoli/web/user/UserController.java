@@ -310,6 +310,7 @@ public class UserController {
     @ResponseBody
     public ResponseMessage checkEmail(@RequestBody EmailCheckForJoinDto form, HttpServletRequest request) {
 
+
         if (form.getEmail().isEmpty()) {
             return ResponseMessage.NULL_OR_BLANK_EMAIL;
         }
