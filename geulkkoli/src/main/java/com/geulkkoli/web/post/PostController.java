@@ -134,11 +134,12 @@ public class PostController {
 
     //게시글 수정 html로 이동
     @GetMapping("/update/{postId}")
-    public String movePostEditForm(Model model, @PathVariable Long postId,
+    public String movePostEditForm(Model model, @PathVariable Long postId, @RequestParam(defaultValue = "0") String page,
                                    @RequestParam(defaultValue = "") String searchType,
                                    @RequestParam(defaultValue = "") String searchWords) {
         EditDTO postPage = EditDTO.toDTO(postService.findById(postId));
         model.addAttribute("editDTO", postPage);
+        model.addAttribute("pageNumber",page);
         searchDefault(model, searchType, searchWords);
         return "/post/postEditForm";
     }
@@ -146,7 +147,8 @@ public class PostController {
     //게시글 수정
     @PostMapping("/update/{postId}")
     public String editPost(@Validated @ModelAttribute EditDTO updateParam, BindingResult bindingResult,
-                           @PathVariable Long postId, RedirectAttributes redirectAttributes, HttpServletRequest request,
+                           @PathVariable Long postId, RedirectAttributes redirectAttributes,
+                           @RequestParam(defaultValue = "0") String page,
                            @RequestParam(defaultValue = "") String searchType,
                            @RequestParam(defaultValue = "") String searchWords) {
         if (bindingResult.hasErrors()) {
@@ -154,7 +156,7 @@ public class PostController {
         }
         postService.updatePost(postId, updateParam);
         redirectAttributes.addAttribute("updateStatus", true);
-        redirectAttributes.addAttribute("page", request.getSession().getAttribute("pageNumber"));
+        redirectAttributes.addAttribute("page", page);
 
         if (searchType != null && searchWords != null) {
             redirectAttributes.addAttribute("searchType", searchType);

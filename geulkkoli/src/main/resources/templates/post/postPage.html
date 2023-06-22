@@ -82,7 +82,7 @@
             <div class="col">
 
                 <button class="w-100 btn btn-primary" onclick="location.href='postUpdateForm.html'"
-                        th:onclick="|location.href='@{/post/update/{postId}(postId=${post.postId},searchType=${searchType},searchWords=${searchWords})}'|"
+                        th:onclick="|location.href='@{/post/update/{postId}(postId=${post.postId},page=${pageNumber},searchType=${searchType},searchWords=${searchWords})}'|"
                         th:if="${#strings.equals(authorUser.nickName, userNickName)}"
                         type="button">게시글 수정
                 </button>

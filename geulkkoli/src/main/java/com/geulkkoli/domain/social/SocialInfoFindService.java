@@ -1,6 +1,6 @@
 package com.geulkkoli.domain.social;
 
-import com.geulkkoli.web.mypage.dto.ConnectedSocialInfos;
+import com.geulkkoli.web.user.dto.mypage.ConnectedSocialInfos;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
