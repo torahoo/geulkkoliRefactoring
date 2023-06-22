@@ -12,12 +12,12 @@
     <link rel="stylesheet" href="/css/nav.css">
     <link rel="stylesheet" href="/css/header.css">
     <link rel="stylesheet" href="/css/calendar.css">
-    <link rel="stylesheet" type="text/css" href="/css/calendar.css">
+    <link rel="stylesheet" href="/css/calendar.css">
 </head>
 <body>
 <div id="wrap">
     <header id="header" th:include="header"></header>
-    <span class="private-page-name"><strong
+    <span class="private-page-name"><strong id="user-nickname"
             th:text="|${#authentication.principal.nickName + ' 의 페이지'}|"> </strong></span>
     <div class="side-nav">
         <div class="div-aside">
@@ -83,6 +83,5 @@
 </div>
 </body>
 <div th:include="footer"></div>
-<script src="/js/nav.js"></script>
 <script src="/js/calendar.js"></script>
 </html>

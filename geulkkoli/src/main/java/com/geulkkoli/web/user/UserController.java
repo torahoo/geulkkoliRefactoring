@@ -21,10 +21,12 @@ import com.geulkkoli.web.post.dto.PostRequestListDTO;
 import com.geulkkoli.web.user.dto.edit.PasswordEditFormDto;
 import com.geulkkoli.web.user.dto.edit.UserInfoEditFormDto;
 import com.geulkkoli.web.user.dto.mypage.ConnectedSocialInfos;
+import com.geulkkoli.web.user.dto.mypage.calendar.CalendarDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.*;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -35,6 +37,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.time.LocalDate;
 import java.util.Comparator;
 import java.util.List;
 
@@ -70,6 +73,17 @@ public class UserController {
         modelAndView.addObject("followsCount", followsCount);
 
         return modelAndView;
+    }
+
+    @GetMapping("{nickName}/calendar")
+    @ResponseBody
+    public ResponseEntity<CalendarDto> calendaring(@PathVariable("nickName") String nickName) {
+        User user = userFindService.findByNickName(nickName);
+
+        List<LocalDate> allPostDatesByOneUser = postFindService.getCreatedAts(user);
+        CalendarDto calendarDto = new CalendarDto(user.getUserName(), user.getSignUpDate(), allPostDatesByOneUser);
+
+        return ResponseEntity.ok(calendarDto);
     }
 
     @GetMapping("/{nickName}/followees")
@@ -137,7 +151,7 @@ public class UserController {
 
 
     @GetMapping("/{nickName}/favorites")
-    public ModelAndView getFavorite(@PathVariable("nickName") String nickName, @PageableDefault(size = 5,sort = "postId",direction = Sort.Direction.DESC) Pageable pageable) {
+    public ModelAndView getFavorite(@PathVariable("nickName") String nickName, @PageableDefault(size = 5, sort = "postId", direction = Sort.Direction.DESC) Pageable pageable) {
         log.info("nickName = {}", nickName);
         User user = userFindService.findByNickName(nickName);
         List<Favorites> favorites = user.getFavorites().stream().collect(toUnmodifiableList());
@@ -176,7 +190,6 @@ public class UserController {
         modelAndView.addObject("comments", new CommentBodyDTO());
         return modelAndView;
     }
-
 
 
     @GetMapping("/edit")

@@ -2,6 +2,7 @@ package com.geulkkoli.domain.post.service;
 
 import com.geulkkoli.domain.post.Post;
 import com.geulkkoli.domain.post.PostRepository;
+import com.geulkkoli.domain.user.User;
 import com.geulkkoli.domain.user.UserRepository;
 import com.geulkkoli.web.post.dto.PostRequestListDTO;
 import lombok.RequiredArgsConstructor;
@@ -10,7 +11,13 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Set;
+import java.util.stream.Collectors;
+
 @Service
 @RequiredArgsConstructor
 public class PostFindService {
@@ -68,5 +75,13 @@ public class PostFindService {
                 String.valueOf(post.getUpdatedAt()),
                 post.getPostHits()
         ));
+    }
+
+    @Transactional(readOnly = true)
+    public List<LocalDate> getCreatedAts(User user) {
+        Set<LocalDateTime> createdAt = postRepository.findCreatedAt(user.getUserId());
+        return createdAt.stream()
+                .map(LocalDateTime::toLocalDate)
+                .collect(Collectors.toList());
     }
 }

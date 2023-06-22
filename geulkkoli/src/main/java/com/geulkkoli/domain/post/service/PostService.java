@@ -119,12 +119,5 @@ public class PostService {
         postRepository.deleteAll();
     }
 
-    @Transactional(readOnly = true)
-    public List<LocalDate> getCreatedAts(User user) {
-        Set<LocalDateTime> createdAt = postRepository.findCreatedAt(user.getUserId());
-        return createdAt.stream()
-                .map(LocalDateTime::toLocalDate)
-                .collect(Collectors.toList());
-    }
 
 }
