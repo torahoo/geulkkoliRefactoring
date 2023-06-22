@@ -132,13 +132,12 @@ public class UserController {
     @GetMapping("{nickName}/write-posts/{postId}")
     public ModelAndView readPost(@PathVariable("nickName") String nickName, @PathVariable("postId") Long postId) {
         Post byId = postFindService.findById(postId);
-        PageDTO post = PageDTO.toDTO(byId);
 
+        PageDTO post = PageDTO.toDTO(byId);
         FollowResult followResult = new FollowResult(true, false);
         String checkFavorite = "none";
-
-
         UserProfileDTO authorUser = UserProfileDTO.toDTO(byId.getUser());
+
         ModelAndView modelAndView = new ModelAndView("/post/postPage");
         modelAndView.addObject("post", post);
         modelAndView.addObject("authorUser", authorUser);
@@ -146,6 +145,7 @@ public class UserController {
         modelAndView.addObject("checkFavorite", checkFavorite);
         modelAndView.addObject("commentList", post.getCommentList());
         modelAndView.addObject("comments", new CommentBodyDTO());
+
         return modelAndView;
     }
 
@@ -194,7 +194,6 @@ public class UserController {
 
     @GetMapping("/edit")
     public ModelAndView editUserInfo(@AuthenticationPrincipal CustomAuthenticationPrinciple authUser, Model model) {
-        log.info("authUser : {}", authUser.getNickName());
         ConnectedSocialInfos connectedInfos = socialInfoFindService.findConnectedInfos(authUser.getUsername());
         UserInfoEditFormDto userInfoEditDto = UserInfoEditFormDto.form(authUser.getUserRealName(), authUser.getNickName(), authUser.getPhoneNo(), authUser.getGender());
         ModelAndView modelAndView = new ModelAndView(EDIT_FORM, "editForm", userInfoEditDto);
@@ -208,7 +207,6 @@ public class UserController {
 
     @PostMapping("/edit")
     public String editUserInfo(@Validated @ModelAttribute("editForm") UserInfoEditFormDto userInfoEditDto, BindingResult bindingResult, @AuthenticationPrincipal CustomAuthenticationPrinciple authUser) {
-        log.info("editForm : {}", userInfoEditDto.toString());
         // 닉네임 중복 검사 && 본인의 기존 닉네임과 일치해도 중복이라고 안 뜨게
         if (userService.isNickNameDuplicate(userInfoEditDto.getNickName()) && !userInfoEditDto.getNickName().equals(authUser.getNickName())) {
             bindingResult.rejectValue("nickName", "Duple.nickName");
@@ -225,7 +223,6 @@ public class UserController {
             // 세션에 저장된 authUser의 정보를 수정한다.
             Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
             CustomAuthenticationPrinciple newAuth = (CustomAuthenticationPrinciple) principal;
-            log.info("nickName : {}", userInfoEditDto.getNickName());
             newAuth.modifyNickName(userInfoEditDto.getNickName());
             newAuth.modifyPhoneNo(userInfoEditDto.getPhoneNo());
             newAuth.modifyGender(userInfoEditDto.getGender());
