@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org"
-      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security" xmlns:>
 <body>
 <header th:fragment="header" id="btn-all" class="p-3 text-white">
     <div class="header-buttons">
@@ -28,7 +28,7 @@
             </button>
         </div>
 
-        <div th:if="${#authentication.principal != null}" class="account-options">
+        <div sec:authorize="hasAnyRole('USER','ADMIN')" class="account-options">
             <button type="button"
                     sec:authorize="hasAnyRole('USER')"
                     th:attr="data-url='/user/'+${#authentication.principal.nickName}"

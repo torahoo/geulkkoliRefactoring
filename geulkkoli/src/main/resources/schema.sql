@@ -24,9 +24,9 @@ CREATE table if not exists users
     user_name varchar(20)  not null,
     nick_name varchar(20)  not null,
     phone_no  varchar(20)  not null,
-    gender    varchar(10) not null,
-    role_id   bigint       not null,
-    sign_up_date        TIMESTAMP      NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    gender    varchar(100) not null,
+    role_id   bigint       not null default 2,
+    created_at        TIMESTAMP      NOT NULL DEFAULT CURRENT_TIMESTAMP,
     CONSTRAINT unique_email_nick_name_phone_no UNIQUE (email, nick_name, phone_no),
     CONSTRAINT fk_role_id FOREIGN KEY (role_id) REFERENCES roles (role_id) ON DELETE CASCADE
 );

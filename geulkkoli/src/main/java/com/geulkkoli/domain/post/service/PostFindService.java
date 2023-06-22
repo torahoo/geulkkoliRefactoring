@@ -38,7 +38,7 @@ public class PostFindService {
                 post.getPostId(),
                 post.getTitle(),
                 post.getNickName(),
-                post.getUpdatedAt(),
+                String.valueOf(post.getUpdatedAt()),
                 post.getPostHits()
         ));
     }
@@ -65,7 +65,7 @@ public class PostFindService {
                 post.getPostId(),
                 post.getTitle(),
                 post.getNickName(),
-                post.getUpdatedAt(),
+                String.valueOf(post.getUpdatedAt()),
                 post.getPostHits()
         ));
     }

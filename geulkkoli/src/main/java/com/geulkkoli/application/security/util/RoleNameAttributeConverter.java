@@ -1,4 +1,4 @@
-package com.geulkkoli.application.user.util;
+package com.geulkkoli.application.security.util;
 
 import com.geulkkoli.application.security.Role;
 

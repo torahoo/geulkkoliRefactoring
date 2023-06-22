@@ -118,7 +118,6 @@ public class User extends ConfigDate {
                 .user(this)
                 .nickName(addDTO.getNickName())
                 .build();
-        post.setCreatedAtForCalendarTest(localDateTime);
         this.posts.add(post);
         return post;
     }

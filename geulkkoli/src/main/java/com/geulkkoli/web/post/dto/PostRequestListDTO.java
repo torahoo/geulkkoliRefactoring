@@ -43,7 +43,7 @@ public class PostRequestListDTO {
                 .postId(post.getPostId())
                 .title(post.getTitle())
                 .nickName(post.getNickName())
-                .date(post.getUpdatedAt())
+                .date(String.valueOf(post.getUpdatedAt()))
                 .postHits(post.getPostHits())
                 .build();
     }

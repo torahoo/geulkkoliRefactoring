@@ -1,10 +1,8 @@
 package com.geulkkoli.web.user;
 
-import com.geulkkoli.application.EmailService;
 import com.geulkkoli.application.follow.FollowInfos;
 import com.geulkkoli.application.user.CustomAuthenticationPrinciple;
-import com.geulkkoli.application.user.PasswordService;
-import com.geulkkoli.domain.favorites.FavoriteService;
+import com.geulkkoli.application.user.service.PasswordService;
 import com.geulkkoli.domain.favorites.Favorites;
 import com.geulkkoli.domain.follow.service.FollowFindService;
 import com.geulkkoli.domain.post.Post;
@@ -17,17 +15,12 @@ import com.geulkkoli.web.comment.dto.CommentBodyDTO;
 import com.geulkkoli.web.follow.dto.FollowResult;
 import com.geulkkoli.web.follow.dto.FollowsCount;
 import com.geulkkoli.web.mypage.dto.ConnectedSocialInfos;
+import com.geulkkoli.web.user.dto.edit.PasswordEditFormDto;
+import com.geulkkoli.web.user.dto.edit.UserInfoEditFormDto;
 import com.geulkkoli.web.post.UserProfileDTO;
 import com.geulkkoli.web.post.dto.PageDTO;
 import com.geulkkoli.web.post.dto.PagingDTO;
 import com.geulkkoli.web.post.dto.PostRequestListDTO;
-import com.geulkkoli.web.user.dto.EmailCheckForJoinDto;
-import com.geulkkoli.web.user.dto.JoinFormDto;
-import com.geulkkoli.web.user.dto.edit.PasswordEditDto;
-import com.geulkkoli.web.user.dto.edit.UserInfoEditDto;
-import com.geulkkoli.web.user.dto.find.FindEmailFormDto;
-import com.geulkkoli.web.user.dto.find.FindPasswordFormDto;
-import com.geulkkoli.web.user.dto.find.FoundEmailFormDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.*;
@@ -37,16 +30,13 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.ObjectError;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Optional;
 
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toUnmodifiableList;
@@ -57,12 +47,7 @@ import static java.util.stream.Collectors.toUnmodifiableList;
 @RequestMapping("/user")
 public class UserController {
 
-    public static final String FIND_EMAIL_FORM = "user/find/findEmailForm";
-    public static final String FOUND_EMAIL_FORM = "user/find/foundEmailForm";
-    public static final String FIND_PASSWORD_FORM = "user/find/findPasswordForm";
-    public static final String TEMP_PASSWORD_FORM = "user/find/tempPasswordForm";
-    public static final String JOIN_FORM = "user/joinForm";
-    public static final String EDIT_FORM = "user/edit/editForm";
+    public static final String EDIT_FORM = "user/edit/userInfoEditForm";
     public static final String EDIT_PASSWORD_FORM = "user/edit/editPasswordForm";
     public static final String REDIRECT_INDEX = "redirect:/";
     public static final String REDIRECT_EDIT_INDEX = "redirect:/user/edit";
@@ -70,10 +55,8 @@ public class UserController {
     private final UserFindService userFindService;
     private final PostFindService postFindService;
     private final PasswordService passwordService;
-    private final FavoriteService favoriteService;
     private final FollowFindService followFindService;
     private final SocialInfoFindService socialInfoFindService;
-    private final EmailService emailService;
 
 
     @GetMapping("/{nickName}")
@@ -83,7 +66,7 @@ public class UserController {
         Integer followee = followFindService.countFolloweeByFollowerId(user.getUserId());
         Integer follower = followFindService.countFollowerByFolloweeId(user.getUserId());
         FollowsCount followsCount = FollowsCount.of(followee, follower);
-        ModelAndView modelAndView = new ModelAndView("mypage/mypage", "connectedInfos", connectedInfos);
+        ModelAndView modelAndView = new ModelAndView("user/mypage", "connectedInfos", connectedInfos);
         modelAndView.addObject("followsCount", followsCount);
 
         return modelAndView;
@@ -94,7 +77,7 @@ public class UserController {
         User user = userFindService.findByNickName(nickName);
         Integer followee = followFindService.countFolloweeByFollowerId(user.getUserId());
         FollowInfos followeeUserInfos = followFindService.findSomeFolloweeByFollowerId(user.getUserId(), null, pageable);
-        ModelAndView modelAndView = new ModelAndView("mypage/followdetail", "followers", followeeUserInfos);
+        ModelAndView modelAndView = new ModelAndView("user/mypage/followdetail", "followers", followeeUserInfos);
         modelAndView.addObject("allCount", followee);
 
         return modelAndView;
@@ -107,7 +90,7 @@ public class UserController {
         FollowInfos followInfos = followFindService.findSomeFollowerByFolloweeId(user.getUserId(), null, pageable);
         List<Long> userIdByFollowedEachOther = followFindService.findUserIdByFollowedEachOther(followInfos.userIds(), user.getUserId(), pageable.getPageSize());
         followInfos.checkSubscribe(userIdByFollowedEachOther);
-        ModelAndView modelAndView = new ModelAndView("mypage/followerdetail", "followers", followInfos);
+        ModelAndView modelAndView = new ModelAndView("user/mypage/followerdetail", "followers", followInfos);
         modelAndView.addObject("allCount", follower);
 
         return modelAndView;
@@ -194,161 +177,14 @@ public class UserController {
         return modelAndView;
     }
 
-    @GetMapping("/findEmail")
-    public String findEmailForm(@ModelAttribute("findEmailForm") FindEmailFormDto form) {
-        return FIND_EMAIL_FORM;
-    }
 
-    @PostMapping("/findEmail")
-    public String userFindEmail(@Validated @ModelAttribute("findEmailForm") FindEmailFormDto form, BindingResult bindingResult, Model model) {
-
-        Optional<User> user = userFindService.findByUserNameAndPhoneNo(form.getUserName(), form.getPhoneNo());
-
-        if (user.isEmpty()) {
-            bindingResult.addError(new ObjectError("empty", "Check.findContent"));
-        }
-
-        if (!bindingResult.hasErrors()) {
-            FoundEmailFormDto foundEmail = new FoundEmailFormDto(user.get().getEmail());
-            model.addAttribute("email", foundEmail.getEmail());
-            return FOUND_EMAIL_FORM;
-
-        } else {
-            return FIND_EMAIL_FORM;
-        }
-    }
-
-    @GetMapping("/foundEmail")
-    public String foundEmailForm(@ModelAttribute("foundEmailForm") FoundEmailFormDto form) {
-        return FOUND_EMAIL_FORM;
-    }
-
-    @GetMapping("/findPassword")
-    public String findPasswordForm(@ModelAttribute("findPasswordForm") FindPasswordFormDto form) {
-        return FIND_PASSWORD_FORM;
-    }
-
-    @PostMapping("/findPassword")
-    public String userFindPassword(@Validated @ModelAttribute("findPasswordForm") FindPasswordFormDto form, BindingResult bindingResult, HttpServletRequest request) {
-
-        Optional<User> user = userFindService.findByEmailAndUserNameAndPhoneNo(form.getEmail(), form.getUserName(), form.getPhoneNo());
-
-        if (user.isEmpty()) {
-            bindingResult.addError(new ObjectError("empty", "Check.findContent"));
-        }
-
-        if (!bindingResult.hasErrors()) {
-            request.getSession().setAttribute("email", user.get().getEmail());
-            return "forward:/tempPassword"; // post로 감
-        } else {
-            return FIND_PASSWORD_FORM;
-        }
-    }
-
-    @PostMapping("/tempPassword")
-    public String tempPasswordForm() {
-        return TEMP_PASSWORD_FORM;
-    }
-
-    @GetMapping("/tempPassword")
-    public String userTempPassword(HttpServletRequest request, Model model) {
-        String email = (String) request.getSession().getAttribute("email");
-        Optional<User> user = userFindService.findByEmail(email);
-
-        int length = passwordService.setLength(8, 20);
-        String tempPassword = passwordService.createTempPassword(length);
-
-        passwordService.updatePassword(user.get().getUserId(), tempPassword);
-        emailService.sendTempPasswordEmail(email, tempPassword);
-        log.info("email 발송");
-
-        model.addAttribute("waitMailMessage", true);
-        return TEMP_PASSWORD_FORM;
-    }
-
-    //join
-    @GetMapping("/join")
-    public String joinForm(@ModelAttribute("joinForm") JoinFormDto form) {
-        return JOIN_FORM;
-    }
-
-    @PostMapping("/join")
-    public String userJoin(@Validated @ModelAttribute("joinForm") JoinFormDto form, BindingResult bindingResult, HttpServletRequest request) {
-        if (userService.isNickNameDuplicate(form.getNickName())) {
-            bindingResult.rejectValue("nickName", "Duple.nickName");
-        }
-
-        if (userService.isPhoneNoDuplicate(form.getPhoneNo())) {
-            bindingResult.rejectValue("phoneNo", "Duple.phoneNo");
-        }
-
-        String authenticationEmail = (String) request.getSession().getAttribute("authenticationEmail");
-        String authenticationNumber = (String) request.getSession().getAttribute("authenticationNumber");
-        if (authenticationEmail.isEmpty() || authenticationNumber.isEmpty()) {
-            bindingResult.rejectValue("email", "Authentication.email");
-        }
-
-        // 인증된 이메일 수정 후 인증 안 된 상태로 가입 시도할 경우
-        if (!form.getEmail().equals(authenticationEmail)) {
-            bindingResult.rejectValue("email", "Authentication.email");
-        }
-
-        if (!form.getPassword().equals(form.getVerifyPassword())) {
-            bindingResult.rejectValue("verifyPassword", "Check.verifyPassword");
-        }
-
-        if (!bindingResult.hasErrors()) {
-            userService.signUp(form);
-
-            return REDIRECT_INDEX;
-        } else {
-            return JOIN_FORM;
-        }
-    }
-
-    @PostMapping("/checkEmail")
-    @ResponseBody
-    public ResponseMessage checkEmail(@RequestBody EmailCheckForJoinDto form, HttpServletRequest request) {
-
-
-        if (form.getEmail().isEmpty()) {
-            return ResponseMessage.NULL_OR_BLANK_EMAIL;
-        }
-        if (userService.isEmailDuplicate(form.getEmail())) {
-            return ResponseMessage.EMAIL_DUPLICATION;
-        }
-        int length = 6;
-        String authenticationNumber = passwordService.authenticationNumber(length);
-        request.getSession().setAttribute("authenticationNumber", authenticationNumber);
-        emailService.sendAuthenticationNumberEmail(form.getEmail(), authenticationNumber);
-        log.info("email 발송");
-
-        return ResponseMessage.SEND_AUTHENTICATION_NUMBER_SUCCESS;
-    }
-
-    @PostMapping("/checkAuthenticationNumber")
-    @ResponseBody
-    public String checkAuthenticationNumber(@RequestBody EmailCheckForJoinDto form, HttpServletRequest request) {
-
-        String authenticationNumber = (String) request.getSession().getAttribute("authenticationNumber");
-        String responseMessage;
-
-        if (!form.getAuthenticationNumber().trim().equals(authenticationNumber)) {
-            responseMessage = "wrong";
-        } else {
-            request.getSession().setAttribute("authenticationEmail", form.getEmail());
-            responseMessage = "right";
-        }
-
-        return responseMessage;
-    }
 
     @GetMapping("/edit")
     public ModelAndView editUserInfo(@AuthenticationPrincipal CustomAuthenticationPrinciple authUser, Model model) {
         log.info("authUser : {}", authUser.getNickName());
         ConnectedSocialInfos connectedInfos = socialInfoFindService.findConnectedInfos(authUser.getUsername());
-        UserInfoEditDto userInfoEditDto = UserInfoEditDto.from(authUser.getUserRealName(), authUser.getNickName(), authUser.getPhoneNo(), authUser.getGender());
-        ModelAndView modelAndView = new ModelAndView().addObject("editForm", userInfoEditDto);
+        UserInfoEditFormDto userInfoEditDto = UserInfoEditFormDto.form(authUser.getUserRealName(), authUser.getNickName(), authUser.getPhoneNo(), authUser.getGender());
+        ModelAndView modelAndView = new ModelAndView(EDIT_FORM, "editForm", userInfoEditDto);
         modelAndView.addObject("connectedInfos", connectedInfos);
 
         modelAndView.setViewName(EDIT_FORM);
@@ -358,7 +194,7 @@ public class UserController {
 
 
     @PostMapping("/edit")
-    public String editUserInfo(@Validated @ModelAttribute("editForm") UserInfoEditDto userInfoEditDto, BindingResult bindingResult, @AuthenticationPrincipal CustomAuthenticationPrinciple authUser) {
+    public String editUserInfo(@Validated @ModelAttribute("editForm") UserInfoEditFormDto userInfoEditDto, BindingResult bindingResult, @AuthenticationPrincipal CustomAuthenticationPrinciple authUser) {
         log.info("editForm : {}", userInfoEditDto.toString());
         // 닉네임 중복 검사 && 본인의 기존 닉네임과 일치해도 중복이라고 안 뜨게
         if (userService.isNickNameDuplicate(userInfoEditDto.getNickName()) && !userInfoEditDto.getNickName().equals(authUser.getNickName())) {
@@ -382,16 +218,16 @@ public class UserController {
             newAuth.modifyGender(userInfoEditDto.getGender());
             newAuth.modifyUserRealName(userInfoEditDto.getUserName());
         }
-        return REDIRECT_EDIT_INDEX;
+        return REDIRECT_INDEX;
     }
 
     @GetMapping("/edit/editPassword")
-    public String editPasswordForm(@ModelAttribute("editPasswordForm") PasswordEditDto form) {
+    public String editPasswordForm(@ModelAttribute("editPasswordForm") PasswordEditFormDto form) {
         return EDIT_PASSWORD_FORM;
     }
 
     @PostMapping("/edit/editPassword")
-    public String editPassword(@Validated @ModelAttribute("editPasswordForm") PasswordEditDto form, BindingResult bindingResult, @AuthenticationPrincipal CustomAuthenticationPrinciple authUser, RedirectAttributes redirectAttributes) {
+    public String editPassword(@Validated @ModelAttribute("editPasswordForm") PasswordEditFormDto form, BindingResult bindingResult, @AuthenticationPrincipal CustomAuthenticationPrinciple authUser, RedirectAttributes redirectAttributes) {
         User user = userFindService.findById(parseLong(authUser));
         if (!passwordService.isPasswordVerification(user, form)) {
             bindingResult.rejectValue("oldPassword", "Check.password");

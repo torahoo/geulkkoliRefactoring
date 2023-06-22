@@ -33,5 +33,5 @@ public interface PostRepository extends JpaRepository<Post, Long>, PostRepositor
     Page<Post> findPostsByPostBodyContaining(Pageable pageable, String searchWords);
 
     @Query("select p.createdAt from Post p where p.user.userId=:userId")
-    Set<String> findCreatedAt(@Param("userId") Long userId);
+    Set<LocalDateTime> findCreatedAt(@Param("userId") Long userId);
 }

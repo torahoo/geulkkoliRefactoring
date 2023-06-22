@@ -1,4 +1,4 @@
-package com.geulkkoli.web.mypage.dto.edit;
+package com.geulkkoli.web.user.dto.edit;
 
 import lombok.Getter;
 import lombok.ToString;

@@ -128,7 +128,7 @@ public class SocialController {
     public RedirectView disconnect(@RequestParam("type") String socialType, @AuthenticationPrincipal CustomAuthenticationPrinciple authUser) {
         log.info("소셜 연동 해제");
         socialService.disconnect(authUser.getUsername(), socialType);
-        return new RedirectView("/myPage");
+        return new RedirectView("/user/edit");
     }
 
     private CustomAuthenticationPrinciple autoLogin(User user, UserModelDto dto) {

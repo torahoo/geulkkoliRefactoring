@@ -3,12 +3,12 @@ package com.geulkkoli.domain.user.service;
 import com.geulkkoli.application.security.Role;
 import com.geulkkoli.application.security.RoleEntity;
 import com.geulkkoli.application.security.RoleRepository;
-import com.geulkkoli.application.user.PasswordService;
+import com.geulkkoli.application.user.service.PasswordService;
 import com.geulkkoli.domain.user.User;
 import com.geulkkoli.domain.user.UserRepository;
+import com.geulkkoli.web.user.dto.edit.UserInfoEditFormDto;
 import com.geulkkoli.web.social.SocialSignUpDto;
 import com.geulkkoli.web.user.dto.JoinFormDto;
-import com.geulkkoli.web.user.dto.edit.UserInfoEditDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -41,7 +41,7 @@ public class UserService {
     }
 
     @Transactional
-    public void edit(Long id, UserInfoEditDto userInfoEditDto) {
+    public void edit(Long id, UserInfoEditFormDto userInfoEditDto) {
         userRepository.edit(id, userInfoEditDto);
     }
 
@@ -61,15 +61,7 @@ public class UserService {
         user.setCreatedAtForCalendarTest(localDate);
         userRepository.save(user);
 
-        RoleEntity roleEntity = user.Role(Role.USER);
-        roleRepository.save(roleEntity);
-        return user;
-    }
-
-    @Transactional
-    public User signUp(SocialSignUpDto signUpDto) {
-        User user = userRepository.save(signUpDto.toEntity(PasswordService.passwordEncoder));
-        RoleEntity roleEntity = user.Role(Role.USER);
+        RoleEntity roleEntity = user.addRole(Role.USER);
         roleRepository.save(roleEntity);
         return user;
     }

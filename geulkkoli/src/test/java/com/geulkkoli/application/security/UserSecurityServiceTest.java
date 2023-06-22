@@ -6,7 +6,7 @@ import com.geulkkoli.application.user.service.UserSecurityService;
 import com.geulkkoli.domain.user.User;
 import com.geulkkoli.domain.user.service.UserFindService;
 import com.geulkkoli.domain.user.service.UserService;
-import com.geulkkoli.web.mypage.dto.edit.PasswordEditFormDto;
+import com.geulkkoli.web.user.dto.edit.PasswordEditFormDto;
 import com.geulkkoli.web.user.dto.JoinFormDto;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
