@@ -91,7 +91,7 @@ public class AdminController {
     @DeleteMapping("/delete/{postId}")
     public String postDelete(@PathVariable Long postId) {
         adminService.deletePost(postId);
-        return postId + "번 게시글이 삭제되었습니다.";
+        return "/post/list";
     }
 
 

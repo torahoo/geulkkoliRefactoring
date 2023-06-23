@@ -200,7 +200,9 @@ public class PostController {
     //게시글 삭제
     @DeleteMapping("/request")
     public String deletePost(@RequestParam("postId") Long postId, @RequestParam("userNickName") String userNickName) {
+        log.info("=====================userNickName={}", userNickName);
         postService.deletePost(postId, userFindService.findByNickName(userNickName).getUserId());
+        log.info("=====================userId={}", userFindService.findByNickName(userNickName).getUserId());
         return "redirect:/post/list";
     }
 

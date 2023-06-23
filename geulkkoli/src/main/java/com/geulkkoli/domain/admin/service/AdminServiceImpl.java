@@ -65,7 +65,8 @@ public class AdminServiceImpl implements AdminService {
     public void deletePost(Long postId) {
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new NoSuchElementException("No post found id matches:" + postId));
-        postRepository.delete(post);
+        Post deletePost = post.getUser().deletePost(post);
+        postRepository.delete(deletePost);
     }
 
     @Transactional
