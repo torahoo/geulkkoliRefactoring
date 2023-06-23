@@ -1,6 +1,5 @@
 package com.geulkkoli.web.post.dto;
 
-import com.geulkkoli.domain.hashtag.HashTag;
 import com.geulkkoli.domain.post.Post;
 import com.geulkkoli.domain.posthashtag.PostHashTag;
 import lombok.Builder;
@@ -12,7 +11,6 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 @Getter
 public class EditDTO {
@@ -60,25 +58,19 @@ public class EditDTO {
         postHashTags.remove(postHashTags.size()-1);
         String tagCategory = postHashTags.get((postHashTags.size()-1)).getHashTag().getHashTagName();
         postHashTags.remove(postHashTags.size()-1);
-        String tags = "";
+        StringBuilder tags = new StringBuilder();
         for (PostHashTag name : postHashTags){
-            tags += " #"+name.getHashTag().getHashTagName();
+            tags.append(" #").append(name.getHashTag().getHashTagName());
         }
         return EditDTO.builder()
                 .postId(post.getPostId())
                 .title(post.getTitle())
                 .postBody(post.getPostBody())
                 .nickName(post.getNickName())
-                .tagListString(tags)
+                .tagListString(tags.toString())
                 .tagCategory("#"+tagCategory)
                 .tagStatus("#"+tagStatus)
                 .build();
     }
 
-    public Post toEntity () {
-        return Post.builder()
-                .title(title)
-                .postBody(postBody)
-                .build();
-    }
 }

@@ -6,13 +6,13 @@ import com.geulkkoli.domain.hashtag.HashTag;
 import com.geulkkoli.domain.posthashtag.PostHashTag;
 import com.geulkkoli.domain.user.NoSuchCommnetException;
 import com.geulkkoli.domain.user.User;
-import com.geulkkoli.web.post.dto.AddDTO;
-import lombok.*;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.util.LinkedHashSet;
 import java.util.NoSuchElementException;
-import java.util.Objects;
 import java.util.Set;
 
 @Getter

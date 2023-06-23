@@ -1,7 +1,6 @@
 package com.geulkkoli.web.post;
 
 import com.geulkkoli.application.user.CustomAuthenticationPrinciple;
-import com.geulkkoli.domain.comment.CommentsService;
 import com.geulkkoli.domain.favorites.FavoriteService;
 import com.geulkkoli.domain.follow.service.FollowFindService;
 import com.geulkkoli.domain.post.AdminTagAccessDenied;
@@ -9,18 +8,14 @@ import com.geulkkoli.domain.post.service.PostService;
 import com.geulkkoli.domain.posthashtag.PostHashTagService;
 import com.geulkkoli.domain.user.User;
 import com.geulkkoli.domain.user.service.UserFindService;
-import com.geulkkoli.domain.user.service.UserService;
 import com.geulkkoli.web.comment.dto.CommentBodyDTO;
+import com.geulkkoli.web.follow.dto.FollowResult;
 import com.geulkkoli.web.post.dto.AddDTO;
 import com.geulkkoli.web.post.dto.EditDTO;
 import com.geulkkoli.web.post.dto.PageDTO;
 import com.geulkkoli.web.post.dto.PagingDTO;
-import com.geulkkoli.web.follow.FollowResult;
-import com.geulkkoli.web.follow.dto.FollowResult;
-import com.geulkkoli.web.post.dto.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.context.MessageSource;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
@@ -37,9 +32,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
-import java.nio.file.AccessDeniedException;
-import java.util.Locale;
-import java.util.List;
 import java.util.Objects;
 
 @Slf4j
@@ -49,12 +41,9 @@ import java.util.Objects;
 public class PostController {
 
     private final PostService postService;
-    private final UserService userService;
     private final UserFindService userFindService;
-    private final CommentsService commentsService;
     private final FavoriteService favoriteService;
     private final PostHashTagService postHashTagService;
-    private final MessageSource messageSource;
     private final FollowFindService followFindService;
 
     /**

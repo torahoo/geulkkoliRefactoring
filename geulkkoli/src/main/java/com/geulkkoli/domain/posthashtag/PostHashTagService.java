@@ -5,22 +5,16 @@ import com.geulkkoli.domain.hashtag.HashTagRepository;
 import com.geulkkoli.domain.hashtag.HashTagType;
 import com.geulkkoli.domain.post.AdminTagAccessDenied;
 import com.geulkkoli.domain.post.Post;
-import com.geulkkoli.domain.post.PostRepository;
-import com.geulkkoli.domain.post.PostRepositoryCustom;
-import com.geulkkoli.web.post.dto.ListDTO;
+import com.geulkkoli.web.post.dto.PostRequestListDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.dao.PermissionDeniedDataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import org.springframework.validation.BindingResult;
 
 import javax.transaction.Transactional;
-import java.nio.file.AccessDeniedException;
 import java.util.*;
-import java.util.Comparator;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -46,7 +40,7 @@ public class PostHashTagService {
     }
 
     //게시판을 들어갔을 때, 게시글을 검색할 때 등 게시글을 가져오는 모든 경우에 쓰입니다.
-    public Page<ListDTO> searchPostsListByHashTag(Pageable pageable, String searchType, String searchWords) {
+    public Page<PostRequestListDTO> searchPostsListByHashTag(Pageable pageable, String searchType, String searchWords) {
 
         String searchWord = searchWordExtractor(searchWords);
         List<HashTag> tags = hashTagSeparator(searchWords);
@@ -82,11 +76,11 @@ public class PostHashTagService {
                 break;
         }
 
-        return getPosts(pageable, resultList).map(post -> new ListDTO(
+        return getPosts(pageable, resultList).map(post -> new PostRequestListDTO(
                 post.getPostId(),
                 post.getTitle(),
                 post.getNickName(),
-                post.getUpdatedAt(),
+                String.valueOf(post.getUpdatedAt()),
                 post.getPostHits()
         ));
     }
@@ -95,7 +89,6 @@ public class PostHashTagService {
     private Page<Post> getPosts(Pageable pageable, List<Post> resultList) {
         resultList.sort(Comparator.comparing(Post::getUpdatedAt).reversed());
 
-//        int start = resultList.size()>=25 ? (int) pageable.getOffset() : resultList.size();
         int start = (int) pageable.getOffset();
         int end = Math.min((start + pageable.getPageSize()), resultList.size());
         return new PageImpl<>(resultList.subList(start, end), pageable, resultList.size());
@@ -153,16 +146,16 @@ public class PostHashTagService {
 
     //웹에서 분류나 상태값을 받아오지 못하거나 관리 태그에 접근하려 하는 경우, 이를 막습니다.
     public void validatePostHasType(List<HashTag> tags) {
-        if(tags.stream().noneMatch(a -> a.getHashTagType().equals(HashTagType.CATEGORY))){
+        if (tags.stream().noneMatch(a -> a.getHashTagType().equals(HashTagType.CATEGORY))) {
             throw new IllegalArgumentException("분류");
         }
-        if(tags.stream().noneMatch(a -> a.getHashTagType().equals(HashTagType.STATUS))){
+        if (tags.stream().noneMatch(a -> a.getHashTagType().equals(HashTagType.STATUS))) {
             throw new IllegalArgumentException("상태");
         }
 
         String managementTag = tags.stream().filter(a -> a.getHashTagType().equals(HashTagType.MANAGEMENT)).findAny().orElseGet(HashTag::new).getHashTagName();
 
-        if(tags.stream().anyMatch(a -> a.getHashTagType().equals(HashTagType.MANAGEMENT))){
+        if (tags.stream().anyMatch(a -> a.getHashTagType().equals(HashTagType.MANAGEMENT))) {
             throw new AdminTagAccessDenied(managementTag);
         }
 
