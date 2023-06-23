@@ -46,9 +46,7 @@ public class SocialController {
      */
     @GetMapping("/oauth2/signup")
     public ModelAndView moveSignUpPage(@AuthenticationPrincipal CustomAuthenticationPrinciple authUser, ModelAndView modelAndView) {
-        log.info("소셜 로그인 회원의 회원 정보 기입");
-        log.info("authUser : {}", authUser.getUserId());
-
+        log.info("소셜회원가입");
         SocialSignUpDto socialSignUpDto = SocialSignUpDto.builder()
                 .email(socialSignUpValueEncryptoDecryptor.encryptValue(authUser.getUsername()))
                 .nickName(authUser.getNickName())

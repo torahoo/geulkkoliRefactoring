@@ -14,11 +14,17 @@ commentSubmit.addEventListener('click', function (ev) {
         Object.fromEntries(
             new FormData(commentForm)));
     const createFieldError = commentForm.querySelector('.field-error');
-
+    var headerName = document.getElementsByClassName("csrf_input")[1].getAttribute("name");
+    var token = document.getElementsByClassName("csrf_input")[0].getAttribute("value");
     if(commentBodyBox.value) {
         fetch(commentForm.getAttribute('action'), {
             method: 'POST',
-            headers: { 'Content-Type' : 'application/json' },
+            headers: {
+                'header': headerName,
+                'X-Requested-With': 'XMLHttpRequest',
+                'X-CSRF-Token': token,
+                'Content-Type': 'application/json',
+            },
             body: str_json
         })
             .then((response) => {

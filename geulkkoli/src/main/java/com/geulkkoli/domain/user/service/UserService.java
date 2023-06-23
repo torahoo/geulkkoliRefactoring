@@ -48,10 +48,10 @@ public class UserService {
 
     @Transactional
     public User signUp(JoinFormDto form) {
-        User user = userRepository.save(form.toEntity(PasswordService.passwordEncoder));
+        User user = form.toEntity(PasswordService.passwordEncoder);
         RoleEntity roleEntity = user.addRole(Role.USER);
         roleRepository.save(roleEntity);
-        return user;
+        return userRepository.save(user);
     }
 
     // 가입 날짜 임의 추가용 메소드 (추후 제거)

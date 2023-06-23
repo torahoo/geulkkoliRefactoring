@@ -1,6 +1,7 @@
 document.getElementsByClassName('emailButton').item(0).addEventListener('click', checkEmail);
 document.getElementsByClassName('authenticationNumberButton').item(0).addEventListener('click', checkAuthenticationNumber);
-
+var headerName = document.getElementsByClassName("csrf_input")[1].getAttribute("name");
+var token = document.getElementsByClassName("csrf_input")[0].getAttribute("value");
 let timer;
 
 // 이메일 중복 체크 & 인증 번호 수신 가능한 이메일인지 체크
@@ -11,7 +12,10 @@ function checkEmail() {
     fetch('/checkEmail', {
         method: 'POST',
         headers: {
-            'Content-Type': 'application/json'
+            'header': headerName,
+            'X-Requested-With': 'XMLHttpRequest',
+            'X-CSRF-Token': token,
+            'Content-Type': 'application/json',
         },
         body: JSON.stringify({email: email})
     })
@@ -78,7 +82,10 @@ function checkAuthenticationNumber() {
     fetch('/checkAuthenticationNumber', {
         method: 'POST',
         headers: {
-            'Content-Type': 'application/json'
+            'header': headerName,
+            'X-Requested-With': 'XMLHttpRequest',
+            'X-CSRF-Token': token,
+            'Content-Type': 'application/json',
         },
         body: JSON.stringify({email: email, authenticationNumber: authenticationNumber})
     })
