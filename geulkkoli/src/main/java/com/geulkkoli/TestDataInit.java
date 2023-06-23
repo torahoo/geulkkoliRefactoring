@@ -9,6 +9,8 @@ import com.geulkkoli.domain.hashtag.HashTagType;
 import com.geulkkoli.domain.post.Post;
 import com.geulkkoli.domain.post.PostRepository;
 import com.geulkkoli.domain.post.service.PostService;
+import com.geulkkoli.domain.topic.Topic;
+import com.geulkkoli.domain.topic.TopicRepository;
 import com.geulkkoli.domain.user.User;
 import com.geulkkoli.domain.user.service.UserFindService;
 import com.geulkkoli.domain.user.service.UserService;
@@ -38,6 +40,7 @@ public class TestDataInit {
     private final PostService postService;
     private final HashTagRepository hashTagRepository;
     private final UserFindService userFindService;
+    private final TopicRepository topicRepository;
 
     /**
      * 확인용 초기 데이터 추가
@@ -247,6 +250,12 @@ public class TestDataInit {
         reportRepository.save(report1);
         reportRepository.save(report2);
         reportRepository.save(report3);
+        
+        
+        //주제 더미 데이터
+        for(int i = 0; i<150; i++) {
+            topicRepository.save(Topic.builder().topicName("testTopic"+i).build());
+        }
     }
 
 }

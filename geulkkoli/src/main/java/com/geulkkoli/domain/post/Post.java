@@ -21,7 +21,6 @@ import java.util.Set;
 @Getter
 @NoArgsConstructor
 @Entity
-@ToString
 public class Post extends ConfigDate {
 
     @Id @Column(name = "post_id")

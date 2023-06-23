@@ -20,7 +20,6 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
@@ -46,14 +45,14 @@ public class AdminController {
     public String adminIndex(Model model) {
         LocalDate startDate = LocalDate.now();
         LocalDate endDate = startDate.plusMonths(1);
-        List<DailyThemeDto> data = new ArrayList<>();
-        data.add(new DailyThemeDto(startDate.toString(), "꽃"));
-        data.add(new DailyThemeDto(startDate.plusDays(2).toString(), "이"));
-        data.add(new DailyThemeDto(startDate.plusDays(3).toString(), "피"));
-        data.add(new DailyThemeDto(startDate.plusDays(4).toString(), "는"));
-        data.add(new DailyThemeDto(startDate.plusDays(5).toString(), "계"));
-        data.add(new DailyThemeDto(startDate.plusDays(6).toString(), "절"));
-        data.add(new DailyThemeDto(startDate.plusDays(7).toString(), "엔"));
+        List<DailyTopicDto> data = new ArrayList<>();
+        data.add(new DailyTopicDto(startDate.toString(), "꽃"));
+        data.add(new DailyTopicDto(startDate.plusDays(2).toString(), "이"));
+        data.add(new DailyTopicDto(startDate.plusDays(3).toString(), "피"));
+        data.add(new DailyTopicDto(startDate.plusDays(4).toString(), "는"));
+        data.add(new DailyTopicDto(startDate.plusDays(5).toString(), "계"));
+        data.add(new DailyTopicDto(startDate.plusDays(6).toString(), "절"));
+        data.add(new DailyTopicDto(startDate.plusDays(7).toString(), "엔"));
         model.addAttribute("data", data);
 
         return "/admin/adminIndex";
@@ -61,8 +60,8 @@ public class AdminController {
 
     @ResponseBody
     @PostMapping("/calendar/update")
-    public ResponseEntity<Void> updateTheme(@RequestBody DailyThemeDto dailyThemeDto) {
-        log.info("date : {}, theme : {}", dailyThemeDto.getDate(), dailyThemeDto.getTheme());
+    public ResponseEntity<Void> updateTheme(@RequestBody DailyTopicDto dailyTopicDto) {
+        log.info("date : {}, theme : {}", dailyTopicDto.getDate(), dailyTopicDto.getTheme());
 //        LocalDate localDate = LocalDate.parse(dailyThemeDto.getDate(), DateTimeFormatter.BASIC_ISO_DATE);
 //        calendarService.updateTheme(localDate, dailyThemeDto.getTheme());
         return ResponseEntity.ok().build();
@@ -93,7 +92,6 @@ public class AdminController {
         adminService.deletePost(postId);
         return "/post/list";
     }
-
 
     @GetMapping("/add")
     public String postAddForm(Model model) {

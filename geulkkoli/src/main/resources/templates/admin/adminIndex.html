@@ -9,20 +9,20 @@
 <body>
 <header id="header"></header>
 <div th:include="header"></div>
-<form id="search-form">
-    <div class="row">
-        <div class="col-12">
-            <div class="row no-gutters m-5 ">
-                <div class="col-lg-3 col-md-3 col-sm-12 p-0">
-                    <button type="button"
-                            onclick="location.href='/admin/reportedPostList'"
-                            class="btn btn-primary">신고받은 게시글
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
-</form>
+
+<div class="row no-gutters m-5 col-12 col-lg-3 col-md-3 col-sm-12 p-0">
+    <button type="button"
+            onclick="location.href='/admin/reportedPostList'"
+            class="btn btn-primary">신고받은 게시글
+    </button>
+</div>
+
+<div class="row no-gutters m-5 col-12 col-lg-3 col-md-3 col-sm-12 p-0">
+    <button type="button"
+            onclick="location.href='/admin/add'"
+            class="btn btn-primary">공지사항 작성
+    </button>
+</div>
 
 <table class="table table-striped">
     <thead>
@@ -58,7 +58,7 @@
                 console.log('Updated successfully.');
             } else {
                 console.error('An error occurred: ' + xhr.status);
-                console.error('error with : ' + date + " and "+theme);
+                console.error('error with : ' + date + " and " + theme);
             }
         };
 

@@ -1,6 +1,7 @@
 package com.geulkkoli.web.post.dto;
 
 import com.geulkkoli.domain.hashtag.HashTag;
+import com.geulkkoli.domain.hashtag.HashTagType;
 import com.geulkkoli.domain.post.Post;
 import com.geulkkoli.domain.posthashtag.PostHashTag;
 import lombok.Builder;

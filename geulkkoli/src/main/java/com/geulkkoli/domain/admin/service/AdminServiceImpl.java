@@ -8,8 +8,11 @@ import com.geulkkoli.domain.post.PostRepository;
 import com.geulkkoli.domain.post.service.PostService;
 import com.geulkkoli.domain.posthashtag.PostHashTag;
 import com.geulkkoli.domain.posthashtag.PostHashTagService;
+import com.geulkkoli.domain.topic.Topic;
+import com.geulkkoli.domain.topic.TopicRepository;
 import com.geulkkoli.domain.user.User;
 import com.geulkkoli.domain.user.UserRepository;
+import com.geulkkoli.web.admin.DailyTopicDto;
 import com.geulkkoli.web.admin.ReportDto;
 import com.geulkkoli.web.post.dto.AddDTO;
 import com.geulkkoli.web.post.dto.EditDTO;
@@ -17,6 +20,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -36,6 +40,8 @@ public class AdminServiceImpl implements AdminService {
     private final AccountLockRepository accountLockRepository;
 
     private final PostHashTagService postHashTagService;
+
+    private final TopicRepository topicRepository;
 
     public void lockUser(Long userId, String reason, Long lockDate) {
         User user = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("해당 유저가 존재하지 않습니다."));
@@ -69,7 +75,6 @@ public class AdminServiceImpl implements AdminService {
         postRepository.delete(deletePost);
     }
 
-    @Transactional
     public Post saveNotice(AddDTO post, User user) {
         Post writePost = user.writePost(post);
         Post save = postRepository.save(writePost);
@@ -79,7 +84,6 @@ public class AdminServiceImpl implements AdminService {
         return save;
     }
 
-    @Transactional
     public void updateNotice(Long postId, EditDTO updateParam) {
         Post post = findById(postId)
                 .getUser()
@@ -101,5 +105,18 @@ public class AdminServiceImpl implements AdminService {
     public Post findById(Long postId) {
         return postRepository.findById(postId)
                 .orElseThrow(() -> new NoSuchElementException("No post found id matches:" + postId));
+    }
+
+    public List<DailyTopicDto> findWeeklyTopic() {
+        List<Topic> topicByUpComingDate = topicRepository.findTopicByUpComingDate(LocalDate.now().plusDays(7));
+
+
+        return null;
+    }
+
+    public List<DailyTopicDto> inputDailyTopic(List<DailyTopicDto> topics) {
+
+
+        return null;
     }
 }

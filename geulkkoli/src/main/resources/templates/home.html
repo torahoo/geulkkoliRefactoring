@@ -110,7 +110,7 @@
             </thead>
             <tbody>
             <tr th:each="post : ${notificationList}">
-                <td> <a th:href="@{|/post/read/${post.postId}|(page=${currentPage})}" th:text="${post.title}"></a></td>
+                <td> <a th:href="@{|/post/read/${post.postId}|(page='0',searchType='해시태그',searchWords='공지글')}" th:text="${post.title}"></a></td>
                 <td th:align="center" th:text="${post.nickName}"></td>
                 <td th:align="center" th:text="${post.date}"></td>
                 <td th:align="center" th:text="${post.postHits}"></td>
