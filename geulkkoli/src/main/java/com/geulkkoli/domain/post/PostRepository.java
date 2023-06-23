@@ -15,6 +15,7 @@ import org.springframework.stereotype.Repository;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
+import java.util.List;
 
 
 @Repository
@@ -32,6 +33,9 @@ public interface PostRepository extends JpaRepository<Post, Long>, PostRepositor
 
     Page<Post> findPostsByPostBodyContaining(Pageable pageable, String searchWords);
 
+    List<Post> findPostsByTitleContaining(String searchWords);
+    List<Post> findPostsByNickNameContaining(String searchWords);
+    List<Post> findPostsByPostBodyContaining(String searchWords);
     @Query("select p.createdAt from Post p where p.user.userId=:userId")
     Set<LocalDateTime> findCreatedAt(@Param("userId") Long userId);
 }

@@ -3,6 +3,7 @@ package com.geulkkoli.web.home;
 import com.geulkkoli.application.EmailService;
 import com.geulkkoli.application.user.service.PasswordService;
 import com.geulkkoli.domain.post.service.PostService;
+import com.geulkkoli.domain.posthashtag.PostHashTagService;
 import com.geulkkoli.domain.user.User;
 import com.geulkkoli.domain.user.service.UserFindService;
 import com.geulkkoli.domain.user.service.UserService;
@@ -41,6 +42,7 @@ public class HomeController {
     public static final String REDIRECT_INDEX = "redirect:/";
 
 
+    private final PostHashTagService postHashTagService;
     private final PostService postService;
     private final EmailService emailService;
     private final UserFindService userFindService;
@@ -50,10 +52,10 @@ public class HomeController {
     @GetMapping
     public String home(@PageableDefault(size = 5, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable,
                        Model model,
-                       @RequestParam(defaultValue = "7") String searchType,
-                       @RequestParam(defaultValue = "7") String searchWords) {
+                       @RequestParam(defaultValue = "") String searchType,
+                       @RequestParam(defaultValue = "") String searchWords) {
 
-//        model.addAttribute("list", postService.searchPostFindAll(pageable, searchType, searchWords));
+        model.addAttribute("list", postHashTagService.searchPostsListByHashTag(pageable, searchType, searchWords).toList());
 
         return "/home";
     }
