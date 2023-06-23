@@ -1,8 +1,19 @@
 package com.geulkkoli.domain.post;
 
+import com.querydsl.core.types.SubQueryExpression;
+import com.querydsl.jpa.JPAExpressions;
+import com.querydsl.jpa.JPQLQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 
 import javax.persistence.EntityManager;
+import java.util.List;
+
+import static com.geulkkoli.domain.hashtag.QHashTag.hashTag;
+import static com.geulkkoli.domain.post.QPost.post;
+import static com.geulkkoli.domain.posthashtag.QPostHashTag.postHashTag;
 
 /**
  * PostRepositoryImpl은 querydsl를 이용하기  위해 만든 클래스입니다.
@@ -35,12 +46,42 @@ public class PostRepositoryImpl implements PostRepositoryCustom {
     }
 
     @Override
-    public void delete(Long postId) {
-        QPost post = QPost.post;
+    public List<Post> postsByHashTag(String searchWords) {
 
-        queryFactory.delete(post)
-                .where(post.postId.eq(postId))
-                .execute();
+        return queryFactory.selectFrom(post)
+                .join(postHashTag).on(postHashTag.post.eq(post))
+                .join(hashTag).on(postHashTag.hashTag.eq(hashTag))
+                .where(hashTag.hashTagName.eq(searchWords))
+                .fetch();
+    }
+
+    @Override
+    public List<Post> allPostsMultiHashTags(List<String> hashTagNames) {
+
+        SubQueryExpression<Post> subquery = multiHashTag(hashTagNames);
+
+        return queryFactory.selectFrom(post)
+                .where(post.in(subquery))
+                .fetch();
+    }
+
+    @Override
+    public List<Post> allPostsTitleAndMultiPosts(String title, List<String> hashTagNames) {
+        SubQueryExpression<Post> subquery = multiHashTag(hashTagNames);
+
+        return queryFactory.selectFrom(post)
+                .where(post.title.contains(title))
+                .where(post.in(subquery))
+                .fetch();
+    }
+
+    private JPQLQuery<Post> multiHashTag(List<String> hashTagNames) {
+        return JPAExpressions.selectDistinct(postHashTag.post)
+                .from(postHashTag)
+                .join(postHashTag.hashTag, hashTag)
+                .where(hashTag.hashTagName.in(hashTagNames))
+                .groupBy(postHashTag.post)
+                .having(hashTag.countDistinct().goe((long) hashTagNames.size()));
     }
 
 }

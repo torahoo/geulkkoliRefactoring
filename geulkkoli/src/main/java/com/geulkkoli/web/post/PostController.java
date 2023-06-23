@@ -1,18 +1,25 @@
 package com.geulkkoli.web.post;
 
 import com.geulkkoli.application.user.CustomAuthenticationPrinciple;
-import com.geulkkoli.domain.favorites.FavoriteService;
 import com.geulkkoli.domain.comment.CommentsService;
-import com.geulkkoli.domain.follow.Follow;
+import com.geulkkoli.domain.favorites.FavoriteService;
 import com.geulkkoli.domain.follow.service.FollowFindService;
+import com.geulkkoli.domain.post.AdminTagAccessDenied;
 import com.geulkkoli.domain.post.service.PostService;
+import com.geulkkoli.domain.posthashtag.PostHashTagService;
 import com.geulkkoli.domain.user.User;
 import com.geulkkoli.domain.user.service.UserFindService;
+import com.geulkkoli.domain.user.service.UserService;
 import com.geulkkoli.web.comment.dto.CommentBodyDTO;
+import com.geulkkoli.web.post.dto.AddDTO;
+import com.geulkkoli.web.post.dto.EditDTO;
+import com.geulkkoli.web.post.dto.PageDTO;
+import com.geulkkoli.web.post.dto.PagingDTO;
 import com.geulkkoli.web.follow.FollowResult;
 import com.geulkkoli.web.post.dto.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.MessageSource;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
@@ -29,6 +36,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.nio.file.AccessDeniedException;
+import java.util.Locale;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -40,9 +49,12 @@ import java.util.stream.Collectors;
 public class PostController {
 
     private final PostService postService;
+    private final UserService userService;
     private final UserFindService userFindService;
     private final CommentsService commentsService;
     private final FavoriteService favoriteService;
+    private final PostHashTagService postHashTagService;
+    private final MessageSource messageSource;
     private final FollowFindService followFindService;
 
     /**
@@ -60,7 +72,7 @@ public class PostController {
                            Model model,
                            @RequestParam(defaultValue = "") String searchType,
                            @RequestParam(defaultValue = "") String searchWords) {
-        PagingDTO pagingDTO = PagingDTO.listDTOtoPagingDTO(postService.searchPostFindAll(pageable, searchType, searchWords));
+        PagingDTO pagingDTO = PagingDTO.listDTOtoPagingDTO(postHashTagService.searchPostsListByHashTag(pageable, searchType, searchWords));
         model.addAttribute("page", pagingDTO);
         searchDefault(model, searchType, searchWords);
         return "/post/postList";
@@ -76,13 +88,24 @@ public class PostController {
     //새 게시글 등록
     @PostMapping("/add")
     public String postAdd(@Validated @ModelAttribute AddDTO post, BindingResult bindingResult,
-                          RedirectAttributes redirectAttributes, HttpServletResponse response)
+                          RedirectAttributes redirectAttributes, HttpServletResponse response, HttpServletRequest request)
             throws UnsupportedEncodingException {
-        if (bindingResult.hasErrors()) {
-            return "/post/postAddForm";
-        }
+        redirectAttributes.addAttribute("page", request.getSession().getAttribute("pageNumber"));
+
         User user = userFindService.findById(post.getAuthorId());
-        long postId = postService.savePost(post, user).getPostId();
+        long postId = 0;
+        try {
+            if (bindingResult.hasErrors()) {
+                return "/post/postAddForm";
+            }
+             postId=postService.savePost(post, user).getPostId();
+        } catch (IllegalArgumentException e) {
+            bindingResult.rejectValue("tagCategory", "Tag.Required", new String[]{e.getMessage()},e.toString());
+            e.getStackTrace();
+        } catch (AdminTagAccessDenied e) {
+            bindingResult.rejectValue("tagListString", "Tag.Denied", new String[]{e.getMessage()},e.toString());
+            e.getStackTrace();
+        }
         redirectAttributes.addAttribute("postId", postId);
         response.addCookie(new Cookie(URLEncoder.encode(post.getNickName(), "UTF-8"), "done"));
         return "redirect:/post/read/{postId}";
@@ -148,23 +171,29 @@ public class PostController {
     //게시글 수정
     @PostMapping("/update/{postId}")
     public String editPost(@Validated @ModelAttribute EditDTO updateParam, BindingResult bindingResult,
-                           @PathVariable Long postId, RedirectAttributes redirectAttributes, HttpServletRequest request,
-                           @RequestParam(defaultValue = "") String searchType,
-                           @RequestParam(defaultValue = "") String searchWords) {
+                             @PathVariable Long postId, RedirectAttributes redirectAttributes, HttpServletRequest request,
+                             @RequestParam(defaultValue = "") String searchType,
+                             @RequestParam(defaultValue = "") String searchWords) {
+        try {
+            if (bindingResult.hasErrors()) {
+                return "/post/postEditForm";
+            }
+            postService.updatePost(postId, updateParam);
+        } catch (IllegalArgumentException e) {
+            bindingResult.rejectValue("tagCategory", "Tag.Required", new String[]{e.getMessage()},e.toString());
+            e.getStackTrace();
+        } catch (AdminTagAccessDenied e) {
+            bindingResult.rejectValue("tagListString", "Tag.Denied", new String[]{e.getMessage()},e.toString());
+            e.getStackTrace();
+        }
         if (bindingResult.hasErrors()) {
             return "/post/postEditForm";
         }
-        postService.updatePost(postId, updateParam);
         redirectAttributes.addAttribute("updateStatus", true);
         redirectAttributes.addAttribute("page", request.getSession().getAttribute("pageNumber"));
+        redirectAttributes.addAttribute("searchType", searchType);
+        redirectAttributes.addAttribute("searchWords", searchWords);
 
-        if (searchType != null && searchWords != null) {
-            redirectAttributes.addAttribute("searchType", searchType);
-            redirectAttributes.addAttribute("searchWords", searchWords);
-        } else {
-            redirectAttributes.addAttribute("searchType", "");
-            redirectAttributes.addAttribute("searchWords", "");
-        }
         return "redirect:/post/read/{postId}?page={page}&searchType={searchType}&searchWords={searchWords}";
     }
 

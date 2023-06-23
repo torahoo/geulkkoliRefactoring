@@ -9,6 +9,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.Set;
+import java.util.List;
 
 @Repository
 public interface PostRepository extends JpaRepository<Post, Long>, PostRepositoryCustom {
@@ -23,6 +24,9 @@ public interface PostRepository extends JpaRepository<Post, Long>, PostRepositor
     Page<Post> findPostsByNickNameContaining(Pageable pageable, String searchWords);
     Page<Post> findPostsByPostBodyContaining(Pageable pageable, String searchWords);
 
+    List<Post> findPostsByTitleContaining(String searchWords);
+    List<Post> findPostsByNickNameContaining(String searchWords);
+    List<Post> findPostsByPostBodyContaining(String searchWords);
     @Query("select p.createdAt from Post p where p.user.userId=:userId")
     Set<String> findCreatedAt(@Param("userId") Long userId);
 }

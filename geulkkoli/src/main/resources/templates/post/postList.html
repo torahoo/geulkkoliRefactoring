@@ -41,6 +41,7 @@
                                     <option th:selected="${searchType}=='제목'">제목</option>
                                     <option th:selected="${searchType}=='본문'">본문</option>
                                     <option th:selected="${searchType}=='닉네임'">닉네임</option>
+                                    <option th:selected="${searchType}=='해시태그'">해시태그</option>
                                 </select>
                             </div>
                             <div class="col-lg-8 col-md-6 col-sm-12 p-0">
@@ -104,7 +105,7 @@
             </thead>
             <tbody>
                 <tr th:each="post : ${page.list}">
-                    <td>  <a th:href="@{/post/read/${post.postId}(page=${page.number},searchType=${searchType},searchWords=${searchWords})}" th:text="${post.title}"></a></td>
+                    <td> <a th:href="@{|/post/read/${post.postId}|(page=${page.number},searchType=${searchType},searchWords=${searchWords})}" th:text="${post.title}"></a></td>
                     <td th:align="center" th:text="${post.nickName}"></td>
                     <td th:align="center" th:text="${post.date}"></td>
                     <td th:align="center" th:text="${post.postHits}"></td>

@@ -1,6 +1,7 @@
 package com.geulkkoli.web.home;
 
 import com.geulkkoli.domain.post.service.PostService;
+import com.geulkkoli.domain.posthashtag.PostHashTagService;
 import com.geulkkoli.domain.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -21,15 +22,15 @@ import javax.servlet.http.HttpServletRequest;
 @RequestMapping("/")
 public class HomeController {
 
-    private final PostService postService;
+    private final PostHashTagService postHashTagService;
 
     @GetMapping
     public String home(@PageableDefault(size = 5, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable,
                        Model model,
-                       @RequestParam(defaultValue = "7") String searchType,
-                       @RequestParam(defaultValue = "7") String searchWords) {
+                       @RequestParam(defaultValue = "") String searchType,
+                       @RequestParam(defaultValue = "") String searchWords) {
 
-        model.addAttribute("list", postService.searchPostFindAll(pageable, searchType, searchWords).toList());
+        model.addAttribute("list", postHashTagService.searchPostsListByHashTag(pageable, searchType, searchWords).toList());
 
         return "/home";
     }
