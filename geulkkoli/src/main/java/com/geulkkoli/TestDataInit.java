@@ -3,8 +3,12 @@ package com.geulkkoli;
 import com.geulkkoli.domain.admin.Report;
 import com.geulkkoli.domain.admin.ReportRepository;
 import com.geulkkoli.domain.admin.service.AdminServiceImpl;
+import com.geulkkoli.domain.hashtag.HashTag;
+import com.geulkkoli.domain.hashtag.HashTagRepository;
+import com.geulkkoli.domain.hashtag.HashTagType;
 import com.geulkkoli.domain.post.Post;
 import com.geulkkoli.domain.post.PostRepository;
+import com.geulkkoli.domain.post.service.PostService;
 import com.geulkkoli.domain.user.User;
 import com.geulkkoli.domain.user.service.UserFindService;
 import com.geulkkoli.domain.user.service.UserService;
@@ -31,6 +35,8 @@ public class TestDataInit {
     private final ReportRepository reportRepository;
     private final AdminServiceImpl adminServiceImpl;
     private final UserService userService;
+    private final PostService postService;
+    private final HashTagRepository hashTagRepository;
     private final UserFindService userFindService;
 
     /**
@@ -85,6 +91,51 @@ public class TestDataInit {
         joinForm.setPassword("123");
         userService.signUpAdmin(joinForm);
 
+        User user01 = userFindService.findById(1L);
+        User user02 = userFindService.findById(2L);
+
+
+        HashTag hashTagCategory1 = HashTag.builder()
+                .hashTagName("시")
+                .hashTagType(HashTagType.CATEGORY)
+                .build();
+        HashTag hashTagCategory2 = HashTag.builder()
+                .hashTagName("소설")
+                .hashTagType(HashTagType.CATEGORY)
+                .build();
+
+        HashTag hashTagCategory3 = HashTag.builder()
+                .hashTagName("수필")
+                .hashTagType(HashTagType.CATEGORY)
+                .build();
+
+        HashTag hashTagStatus1 = HashTag.builder()
+                .hashTagName("단편")
+                .hashTagType(HashTagType.STATUS)
+                .build();
+        HashTag hashTagStatus2 = HashTag.builder()
+                .hashTagName("연재")
+                .hashTagType(HashTagType.STATUS)
+                .build();
+        HashTag hashTagStatus3 = HashTag.builder()
+                .hashTagName("완결")
+                .hashTagType(HashTagType.STATUS)
+                .build();
+
+        HashTag hashTagManagement1 = HashTag.builder()
+                .hashTagName("공지글")
+                .hashTagType(HashTagType.MANAGEMENT)
+                .build();
+
+
+        hashTagRepository.save(hashTagCategory1);
+        hashTagRepository.save(hashTagCategory2);
+        hashTagRepository.save(hashTagCategory3);
+        hashTagRepository.save(hashTagStatus1);
+        hashTagRepository.save(hashTagStatus2);
+        hashTagRepository.save(hashTagStatus3);
+        hashTagRepository.save(hashTagManagement1);
+
         JoinFormDto joinForm4 = new JoinFormDto();
         joinForm4.setEmail("calendar@naver.com");
         joinForm4.setUserName("김캘린");
@@ -95,40 +146,47 @@ public class TestDataInit {
         LocalDate signUpDate = LocalDate.of(2022, 1, 1);
         User user4 = userService.signUp(joinForm4, signUpDate);
 
-        User user01 = userFindService.findById(1L);
-        for (int i = 0; i < 4; ++i) {
+        for (int i = 0; i < 16; ++i) {
 
             AddDTO addDTO = AddDTO.builder()
                     .title("여러분")
                     .postBody("나는 멋지고 섹시한 개발자")
                     .nickName(user01.getNickName())
+                    .tagListString("#testTag1 #일반글")
+                    .tagCategory("#시")
+                    .tagStatus("#단편")
                     .build();
-            Post post = user01.writePost(addDTO);
-            postRepository.save(post);
+            postService.savePost(addDTO, user01);
 
             AddDTO addDTO1 = AddDTO.builder()
                     .title("testTitle01")
                     .postBody("test postbody 01")
                     .nickName(user01.getNickName())
+                    .tagListString("#testTag1 #일반글")
+                    .tagCategory("#소설")
+                    .tagStatus("#완결")
                     .build();
-            Post post1 = user01.writePost(addDTO1);
-            postRepository.save(post1);
+            postService.savePost(addDTO1, user01);
 
             AddDTO addDTO2 = AddDTO.builder()
                     .title("testTitle02")
                     .postBody("test postbody 02")
                     .nickName(user01.getNickName())
+                    .tagListString("#testTag2 #일반글")
+                    .tagCategory("#시")
+                    .tagStatus("#연재")
                     .build();
-            Post post2 = user01.writePost(addDTO2);
-            postRepository.save(post2);
+            postService.savePost(addDTO2, user01);
 
             AddDTO addDTO3 = AddDTO.builder()
                     .title("testTitle03")
                     .postBody("test postbody 03")
-                    .nickName(user01.getNickName())
+                    .nickName(user02.getNickName())
+                    .tagListString("#testTag2 #일반글")
+                    .tagCategory("#수필")
+                    .tagStatus("#연재")
                     .build();
-            Post post3 = user01.writePost(addDTO3);
-            postRepository.save(post3);
+            postService.savePost(addDTO3, user02);
         }
 
         for (int i = 7; i <= 12; i++) {

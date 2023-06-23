@@ -2,7 +2,9 @@ package com.geulkkoli.web.post.dto;
 
 import com.geulkkoli.domain.comment.Comments;
 import com.geulkkoli.domain.comment.CommentsService;
+import com.geulkkoli.domain.hashtag.HashTag;
 import com.geulkkoli.domain.post.Post;
+import com.geulkkoli.domain.posthashtag.PostHashTag;
 import com.geulkkoli.web.comment.dto.CommentListDTO;
 import lombok.Builder;
 import lombok.Getter;
@@ -48,10 +50,13 @@ public class PageDTO {
     @Setter
     private List<CommentListDTO> commentList;
 
+    @Setter
+    private List<HashTag> tagList = new ArrayList<>();
+
     @Builder
     public PageDTO(Long postId, Long authorId, String title,
                    String postBody, String nickName, Set<Comments> comments,
-                   String date, int favoriteCount) {
+                   String date, int favoriteCount, Set<PostHashTag> tagList) {
         this.postId = postId;
         this.authorId = authorId;
         this.title = title;
@@ -60,6 +65,9 @@ public class PageDTO {
         this.commentList = CommentsService.getCommentsList(comments);
         this.date = date;
         this.favoriteCount = favoriteCount;
+        for(PostHashTag list : tagList) {
+            this.tagList.add(list.getHashTag());
+        }
     }
 
     public static PageDTO toDTO (Post post) {
@@ -72,6 +80,7 @@ public class PageDTO {
                 .comments(post.getComments())
                 .date(post.getUpdatedAt())
                 .favoriteCount(post.getFavorites().size())
+                .tagList(post.getPostHashTags())
                 .build();
     }
 }
