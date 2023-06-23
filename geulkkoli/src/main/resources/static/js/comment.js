@@ -110,10 +110,15 @@ function commentEditButtonEvent(event) {
         let formData = new FormData();
         formData.set('commentId', target.closest('.card').querySelector('h5').id);
         formData.set('commentBody', target.closest('.card-body').firstElementChild.value);
-
+        var headerName = document.getElementsByClassName("csrf_input")[1].getAttribute("name");
+        var token = document.getElementsByClassName("csrf_input")[0].getAttribute("value");
+        console.log(postId)
         fetch('/comments/' + postId, {
             method: 'PUT',
-            headers: { 'Content-Type' : 'application/json'},
+            headers: { 'header': headerName,
+                'X-Requested-With': 'XMLHttpRequest',
+                'content-type': 'application/json',
+                'X-CSRF-Token': token,},
             body: JSON.stringify(Object.fromEntries(formData))
         })
             .then((response) => {
@@ -144,10 +149,15 @@ function commentDeleteButtonEvent(ev) {
 
     let formData = new FormData();
     formData.set('commentId', commentDeleteButton.closest('.card').querySelector('h5').id);
-
+    var headerName = document.getElementsByClassName("csrf_input")[1].getAttribute("name");
+    var token = document.getElementsByClassName("csrf_input")[0].getAttribute("value");
     fetch('/comments', {
         method: 'DELETE',
-        headers: {'Content-Type': 'application/json'},
+        headers: {
+            'header': headerName,
+            'X-Requested-With': 'XMLHttpRequest',
+            'X-CSRF-Token': token,
+            'Content-Type': 'application/json'},
         body: JSON.stringify(Object.fromEntries(formData))
     }).then((response) => {
         if (response.status == 200) {
@@ -192,7 +202,10 @@ function commentRemake(list, isClear) {
 
         let editButton;
         let deleteButton;
-        if (newComment.nickName == validName) {
+        var loggedInUser = /*[[${#authentication.principal}]]*/ null;
+
+
+        if (newComment.nickName === validName) {
             editButton = document.createElement('button');
             editButton.setAttribute('class', 'btn btn-primary btn-sm commentEdit');
             editButton.innerText = '수정';

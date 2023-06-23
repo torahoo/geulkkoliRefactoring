@@ -170,18 +170,21 @@
             </div>
         </div>
     </div>
-
-
+    <div sec:authorize="isFullyAuthenticated()">
+        <div id="authuser-nickName" sec:authentication="principal.nickName">
+        </div>
+    </div>
 </div> <!-- /container -->
 
 <footer id="footer" th:include="footer"></footer>
 
 <script th:inline="javascript">
-
-    let user = [[${#authentication.principal}]];
-    let validName = '';
-    if (Object.is(user) === null) {
-        validName = user.nickName;
+    var principal = [[${#authentication.principal}]];
+    var nickName = "";
+    var validName = "";
+    if (principal !== "anonymousUser") {
+        document.getElementById("authuser-nickName").style.display = "none";
+        nickName = document.getElementById("authuser-nickName").innerText;
     }
 
     const postId = [[${post.postId}]];
@@ -189,11 +192,13 @@
     function deletePost() {
 
         const deleteTitle = [[${post.title}]];
-        const postId = [[${post.postId}]];
-        const userNickName = validName;
+        const postId = '[[${post.postId}]]';
+        const userNickName = nickName;
         const compareTitle = document.getElementById("post-Compare").value;
         console.log(compareTitle);
         console.log(deleteTitle)
+        var headerName = document.getElementsByClassName("csrf_input")[1].getAttribute("name");
+        var token = document.getElementsByClassName("csrf_input")[0].getAttribute("value");
         let params = {
             postId: postId,
             userNickName: userNickName
@@ -202,7 +207,14 @@
             .map(key => encodeURIComponent(key) + '=' + encodeURIComponent(params[key]))
             .join('&');
         if (compareTitle === deleteTitle) {
-            fetch('/post/request?' + query, {method: 'DELETE'})
+            fetch('/post/request?' + query, {
+                headers: {
+                    'header': headerName,
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'X-CSRF-Token': token
+                },
+                method: 'DELETE'
+            })
                 .then(response => {
                     window.location = response.url;
                 })
@@ -224,11 +236,11 @@
         formData.append("postId", postId);
         var headerName = document.getElementsByClassName("csrf_input")[1].getAttribute("name");
         var token = document.getElementsByClassName("csrf_input")[0].getAttribute("value");
-
         const requestOptions = {
             headers: {
                 'header': headerName,
                 'X-Requested-With': 'XMLHttpRequest',
+                'accept': 'application/json',
                 'X-CSRF-Token': token
             },
             method: 'POST',
