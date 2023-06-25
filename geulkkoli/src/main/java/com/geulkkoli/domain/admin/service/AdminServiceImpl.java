@@ -17,6 +17,7 @@ import com.geulkkoli.web.admin.ReportDto;
 import com.geulkkoli.web.post.dto.AddDTO;
 import com.geulkkoli.web.post.dto.EditDTO;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,6 +26,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -55,7 +57,7 @@ public class AdminServiceImpl implements AdminService {
         List<ReportDto> reportDtoList = new ArrayList<>();
 
         for (Post post : allPost) {
-            reportDtoList.add(ReportDto.toDto(post,reportRepository.countByReportedPost(post)));
+            reportDtoList.add(ReportDto.toDto(post, reportRepository.countByReportedPost(post)));
         }
 
         return reportDtoList;
@@ -108,15 +110,29 @@ public class AdminServiceImpl implements AdminService {
     }
 
     public List<DailyTopicDto> findWeeklyTopic() {
-        List<Topic> topicByUpComingDate = topicRepository.findTopicByUpComingDate(LocalDate.now().plusDays(7));
+        List<Topic> topics = topicRepository.findTopicByUpComingDateBetween(LocalDate.now(), LocalDate.now().plusDays(29),Sort.by(Sort.Direction.ASC, "upComingDate"));
 
+        if(topics.size()<30){
+            topics = fillTopic(topics);
+        }
+
+        return topics.stream()
+                .map(a -> DailyTopicDto.builder().topic(a.getTopicName()).build())
+                .collect(Collectors.toList());
+    }
+
+    public List<DailyTopicDto> findWeeklyTopic(List<DailyTopicDto> topics) {
 
         return null;
     }
 
-    public List<DailyTopicDto> inputDailyTopic(List<DailyTopicDto> topics) {
 
-
-        return null;
+    public List<Topic> fillTopic(List<Topic> topics){
+        for (int i = 0; i < 30 ; i++) {
+            if(!topics.get(i).getUpComingDate().isEqual(LocalDate.now().plusDays(i))){
+                topics.add(i,topicRepository.findTopicByUseDateBefore(LocalDate.now().minusDays(30)));
+            }
+        }
+        return topics;
     }
 }

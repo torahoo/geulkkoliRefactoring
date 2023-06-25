@@ -10,9 +10,12 @@ import java.util.List;
 public interface TopicRepository extends JpaRepository<Topic, Long> {
 
     @Query(value = "SELECT * FROM Topic t order by RAND() limit 30",nativeQuery = true)
-    List<Topic> findTopicByUseDateBefore(LocalDate time);
+    List<Topic> findTopicsByUseDateBefore(LocalDate time);
 
-    List<Topic> findTopicByUpComingDateAfter(LocalDate time, Sort sort);
+    @Query(value = "SELECT * FROM Topic t order by RAND() limit 1",nativeQuery = true)
+    Topic findTopicByUseDateBefore(LocalDate time);
 
-    List<Topic> findTopicByUpComingDate(LocalDate time);
+    List<Topic> findTopicByUpComingDateBetween(LocalDate start, LocalDate end, Sort sort);
+
+    Topic findTopicByUpComingDate(LocalDate time);
 }

@@ -58,6 +58,10 @@ public class TestDataInit {
          * userService로 테스트 데이터를 저정한다.
          * */
 
+        for(int i = 0; i<50; i++) {
+            topicRepository.save(Topic.builder().topicName("testTopic"+i).build());
+        }
+
         JoinFormDto joinForm = new JoinFormDto();
         joinForm.setEmail("tako99@naver.com");
         joinForm.setUserName("김");

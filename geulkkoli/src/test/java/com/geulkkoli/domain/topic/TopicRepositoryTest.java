@@ -1,6 +1,5 @@
 package com.geulkkoli.domain.topic;
 
-import com.geulkkoli.domain.user.User;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -17,7 +16,6 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 @Slf4j
 @DataJpaTest
@@ -46,24 +44,25 @@ class TopicRepositoryTest {
         //given
 
         //when
-        List<Topic> topicByUseDateBefore = topicRepository.findTopicByUseDateBefore(LocalDate.now());
+        List<Topic> topicByUseDateBefore = topicRepository.findTopicsByUseDateBefore(LocalDate.now().minusDays(30));
 
         //then
         assertThat(topicByUseDateBefore.size()).isEqualTo(30);
     }
 
     @Test @DisplayName("사용할 날짜에 따라 잘 불러오는지")
-    void findTopicByUpComingDateAfterTest(){
+    void findTopicByUpComingDateGreaterThanEqualTest(){
         //given
-        List<Topic> topicByUseDateBefore = topicRepository.findTopicByUseDateBefore(LocalDate.now());
+        List<Topic> topicByUseDateBefore = topicRepository.findTopicsByUseDateBefore(LocalDate.now());
         AtomicInteger index = new AtomicInteger(0);
         topicByUseDateBefore.forEach(topic -> topic.settingUpComingDate(LocalDate.now().plusDays(index.getAndAdd(1))));
 
         //when
-        List<Topic> topicByUpComingDateAfter = topicRepository.findTopicByUpComingDateAfter(LocalDate.now(), Sort.by(Sort.Direction.ASC, "upComingDate"));
+        List<Topic> topicByUpComingDateAfter = topicRepository.findTopicByUpComingDateBetween(LocalDate.now(), LocalDate.now().plusDays(29),Sort.by(Sort.Direction.ASC, "upComingDate"));
 
         //then
         assertThat(topicByUpComingDateAfter.get(0).getUpComingDate()).isEqualTo(LocalDate.now());
+        assertThat(topicByUpComingDateAfter.size()).isEqualTo(30);
     }
 
 }

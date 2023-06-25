@@ -47,13 +47,13 @@ public class AdminController {
         LocalDate endDate = startDate.plusMonths(1);
         List<DailyTopicDto> data = new ArrayList<>();
 
-        data.add(DailyTopicDto.builder().date(DailyTopicDto.dateToString(startDate)).theme("꽃").build());
-        data.add(DailyTopicDto.builder().date(DailyTopicDto.dateToString(startDate.plusDays(2))).theme("이").build());
-        data.add(DailyTopicDto.builder().date(DailyTopicDto.dateToString(startDate.plusDays(3))).theme("피").build());
-        data.add(DailyTopicDto.builder().date(DailyTopicDto.dateToString(startDate.plusDays(4))).theme("는").build());
-        data.add(DailyTopicDto.builder().date(DailyTopicDto.dateToString(startDate.plusDays(5))).theme("계").build());
-        data.add(DailyTopicDto.builder().date(DailyTopicDto.dateToString(startDate.plusDays(6))).theme("절").build());
-        data.add(DailyTopicDto.builder().date(DailyTopicDto.dateToString(startDate.plusDays(7))).theme("엔").build());
+        data.add(DailyTopicDto.builder().date(DailyTopicDto.dateToString(startDate)).topic("꽃").build());
+        data.add(DailyTopicDto.builder().date(DailyTopicDto.dateToString(startDate.plusDays(2))).topic("이").build());
+        data.add(DailyTopicDto.builder().date(DailyTopicDto.dateToString(startDate.plusDays(3))).topic("피").build());
+        data.add(DailyTopicDto.builder().date(DailyTopicDto.dateToString(startDate.plusDays(4))).topic("는").build());
+        data.add(DailyTopicDto.builder().date(DailyTopicDto.dateToString(startDate.plusDays(5))).topic("계").build());
+        data.add(DailyTopicDto.builder().date(DailyTopicDto.dateToString(startDate.plusDays(6))).topic("절").build());
+        data.add(DailyTopicDto.builder().date(DailyTopicDto.dateToString(startDate.plusDays(7))).topic("엔").build());
 
         model.addAttribute("data", data);
 
@@ -63,7 +63,7 @@ public class AdminController {
     @ResponseBody
     @PostMapping("/calendar/update")
     public ResponseEntity<Void> updateTheme(@RequestBody DailyTopicDto dailyTopicDto) {
-        log.info("date : {}, theme : {}", dailyTopicDto.getDate(), dailyTopicDto.getTheme());
+        log.info("date : {}, theme : {}", dailyTopicDto.getDate(), dailyTopicDto.getTopic());
 //        LocalDate localDate = LocalDate.parse(dailyThemeDto.getDate(), DateTimeFormatter.BASIC_ISO_DATE);
 //        calendarService.updateTheme(localDate, dailyThemeDto.getTheme());
         return ResponseEntity.ok().build();

@@ -11,14 +11,14 @@ import java.time.*;
 public class DailyTopicDto {
 
     private String date;
-    private String theme;
+    private String topic;
 
     public DailyTopicDto(){}
 
     @Builder
-    public DailyTopicDto(String date, String theme) {
+    public DailyTopicDto(String date, String topic) {
         this.date = date;
-        this.theme = theme;
+        this.topic = topic;
     }
 
     public static String dateToString (LocalDate date) {
@@ -27,11 +27,10 @@ public class DailyTopicDto {
 
     public static LocalDate stringToDate (String date) {
         String [] split = date.split("-");
-        LocalDate localDate = LocalDate.of(
+        return LocalDate.of(
                 Integer.parseInt(split[0].strip()),
                 Integer.parseInt(split[1].strip()),
                 Integer.parseInt(split[2].strip())
         );
-        return localDate;
     }
 }

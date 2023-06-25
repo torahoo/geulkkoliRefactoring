@@ -1,6 +1,7 @@
 package com.geulkkoli.domain.admin.service;
 
 import com.geulkkoli.domain.post.Post;
+import com.geulkkoli.domain.topic.Topic;
 import com.geulkkoli.domain.user.User;
 import com.geulkkoli.web.admin.DailyTopicDto;
 import com.geulkkoli.web.admin.ReportDto;
@@ -26,4 +27,6 @@ public interface AdminService {
     Post findById(Long postId);
 
     List<DailyTopicDto> findWeeklyTopic();
+
+    public List<Topic> fillTopic(List<Topic> topics);
 }

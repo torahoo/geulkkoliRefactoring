@@ -34,7 +34,7 @@
     <tbody>
     <tr th:each="item : ${data}">
         <td th:text="${item.getDate()}"></td>
-        <td th:text="${item.theme}" contenteditable="true"
+        <td th:text="${item.getTopic}" contenteditable="true"
             th:attr="data-id=${item.date}"
             th:onblur="updateTheme([[${item.getDate}]],this.innerText)">
         </td>
