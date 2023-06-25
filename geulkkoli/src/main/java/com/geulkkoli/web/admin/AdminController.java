@@ -46,13 +46,15 @@ public class AdminController {
         LocalDate startDate = LocalDate.now();
         LocalDate endDate = startDate.plusMonths(1);
         List<DailyTopicDto> data = new ArrayList<>();
-        data.add(new DailyTopicDto(startDate.toString(), "꽃"));
-        data.add(new DailyTopicDto(startDate.plusDays(2).toString(), "이"));
-        data.add(new DailyTopicDto(startDate.plusDays(3).toString(), "피"));
-        data.add(new DailyTopicDto(startDate.plusDays(4).toString(), "는"));
-        data.add(new DailyTopicDto(startDate.plusDays(5).toString(), "계"));
-        data.add(new DailyTopicDto(startDate.plusDays(6).toString(), "절"));
-        data.add(new DailyTopicDto(startDate.plusDays(7).toString(), "엔"));
+
+        data.add(DailyTopicDto.builder().date(DailyTopicDto.dateToString(startDate)).theme("꽃").build());
+        data.add(DailyTopicDto.builder().date(DailyTopicDto.dateToString(startDate.plusDays(2))).theme("이").build());
+        data.add(DailyTopicDto.builder().date(DailyTopicDto.dateToString(startDate.plusDays(3))).theme("피").build());
+        data.add(DailyTopicDto.builder().date(DailyTopicDto.dateToString(startDate.plusDays(4))).theme("는").build());
+        data.add(DailyTopicDto.builder().date(DailyTopicDto.dateToString(startDate.plusDays(5))).theme("계").build());
+        data.add(DailyTopicDto.builder().date(DailyTopicDto.dateToString(startDate.plusDays(6))).theme("절").build());
+        data.add(DailyTopicDto.builder().date(DailyTopicDto.dateToString(startDate.plusDays(7))).theme("엔").build());
+
         model.addAttribute("data", data);
 
         return "/admin/adminIndex";
