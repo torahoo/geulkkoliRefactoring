@@ -177,10 +177,8 @@
             </div>
         </div>
     </div>
-    <div sec:authorize="isFullyAuthenticated()">
-        <div id="authuser-nickName" sec:authentication="principal.nickName">
-        </div>
-    </div>
+
+
 </div> <!-- /container -->
 
 <footer id="footer" th:include="footer"></footer>

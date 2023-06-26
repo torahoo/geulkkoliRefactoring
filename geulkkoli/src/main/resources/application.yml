@@ -3,6 +3,11 @@ spring:
     activate:
       on-profile: default
 
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 100MB
+
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: ${spring.datasource.url}
@@ -78,7 +83,6 @@ spring:
   #구글 계정으로 앱 서비스를 설정하여 전송할 수 있게 했습니다.
   #username은 우리가 이메일 전송 시 사용하는 계정입니다.
   #설정해 둔 계정으로 이메일을 전송하는데, JavaMailSender 클래스를 통해 작동합니다. (이메일 서비스에 불러와져 있는 그거)
-
   mail:
     host: smtp.gmail.com # 서버 호스트
     port: 587 # 서버 포트
@@ -111,4 +115,5 @@ server:
     include-exception: false
     include-message: never
 
-
+comm:
+  uploadPath: C:/geulkkoliFile/

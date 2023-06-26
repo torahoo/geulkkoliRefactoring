@@ -1,6 +1,7 @@
 package com.geulkkoli.web.post;
 
 import com.geulkkoli.application.user.CustomAuthenticationPrinciple;
+import com.geulkkoli.domain.comment.CommentsService;
 import com.geulkkoli.domain.favorites.FavoriteService;
 import com.geulkkoli.domain.follow.service.FollowFindService;
 import com.geulkkoli.domain.post.AdminTagAccessDenied;
@@ -8,6 +9,7 @@ import com.geulkkoli.domain.post.service.PostService;
 import com.geulkkoli.domain.posthashtag.PostHashTagService;
 import com.geulkkoli.domain.user.User;
 import com.geulkkoli.domain.user.service.UserFindService;
+import com.geulkkoli.domain.user.service.UserService;
 import com.geulkkoli.web.comment.dto.CommentBodyDTO;
 import com.geulkkoli.web.follow.dto.FollowResult;
 import com.geulkkoli.web.post.dto.AddDTO;
@@ -16,6 +18,8 @@ import com.geulkkoli.web.post.dto.PageDTO;
 import com.geulkkoli.web.post.dto.PagingDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.MessageSource;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
@@ -25,14 +29,21 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.File;
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.nio.file.AccessDeniedException;
+import java.util.Locale;
+import java.util.List;
 import java.util.Objects;
+import java.util.UUID;
 
 @Slf4j
 @Controller
@@ -42,9 +53,37 @@ public class PostController {
 
     private final PostService postService;
     private final UserFindService userFindService;
+    private final CommentsService commentsService;
     private final FavoriteService favoriteService;
     private final PostHashTagService postHashTagService;
+    private final MessageSource messageSource;
     private final FollowFindService followFindService;
+    @Value("${comm.uploadPath}")
+    private String uploadPath;
+
+    @PostMapping("/upload-file")
+    @ResponseBody
+    public String upload(@RequestParam("file") MultipartFile multipartFile) {
+
+        String originalFileName = multipartFile.getOriginalFilename();
+        String extension = originalFileName.substring(originalFileName.lastIndexOf("."));
+        String fileName = UUID.randomUUID() + extension;
+        String src = "/imageFile/" + fileName;
+
+        File uploadDir = new File(uploadPath);
+        if(!uploadDir.exists())
+            uploadDir.mkdir();
+
+        File uploadDirFile = new File(uploadPath + fileName);
+
+        try {
+            multipartFile.transferTo(uploadDirFile);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        return src;
+    }
 
     /**
      * @param pageable - get 파라미터 page, size, sort 캐치

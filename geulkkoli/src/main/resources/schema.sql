@@ -100,7 +100,7 @@ CREATE TABLE IF NOT EXISTS user_followings
     CONSTRAINT fk_follower FOREIGN KEY (follower_id) REFERENCES users (user_id) ON DELETE CASCADE,
     CONSTRAINT fk_followee FOREIGN KEY (followee_id) REFERENCES users (user_id) ON DELETE CASCADE,
     Constraint unique_following unique (follower_id, followee_id)
-);
+    );
 
 
 
@@ -109,7 +109,7 @@ create table if not exists report
     report_id        bigint primary key auto_increment,
     reported_post_id bigint       not null,
     reporter_id      bigint       not null,
-    reported_at      VARCHAR(255) not null,
+    reported_at      TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP,
     reason           varchar(100) not null,
     constraint fk_reported_post foreign key (reported_post_id) references post (post_id),
     constraint fk_reporter foreign key (reporter_id) references users (user_id),
@@ -126,6 +126,39 @@ create table if not exists social_info
     is_connected        boolean   default true,
     constraint fk_social_info_user foreign key (user_id) references users (user_id),
     constraint unique_social_info unique (social_id, social_type)
-);
+    );
+
+create table if not exists hashtag
+(
+    hashtag_id   bigint primary key,
+    hashtag_name varchar(20) not null,
+    hashtag_type varchar(20) not null
+    );
+
+create table if not exists account_lock
+(
+    account_lock_id bigint primary key auto_increment,
+    user_id         bigint       not null,
+    reason          varchar(200) not null,
+    lock_at         TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    lock_until      TIMESTAMP    NOT NULL,
+    constraint fk_account_lock_user foreign key (user_id) references users (user_id)
+    );
 
 
+create table if not exists post_hashtag
+(
+    postHashtag_id BIGINT PRIMARY KEY AUTO_INCREMENT,
+    post_id        BIGINT NOT NULL,
+    hashtag_id     BIGINT NOT NULL,
+    constraint fk_post foreign key (post_id) references post (post_id) on delete cascade,
+    constraint fk_hashtag foreign key (hashtag_id) references hashtag (hashtag_id) on delete cascade
+    );
+
+create table if not exists topic
+(
+    topic_id   bigint primary key auto_increment,
+    topic_name varchar(255) not null unique,
+    useDate    date not null default '2000-01-01',
+    upComingDate date not null default '2000-01-01'
+    );
