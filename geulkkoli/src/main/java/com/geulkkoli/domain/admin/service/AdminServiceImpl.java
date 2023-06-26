@@ -23,9 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.NoSuchElementException;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -117,22 +115,28 @@ public class AdminServiceImpl implements AdminService {
         }
 
         return topics.stream()
-                .map(a -> DailyTopicDto.builder().topic(a.getTopicName()).build())
+                .limit(7)
+                .map(a -> DailyTopicDto.builder()
+                        .topic(a.getTopicName())
+                        .date(a.getUpComingDate().toString())
+                        .build())
                 .collect(Collectors.toList());
     }
 
-    public List<DailyTopicDto> findWeeklyTopic(List<DailyTopicDto> topics) {
-
-        return null;
-    }
-
-
     public List<Topic> fillTopic(List<Topic> topics){
+        Set<Topic> topicHashSet = new HashSet<>(topics);
         for (int i = 0; i < 30 ; i++) {
-            if(!topics.get(i).getUpComingDate().isEqual(LocalDate.now().plusDays(i))){
-                topics.add(i,topicRepository.findTopicByUseDateBefore(LocalDate.now().minusDays(30)));
+            if(topics.size()==i||!topics.get(i).getUpComingDate().isEqual(LocalDate.now().plusDays(i))){
+                Topic topic = topicRepository.findTopicByUseDateBefore(LocalDate.now().minusDays(30));
+                if(!topics.contains(topic)){
+                    topics.add(i,topic);
+                    topics.get(i).settingUpComingDate(LocalDate.now().plusDays(i));
+                } else {
+                    i--;
+                }
             }
         }
+        topics.sort(Comparator.comparing(Topic::getUpComingDate));
         return topics;
     }
 }

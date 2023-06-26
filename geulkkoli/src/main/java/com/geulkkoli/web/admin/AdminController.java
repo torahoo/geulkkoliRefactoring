@@ -43,20 +43,8 @@ public class AdminController {
 
     @GetMapping("/") // 어드민 기본 페이지 링크
     public String adminIndex(Model model) {
-        LocalDate startDate = LocalDate.now();
-        LocalDate endDate = startDate.plusMonths(1);
-        List<DailyTopicDto> data = new ArrayList<>();
-
-        data.add(DailyTopicDto.builder().date(DailyTopicDto.dateToString(startDate)).topic("꽃").build());
-        data.add(DailyTopicDto.builder().date(DailyTopicDto.dateToString(startDate.plusDays(2))).topic("이").build());
-        data.add(DailyTopicDto.builder().date(DailyTopicDto.dateToString(startDate.plusDays(3))).topic("피").build());
-        data.add(DailyTopicDto.builder().date(DailyTopicDto.dateToString(startDate.plusDays(4))).topic("는").build());
-        data.add(DailyTopicDto.builder().date(DailyTopicDto.dateToString(startDate.plusDays(5))).topic("계").build());
-        data.add(DailyTopicDto.builder().date(DailyTopicDto.dateToString(startDate.plusDays(6))).topic("절").build());
-        data.add(DailyTopicDto.builder().date(DailyTopicDto.dateToString(startDate.plusDays(7))).topic("엔").build());
-
-        model.addAttribute("data", data);
-
+        List<DailyTopicDto> weeklyTopic = adminService.findWeeklyTopic();
+        model.addAttribute("data", weeklyTopic);
         return "/admin/adminIndex";
     }
 

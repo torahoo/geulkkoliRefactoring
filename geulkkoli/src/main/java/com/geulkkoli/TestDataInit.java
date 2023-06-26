@@ -2,6 +2,7 @@ package com.geulkkoli;
 
 import com.geulkkoli.domain.admin.Report;
 import com.geulkkoli.domain.admin.ReportRepository;
+import com.geulkkoli.domain.admin.service.AdminService;
 import com.geulkkoli.domain.admin.service.AdminServiceImpl;
 import com.geulkkoli.domain.hashtag.HashTag;
 import com.geulkkoli.domain.hashtag.HashTagRepository;
@@ -14,6 +15,7 @@ import com.geulkkoli.domain.topic.TopicRepository;
 import com.geulkkoli.domain.user.User;
 import com.geulkkoli.domain.user.service.UserFindService;
 import com.geulkkoli.domain.user.service.UserService;
+import com.geulkkoli.web.admin.DailyTopicDto;
 import com.geulkkoli.web.post.dto.AddDTO;
 import com.geulkkoli.web.user.dto.JoinFormDto;
 import lombok.RequiredArgsConstructor;
@@ -26,6 +28,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -36,6 +39,7 @@ public class TestDataInit {
     private final PostRepository postRepository;
     private final ReportRepository reportRepository;
     private final AdminServiceImpl adminServiceImpl;
+    private final AdminService adminService;
     private final UserService userService;
     private final PostService postService;
     private final HashTagRepository hashTagRepository;
@@ -61,6 +65,7 @@ public class TestDataInit {
         for(int i = 0; i<50; i++) {
             topicRepository.save(Topic.builder().topicName("testTopic"+i).build());
         }
+        List<DailyTopicDto> weeklyTopic = adminService.findWeeklyTopic();
 
         JoinFormDto joinForm = new JoinFormDto();
         joinForm.setEmail("tako99@naver.com");

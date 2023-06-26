@@ -7,6 +7,9 @@ import com.geulkkoli.domain.post.AdminTagAccessDenied;
 import com.geulkkoli.domain.post.Post;
 import com.geulkkoli.domain.post.PostRepository;
 import com.geulkkoli.domain.post.PostRepositoryCustom;
+import com.geulkkoli.domain.topic.Topic;
+import com.geulkkoli.domain.topic.TopicRepository;
+import com.geulkkoli.web.admin.DailyTopicDto;
 import com.geulkkoli.web.post.dto.ListDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -19,6 +22,7 @@ import org.springframework.validation.BindingResult;
 
 import javax.transaction.Transactional;
 import java.nio.file.AccessDeniedException;
+import java.time.LocalDate;
 import java.util.*;
 import java.util.Comparator;
 import java.util.stream.Collectors;
@@ -31,6 +35,7 @@ public class PostHashTagService {
 
     private final HashTagRepository hashTagRepository;
     private final PostHashTagRepository postHashTagRepository;
+    private final TopicRepository topicRepository;
 
     //게시글에 해시태그 1개를 추가합니다
     public Long addHashTagToPost(Post post, HashTag tag) {
@@ -173,6 +178,16 @@ public class PostHashTagService {
             throw new AdminTagAccessDenied(managementTag);
         }
 
+    }
+
+    public DailyTopicDto showTodayTopic (LocalDate date){
+        Topic todayTopic = topicRepository.findTopicByUpComingDate(date);
+        todayTopic.settingUseDate(date);
+        DailyTopicDto dailyTopicDto = DailyTopicDto.builder()
+                .date(date.toString())
+                .topic(todayTopic.getTopicName())
+                .build();
+        return dailyTopicDto;
     }
 
 

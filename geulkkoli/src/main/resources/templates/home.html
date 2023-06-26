@@ -86,6 +86,13 @@
     </form>
 
     <hr class="my-4">
+    <div class="header" style="text-align: center">
+        <h2>오늘의 주제</h2>
+        <h3 th:text="${todayTopic.getTopic()}">todayTopic</h3>
+        <h4 th:text="${todayTopic.getDate()}">todayTopicDate</h4>
+    </div>
+
+    <hr class="my-4">
     <div class="header">
         <div class="col" style="float: left">
             <h4>공지사항</h4>
