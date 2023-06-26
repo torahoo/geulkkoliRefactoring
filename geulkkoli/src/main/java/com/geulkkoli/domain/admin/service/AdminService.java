@@ -29,4 +29,6 @@ public interface AdminService {
     List<DailyTopicDto> findWeeklyTopic();
 
     public List<Topic> fillTopic(List<Topic> topics);
+
+    public void updateTopic(DailyTopicDto topic);
 }

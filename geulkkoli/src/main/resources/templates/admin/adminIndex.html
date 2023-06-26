@@ -15,9 +15,6 @@
             onclick="location.href='/admin/reportedPostList'"
             class="btn btn-primary">신고받은 게시글
     </button>
-</div>
-
-<div class="row no-gutters m-5 col-12 col-lg-3 col-md-3 col-sm-12 p-0">
     <button type="button"
             onclick="location.href='/admin/add'"
             class="btn btn-primary">공지사항 작성
@@ -57,11 +54,9 @@
             if (xhr.status === 200) {
                 console.log('Updated successfully.');
             } else {
-                console.error('An error occurred: ' + xhr.status);
                 console.error('error with : ' + date + " and " + topic);
             }
         };
-
     }
 </script>
 </html>

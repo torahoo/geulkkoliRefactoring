@@ -22,10 +22,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.List;
 
 
@@ -44,16 +42,17 @@ public class AdminController {
     @GetMapping("/") // 어드민 기본 페이지 링크
     public String adminIndex(Model model) {
         List<DailyTopicDto> weeklyTopic = adminService.findWeeklyTopic();
+
         model.addAttribute("data", weeklyTopic);
+
         return "/admin/adminIndex";
     }
 
     @ResponseBody
     @PostMapping("/calendar/update")
     public ResponseEntity<Void> updateTheme(@RequestBody DailyTopicDto dailyTopicDto) {
-        log.info("date : {}, theme : {}", dailyTopicDto.getDate(), dailyTopicDto.getTopic());
-//        LocalDate localDate = LocalDate.parse(dailyThemeDto.getDate(), DateTimeFormatter.BASIC_ISO_DATE);
-//        calendarService.updateTheme(localDate, dailyThemeDto.getTheme());
+
+        adminService.updateTopic(dailyTopicDto);
         return ResponseEntity.ok().build();
     }
 
@@ -80,7 +79,7 @@ public class AdminController {
     @DeleteMapping("/delete/{postId}")
     public String postDelete(@PathVariable Long postId) {
         adminService.deletePost(postId);
-        return "/post/list";
+        return "성공적으로 삭제되었습니다";
     }
 
     @GetMapping("/add")
@@ -96,7 +95,7 @@ public class AdminController {
         redirectAttributes.addAttribute("page", request.getSession().getAttribute("pageNumber"));
 
         User user = userFindService.findById(post.getAuthorId());
-        long postId = 0;
+        long postId;
 
         if (bindingResult.hasErrors()) {
             return "/admin/noticeAddForm";

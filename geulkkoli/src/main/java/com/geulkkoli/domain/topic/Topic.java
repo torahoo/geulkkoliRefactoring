@@ -25,10 +25,12 @@ public class Topic {
 
     @NotNull
     @ColumnDefault("2000-01-01")
+    @Column(name = "topic_useDate")
     private LocalDate useDate;
 
     @NotNull
     @ColumnDefault("2000-01-01")
+    @Column(name = "topic_upComingDate")
     private LocalDate upComingDate;
 
     @Builder

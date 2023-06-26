@@ -18,4 +18,6 @@ public interface TopicRepository extends JpaRepository<Topic, Long> {
     List<Topic> findTopicByUpComingDateBetween(LocalDate start, LocalDate end, Sort sort);
 
     Topic findTopicByUpComingDate(LocalDate time);
+
+    Topic findTopicByTopicName(String name);
 }

@@ -17,6 +17,7 @@ import com.geulkkoli.web.admin.ReportDto;
 import com.geulkkoli.web.post.dto.AddDTO;
 import com.geulkkoli.web.post.dto.EditDTO;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,6 +30,7 @@ import java.util.stream.Collectors;
 @Service
 @Transactional
 @RequiredArgsConstructor
+@Slf4j
 public class AdminServiceImpl implements AdminService {
 
     private final UserRepository userRepository;
@@ -108,14 +110,14 @@ public class AdminServiceImpl implements AdminService {
     }
 
     public List<DailyTopicDto> findWeeklyTopic() {
-        List<Topic> topics = topicRepository.findTopicByUpComingDateBetween(LocalDate.now(), LocalDate.now().plusDays(29),Sort.by(Sort.Direction.ASC, "upComingDate"));
+        List<Topic> topics = topicRepository.findTopicByUpComingDateBetween(LocalDate.now(), LocalDate.now().plusDays(29), Sort.by(Sort.Direction.ASC, "upComingDate"));
 
-        if(topics.size()<30){
+        if (topics.size() < 30) {
             topics = fillTopic(topics);
         }
 
         return topics.stream()
-                .limit(7)
+                .limit(10)
                 .map(a -> DailyTopicDto.builder()
                         .topic(a.getTopicName())
                         .date(a.getUpComingDate().toString())
@@ -123,13 +125,13 @@ public class AdminServiceImpl implements AdminService {
                 .collect(Collectors.toList());
     }
 
-    public List<Topic> fillTopic(List<Topic> topics){
-        Set<Topic> topicHashSet = new HashSet<>(topics);
-        for (int i = 0; i < 30 ; i++) {
-            if(topics.size()==i||!topics.get(i).getUpComingDate().isEqual(LocalDate.now().plusDays(i))){
+
+    public List<Topic> fillTopic(List<Topic> topics) {
+        for (int i = 0; i < 30; i++) {
+            if (topics.size() == i || !topics.get(i).getUpComingDate().isEqual(LocalDate.now().plusDays(i))) {
                 Topic topic = topicRepository.findTopicByUseDateBefore(LocalDate.now().minusDays(30));
-                if(!topics.contains(topic)){
-                    topics.add(i,topic);
+                if (!topics.contains(topic)) {
+                    topics.add(i, topic);
                     topics.get(i).settingUpComingDate(LocalDate.now().plusDays(i));
                 } else {
                     i--;
@@ -138,5 +140,19 @@ public class AdminServiceImpl implements AdminService {
         }
         topics.sort(Comparator.comparing(Topic::getUpComingDate));
         return topics;
+    }
+
+    public void updateTopic(DailyTopicDto topic) {
+        Topic findTopic = topicRepository.findTopicByUpComingDate(LocalDate.parse(topic.getDate()));
+        findTopic.settingUpComingDate(LocalDate.of(2000,1,1));
+
+        Topic updateTopic = topicRepository.findTopicByTopicName(topic.getTopic());
+
+        if(Objects.isNull(updateTopic)){
+            updateTopic = Topic.builder().topicName(topic.getTopic()).build();
+        }
+
+        updateTopic.settingUpComingDate(LocalDate.parse(topic.getDate()));
+        topicRepository.save(updateTopic);
     }
 }
