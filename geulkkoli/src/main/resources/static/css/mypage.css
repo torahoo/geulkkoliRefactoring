@@ -77,6 +77,8 @@ main {
 .private-page-name {
     display: flex;
     flex-direction: column;
+    justify-content: center;
+    align-items: center
 }
 
 @media (max-width: 981px) {
