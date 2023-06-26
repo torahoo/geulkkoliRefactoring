@@ -7,6 +7,13 @@
     <link href="../css/bootstrap.min.css"
           th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
     <link rel="stylesheet" href="/css/post.css">
+
+    <!-- wysiwyg editor summernote -->
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <link href="/summernote/summernote-lite.css" rel="stylesheet">
+    <script src="/summernote/summernote-lite.js"></script>
+    <!-- wysiwyg editor summernote -->
+
     <title>게시글 추가 폼</title>
 </head>
 <body>
@@ -95,32 +102,55 @@
 
 <script type="text/javascript" th:inline="javascript">
 
-    window.onload = function () {
+    $(document).ready(function() {
 
         const user = encodeURIComponent([[${#authentication.principal.nickName}]]);
-        console.log('user =' + user);
+
+        function imageUpload(files, editor) {
+            const data = new FormData();
+            data.append('file', files);
+            $.ajax({
+                enctype: 'multipart/form-data',
+                processData: false,
+                contentType: false,
+                data: data,
+                type: 'POST',
+                url: '/post/upload-file',
+                success: function (url) {
+                    $(editor).summernote('insertImage', url);
+                }
+            });
+        }
+
+        $('#postBody').summernote({
+            height: 300,
+            callbacks: {
+                onImageUpload: function (files) {
+                    imageUpload(files[0], this);
+                },
+                onChange: function (e) {
+                    window.localStorage.setItem(user+'PostBody', $('#postBody').summernote('code'));
+                },
+            }
+        });
+
         const title = document.getElementById('title');
         const postBody = document.getElementById('postBody');
 
         if(getCookie(user) == 'done') {
-            title.value = window.localStorage.removeItem(user+'Title')
-            postBody.value = window.localStorage.removeItem(user+'PostBody');
+            window.localStorage.removeItem(user+'Title');
+            window.localStorage.removeItem(user+'PostBody');
 
             fetch("/post/savedone");
         }
 
-        console.log('불러오기 > ' + getCookie(user))
         title.value = window.localStorage.getItem(user+'Title');
-        postBody.value = window.localStorage.getItem(user+'PostBody');
+        $('#postBody').summernote('code', window.localStorage.getItem(user + 'PostBody'));
 
         title.addEventListener('keyup', function () {
             window.localStorage.setItem(user+'Title', title.value);
         })
-
-        postBody.addEventListener('keyup', function () {
-            window.localStorage.setItem(user+'PostBody', postBody.value);
-        })
-    }
+    });
 
 </script>
 <script src="/js/cookie.js"></script>

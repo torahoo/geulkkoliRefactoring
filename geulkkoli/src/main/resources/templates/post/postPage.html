@@ -71,10 +71,10 @@
 
     </div>
 
+    <hr class="my-4">
     <div class="mb-3">
-        <label for="postBody">내용</label>
-        <textarea id="postBody" name="postBody" class="form-control"
-                  th:text="${post.postBody}" rows="8" readonly></textarea>
+        <div id="postBody" name="postBody"
+             th:utext="${post.postBody}"></div>
     </div>
 
     <div class="mb-3">
@@ -92,68 +92,47 @@
         <div sec:authorize="hasRole('USER')"
              th:with="userNickName=${#authentication.principal.nickName}">
             <div class="col">
+
                 <button class="w-100 btn btn-primary" onclick="location.href='postUpdateForm.html'"
                         th:onclick="|location.href='@{/post/update/{postId}(postId=${post.postId},searchType=${searchType},searchWords=${searchWords})}'|"
                         th:if="${#strings.equals(authorUser.nickName, userNickName)}"
                         type="button">게시글 수정
                 </button>
+
             </div>
 
             <!-- Button trigger modal -->
             <div class="col">
-
                 <button type="button" class="w-100 btn btn-primary" data-bs-toggle="modal" data-bs-target="#deletePost"
                         th:if="${#strings.equals(authorUser.nickName, userNickName)}">삭제
                 </button>
-
-
-
-            </div>
-        </div>
-
-        <!-- admin 수정/삭제 버튼 -->
-        <div sec:authorize="hasRole('ADMIN')"
-             th:with="userNickName=${#authentication.principal.nickName}">
-            <div class="col">
-                <button class="w-100 btn btn-primary" onclick="location.href='postUpdateForm.html'"
-                        th:onclick="|location.href='@{/admin/update/{postId}(postId=${post.postId},searchType=${searchType},searchWords=${searchWords})}'|"
-                        type="button">수정
-                </button>
             </div>
 
-            <!-- Button trigger modal -->
-            <div class="col">
-                <button type="button" class="w-100 btn btn-danger" data-bs-toggle="modal" data-bs-target="#deletePost">삭제
-                </button>
-            </div>
-        </div>
-
-        <!-- Modal -->
-        <div class="modal fade" id="deletePost" tabindex="-1" aria-labelledby="deletePostLabel" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="deletePostLabel">삭제하시려면 밑의 글을 따라 치세요.</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        <div>
-                            <label for="post-Title">제목</label>
-                            <input type="text" id="post-Title" name="post-Title" class="form-control"
-                                   value="제목1" th:value="${post.title}" readonly>
-                            <input type="text" id="post-Compare" name="post-Compare" class="form-control">
+            <!-- Modal -->
+            <div class="modal fade" id="deletePost" tabindex="-1" aria-labelledby="deletePostLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="deletePostLabel">삭제하시려면 밑의 글을 따라 치세요.</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
-                        <button id="deletePostButton" type="button" class="btn btn-primary">삭제</button>
+                        <div class="modal-body">
+                            <div>
+                                <label for="post-Title">제목</label>
+                                <input type="text" id="post-Title" name="post-Title" class="form-control"
+                                       value="제목1" th:value="${post.title}" readonly>
+                                <input type="text" id="post-Compare" name="post-Compare" class="form-control">
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
+                            <button id="deletePostButton" type="button" class="btn btn-primary">삭제</button>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-
-
 
     <div class="col">
         <button class="w-100 btn btn-secondary" onclick="location.href='postList.html'"
