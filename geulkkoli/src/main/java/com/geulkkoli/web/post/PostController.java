@@ -65,7 +65,7 @@ public class PostController {
         String src = "/imageFile/" + fileName;
 
         File uploadDir = new File(uploadPath);
-        if(!uploadDir.exists())
+        if (!uploadDir.exists())
             uploadDir.mkdir();
 
         File uploadDirFile = new File(uploadPath + fileName);
@@ -91,9 +91,9 @@ public class PostController {
     // 게시판 리스트 html로 이동
     @GetMapping("/list")
     public String postList(@PageableDefault(size = 5, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable,
-                           Model model,
                            @RequestParam(defaultValue = "") String searchType,
-                           @RequestParam(defaultValue = "") String searchWords) {
+                           @RequestParam(defaultValue = "") String searchWords, Model model) {
+        log.info("searchType: {}, searchWords: {}", searchType, searchWords);
         PagingDTO pagingDTO = PagingDTO.listDTOtoPagingDTO(postHashTagService.searchPostsListByHashTag(pageable, searchType, searchWords));
         model.addAttribute("page", pagingDTO);
         searchDefault(model, searchType, searchWords);
@@ -115,18 +115,18 @@ public class PostController {
         redirectAttributes.addAttribute("page", request.getSession().getAttribute("pageNumber"));
 
         User user = userFindService.findById(post.getAuthorId());
-       try {
+        try {
             if (bindingResult.hasErrors()) {
                 return "/post/postAddForm";
             }
         } catch (IllegalArgumentException e) {
-            bindingResult.rejectValue("tagCategory", "Tag.Required", new String[]{e.getMessage()},e.toString());
+            bindingResult.rejectValue("tagCategory", "Tag.Required", new String[]{e.getMessage()}, e.toString());
             e.getStackTrace();
         } catch (AdminTagAccessDenied e) {
-            bindingResult.rejectValue("tagListString", "Tag.Denied", new String[]{e.getMessage()},e.toString());
+            bindingResult.rejectValue("tagListString", "Tag.Denied", new String[]{e.getMessage()}, e.toString());
             e.getStackTrace();
         }
-        long postId=postService.savePost(post, user).getPostId();
+        long postId = postService.savePost(post, user).getPostId();
         redirectAttributes.addAttribute("postId", postId);
         response.addCookie(new Cookie(URLEncoder.encode(post.getNickName(), "UTF-8"), "done"));
         return "redirect:/post/read/{postId}";
@@ -149,7 +149,7 @@ public class PostController {
         if (Objects.isNull(authUser)) {
             log.info("로그인을 안한 사용자 접속");
             model.addAttribute("post", postPage);
-            model.addAttribute("pageNumber",page);
+            model.addAttribute("pageNumber", page);
             model.addAttribute("commentList", postPage.getCommentList());
             model.addAttribute("authorUser", userProfile);
             model.addAttribute("checkFavorite", checkFavorite);
@@ -170,7 +170,7 @@ public class PostController {
 
         model.addAttribute("followResult", followResult);
         model.addAttribute("post", postPage);
-        model.addAttribute("pageNumber",page);
+        model.addAttribute("pageNumber", page);
         model.addAttribute("commentList", postPage.getCommentList());
         model.addAttribute("authorUser", authorUser);
         model.addAttribute("checkFavorite", checkFavorite);
@@ -187,7 +187,7 @@ public class PostController {
                                    @RequestParam(defaultValue = "") String searchWords) {
         EditDTO postPage = EditDTO.toDTO(postService.findById(postId));
         model.addAttribute("editDTO", postPage);
-        model.addAttribute("pageNumber",page);
+        model.addAttribute("pageNumber", page);
         searchDefault(model, searchType, searchWords);
         return "/post/postEditForm";
     }
@@ -205,10 +205,10 @@ public class PostController {
             }
             postService.updatePost(postId, updateParam);
         } catch (IllegalArgumentException e) {
-            bindingResult.rejectValue("tagCategory", "Tag.Required", new String[]{e.getMessage()},e.toString());
+            bindingResult.rejectValue("tagCategory", "Tag.Required", new String[]{e.getMessage()}, e.toString());
             e.getStackTrace();
         } catch (AdminTagAccessDenied e) {
-            bindingResult.rejectValue("tagListString", "Tag.Denied", new String[]{e.getMessage()},e.toString());
+            bindingResult.rejectValue("tagListString", "Tag.Denied", new String[]{e.getMessage()}, e.toString());
             e.getStackTrace();
         }
         if (bindingResult.hasErrors()) {

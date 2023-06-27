@@ -188,7 +188,6 @@
 <script th:inline="javascript">
     var principal = [[${#authentication.principal}]];
     var nickName = "";
-    var validName = "";
     if (principal !== "anonymousUser") {
         document.getElementById("auth-user-nickName").style.display = "none";
         nickName = document.getElementById("auth-user-nickName").innerText;

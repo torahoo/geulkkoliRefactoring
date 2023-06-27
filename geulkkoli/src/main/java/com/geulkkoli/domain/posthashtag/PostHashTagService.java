@@ -46,7 +46,6 @@ public class PostHashTagService {
         List<HashTag> tags = hashTagSeparator(searchWords);
 
         List<Post> posts = searchPostContainAllHashTags(tags);
-
         List<Post> resultList;
         switch (searchType) {
             case "제목":

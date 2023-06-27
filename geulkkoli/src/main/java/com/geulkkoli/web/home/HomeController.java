@@ -7,6 +7,7 @@ import com.geulkkoli.domain.posthashtag.PostHashTagService;
 import com.geulkkoli.domain.user.User;
 import com.geulkkoli.domain.user.service.UserFindService;
 import com.geulkkoli.domain.user.service.UserService;
+import com.geulkkoli.web.post.dto.PostRequestListDTO;
 import com.geulkkoli.web.user.ResponseMessage;
 import com.geulkkoli.web.user.dto.EmailCheckForJoinDto;
 import com.geulkkoli.web.user.dto.JoinFormDto;
@@ -27,6 +28,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 import java.util.Optional;
 
 @Controller
@@ -52,10 +54,13 @@ public class HomeController {
     @GetMapping
     public String home(@PageableDefault(size = 5, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable,
                        Model model,
-                       @RequestParam(defaultValue = "") String searchType,
-                       @RequestParam(defaultValue = "") String searchWords) {
-
-       model.addAttribute("list", postHashTagService.searchPostsListByHashTag(pageable, searchType, searchWords).toList());
+                       @RequestParam(defaultValue = "해시태그") String searchType,
+                       @RequestParam(defaultValue = "일반") String searchWords) {
+        log.info("searchType : {}", searchType);
+        log.info("searchWords : {}", searchWords);
+        List<PostRequestListDTO> list = postHashTagService.searchPostsListByHashTag(pageable, searchType, searchWords).toList();
+        log.info("list : {}", list);
+        model.addAttribute("list", list);
 
         return "/home";
     }
