@@ -1,4 +1,4 @@
-package com.geulkkoli.application.social;
+package com.geulkkoli.application.social.service;
 
 import com.geulkkoli.domain.social.SocialInfo;
 import com.geulkkoli.domain.social.SocialInfoFindService;

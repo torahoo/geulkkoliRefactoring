@@ -9,7 +9,6 @@ import com.geulkkoli.domain.post.service.PostService;
 import com.geulkkoli.domain.posthashtag.PostHashTagService;
 import com.geulkkoli.domain.user.User;
 import com.geulkkoli.domain.user.service.UserFindService;
-import com.geulkkoli.domain.user.service.UserService;
 import com.geulkkoli.web.comment.dto.CommentBodyDTO;
 import com.geulkkoli.web.follow.dto.FollowResult;
 import com.geulkkoli.web.post.dto.AddDTO;
@@ -18,8 +17,8 @@ import com.geulkkoli.web.post.dto.PageDTO;
 import com.geulkkoli.web.post.dto.PagingDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.context.MessageSource;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.MessageSource;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
@@ -39,9 +38,6 @@ import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
-import java.nio.file.AccessDeniedException;
-import java.util.Locale;
-import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -53,10 +49,8 @@ public class PostController {
 
     private final PostService postService;
     private final UserFindService userFindService;
-    private final CommentsService commentsService;
     private final FavoriteService favoriteService;
     private final PostHashTagService postHashTagService;
-    private final MessageSource messageSource;
     private final FollowFindService followFindService;
     @Value("${comm.uploadPath}")
     private String uploadPath;
@@ -121,12 +115,10 @@ public class PostController {
         redirectAttributes.addAttribute("page", request.getSession().getAttribute("pageNumber"));
 
         User user = userFindService.findById(post.getAuthorId());
-        long postId = 0;
-        try {
+       try {
             if (bindingResult.hasErrors()) {
                 return "/post/postAddForm";
             }
-             postId=postService.savePost(post, user).getPostId();
         } catch (IllegalArgumentException e) {
             bindingResult.rejectValue("tagCategory", "Tag.Required", new String[]{e.getMessage()},e.toString());
             e.getStackTrace();
@@ -134,6 +126,7 @@ public class PostController {
             bindingResult.rejectValue("tagListString", "Tag.Denied", new String[]{e.getMessage()},e.toString());
             e.getStackTrace();
         }
+        long postId=postService.savePost(post, user).getPostId();
         redirectAttributes.addAttribute("postId", postId);
         response.addCookie(new Cookie(URLEncoder.encode(post.getNickName(), "UTF-8"), "done"));
         return "redirect:/post/read/{postId}";

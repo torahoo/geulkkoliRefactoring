@@ -1,4 +1,4 @@
-package com.geulkkoli.application.social;
+package com.geulkkoli.application.social.service;
 
 import com.geulkkoli.application.security.AccountStatus;
 import com.geulkkoli.application.security.Role;
@@ -45,6 +45,7 @@ public class CustomOauth2UserService extends AbstractOauth2UserService implement
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
         OAuth2UserService<OAuth2UserRequest, OAuth2User> oAuth2UserService = new DefaultOAuth2UserService();
         OAuth2User oAuth2User = oAuth2UserService.loadUser(userRequest);
+
         ProviderUserRequest providerUserRequest = new ProviderUserRequest(userRequest.getClientRegistration(), oAuth2User);
         DelegateOAuth2RequestConverter delegateOAuth2RequestConverter = new DelegateOAuth2RequestConverter();
         ProviderUser providerUser = delegateOAuth2RequestConverter.convert(providerUserRequest);
@@ -55,7 +56,7 @@ public class CustomOauth2UserService extends AbstractOauth2UserService implement
         boolean isConnected = TRUE.equals(isConnected(providerUser.getId()));
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         // 로그인 상태에서 깉은 이메일을 가진 소셜 계정 연동한 기록이 아예 없는 경우
-        if (!Objects.isNull(authentication) && isSignUp && !isAssociated) {
+        if (Objects.nonNull(authentication) && isSignUp && !isAssociated) {
             User user = userInfo(providerUser.getEmail());
             UserModelDto model = singedUpUserToModel(user);
             connect(providerUser.getId(), providerUser.getProvider(), user);
@@ -64,12 +65,12 @@ public class CustomOauth2UserService extends AbstractOauth2UserService implement
         }
 
         // 로그인 상태에서 이메일이 다른 소셜 계정이 연동되어 있지 않은 경우
-        if (!Objects.isNull(authentication) && !isSignUp && !isAssociated) {
+        if (Objects.nonNull(authentication) && !isSignUp && !isAssociated) {
             return getoAuth2User(providerUser, authorities, authentication);
         }
 
         // 로그인한 상태에서 같은 이메일로 회원가입이 되어 있고 소셜 연동을 한 기록이 있고 소셜 연동을 유지하지 않은 경우
-        if (!Objects.isNull(authentication) && isSignUp && !isConnected) {
+        if (Objects.nonNull(authentication) && isSignUp && !isConnected) {
             CustomAuthenticationPrinciple principle = (CustomAuthenticationPrinciple) authentication.getPrincipal();
             reConnected(providerUser.getId(), providerUser.getProvider());
             User user = userInfo(principle.getUsername());
@@ -78,7 +79,8 @@ public class CustomOauth2UserService extends AbstractOauth2UserService implement
             return CustomAuthenticationPrinciple.from(model, authorities, AccountStatus.ACTIVE, providerUser.getAttributes(), SocialType.findByProviderName(providerUser.getProvider()));
         }
 
-        if (!Objects.isNull(authentication) && !isSignUp && isAssociated && !isConnected) {
+        // 로그인 상태에서 같은 이메일로 회원가입이 되어 있지 않고 소셜 연동을 한 기록이 있고 소셜 연동을 유지하지 않은 경우
+        if (Objects.nonNull(authentication) && !isSignUp && !isConnected) {
             CustomAuthenticationPrinciple principle = (CustomAuthenticationPrinciple) authentication.getPrincipal();
             reConnected(providerUser.getId(), providerUser.getProvider());
             User user = userInfo(principle.getUsername());

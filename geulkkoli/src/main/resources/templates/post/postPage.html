@@ -177,8 +177,10 @@
             </div>
         </div>
     </div>
-
-
+    <div sec:authorize="isFullyAuthenticated()">
+        <div id="auth-user-nickName" sec:authentication="principal.nickName">
+        </div>
+    </div>
 </div> <!-- /container -->
 
 <footer id="footer" th:include="footer"></footer>
@@ -188,8 +190,8 @@
     var nickName = "";
     var validName = "";
     if (principal !== "anonymousUser") {
-        document.getElementById("authuser-nickName").style.display = "none";
-        nickName = document.getElementById("authuser-nickName").innerText;
+        document.getElementById("auth-user-nickName").style.display = "none";
+        nickName = document.getElementById("auth-user-nickName").innerText;
     }
 
     const postId = [[${post.postId}]];
@@ -251,8 +253,7 @@
             method: 'POST',
             body: formData
         };
-        console.log("likeImage : " + likeImage);
-        console.log("disLikeImage : " + disLikeImage);
+
         const baseURL = "/favorite/";
         const URL = baseURL + "pressFavorite/" + postId;
         console.log(URL)
@@ -295,7 +296,12 @@
 
         // Perform necessary AJAX request
 
-        toggleFavorite();
+        // 자기 자신의 글이면 좋아요 함수를 실행하지 않는다.
+        nickName = document.getElementById("auth-user-nickName").innerText;
+        var author_nickName = document.querySelector("h6").innerText;
+        if (nickName !==  author_nickName) {
+            toggleFavorite();
+        }
     });
 
     document.getElementById("deletePostButton").addEventListener("click", deletePost);

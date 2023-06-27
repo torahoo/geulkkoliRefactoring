@@ -47,13 +47,13 @@
     </style>
 
 </head>
-<body class="container-fluid">
+<body>
 <div>
     <div th:replace="header :: header"></div>
-    <div class="container">
-        <em>메인 게시판</em>
+    <div class="d-flex justify-content-center" style="font-size: 20px">
+        글꼬리
     </div>
-    <div class="nav-wrapper">
+    <div class="d-flex justify-content-center">
         <div class="nav-content">
             <form id="search-form" th:action="@{/post/list}">
                 <div class="row">
@@ -99,28 +99,30 @@
             </form>
         </div>
     </div>
-    <div th:replace="sidenav :: nav"></div>
-    <div class="container" id="contentArea">
-        <div>
-            <table class="table table-striped">
-                <thead>
-                <tr>
-                    <th scope="col">제목</th>
-                    <th scope="col">닉네임</th>
-                    <th scope="col">날짜</th>
-                    <th scope="col">조회수</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr th:each="post : ${list}">
-                    <td><a th:href="@{|/post/read/${post.postId}|(page=${currentPage})}"
-                           th:text="${post.title}"></a></td>
-                    <td th:align="center" th:text="${post.nickName}"></td>
-                    <td th:align="center" th:text="${post.date}"></td>
-                    <td th:align="center" th:text="${post.postHits}"></td>
-                </tr>
-                </tbody>
-            </table>
+    <div class="d-flex">
+        <div th:replace="sidenav :: nav"></div>
+        <div class="align-self-stretch">
+                <div>
+                    <table class="table table-striped">
+                        <thead>
+                        <tr>
+                            <th scope="col">제목</th>
+                            <th scope="col">닉네임</th>
+                            <th scope="col">날짜</th>
+                            <th scope="col">조회수</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="post : ${list}">
+                            <td><a th:href="@{|/post/read/${post.postId}|(page=${currentPage})}"
+                                   th:text="${post.title}"></a></td>
+                            <td th:align="center" th:text="${post.nickName}"></td>
+                            <td th:align="center" th:text="${post.date}"></td>
+                            <td th:align="center" th:text="${post.postHits}"></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
         </div>
     </div>
 </div>

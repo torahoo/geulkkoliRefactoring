@@ -103,4 +103,5 @@ server:
     path: /error
     include-exception: false
     include-message: never
-
+comm:
+  uploadPath: /Users/choi/Desktop/Project/Upload

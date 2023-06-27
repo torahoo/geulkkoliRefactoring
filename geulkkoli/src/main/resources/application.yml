@@ -116,4 +116,4 @@ server:
     include-message: never
 
 comm:
-  uploadPath: C:/geulkkoliFile/
+  uploadPath: /Users/choi/Desktop/Project/Upload

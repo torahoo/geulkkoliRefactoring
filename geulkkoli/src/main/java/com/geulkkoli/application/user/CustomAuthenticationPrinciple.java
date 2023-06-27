@@ -168,5 +168,23 @@ public class CustomAuthenticationPrinciple implements UserDetails, OAuth2User {
         return Objects.hash(userName);
     }
 
-
+    @Override
+    public String toString() {
+        return "CustomAuthenticationPrinciple{" +
+                "userId='" + userId + '\'' +
+                ", userName='" + userName + '\'' +
+                ", password='" + password + '\'' +
+                ", isEnabled=" + isEnabled +
+                ", isAccountNonExpired=" + isAccountNonExpired +
+                ", isAccountNonLocked=" + isAccountNonLocked +
+                ", isCredentialsNonExpired=" + isCredentialsNonExpired +
+                ", authorities=" + authorities +
+                ", attributes=" + attributes +
+                ", userRealName='" + userRealName + '\'' +
+                ", nickName='" + nickName + '\'' +
+                ", phoneNo='" + phoneNo + '\'' +
+                ", gender='" + gender + '\'' +
+                ", socialType=" + socialType +
+                '}';
+    }
 }

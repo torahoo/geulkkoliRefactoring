@@ -26,7 +26,7 @@ public class AddDTO {
     @NotBlank
     private String nickName;
 
-    private String tagListString;
+    private String tagListString ="";
 
     @NotBlank
     private String tagCategory;

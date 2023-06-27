@@ -29,7 +29,7 @@
         <div>
             <form id="add" th:action th:object="${addDTO}" method="post">
                 <div class="mb-3">
-                    <label th:text="제목">제목</label>
+                    <label for="title" th:text="제목">제목</label>
                     <input class="form-control"
                            type="text"
                            id="title"
@@ -58,7 +58,7 @@
                 </div>
 
                 <div class="mb-3">
-                    <label th:text="내용">내용</label>
+                    <p th:text="내용">내용</p>
                     <textarea class="form-control"
                               th:field="*{postBody}" form="add"
                               rows="8"
@@ -67,26 +67,30 @@
                 </div>
 
                 <div class="mb-3">
-                    <label th:text="해시태그">해시태그</label>
-                    <input class="form-control"
-                           type="text"
-                           id="tagListString"
-                           th:field="*{tagListString}" form="add"
-                           rows="8" placeholder="#태그1 #태그2 ...">
+                    <label th:text="해시태그">해시태그
+                        <input class="form-control"
+                               type="text"
+                               id="tagListString"
+                               th:field="*{tagListString}" form="add"
+                               rows="8" placeholder="#태그1 #태그2 ...">
+                    </label>
                     <div class="field-error" th:errors="*{tagListString}">태그 오류</div>
+
                 </div>
 
                 <hr class="my-4">
                 <div class="row">
                     <div class="col">
                         <button class="w-100 btn btn-primary btn-lg"
-                                type="submit" id="submit" th:value="등록">등록</button>
+                                type="submit" id="submit" th:value="등록">등록
+                        </button>
                     </div>
                     <div class="col">
                         <button class="w-100 btn btn-primary btn-lg"
                                 type="button"
                                 th:onclick="|location.href='@{/post/list}'|"
-                                th:value="취소">취소</button>
+                                th:value="취소">취소
+                        </button>
                     </div>
                 </div>
             </form>
@@ -100,7 +104,7 @@
 
 <script type="text/javascript" th:inline="javascript">
 
-    $(document).ready(function() {
+    $(document).ready(function () {
 
         const user = encodeURIComponent([[${#authentication.principal.nickName}]]);
 
@@ -127,26 +131,25 @@
                     imageUpload(files[0], this);
                 },
                 onChange: function (e) {
-                    window.localStorage.setItem(user+'PostBody', $('#postBody').summernote('code'));
+                    window.localStorage.setItem(user + 'PostBody', $('#postBody').summernote('code'));
                 },
             }
         });
 
         const title = document.getElementById('title');
-        const postBody = document.getElementById('postBody');
 
-        if(getCookie(user) == 'done') {
-            window.localStorage.removeItem(user+'Title');
-            window.localStorage.removeItem(user+'PostBody');
+        if (getCookie(user) == 'done') {
+            window.localStorage.removeItem(user + 'Title');
+            window.localStorage.removeItem(user + 'PostBody');
 
             fetch("/post/savedone");
         }
 
-        title.value = window.localStorage.getItem(user+'Title');
+        title.value = window.localStorage.getItem(user + 'Title');
         $('#postBody').summernote('code', window.localStorage.getItem(user + 'PostBody'));
 
         title.addEventListener('keyup', function () {
-            window.localStorage.setItem(user+'Title', title.value);
+            window.localStorage.setItem(user + 'Title', title.value);
         })
     });
 

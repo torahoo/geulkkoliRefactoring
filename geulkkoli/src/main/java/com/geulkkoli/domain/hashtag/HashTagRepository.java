@@ -7,7 +7,7 @@ import java.util.List;
 
 @Repository
 public interface HashTagRepository extends JpaRepository<HashTag, Long>, HashTagRepositoryCustom {
-    HashTag findHashTagByHashTagName(String tagName);
+    HashTag findByHashTagName(String tagName);
     HashTag findHashTagByHashTagId(Long hashTagId);
     List<HashTag> findHashTagsByHashTagNameContaining(String tagName);
 

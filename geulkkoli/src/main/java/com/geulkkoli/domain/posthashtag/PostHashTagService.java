@@ -48,7 +48,6 @@ public class PostHashTagService {
         List<Post> posts = searchPostContainAllHashTags(tags);
 
         List<Post> resultList;
-
         switch (searchType) {
             case "제목":
                 resultList = posts.stream()
@@ -98,15 +97,17 @@ public class PostHashTagService {
     public List<HashTag> hashTagSeparator(String searchWords) {
         Set<HashTag> hashTags = new LinkedHashSet<>();
         String[] splitter = searchWords.split("#");
+        log.info("splitter: {}", Arrays.stream(splitter).collect(Collectors.toUnmodifiableList()));
         for (int i = 1; i < splitter.length; i++) {
             String stripper = splitter[i].strip();
-
-            HashTag hashTagByHashTagName = hashTagRepository.findHashTagByHashTagName(stripper);
-
+            String trim = stripper.trim();
+            log.info("trim: {}", trim);
+            HashTag hashTagByHashTagName = hashTagRepository.findByHashTagName(trim);
+            log.info("hashTagByHashTagName: {}", hashTagByHashTagName);
             if (hashTagByHashTagName != null) {
                 hashTags.add(hashTagByHashTagName);
             } else {
-                HashTag save = hashTagRepository.save(new HashTag(stripper, HashTagType.GENERAL));
+                HashTag save = hashTagRepository.save(new HashTag(trim, HashTagType.GENERAL));
                 hashTags.add(save);
             }
         }
@@ -122,7 +123,7 @@ public class PostHashTagService {
 
     //해당 태그를 가진 게시글을 찾아냅니다.
     public List<Post> searchPostContainAllHashTags(List<HashTag> tags) {
-        HashTag tag = tags.isEmpty() ? hashTagRepository.findHashTagByHashTagName("일반글") : tags.get(0);
+        HashTag tag = tags.isEmpty() ? hashTagRepository.findByHashTagName("일반") : tags.get(0);
 
         List<Post> posts = new ArrayList<>();
 

@@ -43,7 +43,7 @@ public class PostService {
                 .orElseThrow(() -> new NoSuchElementException("No post found id matches:" + postId));
     }
 
-    @Transactional(readOnly = true)
+    @Transactional
     //게시글 상세보기만을 담당하는 메서드
     public Post showDetailPost(Long postId) {
         postRepository.updateHits(postId);
@@ -58,7 +58,7 @@ public class PostService {
                 post.getPostId(),
                 post.getTitle(),
                 post.getNickName(),
-               String.valueOf(post.getUpdatedAt()),
+                String.valueOf(post.getUpdatedAt()),
                 post.getPostHits()
         ));
     }
@@ -91,10 +91,14 @@ public class PostService {
     }
 
     @Transactional
-    public Post savePost(AddDTO post, User user) {
-        Post writePost = user.writePost(post);
+    public Post savePost(AddDTO addDTO, User user) {
+        Post writePost = user.writePost(addDTO);
         Post save = postRepository.save(writePost);
-        List<HashTag> hashTags = postHashTagService.hashTagSeparator("#일반글" + post.getTagListString() + post.getTagCategory() + post.getTagStatus());
+        log.info("addDTO.getTagListString() : " + addDTO.getTagListString());
+        log.info("addDTO.getTagCategory() : " + addDTO.getTagCategory());
+        log.info("addDTO.getTagStatus() : " + addDTO.getTagStatus());
+        List<HashTag> hashTags = postHashTagService.hashTagSeparator("#일반" + addDTO.getTagListString() + addDTO.getTagCategory()+ addDTO.getTagStatus());
+        log.info("hashTags : " + hashTags);
         postHashTagService.validatePostHasType(hashTags);
         postHashTagService.addHashTagsToPost(save, hashTags);
 
@@ -112,7 +116,7 @@ public class PostService {
                 post.deletePostHashTag(postHashTags.get(i).getPostHashTagId());
             }
             List<HashTag> hashTags = postHashTagService.hashTagSeparator("#일반글"
-                    +updateParam.getTagListString()+updateParam.getTagCategory()+updateParam.getTagStatus());
+                    + updateParam.getTagListString() + updateParam.getTagCategory() + updateParam.getTagStatus());
             postHashTagService.validatePostHasType(hashTags);
             postHashTagService.addHashTagsToPost(post, hashTags);
         }

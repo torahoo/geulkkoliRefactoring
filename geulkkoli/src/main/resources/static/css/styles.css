@@ -7458,6 +7458,7 @@ textarea.form-control-lg {
 
 .align-self-stretch {
   align-self: stretch !important;
+  width: 1000px;
 }
 
 .order-first {

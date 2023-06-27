@@ -2,7 +2,7 @@ package com.geulkkoli.application.security.config;
 
 import com.geulkkoli.application.security.handler.LoginFailureHandler;
 import com.geulkkoli.application.security.handler.LoginSuccessHandler;
-import com.geulkkoli.application.social.CustomOauth2UserService;
+import com.geulkkoli.application.social.service.CustomOauth2UserService;
 import com.geulkkoli.application.user.service.UserSecurityService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;

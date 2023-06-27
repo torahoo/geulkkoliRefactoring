@@ -55,7 +55,7 @@ public class HomeController {
                        @RequestParam(defaultValue = "") String searchType,
                        @RequestParam(defaultValue = "") String searchWords) {
 
-        model.addAttribute("list", postHashTagService.searchPostsListByHashTag(pageable, searchType, searchWords).toList());
+       model.addAttribute("list", postHashTagService.searchPostsListByHashTag(pageable, searchType, searchWords).toList());
 
         return "/home";
     }
