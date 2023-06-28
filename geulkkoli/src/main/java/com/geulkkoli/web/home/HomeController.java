@@ -46,7 +46,6 @@ public class HomeController {
 
 
     private final PostHashTagService postHashTagService;
-    private final PostService postService;
     private final EmailService emailService;
     private final UserFindService userFindService;
     private final UserService userService;
@@ -60,8 +59,8 @@ public class HomeController {
 
         model.addAttribute("list", postHashTagService.searchPostsListByHashTag(pageable, searchType, searchWords).toList());
         model.addAttribute("notificationList", postHashTagService.searchPostsListByHashTag(pageable, searchType, searchWords+"#공지글").toList());
+        log.info("now : {}", LocalDate.now());
         model.addAttribute("todayTopic", postHashTagService.showTodayTopic(LocalDate.now()));
-
         return "/home";
     }
 

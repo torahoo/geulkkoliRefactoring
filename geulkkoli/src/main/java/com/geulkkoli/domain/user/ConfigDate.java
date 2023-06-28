@@ -17,21 +17,9 @@ public abstract class ConfigDate {
     @CreatedDate
     private String signUpDate;
 
-    // 추후 제거
-    @Transient
-    private LocalDate calendarData;
-
     @PrePersist
     public void onPrePersist() {
-        if (calendarData != null) {
-            this.signUpDate = calendarData.format(DateTimeFormatter.ofPattern("yyyy. MM. dd"));
-        } else {
             this.signUpDate= LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy. MM. dd"));
-        }
-    }
 
-    // 달력 잔디 심기용 달력 시작 기준 날짜 필요 (추후 제거)
-    public void setCreatedAtForCalendarTest(LocalDate localDate) {
-        calendarData = localDate;
     }
 }

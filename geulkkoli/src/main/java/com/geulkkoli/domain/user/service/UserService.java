@@ -54,18 +54,6 @@ public class UserService {
         return userRepository.save(user);
     }
 
-    // 가입 날짜 임의 추가용 메소드 (추후 제거)
-    @Transactional
-    public User signUp(JoinFormDto form, LocalDate localDate) {
-        User user = form.toEntity(PasswordService.passwordEncoder);
-        user.setCreatedAtForCalendarTest(localDate);
-        userRepository.save(user);
-
-        RoleEntity roleEntity = user.addRole(Role.USER);
-        roleRepository.save(roleEntity);
-        return user;
-    }
-
     /*
      * 관리자 실험을 위한 임시 관리자 계정 추가용 메서드*/
     @Transactional

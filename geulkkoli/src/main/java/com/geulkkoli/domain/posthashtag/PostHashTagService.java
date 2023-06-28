@@ -5,23 +5,18 @@ import com.geulkkoli.domain.hashtag.HashTagRepository;
 import com.geulkkoli.domain.hashtag.HashTagType;
 import com.geulkkoli.domain.post.AdminTagAccessDenied;
 import com.geulkkoli.domain.post.Post;
-import com.geulkkoli.web.post.dto.PostRequestListDTO;
-import com.geulkkoli.domain.post.PostRepository;
-import com.geulkkoli.domain.post.PostRepositoryCustom;
 import com.geulkkoli.domain.topic.Topic;
 import com.geulkkoli.domain.topic.TopicRepository;
 import com.geulkkoli.web.admin.DailyTopicDto;
-import com.geulkkoli.web.post.dto.ListDTO;
+import com.geulkkoli.web.post.dto.PostRequestListDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.dao.PermissionDeniedDataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.nio.file.AccessDeniedException;
 import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -132,8 +127,6 @@ public class PostHashTagService {
 
     //해당 태그를 가진 게시글을 찾아냅니다.
     public List<Post> searchPostContainAllHashTags(List<HashTag> tags) {
-        HashTag tag = tags.isEmpty() ? hashTagRepository.findByHashTagName("일반") : tags.get(0);
-
         List<Post> posts = new ArrayList<>();
 
         if (tags.isEmpty()) {
@@ -183,11 +176,10 @@ public class PostHashTagService {
     public DailyTopicDto showTodayTopic (LocalDate date){
         Topic todayTopic = topicRepository.findTopicByUpComingDate(date);
         todayTopic.settingUseDate(date);
-        DailyTopicDto dailyTopicDto = DailyTopicDto.builder()
+        return DailyTopicDto.builder()
                 .date(date.toString())
                 .topic(todayTopic.getTopicName())
                 .build();
-        return dailyTopicDto;
     }
 
 

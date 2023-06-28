@@ -35,7 +35,6 @@ class PostFindServiceTest {
                 .build();
 
         LocalDate signUpDate = LocalDate.of(2022, 2, 2);
-        user.setCreatedAtForCalendarTest(signUpDate);
 
         userRepository.save(user);
 

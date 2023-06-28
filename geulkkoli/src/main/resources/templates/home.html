@@ -11,9 +11,6 @@
     <link th:href="@{/css/nav.css}" rel="stylesheet">
     <style>
 
-        .container {
-            max-width: 1200px;
-        }
 
         a {
             text-decoration: none !important;
@@ -33,10 +30,6 @@
 
         thead {
             text-align: center;
-        }
-
-        .nav-wrapper {
-            display: flex;
         }
 
         .nav-content {
@@ -101,19 +94,6 @@
     </div>
     <div class="d-flex">
         <div th:replace="sidenav :: nav"></div>
-        <div class="header" style="text-align: center">
-            <h2>오늘의 주제</h2>
-            <h3 th:text="${todayTopic.getTopic()}">todayTopic</h3>
-            <h4 th:text="${todayTopic.getDate()}">todayTopicDate</h4>
-        </div>
-        <div class="col" style="float: left">
-            <h4>공지사항</h4>
-        </div>
-        <div class="col">
-            <Button class="btn btn-outline-secondary" style="float: right"
-                    th:onclick="|location.href='@{/post/list?page=0&searchType=해시태그&searchWords=공지글}'|">
-            </Button>
-        </div>
         <div class="align-self-stretch">
             <div>
                 <table class="table table-striped">

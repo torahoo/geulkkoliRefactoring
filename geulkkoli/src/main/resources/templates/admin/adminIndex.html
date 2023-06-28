@@ -10,17 +10,20 @@
 <body>
 <header id="header"></header>
 <div th:include="header"></div>
-
-<div class="row no-gutters m-5 col-12 col-lg-3 col-md-3 col-sm-12 p-0">
-    <button type="button"
-            onclick="location.href='/admin/reportedPostList'"
-            class="btn btn-primary">신고받은 게시글
-    </button>
-    <button type="button"
-            onclick="location.href='/admin/add'"
-            class="btn btn-primary">공지사항 작성
-    </button>
-</div>
+<form id="search-form">
+    <div class="row">
+        <div class="col-12">
+            <div class="row no-gutters m-5 ">
+                <div class="col-lg-3 col-md-3 col-sm-12 p-0">
+                    <button type="button"
+                            onclick="location.href='/admin/reportedPostList'"
+                            class="btn btn-primary">신고받은 게시글
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
 
 <table class="table table-striped">
     <thead>
@@ -32,9 +35,9 @@
     <tbody>
     <tr th:each="item : ${data}">
         <td th:text="${item.getDate()}"></td>
-        <td th:text="${item.getTopic}" contenteditable="true"
+        <td th:text="${item.theme}" contenteditable="true"
             th:attr="data-id=${item.date}"
-            th:onblur="updateTheme([[${item.getDate}]],this.innerText)">
+            id="themeInput">
         </td>
     </tr>
     </tbody>
@@ -42,22 +45,29 @@
 
 <footer id="footer"></footer>
 <div th:include="footer"></div>
+<script>
+    const themeCell = document.getElementById('themeInput');
+    themeCell.addEventListener('blur', function() {
+        const date = this.getAttribute('data-id');
+        const theme = this.innerText;
+        updateTheme(date, theme);
+    });
 
-</body>
-
-<script th:inline="javascript">
-    function updateTheme(date, topic) {
+    function updateTheme(date, theme) {
         var xhr = new XMLHttpRequest();
         xhr.open("POST", "/admin/calendar/update");
         xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
-        xhr.send(JSON.stringify({date: date, topic: topic}));
+        xhr.send(JSON.stringify({date: date, theme: theme}));
         xhr.onload = function () {
             if (xhr.status === 200) {
                 console.log('Updated successfully.');
             } else {
-                console.error('error with : ' + date + " and " + topic);
+                console.error('An error occurred: ' + xhr.status);
+                console.error('error with : ' + date + " and "+theme);
             }
         };
+
     }
 </script>
+</body>
 </html>

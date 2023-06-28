@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+ <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
@@ -47,6 +47,7 @@
                                     <option th:selected="${searchType}=='제목'">제목</option>
                                     <option th:selected="${searchType}=='본문'">본문</option>
                                     <option th:selected="${searchType}=='닉네임'">닉네임</option>
+                                    <option th:selected="${searchType}=='해시태그'">해시태그</option>
                                 </select>
                             </div>
                             <div class="col-lg-8 col-md-6 col-sm-12 p-0">
@@ -127,7 +128,7 @@
         </div>
 
         <div class="p-2">
-            <Button class="btn btn-primary btn-group-sm" style="float: right"
+            <Button class="btn btn-primary btn-sm" style="float: right"
                     th:onclick="|location.href='@{/post/add}'|"
                     th:text="'글 쓰기'" type="button">글쓰기
             </Button>
@@ -147,5 +148,4 @@
 
 </script>
 <script src="/js/pagination.js"></script>
-</body>
 </html>

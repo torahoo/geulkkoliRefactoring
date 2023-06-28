@@ -11,9 +11,7 @@ header {
     padding: 0 20px;
     box-sizing: border-box;
 }
-.p-2{
-    margin-top: 10px;
-}
+
 #btn-all {
     margin-top: 15px;
     display: flex;

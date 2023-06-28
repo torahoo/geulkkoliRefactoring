@@ -1,6 +1,5 @@
 package com.geulkkoli.web.follow;
 
-import com.geulkkoli.application.follow.FollowInfo;
 import com.geulkkoli.application.follow.FollowInfos;
 import com.geulkkoli.application.user.CustomAuthenticationPrinciple;
 import com.geulkkoli.domain.follow.service.FollowFindService;
@@ -42,6 +41,7 @@ public class FollowApiController {
             followService.follow(followee, follower);
             return ResponseEntity.ok().build();
         } catch (NoSuchElementException e) {
+            log.error("NoSuchElementException: {}", e.getMessage());
             return ResponseEntity.status(404).build();
         }
     }
@@ -52,40 +52,42 @@ public class FollowApiController {
         try {
             User followee = userFindService.findById(Long.parseLong(userId));
             log.info("followee: {}", followee);
-            User follower = userFindService.findUserByEmail(authUser.getUserName());
+            User follower = userFindService.findByEmail(authUser.getUserName()).orElseThrow(() -> new NoSuchElementException("해당 유저가 없습니다."));
             followService.unfollow(followee, follower);
             return ResponseEntity.ok().build();
         } catch (NoSuchElementException e) {
+            log.error("NoSuchElementException: {}", e.getMessage());
             return ResponseEntity.status(404).build();
         }
     }
 
     @GetMapping("/followees/{lastFollowId}")
     public ResponseEntity<FollowInfos> getFollowees(@PathVariable String
-                                                                 lastFollowId, @PageableDefault(size = 10) Pageable pageable, @AuthenticationPrincipal CustomAuthenticationPrinciple
-                                                                 authUser) {
+                                                            lastFollowId, @PageableDefault(size = 10) Pageable pageable, @AuthenticationPrincipal CustomAuthenticationPrinciple
+                                                            authUser) {
         Optional<User> byEmail = userFindService.findByEmail(authUser.getUserName());
         if (byEmail.isPresent()) {
             User user = byEmail.get();
             FollowInfos someFolloweeByFollowerId = followFindService.findSomeFolloweeByFollowerId(user.getUserId(), Long.parseLong(lastFollowId), pageable);
             return ResponseEntity.ok().body(someFolloweeByFollowerId);
         }
+        log.error("해당 유저가 없습니다.");
         return ResponseEntity.status(404).build();
     }
 
     @GetMapping("/followers/{lastFollowId}")
     public ResponseEntity<FollowInfos> getFollowers(@PathVariable String
-                                                                 lastFollowId, @PageableDefault Pageable pageable, @AuthenticationPrincipal CustomAuthenticationPrinciple
-                                                                 authUser) {
+                                                            lastFollowId, @PageableDefault Pageable pageable, @AuthenticationPrincipal CustomAuthenticationPrinciple
+                                                            authUser) {
         Optional<User> byEmail = userFindService.findByEmail(authUser.getUserName());
         if (byEmail.isPresent()) {
             User user = byEmail.get();
             FollowInfos someFollowerByFolloweeId = followFindService.findSomeFollowerByFolloweeId(user.getUserId(), Long.parseLong(lastFollowId), pageable);
-            log.info("someFollowerByFolloweeId: {}", someFollowerByFolloweeId.getFollowInfos().size());
             List<Long> userIds = followFindService.findUserIdByFollowedEachOther(someFollowerByFolloweeId.userIds(), user.getUserId(), pageable.getPageSize());
             someFollowerByFolloweeId.checkSubscribe(userIds);
             return ResponseEntity.ok().body(someFollowerByFolloweeId);
         }
+        log.error("해당 유저가 없습니다.");
         return ResponseEntity.status(404).build();
     }
 }

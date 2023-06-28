@@ -3,10 +3,6 @@
     align-items: center;
 }
 
-li{
-    list-style: none;
-}
-
 .menu-button {
     display: none;
 }

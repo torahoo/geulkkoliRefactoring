@@ -140,7 +140,7 @@ function commentDeleteButtonEvent(ev) {
     ev.preventDefault();
 
     let commentDeleteButton = ev.target;
-    if (commentDeleteButton.innerText !== '삭제')
+    if (commentDeleteButton.innerText != '삭제')
         return;
 
     if (!confirm('정말 삭제하시겠습니까?')) {
@@ -160,7 +160,7 @@ function commentDeleteButtonEvent(ev) {
             'Content-Type': 'application/json'},
         body: JSON.stringify(Object.fromEntries(formData))
     }).then((response) => {
-        if (response.status === 200) {
+        if (response.status == 200) {
             commentDeleteButton.closest('.card').remove();
         }
     });
@@ -202,8 +202,10 @@ function commentRemake(list, isClear) {
 
         let editButton;
         let deleteButton;
+        var loggedInUser = /*[[${#authentication.principal}]]*/ null;
 
-        if (newComment.nickName === nickName) {
+
+        if (newComment.nickName === validName) {
             editButton = document.createElement('button');
             editButton.setAttribute('class', 'btn btn-primary btn-sm commentEdit');
             editButton.innerText = '수정';

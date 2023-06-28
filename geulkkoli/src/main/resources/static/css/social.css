@@ -1,31 +1,10 @@
-a {
-	text-decoration: none !important;
+body {
+	margin: 0;
+	padding: 0;
+	background-color: #845184;
+	font-family: Arial, sans-serif;
 }
 
-a:link {
-	color: black
-}
-
-a:visited {
-	color: black
-}
-
-a:hover {
-	color: brown
-}
-
-thead {
-	text-align: center;
-}
-
-.nav-wrapper {
-	display: flex;
-}
-
-.nav-content {
-	flex-basis: 80%;
-	padding: 20px;
-}
 form {
 	width: 400px;
 	margin: 0 auto;

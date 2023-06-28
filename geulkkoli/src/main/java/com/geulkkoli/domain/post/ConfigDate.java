@@ -18,27 +18,21 @@ public abstract class ConfigDate {
 
     @Column(name = "created_at", nullable = false, updatable = false)
     @CreatedDate
-    private LocalDateTime createdAt;
+    private String createdAt;
 
     @Column(name = "updated_at")
     @LastModifiedDate
-    private LocalDateTime updatedAt;
+    private String updatedAt;
 
     @PrePersist
-    public void onPrePersist () {
-        LocalDateTime now = LocalDateTime.now();
-        this.createdAt = now;
-        this.updatedAt = now;
+    public void onPrePersist() {
+        this.createdAt = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy. MM. dd a hh:mm:ss"));
+        this.updatedAt = createdAt;
     }
 
     @PreUpdate
-    public void onPreUpdate () {
-        this.updatedAt = LocalDateTime.now();
+    public void onPreUpdate() {
+        this.updatedAt = LocalDateTime.now().format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM));
     }
 
-    // 달력 잔디 심기용 각 다른 날짜의 게시물들 필요 (추후 제거)
-    private String formatDateTime(LocalDateTime dateTime) {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-        return dateTime.format(formatter);
-    }
 }
