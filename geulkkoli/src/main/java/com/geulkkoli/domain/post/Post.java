@@ -32,7 +32,8 @@ public class Post extends ConfigDate {
     @Column(nullable = false)
     private String title;
 
-    @Column(name = "body", nullable = false)
+
+    @Column(name = "body", nullable = false, length = 15000)
     private String postBody;
 
     @Column(name = "nick_name", nullable = false)

@@ -51,7 +51,7 @@ import static java.util.stream.Collectors.toUnmodifiableList;
 public class UserController {
 
     public static final String EDIT_FORM = "user/edit/userInfoEditForm";
-    public static final String EDIT_PASSWORD_FORM = "user/edit/editPasswordForm";
+    public static final String EDIT_PASSWORD_FORM = "user/edit/passwordEditForm";
     public static final String REDIRECT_INDEX = "redirect:/";
     public static final String REDIRECT_EDIT_INDEX = "redirect:/user/edit";
     private final UserService userService;
@@ -193,7 +193,7 @@ public class UserController {
 
 
     @GetMapping("/edit")
-    public ModelAndView editUserInfo(@AuthenticationPrincipal CustomAuthenticationPrinciple authUser, Model model) {
+    public ModelAndView editUserInfo(@AuthenticationPrincipal CustomAuthenticationPrinciple authUser) {
         ConnectedSocialInfos connectedInfos = socialInfoFindService.findConnectedInfos(authUser.getUsername());
         UserInfoEditFormDto userInfoEditDto = UserInfoEditFormDto.form(authUser.getUserRealName(), authUser.getNickName(), authUser.getPhoneNo(), authUser.getGender());
         ModelAndView modelAndView = new ModelAndView(EDIT_FORM, "editForm", userInfoEditDto);
@@ -231,12 +231,12 @@ public class UserController {
         return REDIRECT_INDEX;
     }
 
-    @GetMapping("/edit/editPassword")
+    @GetMapping("/edit/edit-password")
     public String editPasswordForm(@ModelAttribute("editPasswordForm") PasswordEditFormDto form) {
         return EDIT_PASSWORD_FORM;
     }
 
-    @PostMapping("/edit/editPassword")
+    @PostMapping("/edit/edit-password")
     public String editPassword(@Validated @ModelAttribute("editPasswordForm") PasswordEditFormDto form, BindingResult bindingResult, @AuthenticationPrincipal CustomAuthenticationPrinciple authUser, RedirectAttributes redirectAttributes) {
         User user = userFindService.findById(parseLong(authUser));
         if (!passwordService.isPasswordVerification(user, form)) {
