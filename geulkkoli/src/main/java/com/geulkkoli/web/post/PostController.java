@@ -225,7 +225,7 @@ public class PostController {
     //게시글 삭제
     @DeleteMapping("/request")
     public String deletePost(@RequestParam("postId") Long postId, @RequestParam("userNickName") String userNickName) {
-        postService.deletePost(postId, userNickName);
+        postService.deletePost(postId, userFindService.findByNickName(userNickName).getUserId());
         return "redirect:/post/list";
     }
 
@@ -240,12 +240,7 @@ public class PostController {
     }
 
     private static void searchDefault(Model model, String searchType, String searchWords) {
-        if (searchType != null && searchWords != null) {
-            model.addAttribute("searchType", searchType);
-            model.addAttribute("searchWords", searchWords);
-        } else {
-            model.addAttribute("searchType", "");
-            model.addAttribute("searchWords", "");
-        }
+        model.addAttribute("searchType", searchType);
+        model.addAttribute("searchWords", searchWords);
     }
 }

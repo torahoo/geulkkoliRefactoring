@@ -129,7 +129,7 @@ class PostServiceTest {
 
         Post post = postService.savePost(new AddDTO(1L, "title", "body", user1.getNickName(), "#testTag", "소설", "완결"), user1);
 
-        postService.deletePost(post.getPostId(), user1.getNickName());
+        postService.deletePost(post.getPostId(), user1.getUserId());
 
         String searchType = "";
         String searchWords = "";

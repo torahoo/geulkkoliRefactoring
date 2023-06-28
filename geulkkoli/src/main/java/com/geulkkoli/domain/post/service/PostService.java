@@ -123,17 +123,19 @@ public class PostService {
         postRepository.save(post);
     }
 
+
+
     @Transactional
-    public void deletePost(Long postId, String nickName) {
+    public void deletePost(Long postId, Long loggingUserId) {
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new NoSuchElementException("No post found id matches:" + postId));
-        Optional<User> byNickName = userRepository.findByNickName(nickName);
+        Optional<User> loggingUser = userRepository.findById(loggingUserId);
         ArrayList<PostHashTag> postHashTags = new ArrayList<>(post.getPostHashTags());
-        if (byNickName.isPresent() && post.getUser().equals(byNickName.get())) {
-            User user = byNickName.get();
+        if (loggingUser.isPresent() && post.getUser().equals(loggingUser.get())) {
+            User user = loggingUser.get();
             user.deletePost(post);
-            for (int i = 0; i < postHashTags.size(); i++) {
-                post.deletePostHashTag(postHashTags.get(i).getPostHashTagId());
+            for (PostHashTag postHashTag : postHashTags) {
+                post.deletePostHashTag(postHashTag.getPostHashTagId());
             }
         }
 

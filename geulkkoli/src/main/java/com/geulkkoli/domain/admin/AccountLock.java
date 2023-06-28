@@ -24,10 +24,10 @@ public class AccountLock {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User lockedUser;
-    @Column(nullable = false, length = 100)
+    @Column(nullable = false, length = 200)
     private String reason;
 
-    @Column(nullable = false)
+    @Column(nullable = false, name = "lock_until")
     private LocalDateTime lockExpirationDate;
 
     public AccountLock() {

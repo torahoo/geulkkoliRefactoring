@@ -30,6 +30,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.Optional;
+import java.time.LocalDate;
 
 @Controller
 @RequiredArgsConstructor
@@ -56,11 +57,10 @@ public class HomeController {
                        Model model,
                        @RequestParam(defaultValue = "해시태그") String searchType,
                        @RequestParam(defaultValue = "일반") String searchWords) {
-        log.info("searchType : {}", searchType);
-        log.info("searchWords : {}", searchWords);
-        List<PostRequestListDTO> list = postHashTagService.searchPostsListByHashTag(pageable, searchType, searchWords).toList();
-        log.info("list : {}", list);
-        model.addAttribute("list", list);
+
+        model.addAttribute("list", postHashTagService.searchPostsListByHashTag(pageable, searchType, searchWords).toList());
+        model.addAttribute("notificationList", postHashTagService.searchPostsListByHashTag(pageable, searchType, searchWords+"#공지글").toList());
+        model.addAttribute("todayTopic", postHashTagService.showTodayTopic(LocalDate.now()));
 
         return "/home";
     }

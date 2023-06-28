@@ -28,10 +28,8 @@ public class AddDTO {
 
     private String tagListString ="";
 
-    @NotBlank
     private String tagCategory;
 
-    @NotBlank
     private String tagStatus;
 
     @Builder

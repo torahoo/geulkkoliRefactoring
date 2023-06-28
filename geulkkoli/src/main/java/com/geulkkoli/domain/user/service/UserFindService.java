@@ -26,19 +26,15 @@ public class UserFindService {
         return userRepository.findByEmail(email);
     }
 
-    public User findUserByEmail(String email) {
-        return userRepository.findByEmail(email).orElseThrow(() -> new NoSuchElementException("No user found email matches:" + email));
-    }
-
-    public User findByNickName(String nickName){
-        return userRepository.findByNickName(nickName).orElseThrow(() -> new NoSuchElementException("No user found nickname matches:" + nickName));
-    }
-
     public Optional<User> findByUserNameAndPhoneNo(String userName, String phoneNo) {
         return userRepository.findByUserNameAndPhoneNo(userName, phoneNo);
     }
 
     public Optional<User> findByEmailAndUserNameAndPhoneNo(String email, String userName, String phoneNo) {
         return userRepository.findByEmailAndUserNameAndPhoneNo(email, userName, phoneNo);
+    }
+
+    public User findByNickName(String nickName){
+        return userRepository.findByNickName(nickName).orElseThrow(() -> new NoSuchElementException("No user found nickname matches:" + nickName));
     }
 }

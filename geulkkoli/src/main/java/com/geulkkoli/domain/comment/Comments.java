@@ -13,7 +13,7 @@ import java.util.Objects;
 @Entity
 @NoArgsConstructor
 @Getter
-public class Comments extends ConfigDate {
+public class Comments extends ConfigDate{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -58,6 +58,4 @@ public class Comments extends ConfigDate {
     public void changeComments (String commentBody) {
         this.commentBody = commentBody;
     }
-
-
 }

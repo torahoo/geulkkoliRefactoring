@@ -1,14 +1,16 @@
 package com.geulkkoli.domain.post;
 
+import com.geulkkoli.domain.admin.Report;
 import com.geulkkoli.domain.comment.Comments;
 import com.geulkkoli.domain.favorites.Favorites;
 import com.geulkkoli.domain.hashtag.HashTag;
 import com.geulkkoli.domain.posthashtag.PostHashTag;
 import com.geulkkoli.domain.user.NoSuchCommnetException;
 import com.geulkkoli.domain.user.User;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import com.geulkkoli.web.post.dto.AddDTO;
+import lombok.*;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 import java.util.LinkedHashSet;
@@ -26,7 +28,7 @@ public class Post extends ConfigDate {
 
     //게시글 작성자
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "author_id")
+    @JoinColumn(name = "user_id")
     private User user;
 
     @Column(nullable = false)
@@ -55,7 +57,12 @@ public class Post extends ConfigDate {
 
     //해시태그의 게시글 매핑
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Set<PostHashTag> postHashTags = new LinkedHashSet<>();
+
+    @OneToMany(mappedBy = "reportedPost", orphanRemoval = true)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    private Set<Report> report = new LinkedHashSet<>();
 
     @Builder
     public Post(String title, String postBody, String nickName, User user) {
