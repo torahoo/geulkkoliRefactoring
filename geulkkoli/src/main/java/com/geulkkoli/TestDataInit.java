@@ -2,6 +2,7 @@ package com.geulkkoli;
 
 import com.geulkkoli.domain.admin.Report;
 import com.geulkkoli.domain.admin.ReportRepository;
+import com.geulkkoli.domain.admin.service.AdminService;
 import com.geulkkoli.domain.admin.service.AdminServiceImpl;
 import com.geulkkoli.domain.hashtag.HashTag;
 import com.geulkkoli.domain.hashtag.HashTagRepository;
@@ -9,9 +10,12 @@ import com.geulkkoli.domain.hashtag.HashTagType;
 import com.geulkkoli.domain.post.Post;
 import com.geulkkoli.domain.post.PostRepository;
 import com.geulkkoli.domain.post.service.PostService;
+import com.geulkkoli.domain.topic.Topic;
+import com.geulkkoli.domain.topic.TopicRepository;
 import com.geulkkoli.domain.user.User;
 import com.geulkkoli.domain.user.service.UserFindService;
 import com.geulkkoli.domain.user.service.UserService;
+import com.geulkkoli.web.admin.DailyTopicDto;
 import com.geulkkoli.web.post.dto.AddDTO;
 import com.geulkkoli.web.user.dto.JoinFormDto;
 import lombok.RequiredArgsConstructor;
@@ -24,6 +28,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -34,10 +39,12 @@ public class TestDataInit {
     private final PostRepository postRepository;
     private final ReportRepository reportRepository;
     private final AdminServiceImpl adminServiceImpl;
+    private final AdminService adminService;
     private final UserService userService;
     private final PostService postService;
     private final HashTagRepository hashTagRepository;
     private final UserFindService userFindService;
+    private final TopicRepository topicRepository;
 
     /**
      * 확인용 초기 데이터 추가
@@ -55,6 +62,11 @@ public class TestDataInit {
          * userService로 테스트 데이터를 저정한다.
          * */
 
+        for(int i = 0; i<50; i++) {
+            topicRepository.save(Topic.builder().topicName("testTopic"+i).build());
+        }
+        List<DailyTopicDto> weeklyTopic = adminService.findWeeklyTopic();
+
         JoinFormDto joinForm = new JoinFormDto();
         joinForm.setEmail("tako99@naver.com");
         joinForm.setUserName("김");
@@ -65,6 +77,16 @@ public class TestDataInit {
         User user = userService.signUp(joinForm);
 
 
+//        JoinFormDto joinForm1 = new JoinFormDto();
+//        joinForm1.setEmail("kimpjh1@naver.com");
+//        joinForm1.setUserName("김");
+//        joinForm1.setNickName("바나나121");
+//        joinForm1.setPhoneNo("9290232333");
+//        joinForm1.setGender("male");
+//        joinForm1.setPassword("123");
+//        userService.signUp(joinForm1);
+        adminServiceImpl.lockUser(user.getUserId(), "비밀번호가 너무 길어요", 7L);
+
         JoinFormDto joinForm2 = new JoinFormDto();
         joinForm2.setEmail("test01@naver.com");
         joinForm2.setUserName("테스트유저");
@@ -72,13 +94,14 @@ public class TestDataInit {
         joinForm2.setPhoneNo("01012345678");
         joinForm2.setGender("male");
         joinForm2.setPassword("123");
-        userService.signUp(joinForm2);
+        User user2 = userService.signUp(joinForm2);
 
+        // 이메일 테스트하느라 실제 이메일 사용 중
         JoinFormDto joinForm3 = new JoinFormDto();
-        joinForm3.setEmail("cheese@naver.com");
-        joinForm3.setUserName("비밀");
-        joinForm3.setNickName("김륜환만세");
-        joinForm3.setPhoneNo("01099995555");
+        joinForm3.setEmail("plaz7@naver.com");
+        joinForm3.setUserName("신채안");
+        joinForm3.setNickName("이메일테스트해봄");
+        joinForm3.setPhoneNo("01089188913");
         joinForm3.setGender("female");
         joinForm3.setPassword("123");
         userService.signUp(joinForm3);
@@ -93,6 +116,8 @@ public class TestDataInit {
 
         User user01 = userFindService.findById(1L);
         User user02 = userFindService.findById(2L);
+        User user03 = userFindService.findById(3L);
+        User user04 = userFindService.findById(4L);
 
 
         HashTag hashTagCategory1 = HashTag.builder()
@@ -146,6 +171,14 @@ public class TestDataInit {
         LocalDate signUpDate = LocalDate.of(2022, 1, 1);
         User user4 = userService.signUp(joinForm4, signUpDate);
 
+        AddDTO addDTONotice = AddDTO.builder()
+                .title("공지사항입니다")
+                .postBody("나는 멋지고 섹시한 개발자")
+                .nickName(user04.getNickName())
+                .tagListString("#testTag1 #공지글")
+                .build();
+        adminServiceImpl.saveNotice(addDTONotice, user04);
+
         for (int i = 0; i < 16; ++i) {
 
             AddDTO addDTO = AddDTO.builder()
@@ -175,8 +208,11 @@ public class TestDataInit {
                     .tagListString("#testTag2 #일반글")
                     .tagCategory("#시")
                     .tagStatus("#연재")
+                    .nickName(user2.getNickName())
                     .build();
             postService.savePost(addDTO2, user01);
+            Post post2 = user2.writePost(addDTO2);
+            postRepository.save(post2);
 
             AddDTO addDTO3 = AddDTO.builder()
                     .title("testTitle03")
@@ -218,11 +254,17 @@ public class TestDataInit {
         Report report = user.writeReport(postRepository.findById(2L).get(), "욕설");
         Report report1 = user.writeReport(postRepository.findById(1L).get(), "비 협조적");
         Report report2 = user.writeReport(postRepository.findById(4L).get(), "점심을 안먹음");
+        Report report3 = user2.writeReport(postRepository.findById(4L).get(), "욕먹음");
         reportRepository.save(report);
         reportRepository.save(report1);
         reportRepository.save(report2);
-
+        reportRepository.save(report3);
+        
+        
+        //주제 더미 데이터
+        for(int i = 0; i<150; i++) {
+            topicRepository.save(Topic.builder().topicName("testTopic"+i).build());
+        }
     }
-
 
 }

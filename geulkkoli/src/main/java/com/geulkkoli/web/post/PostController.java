@@ -128,12 +128,12 @@ public class PostController {
             if (bindingResult.hasErrors()) {
                 return "/post/postAddForm";
             }
-             postId=postService.savePost(post, user).getPostId();
+            postId = postService.savePost(post, user).getPostId();
         } catch (IllegalArgumentException e) {
-            bindingResult.rejectValue("tagCategory", "Tag.Required", new String[]{e.getMessage()},e.toString());
+            bindingResult.rejectValue("tagCategory", "Tag.Required", new String[]{e.getMessage()}, e.toString());
             e.getStackTrace();
         } catch (AdminTagAccessDenied e) {
-            bindingResult.rejectValue("tagListString", "Tag.Denied", new String[]{e.getMessage()},e.toString());
+            bindingResult.rejectValue("tagListString", "Tag.Denied", new String[]{e.getMessage()}, e.toString());
             e.getStackTrace();
         }
         redirectAttributes.addAttribute("postId", postId);
@@ -171,7 +171,7 @@ public class PostController {
         }
         boolean mine = loggingUser.getUserId().equals(authorUser.getUserId());
         Boolean follow = followFindService.checkFollow(loggingUser, authorUser);
-        FollowResult followResult =  new FollowResult(mine, follow);
+        FollowResult followResult = new FollowResult(mine, follow);
 
         log.info("followResult={}", followResult.isFollow());
         log.info("mine={}", followResult.isMine());
@@ -201,19 +201,19 @@ public class PostController {
     //게시글 수정
     @PostMapping("/update/{postId}")
     public String editPost(@Validated @ModelAttribute EditDTO updateParam, BindingResult bindingResult,
-                             @PathVariable Long postId, RedirectAttributes redirectAttributes, HttpServletRequest request,
-                             @RequestParam(defaultValue = "") String searchType,
-                             @RequestParam(defaultValue = "") String searchWords) {
+                           @PathVariable Long postId, RedirectAttributes redirectAttributes, HttpServletRequest request,
+                           @RequestParam(defaultValue = "") String searchType,
+                           @RequestParam(defaultValue = "") String searchWords) {
         try {
             if (bindingResult.hasErrors()) {
                 return "/post/postEditForm";
             }
             postService.updatePost(postId, updateParam);
         } catch (IllegalArgumentException e) {
-            bindingResult.rejectValue("tagCategory", "Tag.Required", new String[]{e.getMessage()},e.toString());
+            bindingResult.rejectValue("tagCategory", "Tag.Required", new String[]{e.getMessage()}, e.toString());
             e.getStackTrace();
         } catch (AdminTagAccessDenied e) {
-            bindingResult.rejectValue("tagListString", "Tag.Denied", new String[]{e.getMessage()},e.toString());
+            bindingResult.rejectValue("tagListString", "Tag.Denied", new String[]{e.getMessage()}, e.toString());
             e.getStackTrace();
         }
         if (bindingResult.hasErrors()) {
@@ -230,7 +230,9 @@ public class PostController {
     //게시글 삭제
     @DeleteMapping("/request")
     public String deletePost(@RequestParam("postId") Long postId, @RequestParam("userNickName") String userNickName) {
-        postService.deletePost(postId, userNickName);
+        log.info("=====================userNickName={}", userNickName);
+        postService.deletePost(postId, userFindService.findByNickName(userNickName).getUserId());
+        log.info("=====================userId={}", userFindService.findByNickName(userNickName).getUserId());
         return "redirect:/post/list";
     }
 
@@ -245,12 +247,7 @@ public class PostController {
     }
 
     private static void searchDefault(Model model, String searchType, String searchWords) {
-        if (searchType != null && searchWords != null) {
-            model.addAttribute("searchType", searchType);
-            model.addAttribute("searchWords", searchWords);
-        } else {
-            model.addAttribute("searchType", "");
-            model.addAttribute("searchWords", "");
-        }
+        model.addAttribute("searchType", searchType);
+        model.addAttribute("searchWords", searchWords);
     }
 }

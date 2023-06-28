@@ -1,6 +1,7 @@
 package com.geulkkoli.web.post.dto;
 
 import com.geulkkoli.domain.hashtag.HashTag;
+import com.geulkkoli.domain.hashtag.HashTagType;
 import com.geulkkoli.domain.post.Post;
 import com.geulkkoli.domain.posthashtag.PostHashTag;
 import lombok.Builder;
@@ -35,11 +36,11 @@ public class EditDTO {
 
     private final String nickName;
 
-    @NotBlank
-    private String tagCategory;
 
-    @NotBlank
-    private String tagStatus;
+    private final String tagCategory;
+
+
+    private final String tagStatus;
 
     @Builder
     public EditDTO(Long postId, String title, String postBody,
@@ -55,11 +56,19 @@ public class EditDTO {
 
     public static EditDTO toDTO (Post post) {
         List<PostHashTag> postHashTags = new ArrayList<>(post.getPostHashTags());
-        postHashTags.remove(0);
-        String tagStatus = postHashTags.get((postHashTags.size()-1)).getHashTag().getHashTagName();
-        postHashTags.remove(postHashTags.size()-1);
-        String tagCategory = postHashTags.get((postHashTags.size()-1)).getHashTag().getHashTagName();
-        postHashTags.remove(postHashTags.size()-1);
+        String tagStatus = "";
+        String tagCategory = "";
+
+        if(postHashTags.get(0).getHashTag().getHashTagName().equals("공지글")){
+            postHashTags.remove(0);
+        } else {
+            postHashTags.remove(0);
+            tagStatus = postHashTags.get((postHashTags.size()-1)).getHashTag().getHashTagName();
+            postHashTags.remove(postHashTags.size()-1);
+            tagCategory = postHashTags.get((postHashTags.size()-1)).getHashTag().getHashTagName();
+            postHashTags.remove(postHashTags.size()-1);
+        }
+
         String tags = "";
         for (PostHashTag name : postHashTags){
             tags += " #"+name.getHashTag().getHashTagName();

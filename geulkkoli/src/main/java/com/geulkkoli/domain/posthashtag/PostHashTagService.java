@@ -7,6 +7,9 @@ import com.geulkkoli.domain.post.AdminTagAccessDenied;
 import com.geulkkoli.domain.post.Post;
 import com.geulkkoli.domain.post.PostRepository;
 import com.geulkkoli.domain.post.PostRepositoryCustom;
+import com.geulkkoli.domain.topic.Topic;
+import com.geulkkoli.domain.topic.TopicRepository;
+import com.geulkkoli.web.admin.DailyTopicDto;
 import com.geulkkoli.web.post.dto.ListDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -19,6 +22,7 @@ import org.springframework.validation.BindingResult;
 
 import javax.transaction.Transactional;
 import java.nio.file.AccessDeniedException;
+import java.time.LocalDate;
 import java.util.*;
 import java.util.Comparator;
 import java.util.stream.Collectors;
@@ -31,6 +35,7 @@ public class PostHashTagService {
 
     private final HashTagRepository hashTagRepository;
     private final PostHashTagRepository postHashTagRepository;
+    private final TopicRepository topicRepository;
 
     //게시글에 해시태그 1개를 추가합니다
     public Long addHashTagToPost(Post post, HashTag tag) {
@@ -129,22 +134,29 @@ public class PostHashTagService {
 
     //해당 태그를 가진 게시글을 찾아냅니다.
     public List<Post> searchPostContainAllHashTags(List<HashTag> tags) {
-        HashTag tag = tags.isEmpty() ? hashTagRepository.findHashTagByHashTagName("일반글") : tags.get(0);
-
         List<Post> posts = new ArrayList<>();
 
-        List<PostHashTag> postHashTagList = postHashTagRepository.findAllByHashTag(tag);
+        if (tags.isEmpty()) {
+            List<PostHashTag> allList = postHashTagRepository.findAll();
+            Set<Post> setPostList = new LinkedHashSet<>();
+            for (PostHashTag postHashTag : allList) {
+                setPostList.add(postHashTag.getPost());
+            }
+            posts = new ArrayList<>(setPostList);
+        } else {
+            HashTag tag = tags.get(0);
+            List<PostHashTag> postHashTagList = postHashTagRepository.findAllByHashTag(tag);
+            for (PostHashTag postHashTag : postHashTagList) {
+                Set<HashTag> postHashTags = postHashTag.
+                        getPost().
+                        getPostHashTags().
+                        stream().
+                        map(PostHashTag::getHashTag).
+                        collect(Collectors.toSet());
 
-        for (PostHashTag postHashTag : postHashTagList) {
-            Set<HashTag> postHashTags = postHashTag.
-                    getPost().
-                    getPostHashTags().
-                    stream().
-                    map(PostHashTag::getHashTag).
-                    collect(java.util.stream.Collectors.toSet());
-
-            if (postHashTags.containsAll(tags)) {
-                posts.add(postHashTag.getPost());
+                if (postHashTags.containsAll(tags)) {
+                    posts.add(postHashTag.getPost());
+                }
             }
         }
 
@@ -153,19 +165,29 @@ public class PostHashTagService {
 
     //웹에서 분류나 상태값을 받아오지 못하거나 관리 태그에 접근하려 하는 경우, 이를 막습니다.
     public void validatePostHasType(List<HashTag> tags) {
-        if(tags.stream().noneMatch(a -> a.getHashTagType().equals(HashTagType.CATEGORY))){
+        if (tags.stream().noneMatch(a -> a.getHashTagType().equals(HashTagType.CATEGORY))) {
             throw new IllegalArgumentException("분류");
         }
-        if(tags.stream().noneMatch(a -> a.getHashTagType().equals(HashTagType.STATUS))){
+        if (tags.stream().noneMatch(a -> a.getHashTagType().equals(HashTagType.STATUS))) {
             throw new IllegalArgumentException("상태");
         }
 
         String managementTag = tags.stream().filter(a -> a.getHashTagType().equals(HashTagType.MANAGEMENT)).findAny().orElseGet(HashTag::new).getHashTagName();
 
-        if(tags.stream().anyMatch(a -> a.getHashTagType().equals(HashTagType.MANAGEMENT))){
+        if (tags.stream().anyMatch(a -> a.getHashTagType().equals(HashTagType.MANAGEMENT))) {
             throw new AdminTagAccessDenied(managementTag);
         }
 
+    }
+
+    public DailyTopicDto showTodayTopic (LocalDate date){
+        Topic todayTopic = topicRepository.findTopicByUpComingDate(date);
+        todayTopic.settingUseDate(date);
+        DailyTopicDto dailyTopicDto = DailyTopicDto.builder()
+                .date(date.toString())
+                .topic(todayTopic.getTopicName())
+                .build();
+        return dailyTopicDto;
     }
 
 

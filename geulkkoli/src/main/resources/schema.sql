@@ -22,7 +22,7 @@ CREATE table if not exists users
     gender       varchar(10)  not null,
     sign_up_date TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP,
     CONSTRAINT unique_email_nick_name_phone_no UNIQUE (email, nick_name, phone_no)
-    );
+);
 
 create table if not exists post
 (
@@ -36,7 +36,7 @@ create table if not exists post
     created_at        TIMESTAMP      NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at        TIMESTAMP      NOT NULL DEFAULT CURRENT_TIMESTAMP,
     CONSTRAINT fk_users foreign key (author_id) REFERENCES users (user_id) ON DELETE CASCADE
-    );
+);
 
 
 create table if not exists comments
@@ -49,7 +49,7 @@ create table if not exists comments
     updated_at TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP,
     CONSTRAINT fk_comment_author FOREIGN KEY (author_id) REFERENCES users (user_id) ON DELETE CASCADE,
     CONSTRAINT fk_comment_post FOREIGN KEY (post_id) REFERENCES post (post_id) ON DELETE CASCADE
-    );
+);
 
 create table if not exists favorites
 (
@@ -58,7 +58,7 @@ create table if not exists favorites
     favorites_user_id BIGINT not null unique,
     constraint fk_like_user FOREIGN KEY (favorites_user_id) REFERENCES users (user_id) ON DELETE cascade,
     constraint fk_like_post FOREIGN KEY (post_id) REFERENCES post (post_id) ON DELETE CASCADE
-    );
+);
 
 CREATE TABLE IF NOT EXISTS user_followings
 (
@@ -68,7 +68,7 @@ CREATE TABLE IF NOT EXISTS user_followings
     CONSTRAINT fk_follower FOREIGN KEY (follower_id) REFERENCES users (user_id) ON DELETE CASCADE,
     CONSTRAINT fk_followee FOREIGN KEY (followee_id) REFERENCES users (user_id) ON DELETE CASCADE,
     Constraint unique_following unique (follower_id, followee_id)
-    );
+);
 
 
 create table if not exists roles
@@ -77,7 +77,7 @@ create table if not exists roles
     role_name varchar(255) not null unique,
     user_id   bigint       not null,
     constraint fk_role_user foreign key (user_id) references users (user_id)
-    );
+);
 
 create table if not exists report
 (
@@ -89,7 +89,7 @@ create table if not exists report
     constraint fk_reported_post foreign key (reported_post_id) references post (post_id),
     constraint fk_reporter foreign key (reporter_id) references users (user_id),
     constraint unique_report unique (reported_post_id, reporter_id)
-    );
+);
 
 create table if not exists social_info
 (
@@ -101,14 +101,14 @@ create table if not exists social_info
     is_connected        boolean default true,
     constraint fk_social_info_user foreign key (user_id) references users (user_id),
     constraint unique_social_info unique (social_id, social_type)
-    );
+);
 
 create table if not exists hashtag
 (
     hashtag_id   bigint primary key,
     hashtag_name varchar(20) not null,
     hashtag_type varchar(20) not null
-    );
+);
 
 create table if not exists account_lock
 (
@@ -118,7 +118,7 @@ create table if not exists account_lock
     lock_at         TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP,
     lock_until      TIMESTAMP    NOT NULL,
     constraint fk_account_lock_user foreign key (user_id) references users (user_id)
-    );
+);
 
 
 create table if not exists post_hashtag
@@ -128,7 +128,7 @@ create table if not exists post_hashtag
     hashtag_id     BIGINT NOT NULL,
     constraint fk_post foreign key (post_id) references post (post_id) on delete cascade,
     constraint fk_hashtag foreign key (hashtag_id) references hashtag (hashtag_id) on delete cascade
-    );
+);
 
 create table if not exists topic
 (
@@ -136,4 +136,4 @@ create table if not exists topic
     topic_name varchar(255) not null unique,
     useDate    date not null default '2000-01-01',
     upComingDate date not null default '2000-01-01'
-    );
+);

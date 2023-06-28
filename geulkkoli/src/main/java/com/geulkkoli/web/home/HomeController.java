@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import javax.servlet.http.HttpServletRequest;
+import java.time.LocalDate;
 
 @Controller
 @RequiredArgsConstructor
@@ -31,6 +31,8 @@ public class HomeController {
                        @RequestParam(defaultValue = "") String searchWords) {
 
         model.addAttribute("list", postHashTagService.searchPostsListByHashTag(pageable, searchType, searchWords).toList());
+        model.addAttribute("notificationList", postHashTagService.searchPostsListByHashTag(pageable, searchType, searchWords+"#공지글").toList());
+        model.addAttribute("todayTopic", postHashTagService.showTodayTopic(LocalDate.now()));
 
         return "/home";
     }
