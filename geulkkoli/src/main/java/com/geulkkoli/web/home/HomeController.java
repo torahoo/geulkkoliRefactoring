@@ -1,6 +1,7 @@
 package com.geulkkoli.web.home;
 
 import com.geulkkoli.application.EmailService;
+import com.geulkkoli.application.user.CustomAuthenticationPrinciple;
 import com.geulkkoli.application.user.service.PasswordService;
 import com.geulkkoli.domain.post.service.PostService;
 import com.geulkkoli.domain.posthashtag.PostHashTagService;
@@ -20,6 +21,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -56,7 +58,6 @@ public class HomeController {
                        Model model,
                        @RequestParam(defaultValue = "해시태그") String searchType,
                        @RequestParam(defaultValue = "일반") String searchWords) {
-
         model.addAttribute("list", postHashTagService.searchPostsListByHashTag(pageable, searchType, searchWords).toList());
         model.addAttribute("notificationList", postHashTagService.searchPostsListByHashTag(pageable, searchType, searchWords+"#공지글").toList());
         log.info("now : {}", LocalDate.now());

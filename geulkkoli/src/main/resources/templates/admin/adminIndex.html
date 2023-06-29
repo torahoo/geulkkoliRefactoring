@@ -14,7 +14,7 @@
     <div class="row">
         <div class="col-12">
             <div class="row no-gutters m-5 ">
-                <div class="col-lg-3 col-md-3 col-sm-12 p-0">
+                <div class="p-3">
                     <button type="button"
                             onclick="location.href='/admin/reportedPostList'"
                             class="btn btn-primary">신고받은 게시글
@@ -35,7 +35,7 @@
     <tbody>
     <tr th:each="item : ${data}">
         <td th:text="${item.getDate()}"></td>
-        <td th:text="${item.theme}" contenteditable="true"
+        <td th:text="${item.topic}" contenteditable="true"
             th:attr="data-id=${item.date}"
             id="themeInput">
         </td>

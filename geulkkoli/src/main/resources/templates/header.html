@@ -11,6 +11,13 @@
         </button>
 
         <button type="button"
+                onclick="location.href='/admin/'"
+                sec:authorize="hasRole('ADMIN')"
+                class="btn btn-primary">admin
+        </button>
+
+
+        <button type="button"
                 onclick="location.href='/join'"
                 sec:authorize="isAnonymous()"
                 class="btn btn-outline-primary btn-sm fixed-width">Sign-up

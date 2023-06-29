@@ -19,6 +19,6 @@ public class CalendarDto {
     @NotEmpty
     private String signUpDate;
 
-    private List<LocalDate> allPostDatesByOneUser;
+    private List<String> allPostDatesByOneUser;
 
 }

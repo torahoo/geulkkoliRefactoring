@@ -2,8 +2,10 @@
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="utf-8">
-    <link href="/css/bootstrap.min.css"
-          th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
+
+    <link th:href="@{/css/styles.css}" rel="stylesheet">
+    <link th:href="@{/css/header.css}" rel="stylesheet">
+    <link th:href="@{/css/nav.css}" rel="stylesheet">
     <link rel="stylesheet" href="/css/post.css">
 
     <!-- wysiwyg editor summernote -->
@@ -18,7 +20,6 @@
 
 <header id="header"></header>
 <div th:include="header"></div>
-
 <div class="container">
     <div class="py-5 text-center">
         <h2>게시글 등록하기</h2>

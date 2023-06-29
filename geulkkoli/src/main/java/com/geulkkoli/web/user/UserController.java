@@ -80,7 +80,7 @@ public class UserController {
     public ResponseEntity<CalendarDto> calendaring(@PathVariable("nickName") String nickName) {
         User user = userFindService.findByNickName(nickName);
 
-        List<LocalDate> allPostDatesByOneUser = postFindService.getCreatedAts(user);
+        List<String> allPostDatesByOneUser = postFindService.getCreatedAts(user);
         CalendarDto calendarDto = new CalendarDto(user.getUserName(), user.getSignUpDate(), allPostDatesByOneUser);
 
         return ResponseEntity.ok(calendarDto);
@@ -232,12 +232,12 @@ public class UserController {
     }
 
     @GetMapping("/edit/edit-password")
-    public String editPasswordForm(@ModelAttribute("editPasswordForm") PasswordEditFormDto form) {
+    public String editPasswordForm(@ModelAttribute("passwordEditForm") PasswordEditFormDto form) {
         return EDIT_PASSWORD_FORM;
     }
 
     @PostMapping("/edit/edit-password")
-    public String editPassword(@Validated @ModelAttribute("editPasswordForm") PasswordEditFormDto form, BindingResult bindingResult, @AuthenticationPrincipal CustomAuthenticationPrinciple authUser, RedirectAttributes redirectAttributes) {
+    public String editPassword(@Validated @ModelAttribute("passwordEditForm") PasswordEditFormDto form, BindingResult bindingResult, @AuthenticationPrincipal CustomAuthenticationPrinciple authUser, RedirectAttributes redirectAttributes) {
         User user = userFindService.findById(parseLong(authUser));
         if (!passwordService.isPasswordVerification(user, form)) {
             bindingResult.rejectValue("oldPassword", "Check.password");

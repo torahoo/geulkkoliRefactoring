@@ -39,7 +39,7 @@
       <div class="collapse show" id="dashboard-collapse" style="">
         <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
           <li><a th:href="@{/post/list(searchType='해시태그',searchWords='연재#시')}" class="link-body-emphasis d-inline-flex text-decoration-none rounded">시</a></li>
-          <li><a th:href="@{/post/list(searchType='해시태그',searchWords='연재#수필')}" class="link-body-emphasis d-inline-flex text-decoration-none rounded">소설</a>
+          <li><a th:href="@{/post/list(searchType='해시태그',searchWords='연재#소설')}" class="link-body-emphasis d-inline-flex text-decoration-none rounded">소설</a>
             <ul class="btn-toggle-nav list-group-unstyled fw-normal pb-1 small">
               <li><a th:href="@{/post/list(searchType='해시태그',searchWords='연재#소설#로맨스')}" class="link-body-emphasis d-inline-flex text-decoration-none rounded">로맨스</a></li>
               <li><a th:href="@{/post/list(searchType='해시태그',searchWords='연재#소설#판타지')}" class="link-body-emphasis d-inline-flex text-decoration-none rounded">판타지</a></li>
@@ -57,8 +57,8 @@
       </button>
       <div class="collapse show" id="orders-collapse" style="">
         <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
-          <li><a href="#" class="link-body-emphasis d-inline-flex text-decoration-none rounded">시</a></li>
-          <li><a href="#" class="link-body-emphasis d-inline-flex text-decoration-none rounded">소설</a>
+          <li><a th:href="@{/post/list(searchType='해시태그',searchWords='완결#시')}" class="link-body-emphasis d-inline-flex text-decoration-none rounded">시</a></li>
+          <li><a th:href="@{/post/list(searchType='해시태그',searchWords='완결#소설')}" class="link-body-emphasis d-inline-flex text-decoration-none rounded">소설</a>
             <ul class="btn-toggle-nav list-group-unstyled fw-normal pb-1 small">
               <li><a th:href="@{/post/list(searchType='해시태그',searchWords='완결#소설#로맨스')}" class="link-body-emphasis d-inline-flex text-decoration-none rounded">로맨스</a></li>
               <li><a th:href="@{/post/list(searchType='해시태그',searchWords='완결#소설#판타지')}" class="link-body-emphasis d-inline-flex text-decoration-none rounded">판타지</a></li>
@@ -77,7 +77,7 @@
       </button>
       <div class="collapse show" id="account-collapse" style="">
         <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
-          <li><a th:href="@{/post/list(searchType='해시태그',searchWords='공지')}" class="link-dark d-inline-flex text-decoration-none rounded">New...</a></li>
+          <li><a th:href="@{/post/list(searchType='해시태그',searchWords='공지글')}" class="link-dark d-inline-flex text-decoration-none rounded">New...</a></li>
         </ul>
       </div>
     </li>

@@ -18,6 +18,10 @@
     padding: 20px;
     overflow: hidden;
 }
+a{
+    text-decoration: none;
+    color: black;
+}
 
 .menu-list:hover {
     left: -20px;

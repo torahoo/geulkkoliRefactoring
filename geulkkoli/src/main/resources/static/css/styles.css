@@ -7713,6 +7713,8 @@ textarea.form-control-lg {
 
 .p-2 {
   padding: 0.5rem !important;
+  margin-top: 30px;
+  display: inline-block;
 }
 
 .p-3 {

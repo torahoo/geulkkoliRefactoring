@@ -54,11 +54,11 @@ class PostFindServiceTest {
         LocalDateTime createAt2 = LocalDateTime.of(2023, 4, 8, 12, 1);
         user.writePost(addDTO2, createAt2);
 
-        List<LocalDate> createdAts = postFindService.getCreatedAts(user);
+        List<String> createdAts = postFindService.getCreatedAts(user);
 
         assertThat(createdAts.size()).isEqualTo(2);
-        assertThat(createdAts).contains(createAt1.toLocalDate());
-        assertThat(createdAts).contains(createAt2.toLocalDate());
+        assertThat(createdAts).contains(String.valueOf(createAt1.toLocalDate()));
+        assertThat(createdAts).contains(String.valueOf(createAt2.toLocalDate()));
 
     }
 }

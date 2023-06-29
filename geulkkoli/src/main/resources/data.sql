@@ -1,12 +1,257 @@
-insert into roles (role_id, role_number)
-values (1, 1);
-insert into roles (role_id, role_number)
-values (2, 2);
-insert into roles (role_id, role_number)
-values (3, 3);
+insert into topic (topic_id, topic_name,topic_up_coming_date,topic_use_date)
+values (1, '영화', '2023-06-28', '2023-06-28');
+insert into topic (topic_id, topic_name,topic_up_coming_date,topic_use_date)
+values (2, '드라마', '2023-06-29', '2023-06-30');
+insert into topic (topic_id, topic_name,topic_up_coming_date,topic_use_date)
+values (3, '친절한 금자씨', '2023-07-7', '2023-7-8');
+insert into topic (topic_id, topic_name,topic_up_coming_date,topic_use_date)
+values (4, '토익', '2023-07-01', '2023-7-2');
+insert into topic (topic_id, topic_name,topic_up_coming_date,topic_use_date)
+values (5, '토익스피킹', '2023-07-02', '2023-7-3');
+insert into topic (topic_id, topic_name,topic_up_coming_date,topic_use_date)
+values (6, '토익리스닝', '2023-07-03', '2023-7-4');
+insert into topic (topic_id, topic_name,topic_up_coming_date,topic_use_date)
+values (7, '토익리딩', '2023-07-04', '2023-7-5');
+insert into topic (topic_id, topic_name,topic_up_coming_date,topic_use_date)
+values (8, 'Star-Wars', '2023-07-05', '2023-7-6');
+insert into topic (topic_id, topic_name,topic_up_coming_date,topic_use_date)
+values (9, '토익스피킹', '2023-07-06', '2023-7-7');
+insert into topic (topic_id, topic_name,topic_up_coming_date,topic_use_date)
+values (10, '토픽2', '2023-07-07', '2023-7-8');
+insert into topic (topic_id, topic_name,topic_up_coming_date,topic_use_date)
+values (11, '토픽3', '2023-07-08', '2023-7-9');
+insert into topic (topic_id, topic_name,topic_up_coming_date,topic_use_date)
+values (12, '토픽4', '2023-07-09', '2023-7-10');
+insert into topic (topic_id, topic_name,topic_up_coming_date,topic_use_date)
+values (13, '토픽5', '2023-07-10', '2023-7-11');
+insert into topic (topic_id, topic_name,topic_up_coming_date,topic_use_date)
+values (14, '토픽6', '2023-07-11', '2023-7-12');
+insert into topic (topic_id, topic_name,topic_up_coming_date,topic_use_date)
+values (15, '토픽7', '2023-07-12', '2023-7-13');
+insert into topic (topic_id, topic_name,topic_up_coming_date,topic_use_date)
+values (16, '토픽8', '2023-07-13', '2023-7-14');
+insert into topic (topic_id, topic_name,topic_up_coming_date,topic_use_date)
+values (17, '토픽9', '2023-07-14', '2023-7-15');
+insert into topic (topic_id, topic_name,topic_up_coming_date,topic_use_date)
+values (18, '토픽10', '2023-07-15', '2023-7-16');
+insert into topic (topic_id, topic_name,topic_up_coming_date,topic_use_date)
+values (19, '토픽11', '2023-07-16', '2023-7-17');
+insert into topic (topic_id, topic_name,topic_up_coming_date,topic_use_date)
+values (20, '토픽12', '2023-07-17', '2023-7-18');
+insert into topic (topic_id, topic_name,topic_up_coming_date,topic_use_date)
+values (21, '토픽13', '2023-07-18', '2023-7-19');
+insert into topic (topic_id, topic_name,topic_up_coming_date,topic_use_date)
+values (22, '토픽14', '2023-07-19', '2023-7-20');
+insert into topic (topic_id, topic_name,topic_up_coming_date,topic_use_date)
+values (23, '토픽15', '2023-07-20', '2023-7-21');
+insert into topic (topic_id, topic_name,topic_up_coming_date,topic_use_date)
+values (24, '토픽16', '2023-07-21', '2023-7-22');
+insert into topic (topic_id, topic_name,topic_up_coming_date,topic_use_date)
+values (25, '토픽17', '2023-07-22', '2023-7-23');
+insert into topic (topic_id, topic_name,topic_up_coming_date,topic_use_date)
+values (26, '토픽18', '2023-07-23', '2023-7-24');
+insert into topic (topic_id, topic_name,topic_up_coming_date,topic_use_date)
+values (27, '토픽19', '2023-07-24', '2023-7-25');
+insert into topic (topic_id, topic_name,topic_up_coming_date,topic_use_date)
+values (28, '토픽20', '2023-07-25', '2023-7-26');
+insert into topic (topic_id, topic_name,topic_up_coming_date,topic_use_date)
+values (29, '토픽21', '2023-07-26', '2023-7-27');
+insert into topic (topic_id, topic_name,topic_up_coming_date,topic_use_date)
+values (30, '토픽22', '2023-07-27', '2023-7-28');
+insert into topic (topic_id, topic_name,topic_up_coming_date,topic_use_date)
+values (31, '토픽23', '2023-07-28', '2023-7-29');
+insert into topic (topic_id, topic_name,topic_up_coming_date,topic_use_date)
+values (32, '토픽24', '2023-07-29', '2023-7-30');
+insert into topic (topic_id, topic_name,topic_up_coming_date,topic_use_date)
+values (33, '토픽25', '2023-07-30', '2023-7-31');
+insert into topic (topic_id, topic_name,topic_up_coming_date,topic_use_date)
+values (34, '토픽26', '2023-07-31', '2023-8-1');
+insert into topic (topic_id, topic_name,topic_up_coming_date,topic_use_date)
+values (35, '토픽27', '2023-08-01', '2023-8-2');
+insert into topic (topic_id, topic_name,topic_up_coming_date,topic_use_date)
+values (36, '토픽28', '2023-08-02', '2023-8-3');
+insert into topic (topic_id, topic_name,topic_up_coming_date,topic_use_date)
+values (37, '토픽29', '2023-08-03', '2023-8-4');
+insert into topic (topic_id, topic_name,topic_up_coming_date,topic_use_date)
+values (38, '토픽30', '2023-08-04', '2023-8-5');
+insert into topic (topic_id, topic_name,topic_up_coming_date,topic_use_date)
+values (39, '토픽31', '2023-08-05', '2023-8-6');
+insert into topic (topic_id, topic_name,topic_up_coming_date,topic_use_date)
+values (40, '토픽32', '2023-08-06', '2023-8-7');
 
-insert into users (user_id, user_name, password, nick_name, email, phone_No, gender, role_id, sign_up_date)
-values (1, 'Anton Bloy', 'jN0$"rHk!6', 'abloy0', 'abloy0@yellowbook.com', '4817359601', 'Polygender', 2, '2022-10-19');
+
+insert into hashtag (hash_tag_id, hash_tag_name, hash_tag_type, created_at, updated_at)
+values (1, '공지글', 4, '2022-12-12', '2022/12/12');
+insert into hashtag (hash_tag_id, hash_tag_name, hash_tag_type, created_at, updated_at)
+values (2, '시', 2, '2022-12-12', '2022/12/12');
+insert into hashtag (hash_tag_id, hash_tag_name, hash_tag_type, created_at, updated_at)
+values (3, '소설', 2, '2022-12-12', '2022/12/12');
+insert into hashtag (hash_tag_id, hash_tag_name, hash_tag_type, created_at, updated_at)
+values (4, '수필', 2, '2022-12-12', '2022/12/12');
+insert into hashtag (hash_tag_id, hash_tag_name, hash_tag_type, created_at, updated_at)
+values (5, '판타지', 2, '2022-12-12', '2022/12/12');
+insert into hashtag (hash_tag_id, hash_tag_name, hash_tag_type, created_at, updated_at)
+values (6, '로맨스', 2, '2022-12-12', '2022/12/12');
+insert into hashtag (hash_tag_id, hash_tag_name, hash_tag_type, created_at, updated_at)
+values (7, '스릴러', 2, '2022-12-12', '2022/12/12');
+insert into hashtag (hash_tag_id, hash_tag_name, hash_tag_type, created_at, updated_at)
+values (8, '공포', 2, '2022-12-12', '2022/12/12');
+insert into hashtag (hash_tag_id, hash_tag_name, hash_tag_type, created_at, updated_at)
+values (9, '추리', 2, '2022-12-12', '2022/12/12');
+
+insert into hashtag (hash_tag_id, hash_tag_name, hash_tag_type, created_at, updated_at)
+values (10, '단편', 3, '2022-12-12', '2022/12/12');
+
+insert into hashtag (hash_tag_id, hash_tag_name, hash_tag_type, created_at, updated_at)
+values (11, '연재', 3, '2022-12-12', '2022/12/12');
+
+insert into hashtag (hash_tag_id, hash_tag_name, hash_tag_type, created_at, updated_at)
+values (12, '완결', 3, '2022-12-12', '2022/12/12');
+insert into hashtag (hash_tag_id, hash_tag_name, hash_tag_type, created_at, updated_at)
+values (13, '일반글', 1, '2022-12-12', '2022/12/12');
+
+insert into post (post_id, user_id, title, body, nick_name, post_hits, image_upload_name, created_at, updated_at) values (1, 1, 'Salem''s Lot', 'In hac habitasse platea dictumst. Etiam faucibus cursus urna. Ut tellus.', 'yeee', 1, 'Adipiscing.avi', '2023-05-26 11:18:21', '2023-04-01 22:56:12');
+insert into post (post_id, user_id, title, body, nick_name, post_hits, image_upload_name, created_at, updated_at) values (2, 1, 'Empire of Passion (a.k.a. In the Realm of Passion) (a.k.a. Phantom Love) (Ai No Borei)', 'Fusce posuere felis sed lacus. Morbi sem mauris, laoreet ut, rhoncus aliquet, pulvinar sed, nisl. Nunc rhoncus dui vel sem.', 'yeee', 2, 'Orci.gif', '2022-08-24 22:51:26', '2022-12-03 09:01:11');
+insert into post (post_id, user_id, title, body, nick_name, post_hits, image_upload_name, created_at, updated_at) values (3, 1, 'Take This Job and Shove It', 'Nam ultrices, libero non mattis pulvinar, nulla pede ullamcorper augue, a suscipit nulla elit ac nulla. Sed vel enim sit amet nunc viverra dapibus. Nulla suscipit ligula in lacus.', 'yeee', 3, 'ElitSodales.ppt', '2022-07-19 01:38:35', '2023-03-06 07:15:13');
+insert into post (post_id, user_id, title, body, nick_name, post_hits, image_upload_name, created_at, updated_at) values (4, 1, 'Summer of Fear', 'Integer tincidunt ante vel ipsum. Praesent blandit lacinia erat. Vestibulum sed magna at nunc commodo placerat.', 'yeee', 4, 'TinciduntAnte.avi', '2022-09-03 20:14:37', '2023-01-06 15:04:55');
+insert into post (post_id, user_id, title, body, nick_name, post_hits, image_upload_name, created_at, updated_at) values (5, 1, 'Far Off Place, A', 'Fusce posuere felis sed lacus. Morbi sem mauris, laoreet ut, rhoncus aliquet, pulvinar sed, nisl. Nunc rhoncus dui vel sem.', 'yeee', 5, 'NonVelitNec.mov', '2023-01-12 09:46:45', '2023-01-05 17:16:29');
+insert into post (post_id, user_id, title, body, nick_name, post_hits, image_upload_name, created_at, updated_at) values (6, 1, 'Dracula (Dracula 3D)', 'Donec diam neque, vestibulum eget, vulputate ut, ultrices vel, augue. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Donec pharetra, magna vestibulum aliquet ultrices, erat tortor sollicitudin mi, sit amet lobortis sapien sapien non mi. Integer ac neque.', 'yeee', 6, 'InHac.ppt', '2023-05-10 03:44:00', '2023-02-19 02:47:45');
+insert into post (post_id, user_id, title, body, nick_name, post_hits, image_upload_name, created_at, updated_at) values (7, 1, 'Django the Bastard (Strangers Gundown, The) (Django il bastardo)', 'Curabitur gravida nisi at nibh. In hac habitasse platea dictumst. Aliquam augue quam, sollicitudin vitae, consectetuer eget, rutrum at, lorem.', 'yeee', 7, 'AnteNullaJusto.avi', '2022-11-02 18:12:05', '2022-09-07 18:54:07');
+insert into post (post_id, user_id, title, body, nick_name, post_hits, image_upload_name, created_at, updated_at) values (8, 1, 'Dead Man', 'Sed sagittis. Nam congue, risus semper porta volutpat, quam pede lobortis ligula, sit amet eleifend pede libero quis orci. Nullam molestie nibh in lectus.', 'yeee', 8, 'QuisquePorta.avi', '2023-05-20 02:11:26', '2023-01-06 09:10:32');
+insert into post (post_id, user_id, title, body, nick_name, post_hits, image_upload_name, created_at, updated_at) values (9, 1, 'Cleaner', 'Suspendisse potenti. In eleifend quam a odio. In hac habitasse platea dictumst.', 'yeee', 9, 'Nunc.jpeg', '2022-12-29 00:10:22', '2022-09-02 05:03:27');
+insert into post (post_id, user_id, title, body, nick_name, post_hits, image_upload_name, created_at, updated_at) values (10, 1, 'Mutant Aliens', 'Praesent id massa id nisl venenatis lacinia. Aenean sit amet justo. Morbi ut odio.', 'yeee', 10, 'EgetElitSodales.doc', '2022-09-10 12:38:56', '2023-04-29 23:52:08');
+insert into post (post_id, user_id, title, body, nick_name, post_hits, image_upload_name, created_at, updated_at) values (11, 1, 'Kind of Loving, A', 'Morbi porttitor lorem id ligula. Suspendisse ornare consequat lectus. In est risus, auctor sed, tristique in, tempus sit amet, sem.', 'yeee', 11, 'IntegerAc.mp3', '2022-08-06 20:38:16', '2023-03-21 18:51:59');
+insert into post (post_id, user_id, title, body, nick_name, post_hits, image_upload_name, created_at, updated_at) values (12, 1, 'Semi-Pro', 'In quis justo. Maecenas rhoncus aliquam lacus. Morbi quis tortor id nulla ultrices aliquet.', 'yeee', 12, 'AcNullaSed.ppt', '2023-03-25 03:10:37', '2023-04-26 08:29:41');
+insert into post (post_id, user_id, title, body, nick_name, post_hits, image_upload_name, created_at, updated_at) values (13, 1, 'And Then Came Lola', 'Duis aliquam convallis nunc. Proin at turpis a pede posuere nonummy. Integer non velit.', 'yeee', 13, 'SuscipitA.ppt', '2022-07-30 19:01:17', '2023-03-29 19:42:25');
+insert into post (post_id, user_id, title, body, nick_name, post_hits, image_upload_name, created_at, updated_at) values (14, 1, 'Weird Woman', 'Phasellus sit amet erat. Nulla tempus. Vivamus in felis eu sapien cursus vestibulum.', 'yeee', 14, 'PhasellusSitAmet.mp3', '2022-11-16 08:26:48', '2023-05-15 11:45:55');
+insert into post (post_id, user_id, title, body, nick_name, post_hits, image_upload_name, created_at, updated_at) values (15, 1, 'Waitress', 'Phasellus in felis. Donec semper sapien a libero. Nam dui.', 'yeee', 15, 'Faucibus.jpeg', '2023-02-07 06:39:10', '2023-05-22 23:52:08');
+insert into post (post_id, user_id, title, body, nick_name, post_hits, image_upload_name, created_at, updated_at) values (16, 1, 'Backyard, The', 'Aenean fermentum. Donec ut mauris eget massa tempor convallis. Nulla neque libero, convallis eget, eleifend luctus, ultricies eu, nibh.', 'yeee', 16, 'EstDonecOdio.mov', '2022-09-16 17:48:26', '2022-09-22 06:01:20');
+insert into post (post_id, user_id, title, body, nick_name, post_hits, image_upload_name, created_at, updated_at) values (17, 1, 'Arsène Lupin', 'Maecenas ut massa quis augue luctus tincidunt. Nulla mollis molestie lorem. Quisque ut erat.', 'yeee', 17, 'MattisNibh.png', '2022-08-09 14:25:26', '2023-05-17 21:01:50');
+insert into post (post_id, user_id, title, body, nick_name, post_hits, image_upload_name, created_at, updated_at) values (18, 1, 'Ankur (The Seedling)', 'Suspendisse potenti. In eleifend quam a odio. In hac habitasse platea dictumst.', 'yeee', 18, 'DuiVelNisl.mp3', '2022-12-27 23:35:47', '2023-02-15 23:02:25');
+insert into post (post_id, user_id, title, body, nick_name, post_hits, image_upload_name, created_at, updated_at) values (19, 1, 'Dark, The', 'Nullam porttitor lacus at turpis. Donec posuere metus vitae ipsum. Aliquam non mauris.', 'yeee', 19, 'AugueVelAccumsan.mp3', '2023-01-07 11:52:27', '2023-05-12 21:31:50');
+insert into post (post_id, user_id, title, body, nick_name, post_hits, image_upload_name, created_at, updated_at) values (20, 1, 'Song of the South', 'Praesent blandit. Nam nulla. Integer pede justo, lacinia eget, tincidunt eget, tempus vel, pede.', 'yeee', 20, 'IntegerNon.gif', '2023-02-28 05:24:39', '2023-05-29 04:40:48');
+
+insert into post_hashtag (post_id,hashtag_id,created_at,updated_at)
+values (1,1,'2022-12-12','2022-12-12');
+insert into post_hashtag (post_id,hashtag_id,created_at,updated_at)
+values (1,10,'2022-12-12','2022-12-12');
+insert into post_hashtag (post_id,hashtag_id,created_at,updated_at)
+values (1,3,'2022-12-12','2022-12-12');
+insert into post_hashtag (post_id,hashtag_id,created_at,updated_at)
+values (2,1,'2022-12-12','2022-12-12');
+insert into post_hashtag (post_id,hashtag_id,created_at,updated_at)
+values (2,11,'2022-12-12','2022-12-12');
+insert into post_hashtag (post_id,hashtag_id,created_at,updated_at)
+values (2,3,'2022-12-12','2022-12-12');
+insert into post_hashtag (post_id,hashtag_id,created_at,updated_at)
+values (3,1,'2022-12-12','2022-12-12');
+insert into post_hashtag (post_id,hashtag_id,created_at,updated_at)
+values (3,12,'2022-12-12','2022-12-12');
+insert into post_hashtag (post_id,hashtag_id,created_at,updated_at)
+values (3,3,'2022-12-12','2022-12-12');
+insert into post_hashtag (post_id,hashtag_id,created_at,updated_at)
+values (4,13,'2022-12-12','2022-12-12');
+insert into post_hashtag (post_id,hashtag_id,created_at,updated_at)
+values (5,1,'2022-12-12','2022-12-12');
+insert into post_hashtag (post_id,hashtag_id,created_at,updated_at)
+values (5,10,'2022-12-12','2022-12-12');
+insert into post_hashtag (post_id,hashtag_id,created_at,updated_at)
+values (5,3,'2022-12-12','2022-12-12');
+insert into post_hashtag (post_id,hashtag_id,created_at,updated_at)
+values (6,1,'2022-12-12','2022-12-12');
+insert into post_hashtag (post_id,hashtag_id,created_at,updated_at)
+values (6,11,'2022-12-12','2022-12-12');
+insert into post_hashtag (post_id,hashtag_id,created_at,updated_at)
+values (6,3,'2022-12-12','2022-12-12');
+insert into post_hashtag (post_id,hashtag_id,created_at,updated_at)
+values (7,1,'2022-12-12','2022-12-12');
+insert into post_hashtag (post_id,hashtag_id,created_at,updated_at)
+values (7,12,'2022-12-12','2022-12-12');
+insert into post_hashtag (post_id,hashtag_id,created_at,updated_at)
+values (7,3,'2022-12-12','2022-12-12');
+insert into post_hashtag (post_id,hashtag_id,created_at,updated_at)
+values (8,1,'2022-12-12','2022-12-12');
+insert into post_hashtag (post_id,hashtag_id,created_at,updated_at)
+values (8,10,'2022-12-12','2022-12-12');
+insert into post_hashtag (post_id,hashtag_id,created_at,updated_at)
+values (8,3,'2022-12-12','2022-12-12');
+insert into post_hashtag (post_id,hashtag_id,created_at,updated_at)
+values (9,1,'2022-12-12','2022-12-12');
+insert into post_hashtag (post_id,hashtag_id,created_at,updated_at)
+values (9,10,'2022-12-12','2022-12-12');
+insert into post_hashtag (post_id,hashtag_id,created_at,updated_at)
+values (9,3,'2022-12-12','2022-12-12');
+insert into post_hashtag (post_id,hashtag_id,created_at,updated_at)
+values (10,1,'2022-12-12','2022-12-12');
+insert into post_hashtag (post_id,hashtag_id,created_at,updated_at)
+values (10,10,'2022-12-12','2022-12-12');
+insert into post_hashtag (post_id,hashtag_id,created_at,updated_at)
+values (10,3,'2022-12-12','2022-12-12');
+insert into post_hashtag (post_id,hashtag_id,created_at,updated_at)
+values (11,1,'2022-12-12','2022-12-12');
+insert into post_hashtag (post_id,hashtag_id,created_at,updated_at)
+values (11,10,'2022-12-12','2022-12-12');
+insert into post_hashtag (post_id,hashtag_id,created_at,updated_at)
+values (11,3,'2022-12-12','2022-12-12');
+insert into post_hashtag (post_id,hashtag_id,created_at,updated_at)
+values (12,1,'2022-12-12','2022-12-12');
+insert into post_hashtag (post_id,hashtag_id,created_at,updated_at)
+values (12,10,'2022-12-12','2022-12-12');
+insert into post_hashtag (post_id,hashtag_id,created_at,updated_at)
+values (12,3,'2022-12-12','2022-12-12');
+insert into post_hashtag (post_id,hashtag_id,created_at,updated_at)
+values (13,1,'2022-12-12','2022-12-12');
+insert into post_hashtag (post_id,hashtag_id,created_at,updated_at)
+values (13,10,'2022-12-12','2022-12-12');
+insert into post_hashtag (post_id,hashtag_id,created_at,updated_at)
+values (13,3,'2022-12-12','2022-12-12');
+insert into post_hashtag (post_id,hashtag_id,created_at,updated_at)
+values (14,1,'2022-12-12','2022-12-12');
+insert into post_hashtag (post_id,hashtag_id,created_at,updated_at)
+values (14,10,'2022-12-12','2022-12-12');
+insert into post_hashtag (post_id,hashtag_id,created_at,updated_at)
+values (14,3,'2022-12-12','2022-12-12');
+insert into post_hashtag (post_id,hashtag_id,created_at,updated_at)
+values (15,1,'2022-12-12','2022-12-12');
+insert into post_hashtag (post_id,hashtag_id,created_at,updated_at)
+values (15,10,'2022-12-12','2022-12-12');
+insert into post_hashtag (post_id,hashtag_id,created_at,updated_at)
+values (15,3,'2022-12-12','2022-12-12');
+insert into post_hashtag (post_id,hashtag_id,created_at,updated_at)
+values (16,1,'2022-12-12','2022-12-12');
+insert into post_hashtag (post_id,hashtag_id,created_at,updated_at)
+values (16,10,'2022-12-12','2022-12-12');
+insert into post_hashtag (post_id,hashtag_id,created_at,updated_at)
+values (16,3,'2022-12-12','2022-12-12');
+insert into post_hashtag (post_id,hashtag_id,created_at,updated_at)
+values (17,1,'2022-12-12','2022-12-12');
+insert into post_hashtag (post_id,hashtag_id,created_at,updated_at)
+values (17,10,'2022-12-12','2022-12-12');
+insert into post_hashtag (post_id,hashtag_id,created_at,updated_at)
+values (17,3,'2022-12-12','2022-12-12');
+insert into post_hashtag (post_id,hashtag_id,created_at,updated_at)
+values (18,1,'2022-12-12','2022-12-12');
+insert into post_hashtag (post_id,hashtag_id,created_at,updated_at)
+values (18,10,'2022-12-12','2022-12-12');
+insert into post_hashtag (post_id,hashtag_id,created_at,updated_at)
+values (18,3,'2022-12-12','2022-12-12');
+insert into post_hashtag (post_id,hashtag_id,created_at,updated_at)
+values (19,1,'2022-12-12','2022-12-12');
+insert into post_hashtag (post_id,hashtag_id,created_at,updated_at)
+values (19,10,'2022-12-12','2022-12-12');
+insert into post_hashtag (post_id,hashtag_id,created_at,updated_at)
+values (19,3,'2022-12-12','2022-12-12');
+insert into post_hashtag (post_id,hashtag_id,created_at,updated_at)
+values (20,1,'2022-12-12','2022-12-12');
+insert into post_hashtag (post_id,hashtag_id,created_at,updated_at)
+values (20,10,'2022-12-12','2022-12-12');
+insert into post_hashtag (post_id,hashtag_id,created_at,updated_at)
+values (20,3,'2022-12-12','2022-12-12');
+
+
+insert into roles (role_id, role_number)
+values (2, 1);
+
 insert into users (user_id, user_name, password, nick_name, email, phone_No, gender, role_id, sign_up_date)
 values (2, 'Puff Claypole', 'bQ9*}Q$itjbmp_g', 'pclaypole1', 'pclaypole1@facebook.com', '1103846750', 'Male', 2,
         '2023-03-05');
@@ -279,435 +524,4 @@ values (99, 'Rebecka Hyndes', 'jU9=3''/6y>QK', 'rhyndes2q', 'rhyndes2q@nationalg
 insert into users (user_id, user_name, password, nick_name, email, phone_No, gender, role_id, sign_up_date)
 values (100, 'Anya Cussins', 'qF7%T@0UsgjEs', 'acussins2r', 'acussins2r@dell.com', '4666405814', 'Female', 2,
         '2022-09-01');
-
-insert into post (post_id, user_id, title, body, nick_name, post_hits, image_upload_name, created_at, updated_at)
-values (1, 77, 'Petulia',
-        'Morbi non lectus. Aliquam sit amet diam in magna bibendum imperdiet. Nullam orci pede, venenatis non, sodales sed, tincidunt eu, felis.',
-        'wtowersey0', 0, 'EleifendDonec.gif', '2023-01-02', '2022/08/11');
-insert into post (post_id, user_id, title, body, nick_name, post_hits, image_upload_name, created_at, updated_at)
-values (2, 13, 'Cartouche',
-        'Donec diam neque, vestibulum eget, vulputate ut, ultrices vel, augue. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Donec pharetra, magna vestibulum aliquet ultrices, erat tortor sollicitudin mi, sit amet lobortis sapien sapien non mi. Integer ac neque.',
-        'hbirchenhead1', 0, 'In.mpeg', '2022-07-31', '2022/10/24');
-insert into post (post_id, user_id, title, body, nick_name, post_hits, image_upload_name, created_at, updated_at)
-values (3, 11, 'Love and Other Troubles',
-        'Praesent blandit. Nam nulla. Integer pede justo, lacinia eget, tincidunt eget, tempus vel, pede.',
-        'hmartinuzzi2', 0, 'EtCommodoVulputate.avi', '2023-04-19', '2023/02/11');
-insert into post (post_id, user_id, title, body, nick_name, post_hits, image_upload_name, created_at, updated_at)
-values (4, 82, 'Bag Man, The', 'In hac habitasse platea dictumst. Etiam faucibus cursus urna. Ut tellus.', 'ebotton3',
-        0, 'Ultrices.ppt', '2023-03-01', '2022/07/11');
-insert into post (post_id, user_id, title, body, nick_name, post_hits, image_upload_name, created_at, updated_at)
-values (5, 93, 'Dragon Ball Z: Cooler''s Revenge (Doragon bôru Z 5: Tobikkiri no saikyô tai saikyô)',
-        'Sed sagittis. Nam congue, risus semper porta volutpat, quam pede lobortis ligula, sit amet eleifend pede libero quis orci. Nullam molestie nibh in lectus.',
-        'ewaple4', 0, 'Vitae.mov', '2022-12-29', '2023/06/05');
-insert into post (post_id, user_id, title, body, nick_name, post_hits, image_upload_name, created_at, updated_at)
-values (6, 52, 'Meet the Fockers', 'Etiam vel augue. Vestibulum rutrum rutrum neque. Aenean auctor gravida sem.',
-        'shastin5', 0, 'DictumstEtiam.xls', '2023-05-02', '2023/02/26');
-insert into post (post_id, user_id, title, body, nick_name, post_hits, image_upload_name, created_at, updated_at)
-values (7, 67, 'Calling, The',
-        'Curabitur gravida nisi at nibh. In hac habitasse platea dictumst. Aliquam augue quam, sollicitudin vitae, consectetuer eget, rutrum at, lorem.',
-        'lmaddern6', 0, 'Lacinia.xls', '2022-10-04', '2023/02/17');
-insert into post (post_id, user_id, title, body, nick_name, post_hits, image_upload_name, created_at, updated_at)
-values (8, 56, 'Gathering, The',
-        'Nam ultrices, libero non mattis pulvinar, nulla pede ullamcorper augue, a suscipit nulla elit ac nulla. Sed vel enim sit amet nunc viverra dapibus. Nulla suscipit ligula in lacus.',
-        'ctregiddo7', 0, 'Vivamus.tiff', '2022-08-28', '2022/09/14');
-insert into post (post_id, user_id, title, body, nick_name, post_hits, image_upload_name, created_at, updated_at)
-values (9, 89, 'Facing Windows (Finestra di fronte, La)', 'Fusce consequat. Nulla nisl. Nunc nisl.', 'gramshaw8', 0,
-        'FelisSed.xls', '2023-03-01', '2023/06/05');
-insert into post (post_id, user_id, title, body, nick_name, post_hits, image_upload_name, created_at, updated_at)
-values (10, 58, 'Femme Nikita, La (Nikita)',
-        'Morbi porttitor lorem id ligula. Suspendisse ornare consequat lectus. In est risus, auctor sed, tristique in, tempus sit amet, sem.',
-        'jtooker9', 0, 'AliquamLacus.avi', '2023-01-09', '2023/02/28');
-insert into post (post_id, user_id, title, body, nick_name, post_hits, image_upload_name, created_at, updated_at)
-values (11, 17, 'Deeper Shade of Blue, A',
-        'Quisque id justo sit amet sapien dignissim vestibulum. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Nulla dapibus dolor vel est. Donec odio justo, sollicitudin ut, suscipit a, feugiat et, eros.',
-        'ffaira', 0, 'LuctusUltriciesEu.jpeg', '2022-08-11', '2023/06/17');
-insert into post (post_id, user_id, title, body, nick_name, post_hits, image_upload_name, created_at, updated_at)
-values (12, 35, 'The True Story of Puss ''n Boots',
-        'Praesent blandit. Nam nulla. Integer pede justo, lacinia eget, tincidunt eget, tempus vel, pede.', 'eraisonb',
-        0, 'InCongueEtiam.mp3', '2023-05-02', '2022/11/30');
-insert into post (post_id, user_id, title, body, nick_name, post_hits, image_upload_name, created_at, updated_at)
-values (13, 82, 'Rite, The', 'Praesent id massa id nisl venenatis lacinia. Aenean sit amet justo. Morbi ut odio.',
-        'whubanec', 0, 'FaucibusAccumsan.ppt', '2023-01-13', '2022/08/24');
-insert into post (post_id, user_id, title, body, nick_name, post_hits, image_upload_name, created_at, updated_at)
-values (14, 73, 'To the Sea (Alamar)',
-        'Curabitur at ipsum ac tellus semper interdum. Mauris ullamcorper purus sit amet nulla. Quisque arcu libero, rutrum ac, lobortis vel, dapibus at, diam.',
-        'bruddelld', 0, 'DonecPharetra.tiff', '2022-10-30', '2023/01/28');
-insert into post (post_id, user_id, title, body, nick_name, post_hits, image_upload_name, created_at, updated_at)
-values (15, 79, 'Avengers, The',
-        'In hac habitasse platea dictumst. Morbi vestibulum, velit id pretium iaculis, diam erat fermentum justo, nec condimentum neque sapien placerat ante. Nulla justo.',
-        'rmilleye', 0, 'AliquamQuisTurpis.mp3', '2022-11-28', '2023/01/09');
-insert into post (post_id, user_id, title, body, nick_name, post_hits, image_upload_name, created_at, updated_at)
-values (16, 50, 'Quod erat demonstrandum',
-        'Proin eu mi. Nulla ac enim. In tempor, turpis nec euismod scelerisque, quam turpis adipiscing lorem, vitae mattis nibh ligula nec sem.',
-        'hdomenyf', 0, 'LacusMorbiSem.mov', '2023-03-19', '2022/06/23');
-insert into post (post_id, user_id, title, body, nick_name, post_hits, image_upload_name, created_at, updated_at)
-values (17, 83, 'Twilight of a Woman''s Soul (Sumerki zhenskoi dushi)',
-        'Proin interdum mauris non ligula pellentesque ultrices. Phasellus id sapien in sapien iaculis congue. Vivamus metus arcu, adipiscing molestie, hendrerit at, vulputate vitae, nisl.',
-        'cswaloweg', 0, 'Elementum.tiff', '2023-05-01', '2023/02/01');
-insert into post (post_id, user_id, title, body, nick_name, post_hits, image_upload_name, created_at, updated_at)
-values (18, 30, 'The Prisoner', 'Duis bibendum. Morbi non quam nec dui luctus rutrum. Nulla tellus.', 'amolineuxh', 0,
-        'AnteVel.mpeg', '2022-11-26', '2022/10/19');
-insert into post (post_id, user_id, title, body, nick_name, post_hits, image_upload_name, created_at, updated_at)
-values (19, 84, 'Happy New Year', 'Suspendisse potenti. In eleifend quam a odio. In hac habitasse platea dictumst.',
-        'rglendenningi', 0, 'IntegerA.jpeg', '2022-09-27', '2022/08/14');
-insert into post (post_id, user_id, title, body, nick_name, post_hits, image_upload_name, created_at, updated_at)
-values (20, 48, 'Dolphin Tale',
-        'Praesent blandit. Nam nulla. Integer pede justo, lacinia eget, tincidunt eget, tempus vel, pede.', 'kmunkleyj',
-        0, 'AmetEleifendPede.xls', '2022-12-25', '2023/02/27');
-insert into post (post_id, user_id, title, body, nick_name, post_hits, image_upload_name, created_at, updated_at)
-values (21, 99, 'Blown Away',
-        'Vestibulum ac est lacinia nisi venenatis tristique. Fusce congue, diam id ornare imperdiet, sapien urna pretium nisl, ut volutpat sapien arcu sed augue. Aliquam erat volutpat.',
-        'sbazogek', 0, 'PurusSit.mp3', '2022-11-15', '2022/07/10');
-insert into post (post_id, user_id, title, body, nick_name, post_hits, image_upload_name, created_at, updated_at)
-values (22, 46, 'The Horseplayer', 'Phasellus in felis. Donec semper sapien a libero. Nam dui.', 'creiglarl', 0,
-        'Consectetuer.gif', '2023-03-23', '2022/09/08');
-insert into post (post_id, user_id, title, body, nick_name, post_hits, image_upload_name, created_at, updated_at)
-values (23, 15, 'Garfield Christmas Special, A',
-        'Curabitur in libero ut massa volutpat convallis. Morbi odio odio, elementum eu, interdum eu, tincidunt in, leo. Maecenas pulvinar lobortis est.',
-        'ipersehousem', 0, 'SemperInterdumMauris.png', '2023-01-03', '2022/09/15');
-insert into post (post_id, user_id, title, body, nick_name, post_hits, image_upload_name, created_at, updated_at)
-values (24, 4, 'Pretty One, The', 'Etiam vel augue. Vestibulum rutrum rutrum neque. Aenean auctor gravida sem.',
-        'vjonasn', 0, 'EuismodScelerisque.jpeg', '2022-09-10', '2022/07/14');
-insert into post (post_id, user_id, title, body, nick_name, post_hits, image_upload_name, created_at, updated_at)
-values (25, 9, 'Black Water',
-        'Aliquam quis turpis eget elit sodales scelerisque. Mauris sit amet eros. Suspendisse accumsan tortor quis turpis.',
-        'bhucksteppo', 0, 'Nonummy.tiff', '2023-02-20', '2023/04/04');
-insert into post (post_id, user_id, title, body, nick_name, post_hits, image_upload_name, created_at, updated_at)
-values (26, 29, 'Prophet''s Prey',
-        'Maecenas leo odio, condimentum id, luctus nec, molestie sed, justo. Pellentesque viverra pede ac diam. Cras pellentesque volutpat dui.',
-        'ljindrichp', 0, 'Vestibulum.mp3', '2022-11-15', '2023/04/24');
-insert into post (post_id, user_id, title, body, nick_name, post_hits, image_upload_name, created_at, updated_at)
-values (27, 36, 'Steak', 'Praesent id massa id nisl venenatis lacinia. Aenean sit amet justo. Morbi ut odio.',
-        'eeathertonq', 0, 'In.mp3', '2023-03-23', '2023/04/04');
-insert into post (post_id, user_id, title, body, nick_name, post_hits, image_upload_name, created_at, updated_at)
-values (28, 15, 'Fate Is the Hunter',
-        'Nullam sit amet turpis elementum ligula vehicula consequat. Morbi a ipsum. Integer a nibh.', 'fgodboldr', 0,
-        'DonecDapibusDuis.gif', '2022-12-24', '2023/05/15');
-insert into post (post_id, user_id, title, body, nick_name, post_hits, image_upload_name, created_at, updated_at)
-values (29, 95, 'Shadow Puppets', 'Fusce consequat. Nulla nisl. Nunc nisl.', 'gcozinss', 0, 'UltriciesEuNibh.xls',
-        '2022-12-02', '2022/08/20');
-insert into post (post_id, user_id, title, body, nick_name, post_hits, image_upload_name, created_at, updated_at)
-values (30, 28, 'Painted Lady',
-        'In hac habitasse platea dictumst. Morbi vestibulum, velit id pretium iaculis, diam erat fermentum justo, nec condimentum neque sapien placerat ante. Nulla justo.',
-        'mbucklert', 0, 'TellusNisiEu.ppt', '2022-09-02', '2022/12/07');
-insert into post (post_id, user_id, title, body, nick_name, post_hits, image_upload_name, created_at, updated_at)
-values (31, 28, 'Campus Man',
-        'Maecenas ut massa quis augue luctus tincidunt. Nulla mollis molestie lorem. Quisque ut erat.', 'sramsieru', 0,
-        'Ante.ppt', '2022-09-05', '2023/02/25');
-insert into post (post_id, user_id, title, body, nick_name, post_hits, image_upload_name, created_at, updated_at)
-values (32, 73, 'At the Earth''s Core',
-        'Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Vivamus vestibulum sagittis sapien. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.',
-        'lshoubridgev', 0, 'Eros.xls', '2022-06-28', '2023/02/10');
-insert into post (post_id, user_id, title, body, nick_name, post_hits, image_upload_name, created_at, updated_at)
-values (33, 35, 'Macabre',
-        'Morbi porttitor lorem id ligula. Suspendisse ornare consequat lectus. In est risus, auctor sed, tristique in, tempus sit amet, sem.',
-        'vspelwoodw', 0, 'Nisi.tiff', '2022-10-06', '2023/02/24');
-insert into post (post_id, user_id, title, body, nick_name, post_hits, image_upload_name, created_at, updated_at)
-values (34, 90, 'Blazing Guns',
-        'Morbi non lectus. Aliquam sit amet diam in magna bibendum imperdiet. Nullam orci pede, venenatis non, sodales sed, tincidunt eu, felis.',
-        'kkopmanx', 0, 'Ut.ppt', '2022-09-11', '2023/01/24');
-insert into post (post_id, user_id, title, body, nick_name, post_hits, image_upload_name, created_at, updated_at)
-values (35, 73, 'Harrison''s Flowers',
-        'Vestibulum quam sapien, varius ut, blandit non, interdum in, ante. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Duis faucibus accumsan odio. Curabitur convallis.',
-        'jmershy', 0, 'AnteVel.avi', '2022-07-06', '2023/06/15');
-insert into post (post_id, user_id, title, body, nick_name, post_hits, image_upload_name, created_at, updated_at)
-values (36, 1, 'Moon Zero Two', 'Sed ante. Vivamus tortor. Duis mattis egestas metus.', 'aknellenz', 0, 'Nullam.avi',
-        '2022-10-04', '2022/10/09');
-insert into post (post_id, user_id, title, body, nick_name, post_hits, image_upload_name, created_at, updated_at)
-values (37, 49, 'Armour of God II: Operation Condor (Operation Condor) (Fei ying gai wak)',
-        'Vestibulum ac est lacinia nisi venenatis tristique. Fusce congue, diam id ornare imperdiet, sapien urna pretium nisl, ut volutpat sapien arcu sed augue. Aliquam erat volutpat.',
-        'supward10', 0, 'FaucibusOrciLuctus.png', '2022-11-15', '2023/04/06');
-insert into post (post_id, user_id, title, body, nick_name, post_hits, image_upload_name, created_at, updated_at)
-values (38, 33, 'Dark Mirror',
-        'Morbi non lectus. Aliquam sit amet diam in magna bibendum imperdiet. Nullam orci pede, venenatis non, sodales sed, tincidunt eu, felis.',
-        'smogenot11', 0, 'NullaDapibus.ppt', '2022-06-24', '2022/08/23');
-insert into post (post_id, user_id, title, body, nick_name, post_hits, image_upload_name, created_at, updated_at)
-values (39, 25, 'The Gamers: Hands of Fate',
-        'Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Vivamus vestibulum sagittis sapien. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.',
-        'mlangelaan12', 0, 'DuisMattisEgestas.ppt', '2022-12-07', '2022/12/25');
-insert into post (post_id, user_id, title, body, nick_name, post_hits, image_upload_name, created_at, updated_at)
-values (40, 17, 'Eloise at Christmastime',
-        'Curabitur in libero ut massa volutpat convallis. Morbi odio odio, elementum eu, interdum eu, tincidunt in, leo. Maecenas pulvinar lobortis est.',
-        'knaptine13', 0, 'Libero.gif', '2022-07-01', '2023/03/09');
-insert into post (post_id, user_id, title, body, nick_name, post_hits, image_upload_name, created_at, updated_at)
-values (41, 57, 'Farsan',
-        'Duis bibendum, felis sed interdum venenatis, turpis enim blandit mi, in porttitor pede justo eu massa. Donec dapibus. Duis at velit eu est congue elementum.',
-        'akevis14', 0, 'AliquamSit.ppt', '2022-11-23', '2023/06/02');
-insert into post (post_id, user_id, title, body, nick_name, post_hits, image_upload_name, created_at, updated_at)
-values (42, 82, 'Dealing: Or the Berkeley-to-Boston Forty-Brick Lost-Bag Blues',
-        'In hac habitasse platea dictumst. Morbi vestibulum, velit id pretium iaculis, diam erat fermentum justo, nec condimentum neque sapien placerat ante. Nulla justo.',
-        'rlamberteschi15', 0, 'VariusInteger.tiff', '2023-03-15', '2023/02/03');
-insert into post (post_id, user_id, title, body, nick_name, post_hits, image_upload_name, created_at, updated_at)
-values (43, 51, 'Björk at the Royal Opera House',
-        'Morbi porttitor lorem id ligula. Suspendisse ornare consequat lectus. In est risus, auctor sed, tristique in, tempus sit amet, sem.',
-        'dhuebner16', 0, 'VivamusTortorDuis.mp3', '2022-06-24', '2022/07/31');
-insert into post (post_id, user_id, title, body, nick_name, post_hits, image_upload_name, created_at, updated_at)
-values (44, 8, 'Disclosure', 'In hac habitasse platea dictumst. Etiam faucibus cursus urna. Ut tellus.',
-        'jgotecliffe17', 0, 'Tempus.xls', '2023-05-26', '2023/01/20');
-insert into post (post_id, user_id, title, body, nick_name, post_hits, image_upload_name, created_at, updated_at)
-values (45, 44, 'Thomas in Love (Thomas est Amoureux)',
-        'Pellentesque at nulla. Suspendisse potenti. Cras in purus eu magna vulputate luctus.', 'rdoctor18', 0,
-        'AmetJusto.tiff', '2023-01-25', '2023/06/10');
-insert into post (post_id, user_id, title, body, nick_name, post_hits, image_upload_name, created_at, updated_at)
-values (46, 5, 'Fever in the Blood, A',
-        'Proin eu mi. Nulla ac enim. In tempor, turpis nec euismod scelerisque, quam turpis adipiscing lorem, vitae mattis nibh ligula nec sem.',
-        'qmillions19', 0, 'NullaSed.xls', '2022-08-09', '2023/05/29');
-insert into post (post_id, user_id, title, body, nick_name, post_hits, image_upload_name, created_at, updated_at)
-values (47, 9, 'Eye, The', 'Pellentesque at nulla. Suspendisse potenti. Cras in purus eu magna vulputate luctus.',
-        'htydeman1a', 0, 'AcLobortisVel.xls', '2022-09-12', '2023/06/28');
-insert into post (post_id, user_id, title, body, nick_name, post_hits, image_upload_name, created_at, updated_at)
-values (48, 23, 'Splinterheads',
-        'Curabitur gravida nisi at nibh. In hac habitasse platea dictumst. Aliquam augue quam, sollicitudin vitae, consectetuer eget, rutrum at, lorem.',
-        'ckippie1b', 0, 'ProinInterdumMauris.mp3', '2023-06-17', '2023/06/16');
-insert into post (post_id, user_id, title, body, nick_name, post_hits, image_upload_name, created_at, updated_at)
-values (49, 7, 'Breaking Away',
-        'Maecenas tristique, est et tempus semper, est quam pharetra magna, ac consequat metus sapien ut nunc. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Mauris viverra diam vitae quam. Suspendisse potenti.',
-        'kcampes1c', 0, 'InTempusSit.xls', '2022-09-05', '2022/08/06');
-insert into post (post_id, user_id, title, body, nick_name, post_hits, image_upload_name, created_at, updated_at)
-values (50, 24, 'Pursuit of Happiness, The',
-        'Proin eu mi. Nulla ac enim. In tempor, turpis nec euismod scelerisque, quam turpis adipiscing lorem, vitae mattis nibh ligula nec sem.',
-        'pgreenhalf1d', 0, 'Purus.avi', '2022-08-31', '2022/09/21');
-insert into post (post_id, user_id, title, body, nick_name, post_hits, image_upload_name, created_at, updated_at)
-values (51, 77, 'Flickering Lights (Blinkende lygter)',
-        'Quisque porta volutpat erat. Quisque erat eros, viverra eget, congue eget, semper rutrum, nulla. Nunc purus.',
-        'kwilkisson1e', 0, 'Vel.mp3', '2023-05-02', '2022/12/13');
-insert into post (post_id, user_id, title, body, nick_name, post_hits, image_upload_name, created_at, updated_at)
-values (52, 67, 'Kedma',
-        'Maecenas tristique, est et tempus semper, est quam pharetra magna, ac consequat metus sapien ut nunc. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Mauris viverra diam vitae quam. Suspendisse potenti.',
-        'mdemorena1f', 0, 'Odio.xls', '2022-09-23', '2022/10/22');
-insert into post (post_id, user_id, title, body, nick_name, post_hits, image_upload_name, created_at, updated_at)
-values (53, 29, 'Doctor Who',
-        'Duis consequat dui nec nisi volutpat eleifend. Donec ut dolor. Morbi vel lectus in quam fringilla rhoncus.',
-        'gepple1g', 0, 'Porttitor.gif', '2023-05-22', '2022/12/21');
-insert into post (post_id, user_id, title, body, nick_name, post_hits, image_upload_name, created_at, updated_at)
-values (54, 71, 'Sidewalls (Medianeras)',
-        'Proin eu mi. Nulla ac enim. In tempor, turpis nec euismod scelerisque, quam turpis adipiscing lorem, vitae mattis nibh ligula nec sem.',
-        'vmuriel1h', 0, 'AnteNulla.ppt', '2023-03-05', '2023/04/05');
-insert into post (post_id, user_id, title, body, nick_name, post_hits, image_upload_name, created_at, updated_at)
-values (55, 47, 'Shooting Gallery',
-        'Duis consequat dui nec nisi volutpat eleifend. Donec ut dolor. Morbi vel lectus in quam fringilla rhoncus.',
-        'ipapa1i', 0, 'IdLobortisConvallis.mov', '2023-05-10', '2022/08/21');
-insert into post (post_id, user_id, title, body, nick_name, post_hits, image_upload_name, created_at, updated_at)
-values (56, 37, 'Desert Blue', 'Aenean lectus. Pellentesque eget nunc. Donec quis orci eget orci vehicula condimentum.',
-        'vsweet1j', 0, 'Nunc.pdf', '2023-05-10', '2023/01/20');
-insert into post (post_id, user_id, title, body, nick_name, post_hits, image_upload_name, created_at, updated_at)
-values (57, 6, 'Lion''s Den (Leonera)',
-        'Integer tincidunt ante vel ipsum. Praesent blandit lacinia erat. Vestibulum sed magna at nunc commodo placerat.',
-        'cyashunin1k', 0, 'OdioCondimentum.ppt', '2022-08-25', '2022/07/02');
-insert into post (post_id, user_id, title, body, nick_name, post_hits, image_upload_name, created_at, updated_at)
-values (58, 62, 'Other Guys, The',
-        'Proin interdum mauris non ligula pellentesque ultrices. Phasellus id sapien in sapien iaculis congue. Vivamus metus arcu, adipiscing molestie, hendrerit at, vulputate vitae, nisl.',
-        'bpandie1l', 0, 'Ultrices.ppt', '2022-12-02', '2023/01/14');
-insert into post (post_id, user_id, title, body, nick_name, post_hits, image_upload_name, created_at, updated_at)
-values (59, 64, 'Way Back, The',
-        'Nullam sit amet turpis elementum ligula vehicula consequat. Morbi a ipsum. Integer a nibh.', 'mchalke1m', 0,
-        'InCongue.tiff', '2022-11-22', '2023/02/24');
-insert into post (post_id, user_id, title, body, nick_name, post_hits, image_upload_name, created_at, updated_at)
-values (60, 15, 'Dagon',
-        'Nam ultrices, libero non mattis pulvinar, nulla pede ullamcorper augue, a suscipit nulla elit ac nulla. Sed vel enim sit amet nunc viverra dapibus. Nulla suscipit ligula in lacus.',
-        'panning1n', 0, 'Elementum.xls', '2022-09-19', '2022/08/10');
-insert into post (post_id, user_id, title, body, nick_name, post_hits, image_upload_name, created_at, updated_at)
-values (61, 45, 'Peepli Live',
-        'Curabitur at ipsum ac tellus semper interdum. Mauris ullamcorper purus sit amet nulla. Quisque arcu libero, rutrum ac, lobortis vel, dapibus at, diam.',
-        'arylatt1o', 0, 'PellentesqueViverra.jpeg', '2022-07-11', '2022/08/11');
-insert into post (post_id, user_id, title, body, nick_name, post_hits, image_upload_name, created_at, updated_at)
-values (62, 58, 'My Name Is Nobody (Il Mio nome è Nessuno)',
-        'Vestibulum ac est lacinia nisi venenatis tristique. Fusce congue, diam id ornare imperdiet, sapien urna pretium nisl, ut volutpat sapien arcu sed augue. Aliquam erat volutpat.',
-        'cdinneen1p', 0, 'InSapien.avi', '2022-09-29', '2023/06/20');
-insert into post (post_id, user_id, title, body, nick_name, post_hits, image_upload_name, created_at, updated_at)
-values (63, 95, 'Shorts',
-        'In sagittis dui vel nisl. Duis ac nibh. Fusce lacus purus, aliquet at, feugiat non, pretium quis, lectus.',
-        'zmatussow1q', 0, 'DapibusDuis.xls', '2023-01-27', '2023/01/23');
-insert into post (post_id, user_id, title, body, nick_name, post_hits, image_upload_name, created_at, updated_at)
-values (64, 66, 'Smooth Talk', 'Praesent id massa id nisl venenatis lacinia. Aenean sit amet justo. Morbi ut odio.',
-        'abattey1r', 0, 'JustoSitAmet.ppt', '2022-09-07', '2023/03/02');
-insert into post (post_id, user_id, title, body, nick_name, post_hits, image_upload_name, created_at, updated_at)
-values (65, 85, 'Danse: The Paris Opera Ballet, La (La Danse - Le ballet de l''Opéra de Paris)',
-        'Cras non velit nec nisi vulputate nonummy. Maecenas tincidunt lacus at velit. Vivamus vel nulla eget eros elementum pellentesque.',
-        'sgiacaponi1s', 0, 'EuismodScelerisqueQuam.avi', '2022-12-26', '2022/12/07');
-insert into post (post_id, user_id, title, body, nick_name, post_hits, image_upload_name, created_at, updated_at)
-values (66, 84, 'Bookies',
-        'Morbi non lectus. Aliquam sit amet diam in magna bibendum imperdiet. Nullam orci pede, venenatis non, sodales sed, tincidunt eu, felis.',
-        'mfiennes1t', 0, 'OdioJustoSollicitudin.mp3', '2022-12-25', '2022/08/21');
-insert into post (post_id, user_id, title, body, nick_name, post_hits, image_upload_name, created_at, updated_at)
-values (67, 21, 'Citizen Toxie: The Toxic Avenger IV',
-        'Phasellus sit amet erat. Nulla tempus. Vivamus in felis eu sapien cursus vestibulum.', 'fzanelli1u', 0,
-        'EtiamJusto.xls', '2022-12-09', '2022/07/25');
-insert into post (post_id, user_id, title, body, nick_name, post_hits, image_upload_name, created_at, updated_at)
-values (68, 76, 'Firewalker',
-        'Aliquam quis turpis eget elit sodales scelerisque. Mauris sit amet eros. Suspendisse accumsan tortor quis turpis.',
-        'zredihalgh1v', 0, 'Sit.ppt', '2023-05-28', '2022/12/22');
-insert into post (post_id, user_id, title, body, nick_name, post_hits, image_upload_name, created_at, updated_at)
-values (69, 49, 'Washington Heights',
-        'Aenean fermentum. Donec ut mauris eget massa tempor convallis. Nulla neque libero, convallis eget, eleifend luctus, ultricies eu, nibh.',
-        'ddacca1w', 0, 'Lorem.tiff', '2023-03-23', '2022/08/30');
-insert into post (post_id, user_id, title, body, nick_name, post_hits, image_upload_name, created_at, updated_at)
-values (70, 54, 'Easy Living',
-        'Maecenas leo odio, condimentum id, luctus nec, molestie sed, justo. Pellentesque viverra pede ac diam. Cras pellentesque volutpat dui.',
-        'creary1x', 0, 'IntegerTinciduntAnte.jpeg', '2022-09-07', '2023/05/14');
-insert into post (post_id, user_id, title, body, nick_name, post_hits, image_upload_name, created_at, updated_at)
-values (71, 4, 'Being John Malkovich',
-        'Duis bibendum, felis sed interdum venenatis, turpis enim blandit mi, in porttitor pede justo eu massa. Donec dapibus. Duis at velit eu est congue elementum.',
-        'gduggen1y', 0, 'PorttitorLorem.png', '2023-04-11', '2023/03/24');
-insert into post (post_id, user_id, title, body, nick_name, post_hits, image_upload_name, created_at, updated_at)
-values (72, 27, 'Pawn Shop Chronicles',
-        'Proin interdum mauris non ligula pellentesque ultrices. Phasellus id sapien in sapien iaculis congue. Vivamus metus arcu, adipiscing molestie, hendrerit at, vulputate vitae, nisl.',
-        'dscawen1z', 0, 'CongueDiam.pdf', '2023-02-21', '2022/08/17');
-insert into post (post_id, user_id, title, body, nick_name, post_hits, image_upload_name, created_at, updated_at)
-values (73, 30, 'Gloria',
-        'In sagittis dui vel nisl. Duis ac nibh. Fusce lacus purus, aliquet at, feugiat non, pretium quis, lectus.',
-        'lrosenfelt20', 0, 'Accumsan.avi', '2022-07-25', '2022/08/12');
-insert into post (post_id, user_id, title, body, nick_name, post_hits, image_upload_name, created_at, updated_at)
-values (74, 94, 'Italianamerican',
-        'Quisque id justo sit amet sapien dignissim vestibulum. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Nulla dapibus dolor vel est. Donec odio justo, sollicitudin ut, suscipit a, feugiat et, eros.',
-        'gcomfort21', 0, 'AliquamErat.png', '2022-07-16', '2023/03/06');
-insert into post (post_id, user_id, title, body, nick_name, post_hits, image_upload_name, created_at, updated_at)
-values (75, 14, 'Death Wish 4: The Crackdown',
-        'Nullam sit amet turpis elementum ligula vehicula consequat. Morbi a ipsum. Integer a nibh.', 'sgodmer22', 0,
-        'MollisMolestieLorem.xls', '2023-01-06', '2022/09/06');
-insert into post (post_id, user_id, title, body, nick_name, post_hits, image_upload_name, created_at, updated_at)
-values (76, 53, 'Images of the World and the Inscription of War (Bilder der Welt und Inschrift des Krieges)',
-        'Integer tincidunt ante vel ipsum. Praesent blandit lacinia erat. Vestibulum sed magna at nunc commodo placerat.',
-        'rkristof23', 0, 'PretiumIaculisJusto.xls', '2023-01-04', '2023/05/01');
-insert into post (post_id, user_id, title, body, nick_name, post_hits, image_upload_name, created_at, updated_at)
-values (77, 98, 'Islands in the Stream',
-        'In sagittis dui vel nisl. Duis ac nibh. Fusce lacus purus, aliquet at, feugiat non, pretium quis, lectus.',
-        'hingold24', 0, 'PedeAcDiam.jpeg', '2022-07-14', '2022/12/20');
-insert into post (post_id, user_id, title, body, nick_name, post_hits, image_upload_name, created_at, updated_at)
-values (78, 59, 'Pahat pojat',
-        'Mauris enim leo, rhoncus sed, vestibulum sit amet, cursus id, turpis. Integer aliquet, massa id lobortis convallis, tortor risus dapibus augue, vel accumsan tellus nisi eu orci. Mauris lacinia sapien quis libero.',
-        'gzelake25', 0, 'SapienDignissim.avi', '2022-11-23', '2022/12/16');
-insert into post (post_id, user_id, title, body, nick_name, post_hits, image_upload_name, created_at, updated_at)
-values (79, 48, 'Soldier in the Rain', 'Integer ac leo. Pellentesque ultrices mattis odio. Donec vitae nisi.',
-        'hitzchaki26', 0, 'NatoquePenatibus.jpeg', '2022-09-25', '2022/12/14');
-insert into post (post_id, user_id, title, body, nick_name, post_hits, image_upload_name, created_at, updated_at)
-values (80, 32, 'Ronde, La',
-        'Nullam sit amet turpis elementum ligula vehicula consequat. Morbi a ipsum. Integer a nibh.', 'lschimonek27', 0,
-        'VariusInteger.gif', '2022-11-27', '2022/12/01');
-insert into post (post_id, user_id, title, body, nick_name, post_hits, image_upload_name, created_at, updated_at)
-values (81, 74, 'Raw Deal', 'Duis aliquam convallis nunc. Proin at turpis a pede posuere nonummy. Integer non velit.',
-        'alogg28', 0, 'MolestieHendrerit.mpeg', '2023-01-20', '2023/03/21');
-insert into post (post_id, user_id, title, body, nick_name, post_hits, image_upload_name, created_at, updated_at)
-values (82, 16, 'Phantom of the Paradise',
-        'In sagittis dui vel nisl. Duis ac nibh. Fusce lacus purus, aliquet at, feugiat non, pretium quis, lectus.',
-        'scatmull29', 0, 'EleifendPedeLibero.xls', '2023-02-01', '2023/06/21');
-insert into post (post_id, user_id, title, body, nick_name, post_hits, image_upload_name, created_at, updated_at)
-values (83, 15, 'Cobb',
-        'Duis consequat dui nec nisi volutpat eleifend. Donec ut dolor. Morbi vel lectus in quam fringilla rhoncus.',
-        'jannand2a', 0, 'OrnareImperdiet.avi', '2022-12-04', '2023/05/05');
-insert into post (post_id, user_id, title, body, nick_name, post_hits, image_upload_name, created_at, updated_at)
-values (84, 70, 'Jerry and Tom',
-        'Praesent blandit. Nam nulla. Integer pede justo, lacinia eget, tincidunt eget, tempus vel, pede.',
-        'acleaveland2b', 0, 'MaecenasRhoncus.ppt', '2022-07-24', '2023/01/04');
-insert into post (post_id, user_id, title, body, nick_name, post_hits, image_upload_name, created_at, updated_at)
-values (85, 44, 'PCU',
-        'Aliquam quis turpis eget elit sodales scelerisque. Mauris sit amet eros. Suspendisse accumsan tortor quis turpis.',
-        'hlochrie2c', 0, 'EratNulla.png', '2023-06-10', '2022/11/25');
-insert into post (post_id, user_id, title, body, nick_name, post_hits, image_upload_name, created_at, updated_at)
-values (86, 94, 'Bay of Angels (La baie des anges)',
-        'Nullam porttitor lacus at turpis. Donec posuere metus vitae ipsum. Aliquam non mauris.', 'torrell2d', 0,
-        'ConvallisMorbiOdio.ppt', '2022-12-25', '2022/12/03');
-insert into post (post_id, user_id, title, body, nick_name, post_hits, image_upload_name, created_at, updated_at)
-values (87, 84, 'Moonraker', 'Duis bibendum. Morbi non quam nec dui luctus rutrum. Nulla tellus.', 'swaltho2e', 0,
-        'Luctus.png', '2023-01-18', '2023/03/09');
-insert into post (post_id, user_id, title, body, nick_name, post_hits, image_upload_name, created_at, updated_at)
-values (88, 64, 'Celestial Wives of the Meadow Mari (Nebesnye zheny lugovykh mari)',
-        'Etiam vel augue. Vestibulum rutrum rutrum neque. Aenean auctor gravida sem.', 'dsommersett2f', 0,
-        'NonLectus.doc', '2022-12-08', '2023/06/03');
-insert into post (post_id, user_id, title, body, nick_name, post_hits, image_upload_name, created_at, updated_at)
-values (89, 11, 'Inside: ''Dr. Strangelove or How I Learned to Stop Worrying and Love the Bomb''',
-        'Donec diam neque, vestibulum eget, vulputate ut, ultrices vel, augue. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Donec pharetra, magna vestibulum aliquet ultrices, erat tortor sollicitudin mi, sit amet lobortis sapien sapien non mi. Integer ac neque.',
-        'ltrusler2g', 0, 'TempusVelPede.ppt', '2022-10-05', '2022/09/28');
-insert into post (post_id, user_id, title, body, nick_name, post_hits, image_upload_name, created_at, updated_at)
-values (90, 68, '4 Little Girls',
-        'Aliquam quis turpis eget elit sodales scelerisque. Mauris sit amet eros. Suspendisse accumsan tortor quis turpis.',
-        'cmcmahon2h', 0, 'MontesNascetur.tiff', '2023-04-10', '2023/04/27');
-insert into post (post_id, user_id, title, body, nick_name, post_hits, image_upload_name, created_at, updated_at)
-values (91, 51, 'Lesson in Love, A (En lektion i kärlek)',
-        'In hac habitasse platea dictumst. Etiam faucibus cursus urna. Ut tellus.', 'oolivi2i', 0, 'Elementum.xls',
-        '2023-05-12', '2022/12/07');
-insert into post (post_id, user_id, title, body, nick_name, post_hits, image_upload_name, created_at, updated_at)
-values (92, 86, 'Seven Days in Utopia',
-        'Curabitur in libero ut massa volutpat convallis. Morbi odio odio, elementum eu, interdum eu, tincidunt in, leo. Maecenas pulvinar lobortis est.',
-        'rmcgall2j', 0, 'PharetraMagna.png', '2022-07-23', '2023/05/06');
-insert into post (post_id, user_id, title, body, nick_name, post_hits, image_upload_name, created_at, updated_at)
-values (93, 76, 'Man on the Roof, The (Mannen på taket)',
-        'Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Proin risus. Praesent lectus.', 'bmalley2k', 0,
-        'AcEnimIn.xls', '2023-01-08', '2023/05/16');
-insert into post (post_id, user_id, title, body, nick_name, post_hits, image_upload_name, created_at, updated_at)
-values (94, 73, 'Ricky Gervais Live 4: Science',
-        'Fusce posuere felis sed lacus. Morbi sem mauris, laoreet ut, rhoncus aliquet, pulvinar sed, nisl. Nunc rhoncus dui vel sem.',
-        'smackett2l', 0, 'ViverraEget.mp3', '2022-09-09', '2022/12/08');
-insert into post (post_id, user_id, title, body, nick_name, post_hits, image_upload_name, created_at, updated_at)
-values (95, 22, 'Sherlock Holmes: A Game of Shadows', 'Fusce consequat. Nulla nisl. Nunc nisl.', 'bjuppe2m', 0,
-        'DonecPosuereMetus.mpeg', '2023-04-04', '2022/10/11');
-insert into post (post_id, user_id, title, body, nick_name, post_hits, image_upload_name, created_at, updated_at)
-values (96, 74, 'Paranormal Activity 4',
-        'Aliquam quis turpis eget elit sodales scelerisque. Mauris sit amet eros. Suspendisse accumsan tortor quis turpis.',
-        'cardron2n', 0, 'SapienQuisLibero.tiff', '2023-04-16', '2023/05/02');
-insert into post (post_id, user_id, title, body, nick_name, post_hits, image_upload_name, created_at, updated_at)
-values (97, 42, 'I Shot a Man in Vegas', 'Duis bibendum. Morbi non quam nec dui luctus rutrum. Nulla tellus.',
-        'lmcwhinney2o', 0, 'DictumstAliquam.mov', '2023-04-07', '2023/05/17');
-insert into post (post_id, user_id, title, body, nick_name, post_hits, image_upload_name, created_at, updated_at)
-values (98, 39, 'Marwencol',
-        'In sagittis dui vel nisl. Duis ac nibh. Fusce lacus purus, aliquet at, feugiat non, pretium quis, lectus.',
-        'edyte2p', 0, 'Id.txt', '2022-08-12', '2023/04/25');
-insert into post (post_id, user_id, title, body, nick_name, post_hits, image_upload_name, created_at, updated_at)
-values (99, 64, 'Tunes of Glory',
-        'Aenean fermentum. Donec ut mauris eget massa tempor convallis. Nulla neque libero, convallis eget, eleifend luctus, ultricies eu, nibh.',
-        'dchretien2q', 0, 'AmetErosSuspendisse.avi', '2022-11-06', '2022/12/17');
-insert into post (post_id, user_id, title, body, nick_name, post_hits, image_upload_name, created_at, updated_at)
-values (100, 25, 'Miracle Worker, The',
-        'Phasellus sit amet erat. Nulla tempus. Vivamus in felis eu sapien cursus vestibulum.', 'cduprey2r', 0,
-        'NullaNunc.gif', '2023-03-04', '2022/08/15');
-
-
-insert into hashtag (hash_tag_id, hash_tag_name, hash_tag_type, created_at, updated_at)
-values (1, '일반글', 1, '2022-12-12', '2022/12/12');
-insert into hashtag (hash_tag_id, hash_tag_name, hash_tag_type, created_at, updated_at)
-values (2, '시', 2, '2022-12-12', '2022/12/12');
-insert into hashtag (hash_tag_id, hash_tag_name, hash_tag_type, created_at, updated_at)
-values (3, '소설', 2, '2022-12-12', '2022/12/12');
-insert into hashtag (hash_tag_id, hash_tag_name, hash_tag_type, created_at, updated_at)
-values (4, '수필', 2, '2022-12-12', '2022/12/12');
-insert into hashtag (hash_tag_id, hash_tag_name, hash_tag_type, created_at, updated_at)
-values (5, '판타지', 2, '2022-12-12', '2022/12/12');
-insert into hashtag (hash_tag_id, hash_tag_name, hash_tag_type, created_at, updated_at)
-values (6, '로맨스', 2, '2022-12-12', '2022/12/12');
-insert into hashtag (hash_tag_id, hash_tag_name, hash_tag_type, created_at, updated_at)
-values (7, '스릴러', 2, '2022-12-12', '2022/12/12');
-insert into hashtag (hash_tag_id, hash_tag_name, hash_tag_type, created_at, updated_at)
-values (8, '공포', 2, '2022-12-12', '2022/12/12');
-insert into hashtag (hash_tag_id, hash_tag_name, hash_tag_type, created_at, updated_at)
-values (9, '추리', 2, '2022-12-12', '2022/12/12');
-
-insert into hashtag (hash_tag_id, hash_tag_name, hash_tag_type, created_at, updated_at)
-values (10, '단편', 3, '2022-12-12', '2022/12/12');
-
-insert into hashtag (hash_tag_id, hash_tag_name, hash_tag_type, created_at, updated_at)
-values (11, '연재', 3, '2022-12-12', '2022/12/12');
-
-insert into hashtag (hash_tag_id, hash_tag_name, hash_tag_type, created_at, updated_at)
-values (12, '완결', 3, '2022-12-12', '2022/12/12');
-insert into hashtag (hash_tag_id, hash_tag_name, hash_tag_type, created_at, updated_at)
-values (13, '공지글', 4, '2022-12-12', '2022/12/12');
-
-insert into topic (topic_id, topic_name,topic_up_coming_date,topic_use_date)
-values (1, '영화', '2023-06-28', '2023-06-28');
-insert into topic (topic_id, topic_name,topic_up_coming_date,topic_use_date)
-values (2, '드라마', '2023-06-29', '2023-06-30');
-insert into topic (topic_id, topic_name,topic_up_coming_date,topic_use_date)
-values (3, '친절한 금자씨', '2023-07-7', '2023-7-8');
-insert into topic (topic_id, topic_name,topic_up_coming_date,topic_use_date)
-values (4, '토익', '2023-07-01', '2023-7-2');
-insert into topic (topic_id, topic_name,topic_up_coming_date,topic_use_date)
-values (5, '토익스피킹', '2023-07-02', '2023-7-3');
-insert into topic (topic_id, topic_name,topic_up_coming_date,topic_use_date)
-values (6, '토익리스닝', '2023-07-03', '2023-7-4');
-insert into topic (topic_id, topic_name,topic_up_coming_date,topic_use_date)
-values (7, '토익리딩', '2023-07-04', '2023-7-5');
-insert into topic (topic_id, topic_name,topic_up_coming_date,topic_use_date)
-values (8, 'Star-Wars', '2023-07-05', '2023-7-6');
-insert into topic (topic_id, topic_name,topic_up_coming_date,topic_use_date)
-values (9, '토익스피킹', '2023-07-06', '2023-7-7');
 

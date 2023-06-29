@@ -60,6 +60,8 @@ public class SecurityConfig {
 
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.authorizeRequests(auth -> {
+                    auth.mvcMatchers("/actuator/**").hasRole("ADMIN");
+                    auth.mvcMatchers("users/**").hasIpAddress("localhost");
                     auth.mvcMatchers("/admin/**").hasRole("ADMIN");
                     auth.mvcMatchers("/user/**").hasAnyRole("USER");
                     auth.mvcMatchers(HttpMethod.GET, "/social/oauth2/signup").hasAnyRole("GUEST");
