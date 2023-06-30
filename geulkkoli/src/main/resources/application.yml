@@ -13,7 +13,7 @@ spring:
     url: ${spring.datasource.url}
     username: ${spring.datasource.username}
     password: ${spring.datasource.password}
-
+ # creat- drop -> update로 수정 (테이블이 없으면 생성하고 있으면 수정)
   jpa:
     hibernate:
       ddl-auto: update
