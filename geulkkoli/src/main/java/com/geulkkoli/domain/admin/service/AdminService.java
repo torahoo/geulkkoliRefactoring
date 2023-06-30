@@ -1,5 +1,6 @@
 package com.geulkkoli.domain.admin.service;
 
+import com.geulkkoli.domain.admin.AccountLock;
 import com.geulkkoli.domain.post.Post;
 import com.geulkkoli.domain.topic.Topic;
 import com.geulkkoli.domain.user.User;
@@ -12,7 +13,7 @@ import java.util.List;
 
 public interface AdminService {
 
-    void lockUser(Long userId, String reason, Long lockDate);
+    AccountLock lockUser(Long userId, String reason, Long lockDate);
 
     List<ReportDto> findAllReportedPost();
 

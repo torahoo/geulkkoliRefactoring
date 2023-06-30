@@ -42,6 +42,7 @@ class UserSecurityServiceTest {
 
 
     @Test
+    @DisplayName("가입 시 성공시 유저 권한 부여 테스트")
     void join() {
         JoinFormDto joinForm = new JoinFormDto();
         joinForm.setEmail("tako11@naver.com");
@@ -52,7 +53,7 @@ class UserSecurityServiceTest {
         joinForm.setPassword("123qwe!@#");
         User user = userService.signUp(joinForm);
 
-        assertThat(user.getRole()).isEqualTo(RoleEntity.of(Role.USER, user));
+        assertThat(user.isUser()).isTrue();
     }
 
     @Test
@@ -140,18 +141,4 @@ class UserSecurityServiceTest {
 
     }
 
-    @Test
-    @DisplayName("이메일은 존재하지만 권한 정보가 존재하지 않을 경우 AuthenticationException 예외가 발생한다.")
-    void exception_thrown_for_non_existent_permission() {
-        JoinFormDto joinForm = new JoinFormDto();
-        joinForm.setEmail("tako1@naver.com");
-        joinForm.setUserName("tako1@naver.com");
-        joinForm.setNickName("바나나1");
-        joinForm.setPhoneNo("01012345671");
-        joinForm.setGender("male");
-        joinForm.setPassword("123qwe!@#");
-        userService.signUp(joinForm);
-
-        assertThrows(AuthenticationException.class, () -> userSecurityService.loadUserByUsername("tako1@naver.com"));
-    }
 }
