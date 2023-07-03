@@ -25,13 +25,13 @@ import java.util.*;
 @NoArgsConstructor
 @Entity
 @Getter
-@Table(name = "users")
+@Table(name = "users", indexes = @Index(name = "idx_user_email_nick_name", columnList = "email,nick_name"))
 public class User extends ConfigDate {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long userId;
 
-    @Column(name = "name", nullable = false)
+    @Column(nullable = false)
     private String userName;
 
     @Column(name = "password", nullable = false)
@@ -76,6 +76,7 @@ public class User extends ConfigDate {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Favorites> favorites = new LinkedHashSet<>();
 
+    //팔로우의 유저 매핑
     @OneToMany(mappedBy = "followee", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Follow> followees = new LinkedHashSet<>();
 
@@ -117,7 +118,6 @@ public class User extends ConfigDate {
                 .user(this)
                 .nickName(addDTO.getNickName())
                 .build();
-        post.setCreatedAtForCalendarTest(localDateTime);
         this.posts.add(post);
         return post;
     }
@@ -277,7 +277,7 @@ public class User extends ConfigDate {
     }
 
 
-    public RoleEntity Role(Role role) {
+    public RoleEntity addRole(Role role) {
         RoleEntity roleEntity = RoleEntity.of(role, this);
         this.role = roleEntity;
         return roleEntity;
@@ -289,23 +289,11 @@ public class User extends ConfigDate {
         return follow;
     }
 
-    public Follow unfollow(User followee) {
-        Follow follow = findFollow(followee);
-        this.followees.remove(follow);
-        return follow;
-    }
-
     public Follow unfollow(Follow follow) {
         this.followees.remove(follow);
         return follow;
     }
 
-    private Follow findFollow(User followee) {
-        return this.followees.stream()
-                .filter(follow -> follow.isFollowee(followee))
-                .findFirst()
-                .orElseThrow(() -> new NoSuchFollowException("해당 팔로우가 없습니다."));
-    }
     public RoleEntity getRole() {
         return role;
     }

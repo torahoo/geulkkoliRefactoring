@@ -1,58 +1,57 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org"
-      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
-<head>
-    <meta charset="UTF-8">
-    <title>Root Page</title>
-</head>
-
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security" xmlns:>
 <body>
-<header th:fragment="header" class="p-3 bg-white text-white">
-    <div class="container">
-        <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
-            <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
-                <li><a id="home" href="/" class="nav-link px-2 text-secondary">Home</a></li>
-            </ul>
+<header th:fragment="header" id="btn-all" class="p-3 text-white">
+    <div class="header-buttons">
+        <button type="button"
+                onclick="location.href='/loginPage'"
+                sec:authorize="isAnonymous()"
+                class="btn btn-primary btn-sm fixed-width">Login
+        </button>
 
+        <button type="button"
+                onclick="location.href='/admin/'"
+                sec:authorize="hasRole('ADMIN')"
+                class="btn btn-primary">admin
+        </button>
+
+
+        <button type="button"
+                onclick="location.href='/join'"
+                sec:authorize="isAnonymous()"
+                class="btn btn-outline-primary btn-sm fixed-width">Sign-up
+        </button>
+
+        <div th:if="${#request.getAttribute('loginError') != null}">
             <button type="button"
                     onclick="location.href='/loginPage'"
-                    sec:authorize="isAnonymous()"
-                    class="btn btn-primary">Login
+                    class="btn btn-primary btn-sm fixed-width">Login
             </button>
 
             <button type="button"
                     onclick="location.href='/join'"
-                    sec:authorize="isAnonymous()"
-                    class="btn btn-outline-primary">Sign-up
+                    class="btn btn-outline-primary btn-sm fixed-width">Sign-up
             </button>
-            <button th:if="${#request.getAttribute('loginError')!= null}" type="button"
-                    onclick="location.href='/loginPage'"
-                    class="btn btn-primary">Login
-            </button>
+        </div>
 
-            <button th:if="${#request.getAttribute('loginError')!= null}" type="button"
-                    onclick="location.href='/join'"
-                    class="btn btn-outline-primary">Sign-up
+        <div sec:authorize="hasAnyRole('USER','ADMIN')" class="account-options">
+            <button type="button"
+                    sec:authorize="hasAnyRole('USER')"
+                    th:attr="data-url='/user/'+${#authentication.principal.nickName}"
+                    onclick="location.href=this.getAttribute('data-url')"
+                    class="btn btn-primary btn-sm fixed-width">Account profile
             </button>
             <button type="button"
-                    onclick="location.href='/admin/'"
-                    sec:authorize="hasRole('ADMIN')"
-                    class="btn btn-primary">admin
+                    sec:authorize="hasAnyRole('USER')"
+                    onclick="location.href='/user/edit'"
+                    class="btn btn-primary btn-sm fixed-width">Account Settings
             </button>
-
-            <button type="button"
-                    onclick="location.href='/myPage'"
-                    sec:authorize="hasRole('USER')"
-                    class="btn btn-primary">myPage
-            </button>
-
-
             <button type="button"
                     onclick="location.href='/logout'"
-                    sec:authorize="hasAnyRole('USER','ADMIN','GUEST')"
-                    class="btn btn-outline-primary">logout
+                    sec:authorize="hasAnyRole('USER','ADMIN')"
+                    class="btn btn-outline-primary btn-sm fixed-width">Logout
             </button>
-
         </div>
     </div>
 </header>

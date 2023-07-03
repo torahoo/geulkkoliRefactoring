@@ -1,5 +1,6 @@
 package com.geulkkoli.domain.hashtag;
 
+import com.geulkkoli.domain.hashtag.util.HashTagTypeConverter;
 import com.geulkkoli.domain.post.ConfigDate;
 import com.geulkkoli.domain.posthashtag.PostHashTag;
 import lombok.Builder;
@@ -22,10 +23,11 @@ public class HashTag extends ConfigDate {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long hashTagId;
 
-    @Column(nullable = false)
+    @Column(nullable = false, name = "hashTag_Name")
     private String hashTagName;
 
-    @Column(nullable = false)
+    @Convert(converter = HashTagTypeConverter.class)
+    @Column(nullable = false, name = "hashTag_Type")
     private HashTagType hashTagType;
 
     //PostHashTag 클라스와 일대다로 묶는 메서드
@@ -48,5 +50,13 @@ public class HashTag extends ConfigDate {
     @Override
     public int hashCode() {
         return getClass().hashCode();
+    }
+
+    @Override
+    public String toString() {
+        return "HashTag{" +
+                "hashTagName='" + hashTagName + '\'' +
+                ", hashTagType=" + hashTagType +
+                '}';
     }
 }

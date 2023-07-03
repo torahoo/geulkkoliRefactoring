@@ -1,8 +1,9 @@
 package com.geulkkoli.domain.follow.service;
 
-import com.geulkkoli.domain.follow.Follow;
+import com.geulkkoli.application.follow.FollowInfos;
 import com.geulkkoli.domain.follow.FollowRepository;
 import com.geulkkoli.domain.user.User;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,8 +19,16 @@ public class FollowFindService {
     }
 
 
-    public List<Follow> findAllFollowerByFolloweeId(Long followeeId) {
-        return followRepository.findFollowEntitiesByFolloweeUserId(followeeId);
+    public FollowInfos findSomeFollowerByFolloweeId(Long followeeId, Long lastFollowId, Pageable pageable) {
+        return FollowInfos.of(followRepository.findFollowersByFolloweeUserId(followeeId, lastFollowId, pageable.getPageSize()));
+    }
+
+    public FollowInfos findSomeFolloweeByFollowerId(Long followerId, Long lastFollowId, Pageable pageable) {
+        return FollowInfos.of(followRepository.findFolloweesByFollowerUserId(followerId, lastFollowId, pageable.getPageSize()));
+    }
+
+    public List<Long> findUserIdByFollowedEachOther(List<Long> followeeIds, Long followerId, Integer limit) {
+        return followRepository.findFollowedEachOther(followeeIds, followerId, limit);
     }
 
     public Integer countFollowerByFolloweeId(Long followeeId) {
@@ -28,10 +37,6 @@ public class FollowFindService {
 
     public Integer countFolloweeByFollowerId(Long followerId) {
         return followRepository.countByFollowerUserId(followerId);
-    }
-
-    public List<Follow> findAllFolloweeByFollowerId(Long followerId) {
-        return followRepository.findFollowEntitiesByFollowerUserId(followerId);
     }
 
     public Boolean checkFollow(User loggingUser, User authorUser) {

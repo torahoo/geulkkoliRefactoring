@@ -15,7 +15,6 @@ import org.hibernate.annotations.OnDeleteAction;
 import javax.persistence.*;
 import java.util.LinkedHashSet;
 import java.util.NoSuchElementException;
-import java.util.Objects;
 import java.util.Set;
 
 @Getter
@@ -32,22 +31,20 @@ public class Post extends ConfigDate {
     @JoinColumn(name = "user_id")
     private User user;
 
-    @Setter
     @Column(nullable = false)
     private String title;
 
-    @Setter
-    @Column(name = "body", nullable = false)
+
+    @Column(name = "body", nullable = false, length = 15000)
     private String postBody;
 
     @Column(name = "nick_name", nullable = false)
     private String nickName;
 
-    @Setter
     @Column(nullable = false)
     private int postHits;
 
-    @Setter
+    @Column(name = "image_upload_name")
     private String imageUploadName;
 
     //댓글의 게시글 매핑

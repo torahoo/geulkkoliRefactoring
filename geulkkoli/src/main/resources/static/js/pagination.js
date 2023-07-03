@@ -10,7 +10,7 @@ if(nextPage >= endPage) {
 }
 
 for (let page = block, index = 0;
-     page < (block + blockCount) & page < endPage;
+     page < (block + blockCount) && page < endPage;
      ++page, ++index) {
 
     const liPage = document.createElement('li');

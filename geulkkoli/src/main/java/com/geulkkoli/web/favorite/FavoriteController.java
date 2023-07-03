@@ -14,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.NoSuchElementException;
@@ -22,16 +23,17 @@ import java.util.Optional;
 @RestController
 @Slf4j
 @RequiredArgsConstructor
+@RequestMapping("/favorite")
 public class FavoriteController {
 
     private final FavoriteService favoriteService;
     private final PostService postService;
     private final UserFindService userFindService;
 
-    @PostMapping("pressFavorite/{postId}")
+    @PostMapping("/pressFavorite/{postId}")
     public ResponseEntity<String> pressFavoriteButton(@PathVariable("postId") Long postId,
                                                       @AuthenticationPrincipal CustomAuthenticationPrinciple user) throws Exception {
-
+        log.info("pressFavoriteButton");
         Post post = postService.findById(postId);
 
         try {

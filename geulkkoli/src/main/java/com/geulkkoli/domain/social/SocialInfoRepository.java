@@ -17,4 +17,6 @@ public interface SocialInfoRepository extends JpaRepository<SocialInfo, Long>, S
     List<SocialInfo> findAllByUser_Email(String email);
 
     Optional<SocialInfo> findSocialInfoBySocialId(String socialId);
+
+    List<SocialInfo> findAllByUserNickName(String nickName);
 }

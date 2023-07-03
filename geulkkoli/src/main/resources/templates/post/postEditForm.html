@@ -2,7 +2,7 @@
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
   <meta charset="utf-8">
-  <link href="../css/bootstrap.min.css"
+  <link href="/css/bootstrap.min.css"
         th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
   <link rel="stylesheet" href="/css/post.css">
   <title>게시글 수정 폼</title>
@@ -79,7 +79,7 @@
           <div class="col">
             <button class="w-100 btn btn-primary btn-lg"
                     type="button"
-                    th:onclick="|location.href='@{/post/list(page=${session.pageNumber},searchType=${searchType},searchWords=${searchWords})}'|"
+                    th:onclick="|location.href='@{/post/list(page=${pageNumber},searchType=${searchType},searchWords=${searchWords})}'|"
                     th:value="취소">취소</button>
           </div>
           <div class="col">
@@ -93,7 +93,6 @@
 
 </div>
 
-<footer id="footer"></footer>
 <div th:include="footer" ></div>
 
 <script type="text/javascript" >
@@ -126,4 +125,5 @@
 </script>
 
 </body>
+<div th:include="footer" ></div>
 </html>

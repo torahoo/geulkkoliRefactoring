@@ -9,6 +9,7 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
+import java.util.Locale;
 
 @Getter
 @MappedSuperclass
@@ -23,17 +24,9 @@ public abstract class ConfigDate {
     @LastModifiedDate
     private String updatedAt;
 
-    // 추후 제거
-    @Transient
-    private LocalDateTime calendarData;
-
     @PrePersist
     public void onPrePersist() {
-        if (calendarData != null) {
-            this.createdAt = calendarData.format(DateTimeFormatter.ofPattern("yyyy. MM. dd a hh:mm:ss"));
-        } else {
-            this.createdAt = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy. MM. dd a hh:mm:ss"));
-        }
+        this.createdAt = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy. MM. dd a hh:mm:ss"));
         this.updatedAt = createdAt;
     }
 
@@ -42,8 +35,4 @@ public abstract class ConfigDate {
         this.updatedAt = LocalDateTime.now().format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM));
     }
 
-    // 달력 잔디 심기용 각 다른 날짜의 게시물들 필요 (추후 제거)
-    public void setCreatedAtForCalendarTest(LocalDateTime localDateTime) {
-        calendarData = localDateTime;
-    }
 }

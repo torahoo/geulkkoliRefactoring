@@ -5,26 +5,20 @@ import com.geulkkoli.domain.hashtag.HashTagRepository;
 import com.geulkkoli.domain.hashtag.HashTagType;
 import com.geulkkoli.domain.post.AdminTagAccessDenied;
 import com.geulkkoli.domain.post.Post;
-import com.geulkkoli.domain.post.PostRepository;
-import com.geulkkoli.domain.post.PostRepositoryCustom;
 import com.geulkkoli.domain.topic.Topic;
 import com.geulkkoli.domain.topic.TopicRepository;
 import com.geulkkoli.web.admin.DailyTopicDto;
-import com.geulkkoli.web.post.dto.ListDTO;
+import com.geulkkoli.web.post.dto.PostRequestListDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.dao.PermissionDeniedDataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import org.springframework.validation.BindingResult;
 
 import javax.transaction.Transactional;
-import java.nio.file.AccessDeniedException;
 import java.time.LocalDate;
 import java.util.*;
-import java.util.Comparator;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -51,15 +45,13 @@ public class PostHashTagService {
     }
 
     //게시판을 들어갔을 때, 게시글을 검색할 때 등 게시글을 가져오는 모든 경우에 쓰입니다.
-    public Page<ListDTO> searchPostsListByHashTag(Pageable pageable, String searchType, String searchWords) {
+    public Page<PostRequestListDTO> searchPostsListByHashTag(Pageable pageable, String searchType, String searchWords) {
 
         String searchWord = searchWordExtractor(searchWords);
         List<HashTag> tags = hashTagSeparator(searchWords);
 
         List<Post> posts = searchPostContainAllHashTags(tags);
-
         List<Post> resultList;
-
         switch (searchType) {
             case "제목":
                 resultList = posts.stream()
@@ -87,7 +79,7 @@ public class PostHashTagService {
                 break;
         }
 
-        return getPosts(pageable, resultList).map(post -> new ListDTO(
+        return getPosts(pageable, resultList).map(post -> new PostRequestListDTO(
                 post.getPostId(),
                 post.getTitle(),
                 post.getNickName(),
@@ -100,7 +92,6 @@ public class PostHashTagService {
     private Page<Post> getPosts(Pageable pageable, List<Post> resultList) {
         resultList.sort(Comparator.comparing(Post::getUpdatedAt).reversed());
 
-//        int start = resultList.size()>=25 ? (int) pageable.getOffset() : resultList.size();
         int start = (int) pageable.getOffset();
         int end = Math.min((start + pageable.getPageSize()), resultList.size());
         return new PageImpl<>(resultList.subList(start, end), pageable, resultList.size());
@@ -110,15 +101,17 @@ public class PostHashTagService {
     public List<HashTag> hashTagSeparator(String searchWords) {
         Set<HashTag> hashTags = new LinkedHashSet<>();
         String[] splitter = searchWords.split("#");
+        log.info("splitter: {}", Arrays.stream(splitter).collect(Collectors.toUnmodifiableList()));
         for (int i = 1; i < splitter.length; i++) {
             String stripper = splitter[i].strip();
-
-            HashTag hashTagByHashTagName = hashTagRepository.findHashTagByHashTagName(stripper);
-
+            String trim = stripper.trim();
+            log.info("trim: {}", trim);
+            HashTag hashTagByHashTagName = hashTagRepository.findByHashTagName(trim);
+            log.info("hashTagByHashTagName: {}", hashTagByHashTagName);
             if (hashTagByHashTagName != null) {
                 hashTags.add(hashTagByHashTagName);
             } else {
-                HashTag save = hashTagRepository.save(new HashTag(stripper, HashTagType.GENERAL));
+                HashTag save = hashTagRepository.save(new HashTag(trim, HashTagType.GENERAL));
                 hashTags.add(save);
             }
         }
@@ -183,11 +176,10 @@ public class PostHashTagService {
     public DailyTopicDto showTodayTopic (LocalDate date){
         Topic todayTopic = topicRepository.findTopicByUpComingDate(date);
         todayTopic.settingUseDate(date);
-        DailyTopicDto dailyTopicDto = DailyTopicDto.builder()
+        return DailyTopicDto.builder()
                 .date(date.toString())
                 .topic(todayTopic.getTopicName())
                 .build();
-        return dailyTopicDto;
     }
 
 

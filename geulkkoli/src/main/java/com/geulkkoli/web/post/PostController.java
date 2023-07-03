@@ -9,18 +9,16 @@ import com.geulkkoli.domain.post.service.PostService;
 import com.geulkkoli.domain.posthashtag.PostHashTagService;
 import com.geulkkoli.domain.user.User;
 import com.geulkkoli.domain.user.service.UserFindService;
-import com.geulkkoli.domain.user.service.UserService;
 import com.geulkkoli.web.comment.dto.CommentBodyDTO;
+import com.geulkkoli.web.follow.dto.FollowResult;
 import com.geulkkoli.web.post.dto.AddDTO;
 import com.geulkkoli.web.post.dto.EditDTO;
 import com.geulkkoli.web.post.dto.PageDTO;
 import com.geulkkoli.web.post.dto.PagingDTO;
-import com.geulkkoli.web.follow.FollowResult;
-import com.geulkkoli.web.post.dto.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.context.MessageSource;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.MessageSource;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
@@ -40,9 +38,6 @@ import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
-import java.nio.file.AccessDeniedException;
-import java.util.Locale;
-import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -53,12 +48,9 @@ import java.util.UUID;
 public class PostController {
 
     private final PostService postService;
-    private final UserService userService;
     private final UserFindService userFindService;
-    private final CommentsService commentsService;
     private final FavoriteService favoriteService;
     private final PostHashTagService postHashTagService;
-    private final MessageSource messageSource;
     private final FollowFindService followFindService;
     @Value("${comm.uploadPath}")
     private String uploadPath;
@@ -73,7 +65,7 @@ public class PostController {
         String src = "/imageFile/" + fileName;
 
         File uploadDir = new File(uploadPath);
-        if(!uploadDir.exists())
+        if (!uploadDir.exists())
             uploadDir.mkdir();
 
         File uploadDirFile = new File(uploadPath + fileName);
@@ -99,9 +91,9 @@ public class PostController {
     // 게시판 리스트 html로 이동
     @GetMapping("/list")
     public String postList(@PageableDefault(size = 5, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable,
-                           Model model,
                            @RequestParam(defaultValue = "") String searchType,
-                           @RequestParam(defaultValue = "") String searchWords) {
+                           @RequestParam(defaultValue = "") String searchWords, Model model) {
+        log.info("searchType: {}, searchWords: {}", searchType, searchWords);
         PagingDTO pagingDTO = PagingDTO.listDTOtoPagingDTO(postHashTagService.searchPostsListByHashTag(pageable, searchType, searchWords));
         model.addAttribute("page", pagingDTO);
         searchDefault(model, searchType, searchWords);
@@ -123,12 +115,10 @@ public class PostController {
         redirectAttributes.addAttribute("page", request.getSession().getAttribute("pageNumber"));
 
         User user = userFindService.findById(post.getAuthorId());
-        long postId = 0;
         try {
             if (bindingResult.hasErrors()) {
                 return "/post/postAddForm";
             }
-            postId = postService.savePost(post, user).getPostId();
         } catch (IllegalArgumentException e) {
             bindingResult.rejectValue("tagCategory", "Tag.Required", new String[]{e.getMessage()}, e.toString());
             e.getStackTrace();
@@ -136,6 +126,7 @@ public class PostController {
             bindingResult.rejectValue("tagListString", "Tag.Denied", new String[]{e.getMessage()}, e.toString());
             e.getStackTrace();
         }
+        long postId = postService.savePost(post, user).getPostId();
         redirectAttributes.addAttribute("postId", postId);
         response.addCookie(new Cookie(URLEncoder.encode(post.getNickName(), "UTF-8"), "done"));
         return "redirect:/post/read/{postId}";
@@ -143,21 +134,24 @@ public class PostController {
 
     //게시글 읽기 Page로 이동
     @GetMapping("/read/{postId}")
-    public String readPost(Model model, @PathVariable Long postId, HttpServletRequest request,
+    public String readPost(Model model, @PathVariable Long postId,
+                           @RequestParam(defaultValue = "0") String page,
                            @RequestParam(defaultValue = "") String searchType,
                            @RequestParam(defaultValue = "") String searchWords,
                            @AuthenticationPrincipal CustomAuthenticationPrinciple authUser) {
         PageDTO postPage = PageDTO.toDTO(postService.showDetailPost(postId));
         User authorUser = userFindService.findById(postPage.getAuthorId());
-        request.getSession().setAttribute("pageNumber", request.getParameter("page"));
+        UserProfileDTO userProfile = UserProfileDTO.toDTO(authorUser);
+
 
         String checkFavorite = "never clicked";
 
         if (Objects.isNull(authUser)) {
             log.info("로그인을 안한 사용자 접속");
             model.addAttribute("post", postPage);
+            model.addAttribute("pageNumber", page);
             model.addAttribute("commentList", postPage.getCommentList());
-            model.addAttribute("authorUser", authorUser);
+            model.addAttribute("authorUser", userProfile);
             model.addAttribute("checkFavorite", checkFavorite);
             searchDefault(model, searchType, searchWords);
             return "/post/postPage";
@@ -173,11 +167,10 @@ public class PostController {
         Boolean follow = followFindService.checkFollow(loggingUser, authorUser);
         FollowResult followResult = new FollowResult(mine, follow);
 
-        log.info("followResult={}", followResult.isFollow());
-        log.info("mine={}", followResult.isMine());
-        log.info("checkFavorite={}", checkFavorite);
+
         model.addAttribute("followResult", followResult);
         model.addAttribute("post", postPage);
+        model.addAttribute("pageNumber", page);
         model.addAttribute("commentList", postPage.getCommentList());
         model.addAttribute("authorUser", authorUser);
         model.addAttribute("checkFavorite", checkFavorite);
@@ -189,11 +182,12 @@ public class PostController {
 
     //게시글 수정 html로 이동
     @GetMapping("/update/{postId}")
-    public String movePostEditForm(Model model, @PathVariable Long postId,
+    public String movePostEditForm(Model model, @PathVariable Long postId, @RequestParam(defaultValue = "0") String page,
                                    @RequestParam(defaultValue = "") String searchType,
                                    @RequestParam(defaultValue = "") String searchWords) {
         EditDTO postPage = EditDTO.toDTO(postService.findById(postId));
         model.addAttribute("editDTO", postPage);
+        model.addAttribute("pageNumber", page);
         searchDefault(model, searchType, searchWords);
         return "/post/postEditForm";
     }
@@ -201,7 +195,8 @@ public class PostController {
     //게시글 수정
     @PostMapping("/update/{postId}")
     public String editPost(@Validated @ModelAttribute EditDTO updateParam, BindingResult bindingResult,
-                           @PathVariable Long postId, RedirectAttributes redirectAttributes, HttpServletRequest request,
+                           @PathVariable Long postId, RedirectAttributes redirectAttributes,
+                           @RequestParam(defaultValue = "0") String page,
                            @RequestParam(defaultValue = "") String searchType,
                            @RequestParam(defaultValue = "") String searchWords) {
         try {
@@ -220,7 +215,7 @@ public class PostController {
             return "/post/postEditForm";
         }
         redirectAttributes.addAttribute("updateStatus", true);
-        redirectAttributes.addAttribute("page", request.getSession().getAttribute("pageNumber"));
+        redirectAttributes.addAttribute("page", page);
         redirectAttributes.addAttribute("searchType", searchType);
         redirectAttributes.addAttribute("searchWords", searchWords);
 
@@ -230,9 +225,7 @@ public class PostController {
     //게시글 삭제
     @DeleteMapping("/request")
     public String deletePost(@RequestParam("postId") Long postId, @RequestParam("userNickName") String userNickName) {
-        log.info("=====================userNickName={}", userNickName);
         postService.deletePost(postId, userFindService.findByNickName(userNickName).getUserId());
-        log.info("=====================userId={}", userFindService.findByNickName(userNickName).getUserId());
         return "redirect:/post/list";
     }
 

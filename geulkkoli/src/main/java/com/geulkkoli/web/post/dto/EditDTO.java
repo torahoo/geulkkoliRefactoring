@@ -83,7 +83,6 @@ public class EditDTO {
                 .tagStatus("#"+tagStatus)
                 .build();
     }
-
     public Post toEntity () {
         return Post.builder()
                 .title(title)

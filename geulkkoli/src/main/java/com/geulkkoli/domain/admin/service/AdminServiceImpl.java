@@ -1,11 +1,11 @@
 package com.geulkkoli.domain.admin.service;
 
+import com.geulkkoli.domain.admin.AccountLock;
 import com.geulkkoli.domain.admin.AccountLockRepository;
 import com.geulkkoli.domain.admin.ReportRepository;
 import com.geulkkoli.domain.hashtag.HashTag;
 import com.geulkkoli.domain.post.Post;
 import com.geulkkoli.domain.post.PostRepository;
-import com.geulkkoli.domain.post.service.PostService;
 import com.geulkkoli.domain.posthashtag.PostHashTag;
 import com.geulkkoli.domain.posthashtag.PostHashTagService;
 import com.geulkkoli.domain.topic.Topic;
@@ -45,10 +45,10 @@ public class AdminServiceImpl implements AdminService {
 
     private final TopicRepository topicRepository;
 
-    public void lockUser(Long userId, String reason, Long lockDate) {
+    public AccountLock lockUser(Long userId, String reason, Long lockDate) {
         User user = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("해당 유저가 존재하지 않습니다."));
         LocalDateTime lockUntil = LocalDateTime.now().plusDays(lockDate);
-        accountLockRepository.save(user.lock(reason, lockUntil));
+        return accountLockRepository.save(user.lock(reason, lockUntil));
     }
 
     //신고받은 게시글 조회
@@ -138,6 +138,12 @@ public class AdminServiceImpl implements AdminService {
                 }
             }
         }
+        topics.sort(Comparator.comparing(Topic::getUpComingDate));
+        return topics;
+    }
+
+    public List<Topic> fillTopic2(List<Topic> topics) {
+
         topics.sort(Comparator.comparing(Topic::getUpComingDate));
         return topics;
     }

@@ -9,7 +9,7 @@ import com.geulkkoli.domain.post.service.PostService;
 import com.geulkkoli.domain.user.User;
 import com.geulkkoli.domain.user.UserRepository;
 import com.geulkkoli.web.post.dto.AddDTO;
-import com.geulkkoli.web.post.dto.ListDTO;
+import com.geulkkoli.web.post.dto.PostRequestListDTO;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -19,17 +19,14 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.web.PageableDefault;
 
 import javax.transaction.Transactional;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
 @Transactional
@@ -232,8 +229,8 @@ class PostHashTagServiceTest {
 
         //when
         Pageable pageable = PageRequest.of(5, 5);
-        Page<ListDTO> listDTOS = postHashTagService.searchPostsListByHashTag(pageable, searchType, searchWords);
-        List<ListDTO> collect = listDTOS.get().collect(Collectors.toList());
+        Page<PostRequestListDTO> listDTOS = postHashTagService.searchPostsListByHashTag(pageable, searchType, searchWords);
+        List<PostRequestListDTO> collect = listDTOS.get().collect(Collectors.toList());
 
         //then
         assertThat(collect.size()).isEqualTo(5);

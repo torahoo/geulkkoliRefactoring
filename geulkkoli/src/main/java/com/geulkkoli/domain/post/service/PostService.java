@@ -9,7 +9,7 @@ import com.geulkkoli.domain.user.User;
 import com.geulkkoli.domain.user.UserRepository;
 import com.geulkkoli.web.post.dto.AddDTO;
 import com.geulkkoli.web.post.dto.EditDTO;
-import com.geulkkoli.web.post.dto.ListDTO;
+import com.geulkkoli.web.post.dto.PostRequestListDTO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -43,29 +43,29 @@ public class PostService {
                 .orElseThrow(() -> new NoSuchElementException("No post found id matches:" + postId));
     }
 
-    @Transactional(readOnly = true)
+    @Transactional
     //게시글 상세보기만을 담당하는 메서드
-    public Post showDetailPost (Long postId) {
+    public Post showDetailPost(Long postId) {
         postRepository.updateHits(postId);
         return postRepository.findById(postId)
                 .orElseThrow(() -> new NoSuchElementException("No post found id matches:" + postId));
     }
 
     @Transactional(readOnly = true)
-    public Page<ListDTO> findAll(Pageable pageable) {
+    public Page<PostRequestListDTO> findAll(Pageable pageable) {
         Page<Post> posts = postRepository.findAll(pageable);
-        return posts.map(post -> new ListDTO(
+        return posts.map(post -> new PostRequestListDTO(
                 post.getPostId(),
                 post.getTitle(),
                 post.getNickName(),
-                post.getUpdatedAt(),
+                String.valueOf(post.getUpdatedAt()),
                 post.getPostHits()
         ));
     }
 
     @Transactional(readOnly = true)
     //전체 게시글 리스트 & 조회 기능 포함
-    public Page<ListDTO> searchPostFindAll(Pageable pageable, String searchType, String searchWords) {
+    public Page<PostRequestListDTO> searchPostFindAll(Pageable pageable, String searchType, String searchWords) {
         Page<Post> posts;
         switch (searchType) {
             case "제목":
@@ -81,20 +81,24 @@ public class PostService {
                 posts = postRepository.findAll(pageable);
                 break;
         }
-        return posts.map(post -> new ListDTO(
+        return posts.map(post -> new PostRequestListDTO(
                 post.getPostId(),
                 post.getTitle(),
                 post.getNickName(),
-                post.getUpdatedAt(),
+                String.valueOf(post.getUpdatedAt()),
                 post.getPostHits()
         ));
     }
 
     @Transactional
-    public Post savePost(AddDTO post, User user) {
-        Post writePost = user.writePost(post);
+    public Post savePost(AddDTO addDTO, User user) {
+        Post writePost = user.writePost(addDTO);
         Post save = postRepository.save(writePost);
-        List<HashTag> hashTags = postHashTagService.hashTagSeparator("#일반글" + post.getTagListString() + post.getTagCategory() + post.getTagStatus());
+        log.info("addDTO.getTagListString() : " + addDTO.getTagListString());
+        log.info("addDTO.getTagCategory() : " + addDTO.getTagCategory());
+        log.info("addDTO.getTagStatus() : " + addDTO.getTagStatus());
+        List<HashTag> hashTags = postHashTagService.hashTagSeparator("#일반" + addDTO.getTagListString() + addDTO.getTagCategory()+ addDTO.getTagStatus());
+        log.info("hashTags : " + hashTags);
         postHashTagService.validatePostHasType(hashTags);
         postHashTagService.addHashTagsToPost(save, hashTags);
 
@@ -112,7 +116,7 @@ public class PostService {
                 post.deletePostHashTag(postHashTags.get(i).getPostHashTagId());
             }
             List<HashTag> hashTags = postHashTagService.hashTagSeparator("#일반글"
-                    +updateParam.getTagListString()+updateParam.getTagCategory()+updateParam.getTagStatus());
+                    + updateParam.getTagListString() + updateParam.getTagCategory() + updateParam.getTagStatus());
             postHashTagService.validatePostHasType(hashTags);
             postHashTagService.addHashTagsToPost(post, hashTags);
         }
@@ -143,13 +147,5 @@ public class PostService {
         postRepository.deleteAll();
     }
 
-    @Transactional(readOnly = true)
-    public List<LocalDate> getCreatedAts(User user) {
-        Set<String> createdAt = postRepository.findCreatedAt(user.getUserId());
-        return createdAt.stream()
-                .map(postingDate -> LocalDateTime.parse(postingDate, DateTimeFormatter.ofPattern("yyyy. MM. dd a hh:mm:ss")))
-                .map(LocalDateTime::toLocalDate)
-                .collect(Collectors.toList());
-    }
 
 }

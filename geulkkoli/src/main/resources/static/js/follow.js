@@ -2,9 +2,8 @@ function followButtonHandler() {
     var followButton = document.getElementById('btn-follow');
     if (followButton) {
         followButton.addEventListener('click', function() {
-            var email = document.getElementById('email').textContent;
-            var url = '/follow/' + email;
-
+            var userId = document.getElementById('userId').textContent;
+            var url = '/api/follow/' + userId;
             fetch(url, {
                 method: 'GET', // or 'POST'
             })
@@ -14,7 +13,15 @@ function followButtonHandler() {
                         unfollowButton.id = 'btn-unfollow';
                         unfollowButton.className = 'w-100 btn btn-primary';
                         unfollowButton.setAttribute('type', 'button');
-                        unfollowButton.textContent = '구독 취소';
+
+                        const buttonInnerSpan = document.createElement('span');
+                        buttonInnerSpan.classList.add('txt_default');
+                        buttonInnerSpan.innerText = '구독중';
+                        unfollowButton.appendChild(buttonInnerSpan);
+                        const buttonInnerSpan2 = document.createElement('span');
+                        buttonInnerSpan2.classList.add('txt_on');
+                        buttonInnerSpan2.innerText = '구독 취소';
+                        unfollowButton.appendChild(buttonInnerSpan2);
 
                         var parentElement = followButton.parentNode;
                         if (parentElement) {
@@ -34,8 +41,8 @@ function unFollowButtonHandler() {
     var unfollowButton = document.getElementById('btn-unfollow');
     if (unfollowButton) {
         unfollowButton.addEventListener('click', function() {
-            var email = document.getElementById('email').textContent;
-            var url = '/unfollow/' + email;
+            var userId = document.getElementById('userId').textContent;
+            var url = '/api/unfollow/' + userId;
 
             fetch(url, {
                 method: 'GET', // or 'POST'

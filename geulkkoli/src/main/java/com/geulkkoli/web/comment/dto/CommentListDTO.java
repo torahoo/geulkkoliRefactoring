@@ -38,7 +38,7 @@ public class CommentListDTO {
                 .commentId(comment.getCommentId())
                 .commentBody(comment.getCommentBody())
                 .nickName(comment.getUser().getNickName())
-                .date(comment.getUpdatedAt())
+                .date(String.valueOf(comment.getUpdatedAt()))
                 .build();
     }
 }

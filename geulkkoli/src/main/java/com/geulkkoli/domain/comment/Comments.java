@@ -21,7 +21,7 @@ public class Comments extends ConfigDate{
 
     //댓글 작성자
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "author_id")
     private User user;
 
     //댓글이 어떤 게시글에 있는지
@@ -29,6 +29,7 @@ public class Comments extends ConfigDate{
     @JoinColumn(name = "post_id")
     private Post post;
 
+    @Column(name = "body")
     private String commentBody;
 
     @Override

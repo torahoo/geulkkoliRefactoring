@@ -6,7 +6,7 @@ import com.geulkkoli.application.security.RoleRepository;
 import com.geulkkoli.application.user.service.PasswordService;
 import com.geulkkoli.domain.user.User;
 import com.geulkkoli.domain.user.UserRepository;
-import com.geulkkoli.web.mypage.dto.edit.UserInfoEditFormDto;
+import com.geulkkoli.web.user.dto.edit.UserInfoEditFormDto;
 import com.geulkkoli.web.social.SocialSignUpDto;
 import com.geulkkoli.web.user.dto.JoinFormDto;
 import lombok.RequiredArgsConstructor;
@@ -16,7 +16,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.NoSuchElementException;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -42,36 +41,17 @@ public class UserService {
     }
 
     @Transactional
-    public void edit(Long id, UserInfoEditFormDto userInfoEditFormDto) {
-        userRepository.edit(id, userInfoEditFormDto);
+    public void edit(Long id, UserInfoEditFormDto userInfoEditDto) {
+        userRepository.edit(id, userInfoEditDto);
     }
+
 
     @Transactional
     public User signUp(JoinFormDto form) {
-        User user = userRepository.save(form.toEntity(PasswordService.passwordEncoder));
-        RoleEntity roleEntity = user.Role(Role.USER);
-        roleRepository.save(roleEntity);
-        return user;
-    }
-
-    // 가입 날짜 임의 추가용 메소드 (추후 제거)
-    @Transactional
-    public User signUp(JoinFormDto form, LocalDate localDate) {
         User user = form.toEntity(PasswordService.passwordEncoder);
-        user.setCreatedAtForCalendarTest(localDate);
-        userRepository.save(user);
-
-        RoleEntity roleEntity = user.Role(Role.USER);
+        RoleEntity roleEntity = user.addRole(Role.USER);
         roleRepository.save(roleEntity);
-        return user;
-    }
-
-    @Transactional
-    public User signUp(SocialSignUpDto signUpDto) {
-        User user = userRepository.save(signUpDto.toEntity(PasswordService.passwordEncoder));
-        RoleEntity roleEntity = user.Role(Role.USER);
-        roleRepository.save(roleEntity);
-        return user;
+        return userRepository.save(user);
     }
 
     /*
@@ -79,7 +59,7 @@ public class UserService {
     @Transactional
     public void signUpAdmin(JoinFormDto form) {
         User user = form.toEntity(PasswordService.passwordEncoder);
-        RoleEntity roleEntity = user.Role(Role.ADMIN);
+        RoleEntity roleEntity = user.addRole(Role.ADMIN);
         roleRepository.save(roleEntity);
         userRepository.save(user);
     }
@@ -89,4 +69,18 @@ public class UserService {
         userRepository.deleteById(user.getUserId());
     }
 
+    @Transactional(readOnly = true)
+    public User findById(Long id) {
+        return userRepository.findById(id)
+                .orElseThrow(() -> new NoSuchElementException("No user found id matches:" + id));
+    }
+
+    @Transactional
+    public User signUp(SocialSignUpDto signUpDto) {
+        User user = signUpDto.toEntity(PasswordService.passwordEncoder);
+        RoleEntity role = user.addRole(Role.USER);
+        roleRepository.save(role);
+        userRepository.save(user);
+        return user;
+    }
 }

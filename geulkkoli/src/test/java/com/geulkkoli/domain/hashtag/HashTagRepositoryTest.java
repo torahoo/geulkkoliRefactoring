@@ -132,4 +132,23 @@ class HashTagRepositoryTest {
 //
 //        hashTagRepository.allPostHashTagsByHashTagName("일반글");
     }
+
+    @Test
+    void findByHashTagName() {
+        //given
+        HashTag hashTag = HashTag.builder()
+                .hashTagName("일반")
+                .hashTagType(HashTagType.GENERAL)
+                .build();
+        HashTag save = hashTagRepository.save(hashTag);
+        HashTag hashTag2 = HashTag.builder()
+                .hashTagName("공지")
+                .hashTagType(HashTagType.MANAGEMENT)
+                .build();
+        HashTag save2 = hashTagRepository.save(hashTag2);
+        //when
+        HashTag byHashTagName = hashTagRepository.findByHashTagName("일반");
+        //then
+        assertThat(byHashTagName.getHashTagId()).isEqualTo(save.getHashTagId());
+    }
 }

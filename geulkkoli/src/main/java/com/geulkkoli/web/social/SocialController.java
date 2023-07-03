@@ -7,9 +7,10 @@ import com.geulkkoli.domain.social.SocialInfoService;
 import com.geulkkoli.domain.user.User;
 import com.geulkkoli.domain.user.service.UserService;
 import com.geulkkoli.web.social.util.SocialSignUpValueEncryptoDecryptor;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -27,17 +28,15 @@ import java.util.List;
 @Controller
 @RequestMapping("/social")
 @Slf4j
+@RequiredArgsConstructor
 public class SocialController {
     private static final String SIGN_UP_VIEW_NAME = "social/oauth2/signup";
     private static final String HOME = "/home";
-    @Autowired
-    private UserService userService;
+    private final UserService userService;
 
-    @Autowired
-    private SocialInfoService socialService;
+    private final SocialInfoService socialService;
 
-    @Autowired
-    SocialSignUpValueEncryptoDecryptor socialSignUpValueEncryptoDecryptor;
+    private final SocialSignUpValueEncryptoDecryptor socialSignUpValueEncryptoDecryptor;
 
     /**
      * @param authUser     각 인증 서버 (구글, 카카오, 네이버)에서 성공적으로 정보를 받아 인증이 완료되었지만 우리 서비스에 가입되지 않은 회원의 경우
@@ -48,9 +47,7 @@ public class SocialController {
      */
     @GetMapping("/oauth2/signup")
     public ModelAndView moveSignUpPage(@AuthenticationPrincipal CustomAuthenticationPrinciple authUser, ModelAndView modelAndView) {
-        log.info("소셜 로그인 회원의 회원 정보 기입");
-        log.info("authUser : {}", authUser.getUserId());
-
+        log.info("소셜회원가입");
         SocialSignUpDto socialSignUpDto = SocialSignUpDto.builder()
                 .email(socialSignUpValueEncryptoDecryptor.encryptValue(authUser.getUsername()))
                 .nickName(authUser.getNickName())
@@ -100,12 +97,15 @@ public class SocialController {
         UserModelDto dto = UserModelDto.toDto(user);
 
         CustomAuthenticationPrinciple principle = autoLogin(user, dto);
-
+        log.info("principle : {}", principle);
+        log.info("principle auth : {}", principle.getAuthorities());
         UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(principle, principle.getAuthorities());
         SecurityContext context = SecurityContextHolder.createEmptyContext();
         context.setAuthentication(token);
         SecurityContextHolder.setContext(context);
-
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        log.info("token : {}", token.getAuthorities());
+        log.info("authentication : {}", authentication.isAuthenticated());
         modelAndView.setViewName("redirect:/");
         return modelAndView;
     }
@@ -130,12 +130,14 @@ public class SocialController {
     public RedirectView disconnect(@RequestParam("type") String socialType, @AuthenticationPrincipal CustomAuthenticationPrinciple authUser) {
         log.info("소셜 연동 해제");
         socialService.disconnect(authUser.getUsername(), socialType);
-        return new RedirectView("/myPage");
+        return new RedirectView("/user/edit");
     }
 
     private CustomAuthenticationPrinciple autoLogin(User user, UserModelDto dto) {
         List<GrantedAuthority> authorities = new ArrayList<>();
+        log.info("user.authority() : {}", user.authority());
         authorities.add(new SimpleGrantedAuthority(user.authority()));
+        log.info("authorities : {}", authorities);
         return CustomAuthenticationPrinciple.from(dto, authorities, AccountStatus.ACTIVE);
     }
 

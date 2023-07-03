@@ -28,10 +28,11 @@ function makeDays() {
 }
 
 let postingDates; //한 유저의 글 쓴 날들의 집합
+const userNickName = document.getElementById('user-nickname').innerText.split(" ")[0];
 
 async function settingCalendarDaysByUserSignUpDate() {
     try {
-        const response = await fetch(`/myPage/calendar`);
+        const response = await fetch(`/user/${userNickName}/calendar`);
         const data = await response.json();
 
         makeDays();

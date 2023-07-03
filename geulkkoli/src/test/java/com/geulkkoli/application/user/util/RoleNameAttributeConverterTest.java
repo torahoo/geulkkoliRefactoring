@@ -1,6 +1,7 @@
 package com.geulkkoli.application.user.util;
 
 import com.geulkkoli.application.security.Role;
+import com.geulkkoli.application.security.util.RoleNameAttributeConverter;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 

@@ -1,7 +1,5 @@
 package com.geulkkoli.domain.hashtag;
 
-import com.geulkkoli.domain.post.Post;
-import com.geulkkoli.domain.posthashtag.PostHashTag;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 
 import javax.persistence.EntityManager;

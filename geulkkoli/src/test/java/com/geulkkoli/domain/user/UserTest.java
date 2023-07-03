@@ -4,16 +4,12 @@ import com.geulkkoli.application.security.LockExpiredTimeException;
 import com.geulkkoli.application.security.Role;
 import com.geulkkoli.application.security.RoleEntity;
 import com.geulkkoli.domain.admin.Report;
-import com.geulkkoli.domain.admin.ReportRepository;
 import com.geulkkoli.domain.post.Post;
-import com.geulkkoli.domain.post.PostRepository;
 import com.geulkkoli.web.post.dto.AddDTO;
 import com.geulkkoli.web.post.dto.EditDTO;
 import org.assertj.core.api.Condition;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
 import java.time.LocalDateTime;
 
@@ -121,7 +117,7 @@ class UserTest {
                 .phoneNo("0102221111")
                 .gender("male")
                 .build();
-        RoleEntity roleEntity = user.Role(Role.USER);
+        RoleEntity roleEntity = user.addRole(Role.USER);
 
         assertThat(roleEntity).isNotNull().has(new Condition<>(r -> r.getRole() == Role.USER, "USER 역할이 추가되었다")).has(new Condition<>(r -> r.getUsers().contains(user), "user가 추가되었다"));
     }

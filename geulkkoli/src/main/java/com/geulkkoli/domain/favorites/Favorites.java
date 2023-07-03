@@ -24,7 +24,7 @@ public class Favorites {
 
     //누가 좋아요를 눌렀는지
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "favorites_user_id")
     private User user;
 
     public Favorites (User user, Post post) {

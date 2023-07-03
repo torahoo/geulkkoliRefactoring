@@ -2,7 +2,7 @@ package com.geulkkoli.application.security.config;
 
 import com.geulkkoli.application.security.handler.LoginFailureHandler;
 import com.geulkkoli.application.security.handler.LoginSuccessHandler;
-import com.geulkkoli.application.social.CustomOauth2UserService;
+import com.geulkkoli.application.social.service.CustomOauth2UserService;
 import com.geulkkoli.application.user.service.UserSecurityService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
@@ -60,15 +60,17 @@ public class SecurityConfig {
 
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.authorizeRequests(auth -> {
+                    auth.mvcMatchers("/actuator/**").hasRole("ADMIN");
+                    auth.mvcMatchers("users/**").hasIpAddress("localhost");
                     auth.mvcMatchers("/admin/**").hasRole("ADMIN");
-                    auth.mvcMatchers("/user/edit/**").hasAnyRole("USER");
+                    auth.mvcMatchers("/user/**").hasAnyRole("USER");
                     auth.mvcMatchers(HttpMethod.GET, "/social/oauth2/signup").hasAnyRole("GUEST");
                     auth.mvcMatchers("/post/add/**", "/post/update/**", "/post/delete/**").hasAnyRole("USER", "ADMIN");
                     auth.mvcMatchers(LOGIN_PAGE).anonymous();
                     auth.mvcMatchers(HttpMethod.GET, "/", "/post/read/**", "/post/list/**", "/post/search/**", "/post/category/*")
                             .permitAll();
                     auth.requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll(); // 정적 리소스들(css,js)등을 권장 방식에 맞게 인증 체크에서 제외 시켰다
-                }).csrf().disable()
+                })
                 .formLogin()
                 .loginPage(LOGIN_PAGE)
                 .loginProcessingUrl("/login-process")

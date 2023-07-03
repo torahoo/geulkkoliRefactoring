@@ -7,6 +7,8 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.test.util.ReflectionTestUtils;
 
+import java.util.Optional;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.mockito.BDDMockito.given;
@@ -80,7 +82,7 @@ class FollowServiceTest {
 
         Follow followEntity = Follow.of(user, user2);
 
-        given(followRepository.findByFolloweeUserIdAndFollowerUserId(1L, 2L)).willReturn(followEntity);
+        given(followRepository.findByFolloweeUserIdAndFollowerUserId(1L, 2L)).willReturn(Optional.of(followEntity));
 
         followService.deleteByFolloweeIdAndFollowerId(1L, 2L);
 

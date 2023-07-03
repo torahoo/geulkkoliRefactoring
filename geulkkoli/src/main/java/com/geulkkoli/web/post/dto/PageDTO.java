@@ -78,7 +78,7 @@ public class PageDTO {
                 .postBody(post.getPostBody())
                 .nickName(post.getNickName())
                 .comments(post.getComments())
-                .date(post.getUpdatedAt())
+                .date(String.valueOf(post.getUpdatedAt()))
                 .favoriteCount(post.getFavorites().size())
                 .tagList(post.getPostHashTags())
                 .build();
