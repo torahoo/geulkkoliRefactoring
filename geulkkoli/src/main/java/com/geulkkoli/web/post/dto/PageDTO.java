@@ -1,7 +1,7 @@
 package com.geulkkoli.web.post.dto;
 
 import com.geulkkoli.domain.comment.Comments;
-import com.geulkkoli.domain.comment.CommentsService;
+import com.geulkkoli.domain.comment.service.CommentsService;
 import com.geulkkoli.domain.hashtag.HashTag;
 import com.geulkkoli.domain.post.Post;
 import com.geulkkoli.domain.posthashtag.PostHashTag;

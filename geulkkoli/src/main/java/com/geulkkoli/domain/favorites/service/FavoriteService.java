@@ -1,5 +1,7 @@
-package com.geulkkoli.domain.favorites;
+package com.geulkkoli.domain.favorites.service;
 
+import com.geulkkoli.domain.favorites.Favorites;
+import com.geulkkoli.domain.favorites.FavoritesRepository;
 import com.geulkkoli.domain.post.Post;
 import com.geulkkoli.domain.user.User;
 import lombok.extern.slf4j.Slf4j;

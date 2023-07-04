@@ -1,5 +1,6 @@
 package com.geulkkoli.domain.favorites;
 
+import com.geulkkoli.domain.favorites.Favorites;
 import com.geulkkoli.domain.post.Post;
 import com.geulkkoli.domain.user.User;
 import org.springframework.data.jpa.repository.JpaRepository;

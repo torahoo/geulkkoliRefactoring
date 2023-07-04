@@ -1,12 +1,11 @@
 package com.geulkkoli.web.post;
 
 import com.geulkkoli.application.user.CustomAuthenticationPrinciple;
-import com.geulkkoli.domain.comment.CommentsService;
-import com.geulkkoli.domain.favorites.FavoriteService;
+import com.geulkkoli.domain.favorites.service.FavoriteService;
 import com.geulkkoli.domain.follow.service.FollowFindService;
 import com.geulkkoli.domain.post.AdminTagAccessDenied;
 import com.geulkkoli.domain.post.service.PostService;
-import com.geulkkoli.domain.posthashtag.PostHashTagService;
+import com.geulkkoli.domain.posthashtag.service.PostHashTagService;
 import com.geulkkoli.domain.user.User;
 import com.geulkkoli.domain.user.service.UserFindService;
 import com.geulkkoli.web.comment.dto.CommentBodyDTO;
@@ -18,7 +17,6 @@ import com.geulkkoli.web.post.dto.PagingDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.MessageSource;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;

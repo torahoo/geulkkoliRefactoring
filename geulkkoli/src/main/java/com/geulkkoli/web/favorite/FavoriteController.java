@@ -1,7 +1,7 @@
 package com.geulkkoli.web.favorite;
 
 import com.geulkkoli.application.user.CustomAuthenticationPrinciple;
-import com.geulkkoli.domain.favorites.FavoriteService;
+import com.geulkkoli.domain.favorites.service.FavoriteService;
 import com.geulkkoli.domain.favorites.Favorites;
 import com.geulkkoli.domain.post.Post;
 import com.geulkkoli.domain.post.service.PostService;

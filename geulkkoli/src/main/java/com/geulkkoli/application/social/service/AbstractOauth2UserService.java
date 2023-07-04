@@ -1,8 +1,8 @@
 package com.geulkkoli.application.social.service;
 
 import com.geulkkoli.domain.social.SocialInfo;
-import com.geulkkoli.domain.social.SocialInfoFindService;
-import com.geulkkoli.domain.social.SocialInfoService;
+import com.geulkkoli.domain.social.service.SocialInfoFindService;
+import com.geulkkoli.domain.social.service.SocialInfoService;
 import com.geulkkoli.domain.user.User;
 import com.geulkkoli.domain.user.service.UserFindService;
 import com.geulkkoli.web.social.SocialInfoDto;

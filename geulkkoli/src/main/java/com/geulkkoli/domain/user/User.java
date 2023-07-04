@@ -110,18 +110,6 @@ public class User extends ConfigDate {
         return post;
     }
 
-    //달력 잔디 심기용 각 다른 날짜의 게시물들 필요 (추후 제거)
-    public Post writePost(AddDTO addDTO, LocalDateTime localDateTime) {
-        Post post = Post.builder()
-                .title(addDTO.getTitle())
-                .postBody(addDTO.getPostBody())
-                .user(this)
-                .nickName(addDTO.getNickName())
-                .build();
-        this.posts.add(post);
-        return post;
-    }
-
     public Post deletePost(Post post) {
         posts.remove(post);
         return post;
@@ -223,24 +211,10 @@ public class User extends ConfigDate {
         return report;
     }
 
-
-    public Report deleteReport(Long reportId) {
-        Report deletReport = findReport(reportId);
-        reports.remove(deletReport);
-        return deletReport;
-    }
-
     public Report deleteReport(Report report) {
         Report report1 = reports.stream().filter(r -> r.equals(report)).findFirst().orElseThrow(() -> new NoSuchReportException("해당 신고가 없습니다."));
         reports.remove(report1);
         return report1;
-    }
-
-    private Report findReport(Long reportId) {
-        return this.reports.stream()
-                .filter(report -> report.getReportId().equals(reportId))
-                .findFirst()
-                .orElseThrow(() -> new NoSuchReportException("해당 신고가 없습니다."));
     }
 
     /**
@@ -300,10 +274,6 @@ public class User extends ConfigDate {
 
     public String roleName() {
         return role.getRole().getRoleName();
-    }
-
-    public Boolean isGuest() {
-        return role.isGuest();
     }
 
     public Boolean isAdmin() {

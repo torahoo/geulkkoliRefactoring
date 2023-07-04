@@ -2,7 +2,7 @@ package com.geulkkoli.web.comment;
 
 import com.geulkkoli.application.user.CustomAuthenticationPrinciple;
 import com.geulkkoli.domain.comment.Comments;
-import com.geulkkoli.domain.comment.CommentsService;
+import com.geulkkoli.domain.comment.service.CommentsService;
 import com.geulkkoli.domain.post.Post;
 import com.geulkkoli.domain.post.service.PostService;
 import com.geulkkoli.domain.user.User;
@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-import static com.geulkkoli.domain.comment.CommentsService.getCommentsList;
+import static com.geulkkoli.domain.comment.service.CommentsService.getCommentsList;
 
 @Slf4j
 @RequiredArgsConstructor

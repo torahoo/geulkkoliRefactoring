@@ -1,14 +1,11 @@
 package com.geulkkoli.web.home;
 
 import com.geulkkoli.application.EmailService;
-import com.geulkkoli.application.user.CustomAuthenticationPrinciple;
 import com.geulkkoli.application.user.service.PasswordService;
-import com.geulkkoli.domain.post.service.PostService;
-import com.geulkkoli.domain.posthashtag.PostHashTagService;
+import com.geulkkoli.domain.posthashtag.service.PostHashTagService;
 import com.geulkkoli.domain.user.User;
 import com.geulkkoli.domain.user.service.UserFindService;
 import com.geulkkoli.domain.user.service.UserService;
-import com.geulkkoli.web.post.dto.PostRequestListDTO;
 import com.geulkkoli.web.user.ResponseMessage;
 import com.geulkkoli.web.user.dto.EmailCheckForJoinDto;
 import com.geulkkoli.web.user.dto.JoinFormDto;
@@ -21,7 +18,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -30,7 +26,6 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.List;
 import java.util.Optional;
 import java.time.LocalDate;
 

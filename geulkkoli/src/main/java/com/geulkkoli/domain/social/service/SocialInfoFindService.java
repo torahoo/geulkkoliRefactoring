@@ -1,5 +1,7 @@
-package com.geulkkoli.domain.social;
+package com.geulkkoli.domain.social.service;
 
+import com.geulkkoli.domain.social.SocialInfo;
+import com.geulkkoli.domain.social.SocialInfoRepository;
 import com.geulkkoli.web.user.dto.mypage.ConnectedSocialInfos;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

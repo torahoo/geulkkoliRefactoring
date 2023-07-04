@@ -1,5 +1,6 @@
 package com.geulkkoli.domain.favorites;
 
+import com.geulkkoli.domain.favorites.service.FavoriteService;
 import com.geulkkoli.domain.post.Post;
 import com.geulkkoli.domain.post.service.PostService;
 import com.geulkkoli.domain.user.User;

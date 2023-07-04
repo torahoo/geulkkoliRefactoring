@@ -7,7 +7,7 @@ import com.geulkkoli.domain.favorites.Favorites;
 import com.geulkkoli.domain.follow.service.FollowFindService;
 import com.geulkkoli.domain.post.Post;
 import com.geulkkoli.domain.post.service.PostFindService;
-import com.geulkkoli.domain.social.SocialInfoFindService;
+import com.geulkkoli.domain.social.service.SocialInfoFindService;
 import com.geulkkoli.domain.user.User;
 import com.geulkkoli.domain.user.service.UserFindService;
 import com.geulkkoli.domain.user.service.UserService;
@@ -30,14 +30,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.time.LocalDate;
 import java.util.Comparator;
 import java.util.List;
 
