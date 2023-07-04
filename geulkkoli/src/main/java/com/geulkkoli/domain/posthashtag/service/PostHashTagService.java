@@ -1,10 +1,12 @@
-package com.geulkkoli.domain.posthashtag;
+package com.geulkkoli.domain.posthashtag.service;
 
 import com.geulkkoli.domain.hashtag.HashTag;
 import com.geulkkoli.domain.hashtag.HashTagRepository;
 import com.geulkkoli.domain.hashtag.HashTagType;
 import com.geulkkoli.domain.post.AdminTagAccessDenied;
 import com.geulkkoli.domain.post.Post;
+import com.geulkkoli.domain.posthashtag.PostHashTag;
+import com.geulkkoli.domain.posthashtag.PostHashTagRepository;
 import com.geulkkoli.domain.topic.Topic;
 import com.geulkkoli.domain.topic.TopicRepository;
 import com.geulkkoli.web.admin.DailyTopicDto;

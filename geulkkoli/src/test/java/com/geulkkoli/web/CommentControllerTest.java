@@ -3,7 +3,7 @@ package com.geulkkoli.web;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
-import com.geulkkoli.domain.comment.CommentsService;
+import com.geulkkoli.domain.comment.service.CommentsService;
 import com.geulkkoli.domain.post.Post;
 import com.geulkkoli.domain.post.service.PostService;
 import com.geulkkoli.domain.user.User;

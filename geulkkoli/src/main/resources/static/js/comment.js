@@ -204,7 +204,7 @@ function commentRemake(list, isClear) {
         let deleteButton;
         var loggedInUser = /*[[${#authentication.principal}]]*/ null;
 
-
+        validName = document.getElementById("auth-user-nickName").innerText;
         if (newComment.nickName === validName) {
             editButton = document.createElement('button');
             editButton.setAttribute('class', 'btn btn-primary btn-sm commentEdit');

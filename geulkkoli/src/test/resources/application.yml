@@ -3,6 +3,12 @@ spring:
     activate:
       on-profile: test
 
+  servlet:
+    multipart:
+      location:
+      max-file-size: 10MB
+      max-request-size: 100MB
+
   datasource:
     driver-class-name: org.h2.Driver
     url: jdbc:h2:mem:testdb;mode=MySQL;
@@ -77,8 +83,8 @@ spring:
   mail:
     host: smtp.gmail.com # 서버 호스트
     port: 587 # 서버 포트
-    username:  # 보내는 사람 이메일
-    password:    # 실제 비밀번호가 아니라 앱 서비스용 비밀번호라 구글 로그인은 안 됨
+    username: test1@gmail.com # 보내는 사람 이메일
+    password: 123  # 실제 비밀번호가 아니라 앱 서비스용 비밀번호라 구글 로그인은 안 됨
     properties:
       mail:
         smtp:
@@ -105,5 +111,6 @@ server:
     path: /error
     include-exception: false
     include-message: never
+
 comm:
-  uploadPath: /Users/choi/Desktop/Project/Upload
+

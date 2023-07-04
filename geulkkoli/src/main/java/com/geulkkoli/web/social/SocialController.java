@@ -3,7 +3,7 @@ package com.geulkkoli.web.social;
 import com.geulkkoli.application.security.AccountStatus;
 import com.geulkkoli.application.user.CustomAuthenticationPrinciple;
 import com.geulkkoli.application.user.UserModelDto;
-import com.geulkkoli.domain.social.SocialInfoService;
+import com.geulkkoli.domain.social.service.SocialInfoService;
 import com.geulkkoli.domain.user.User;
 import com.geulkkoli.domain.user.service.UserService;
 import com.geulkkoli.web.social.util.SocialSignUpValueEncryptoDecryptor;
