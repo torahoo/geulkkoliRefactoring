@@ -30,6 +30,10 @@ public class FollowService {
         return follow;
     }
 
+    public void allUnfollow(User deleteTarget) {
+        followRepository.deleteAll(followRepository.findAllByFolloweeUserIdOrFolloweeUserId(deleteTarget.getUserId(), deleteTarget.getUserId()));
+    }
+
     public void deleteByFolloweeIdAndFollowerId(Long followeeId, Long followerId) {
         try {
             Follow followEntity = followRepository.findByFolloweeUserIdAndFollowerUserId(followeeId, followerId).orElseThrow(() -> new NoSuchElementException("존재하지 않는 팔로우입니다."));
