@@ -63,7 +63,7 @@ public class SecurityConfig {
                     auth.mvcMatchers("/actuator/**").hasRole("ADMIN");
                     auth.mvcMatchers("users/**").hasIpAddress("localhost");
                     auth.mvcMatchers("/admin/**").hasRole("ADMIN");
-                    auth.mvcMatchers("/user/**").hasAnyRole("USER");
+                    auth.mvcMatchers("/user/**").hasRole("USER");
                     auth.mvcMatchers(HttpMethod.GET, "/social/oauth2/signup").hasAnyRole("GUEST");
                     auth.mvcMatchers("/post/add/**", "/post/update/**", "/post/delete/**").hasAnyRole("USER", "ADMIN");
                     auth.mvcMatchers(LOGIN_PAGE).anonymous();

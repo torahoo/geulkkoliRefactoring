@@ -260,8 +260,8 @@ public class UserController {
      * 서비스에서 쓰는 객체의 이름은 User인데 memberDelete라는 이름으로 되어 있어서 통일성을 위해 이름을 고친다.
      * 또한 사용자 입장에서는 자신의 정보를 삭제하는 게 아니라 탈퇴하는 서비스를 쓰고 있으므로 uri를 의미에 더 가깝게 고쳤다.
      */
-    @DeleteMapping("/unsubscribe/{nickName}")
-    public String unsubscribe(@PathVariable("nickName") String nickName) {
+    @GetMapping("/{nickName}/unsubscribed")
+    public String unSubscribe(@PathVariable("nickName") String nickName) {
         try {
             User findUser = userFindService.findByNickName(nickName);
             userService.delete(findUser);
