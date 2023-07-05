@@ -1,6 +1,6 @@
 package com.geulkkoli.web.social;
 
-import com.geulkkoli.domain.social.SocialInfo;
+import com.geulkkoli.domain.social.service.SocialInfo;
 import com.geulkkoli.domain.user.User;
 
 public class SocialInfoDto {

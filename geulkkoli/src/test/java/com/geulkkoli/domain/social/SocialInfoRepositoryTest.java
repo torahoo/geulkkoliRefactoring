@@ -1,6 +1,8 @@
 package com.geulkkoli.domain.social;
 
 import com.geulkkoli.application.social.util.SocialType;
+import com.geulkkoli.domain.social.service.SocialInfo;
+import com.geulkkoli.domain.social.service.SocialInfoRepository;
 import com.geulkkoli.domain.user.User;
 import com.geulkkoli.domain.user.UserRepository;
 import org.junit.jupiter.api.Test;

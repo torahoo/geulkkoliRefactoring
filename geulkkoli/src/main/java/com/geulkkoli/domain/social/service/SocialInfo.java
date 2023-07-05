@@ -1,4 +1,4 @@
-package com.geulkkoli.domain.social;
+package com.geulkkoli.domain.social.service;
 
 import com.geulkkoli.domain.user.User;
 import lombok.Builder;

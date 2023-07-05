@@ -1,5 +1,6 @@
-package com.geulkkoli.domain.social;
+package com.geulkkoli.domain.social.service;
 
+import com.geulkkoli.domain.social.SocialInfoRepositoryCustom;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

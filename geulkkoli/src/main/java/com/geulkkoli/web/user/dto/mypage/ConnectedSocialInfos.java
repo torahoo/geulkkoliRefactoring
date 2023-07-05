@@ -2,11 +2,7 @@ package com.geulkkoli.web.user.dto.mypage;
 
 import com.geulkkoli.application.social.util.SocialType;
 import com.geulkkoli.application.social.util.SocialTypeException;
-import com.geulkkoli.domain.social.SocialInfo;
-import com.geulkkoli.web.user.dto.mypage.ConnectSocialInfo;
-import com.geulkkoli.web.user.dto.mypage.GoogleConnectedSocialInfo;
-import com.geulkkoli.web.user.dto.mypage.KaKaoConnectedSocialInfo;
-import com.geulkkoli.web.user.dto.mypage.NaverConnectedSocialInfo;
+import com.geulkkoli.domain.social.service.SocialInfo;
 
 import java.util.List;
 import java.util.stream.Collectors;

@@ -1,5 +1,6 @@
 package com.geulkkoli.domain.social;
 
+import com.geulkkoli.domain.social.service.SocialInfo;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDateTime;
