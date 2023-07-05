@@ -5,9 +5,11 @@ import com.geulkkoli.application.user.CustomAuthenticationPrinciple;
 import com.geulkkoli.application.user.service.PasswordService;
 import com.geulkkoli.domain.favorites.Favorites;
 import com.geulkkoli.domain.follow.service.FollowFindService;
+import com.geulkkoli.domain.follow.service.FollowService;
 import com.geulkkoli.domain.post.Post;
 import com.geulkkoli.domain.post.service.PostFindService;
 import com.geulkkoli.domain.social.service.SocialInfoFindService;
+import com.geulkkoli.domain.social.service.SocialInfoService;
 import com.geulkkoli.domain.user.User;
 import com.geulkkoli.domain.user.service.UserFindService;
 import com.geulkkoli.domain.user.service.UserService;
@@ -57,6 +59,8 @@ public class UserController {
     private final PostFindService postFindService;
     private final PasswordService passwordService;
     private final FollowFindService followFindService;
+    private final SocialInfoService socialInfoService;
+    private final FollowService followService;
     private final SocialInfoFindService socialInfoFindService;
 
 
@@ -80,7 +84,7 @@ public class UserController {
 
         List<String> allPostDatesByOneUser = postFindService.getCreatedAts(user);
         CalendarDto calendarDto = new CalendarDto(user.getUserName(), user.getSignUpDate(), allPostDatesByOneUser);
-
+        log.info("calendarDto : {}", calendarDto);
         return ResponseEntity.ok(calendarDto);
     }
 
@@ -264,9 +268,11 @@ public class UserController {
     public String unSubscribe(@PathVariable("nickName") String nickName) {
         try {
             User findUser = userFindService.findByNickName(nickName);
+            followService.allUnfollow(findUser);
+            socialInfoFindService.findAllByUser_eamil(findUser.getEmail()).forEach(socialInfoService::delete);
             userService.delete(findUser);
         } catch (Exception e) {
-            //만약 findUser가 null이라면? 다른 에러페이지를 보여줘야하지 않을까?
+            log.error("unSubscribe error = {}", e.getMessage());
             return REDIRECT_INDEX;
         }
         return REDIRECT_INDEX;
