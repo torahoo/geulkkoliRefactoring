@@ -68,8 +68,7 @@ public class HomeController {
     @GetMapping("/loginPage")
     public String loginForm(@ModelAttribute("loginForm") LoginFormDto form) {
 
-        String LOGIN_FORM = "user/loginForm";
-        return LOGIN_FORM;
+        return "user/loginForm";
     }
 
     @GetMapping("/findEmail")
