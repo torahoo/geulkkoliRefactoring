@@ -19,7 +19,7 @@ public abstract class ConfigDate {
 
     @PrePersist
     public void onPrePersist() {
-            this.signUpDate= LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy. MM. dd"));
+            this.signUpDate= LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy/MM/dd"));
 
     }
 }

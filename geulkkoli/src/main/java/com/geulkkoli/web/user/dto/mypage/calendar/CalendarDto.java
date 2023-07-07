@@ -9,8 +9,6 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-import static java.time.LocalDate.parse;
-import static java.time.format.DateTimeFormatter.ofPattern;
 
 @Getter
 public class CalendarDto {
@@ -26,7 +24,14 @@ public class CalendarDto {
     public CalendarDto(String email, String signUpDate, List<String> allPostDatesByOneUser) {
         this.email = email;
         this.signUpDate = signUpDate;
-        this.allPostDatesByOneUser =allPostDatesByOneUser;
+        this.allPostDatesByOneUser = allPostDatesByOneUser;
+    }
+
+    public List<LocalDate> getAllPostDatesByOneUser() {
+        return allPostDatesByOneUser.stream()
+                .map(date -> date.substring(0,10))
+                .map(date2 -> LocalDate.parse(date2, DateTimeFormatter.ofPattern("yyyy/MM/dd")))
+                .collect(Collectors.toList());
     }
 
     @Override

@@ -84,7 +84,7 @@ public class UserController {
 
         List<String> allPostDatesByOneUser = postFindService.getCreatedAts(user);
         CalendarDto calendarDto = new CalendarDto(user.getUserName(), user.getSignUpDate(), allPostDatesByOneUser);
-        log.info("calendarDto : {}", calendarDto);
+        log.info("calendarDto : {}", calendarDto.getAllPostDatesByOneUser());
         return ResponseEntity.ok(calendarDto);
     }
 
@@ -251,7 +251,6 @@ public class UserController {
         if (bindingResult.hasErrors()) {
             return new ModelAndView(EDIT_PASSWORD_FORM);
         }
-        log.info("비밀번호 수정 시작");
         passwordService.updatePassword(parseLong(authUser), form.getNewPassword());
         ModelAndView modelAndView = new ModelAndView(REDIRECT_EDIT_INDEX);
         modelAndView.addObject("status", true);
