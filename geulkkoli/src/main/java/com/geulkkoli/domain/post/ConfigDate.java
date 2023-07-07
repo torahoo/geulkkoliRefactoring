@@ -26,7 +26,7 @@ public abstract class ConfigDate {
 
     @PrePersist
     public void onPrePersist() {
-        this.createdAt = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy. MM. dd a hh:mm:ss"));
+        this.createdAt = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy/MM/dd a hh:mm:ss"));
         this.updatedAt = createdAt;
     }
 

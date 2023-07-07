@@ -36,17 +36,13 @@ async function settingCalendarDaysByUserSignUpDate() {
         const data = await response.json();
 
         makeDays();
-        console.log(data)
-        let dataString = data.signUpDate.replace(/(\d{4})\. (\d{2})\. (\d{2}) (.+)/, '$2/$3/$1 $4');
-        let signUpDate = new Date(dataString);
+        let signUpDate = new Date(data.signUpDate);
         let startYear = signUpDate.getFullYear();
-
         let now = new Date();
         let nowYear = now.getFullYear();
-        let nowMonth = now.getMonth();
-
+        let nowMonth = now.getMonth() +1;
         postingDates = data.allPostDatesByOneUser.map(postDate => postDate.replace(/(\d{4})\. (\d{2})\. (\d{2}) (.+)/, '$2/$3/$1 $4'));
-        console.log(postingDates.toString());
+        console.log(postingDates);
         //가입 후 1년이 지났는지
         let timeDiff = Math.abs(now.getTime() - signUpDate.getTime());
         let diffYears = Math.floor(timeDiff / (1000 * 3600 * 24 * 365));
@@ -126,7 +122,7 @@ function checkDate(year, month, date) {
     for (let oneDate of postingDates) {
         let postingDate = new Date(oneDate);
         let postYear = postingDate.getFullYear();
-        let postMonth = postingDate.getMonth() + 1;
+        let postMonth = postingDate.getMonth();
         let postDate = postingDate.getDate();
         if (postYear === year && postMonth === month && postDate === date) {
             return true;
@@ -156,7 +152,7 @@ document.querySelectorAll('select').forEach(function (select) {
         while (calendar.childElementCount > 1) //맨 왼쪽에 써 있는 days 살리고 다 지우기
             calendar.removeChild(calendar.lastElementChild);
 
-        for (let month = 0; month <= 12; month++)
-            createCalendar(beforeOneMonth, month);
+        for (let month = 0; month <= 11; month++)
+            createCalendar(beforeOneMonth, month );
     });
 });

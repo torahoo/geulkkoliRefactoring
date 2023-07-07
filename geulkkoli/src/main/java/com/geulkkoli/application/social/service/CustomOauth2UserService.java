@@ -32,8 +32,8 @@ import java.util.Objects;
 import static java.lang.Boolean.*;
 
 @Slf4j
-@Transactional
 @Service
+@Transactional
 public class CustomOauth2UserService extends AbstractOauth2UserService implements OAuth2UserService<OAuth2UserRequest, OAuth2User> {
 
 
@@ -59,6 +59,7 @@ public class CustomOauth2UserService extends AbstractOauth2UserService implement
         if (Objects.nonNull(authentication) && isSignUp && !isAssociated) {
             User user = userInfo(providerUser.getEmail());
             UserModelDto model = singedUpUserToModel(user);
+
             connect(providerUser.getId(), providerUser.getProvider(), user);
             authorities.add(new SimpleGrantedAuthority(user.roleName()));
             return CustomAuthenticationPrinciple.from(model, authorities, AccountStatus.ACTIVE, providerUser.getAttributes(), SocialType.findByProviderName(providerUser.getProvider()));
@@ -66,44 +67,30 @@ public class CustomOauth2UserService extends AbstractOauth2UserService implement
 
         // 로그인 상태에서 이메일이 다른 소셜 계정이 연동되어 있지 않은 경우
         if (Objects.nonNull(authentication) && !isSignUp && !isAssociated) {
-            return getoAuth2User(providerUser, authorities, authentication);
+            return differentEmailConnectAndLogin(providerUser, authorities, authentication);
         }
 
         // 로그인한 상태에서 같은 이메일로 회원가입이 되어 있고 소셜 연동을 한 기록이 있고 소셜 연동을 유지하지 않은 경우
         if (Objects.nonNull(authentication) && isSignUp && !isConnected) {
-            CustomAuthenticationPrinciple principle = (CustomAuthenticationPrinciple) authentication.getPrincipal();
-            reConnected(providerUser.getId(), providerUser.getProvider());
-            User user = userInfo(principle.getUsername());
-            UserModelDto model = singedUpUserToModel(user);
-            authorities.add(new SimpleGrantedAuthority(user.roleName()));
-            return CustomAuthenticationPrinciple.from(model, authorities, AccountStatus.ACTIVE, providerUser.getAttributes(), SocialType.findByProviderName(providerUser.getProvider()));
+            return reConnectAndLogin(providerUser, authorities, authentication);
         }
 
         // 로그인 상태에서 같은 이메일로 회원가입이 되어 있지 않고 소셜 연동을 한 기록이 있고 소셜 연동을 유지하지 않은 경우
         if (Objects.nonNull(authentication) && !isSignUp && !isConnected) {
-            CustomAuthenticationPrinciple principle = (CustomAuthenticationPrinciple) authentication.getPrincipal();
-            reConnected(providerUser.getId(), providerUser.getProvider());
-            User user = userInfo(principle.getUsername());
-            UserModelDto model = singedUpUserToModel(user);
-            authorities.add(new SimpleGrantedAuthority(user.roleName()));
-            return CustomAuthenticationPrinciple.from(model, authorities, AccountStatus.ACTIVE, providerUser.getAttributes(), SocialType.findByProviderName(providerUser.getProvider()));
+            return reConnectAndLogin(providerUser, authorities, authentication);
         }
 
         // 같은 이메일로 회원가입이 되어 있고 소셜 연동을 한 기록이 있고 소셜 연동을 유지한 경우
         if (isSignUp && isAssociated && isConnected) {
             User user = userInfo(providerUser.getEmail());
-            UserModelDto model = singedUpUserToModel(user);
-            authorities.add(new SimpleGrantedAuthority(user.roleName()));
-            return CustomAuthenticationPrinciple.from(model, authorities, AccountStatus.ACTIVE, providerUser.getAttributes(), SocialType.findByProviderName(providerUser.getProvider()));
+            return checkLockAndLogin(providerUser, authorities, user);
         }
 
 
         // 이메일이 다른 소셜 계정으로 로그인을 시도했고 연동한 기록이 있고 소셜 연동을 유지한 경우
         if (!isSignUp && isAssociated && isConnected) {
             User user = findUserBySocialId(providerUser.getId(), providerUser.getProvider());
-            UserModelDto model = singedUpUserToModel(user);
-            authorities.add(new SimpleGrantedAuthority(user.roleName()));
-            return CustomAuthenticationPrinciple.from(model, authorities, AccountStatus.ACTIVE, providerUser.getAttributes(), SocialType.findByProviderName(providerUser.getProvider()));
+            return checkLockAndLogin(providerUser, authorities, user);
         }
 
 
@@ -113,11 +100,30 @@ public class CustomOauth2UserService extends AbstractOauth2UserService implement
             authorities.add(new SimpleGrantedAuthority(Role.GUEST.getRoleName()));
             return CustomAuthenticationPrinciple.from(model, authorities, AccountStatus.ACTIVE, providerUser.getAttributes(), SocialType.findByProviderName(providerUser.getProvider()));
         }
+
         // 이메일이 다른 소셜 계정으로 로그인을 시도했고 연동한 기록이 있고 소셜 연동을 유지하지 않은 경우
         throw new OAuth2AuthenticationException("소셜 계정 연동이 되어 있지 않습니다.");
     }
 
-    private OAuth2User getoAuth2User(ProviderUser providerUser, List<GrantedAuthority> authorities, Authentication authentication) {
+    private OAuth2User reConnectAndLogin(ProviderUser providerUser, List<GrantedAuthority> authorities, Authentication authentication) {
+        CustomAuthenticationPrinciple principle = (CustomAuthenticationPrinciple) authentication.getPrincipal();
+        reConnected(providerUser.getId(), providerUser.getProvider());
+        User user = userInfo(principle.getUsername());
+        UserModelDto model = singedUpUserToModel(user);
+        authorities.add(new SimpleGrantedAuthority(user.roleName()));
+        return CustomAuthenticationPrinciple.from(model, authorities, AccountStatus.ACTIVE, providerUser.getAttributes(), SocialType.findByProviderName(providerUser.getProvider()));
+    }
+
+    private OAuth2User checkLockAndLogin(ProviderUser providerUser, List<GrantedAuthority> authorities, User user) {
+        UserModelDto model = singedUpUserToModel(user);
+        if (TRUE.equals(user.isLock())) {
+            return CustomAuthenticationPrinciple.from(model, authorities, AccountStatus.LOCKED);
+        }
+        authorities.add(new SimpleGrantedAuthority(user.roleName()));
+        return CustomAuthenticationPrinciple.from(model, authorities, AccountStatus.ACTIVE, providerUser.getAttributes(), SocialType.findByProviderName(providerUser.getProvider()));
+    }
+
+    private OAuth2User differentEmailConnectAndLogin(ProviderUser providerUser, List<GrantedAuthority> authorities, Authentication authentication) {
         CustomAuthenticationPrinciple principle = (CustomAuthenticationPrinciple) authentication.getPrincipal();
         User user = userInfo(principle.getUsername());
         UserModelDto model = singedUpUserToModel(user);
@@ -142,6 +148,5 @@ public class CustomOauth2UserService extends AbstractOauth2UserService implement
     private UserModelDto singedUpUserToModel(User user) {
         return UserModelDto.toDto(user);
     }
-
 
 }

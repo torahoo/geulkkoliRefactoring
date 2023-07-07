@@ -84,7 +84,7 @@ public class UserController {
 
         List<String> allPostDatesByOneUser = postFindService.getCreatedAts(user);
         CalendarDto calendarDto = new CalendarDto(user.getUserName(), user.getSignUpDate(), allPostDatesByOneUser);
-        log.info("calendarDto : {}", calendarDto);
+        log.info("calendarDto : {}", calendarDto.getAllPostDatesByOneUser());
         return ResponseEntity.ok(calendarDto);
     }
 
@@ -239,7 +239,7 @@ public class UserController {
     }
 
     @PostMapping("/edit/edit-password")
-    public String editPassword(@Validated @ModelAttribute("passwordEditForm") PasswordEditFormDto form, BindingResult bindingResult, @AuthenticationPrincipal CustomAuthenticationPrinciple authUser, RedirectAttributes redirectAttributes) {
+    public ModelAndView editPassword(@Validated @ModelAttribute("passwordEditForm") PasswordEditFormDto form, BindingResult bindingResult, @AuthenticationPrincipal CustomAuthenticationPrinciple authUser, RedirectAttributes redirectAttributes) {
         User user = userFindService.findById(parseLong(authUser));
         if (!passwordService.isPasswordVerification(user, form)) {
             bindingResult.rejectValue("oldPassword", "Check.password");
@@ -248,16 +248,13 @@ public class UserController {
         if (!form.getNewPassword().equals(form.getVerifyPassword())) {
             bindingResult.rejectValue("verifyPassword", "Check.verifyPassword");
         }
-
         if (bindingResult.hasErrors()) {
-            return EDIT_PASSWORD_FORM;
-        } else {
-            passwordService.updatePassword(parseLong(authUser), form.getNewPassword());
-            redirectAttributes.addAttribute("status", true);
-            log.info("editPasswordForm = {}", form);
+            return new ModelAndView(EDIT_PASSWORD_FORM);
         }
-
-        return REDIRECT_EDIT_INDEX;
+        passwordService.updatePassword(parseLong(authUser), form.getNewPassword());
+        ModelAndView modelAndView = new ModelAndView(REDIRECT_EDIT_INDEX);
+        modelAndView.addObject("status", true);
+        return modelAndView;
     }
 
     /**

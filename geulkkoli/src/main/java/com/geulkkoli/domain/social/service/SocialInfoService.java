@@ -19,8 +19,8 @@ public class SocialInfoService {
         return socialInfoRepository.save(socialInfo.toEntity());
     }
 
-    public SocialInfo reconnect(SocialInfo socialInfo) {
-        return socialInfoRepository.save(socialInfo);
+    public void reconnect(SocialInfo socialInfo) {
+        socialInfoRepository.save(socialInfo);
     }
 
     public void delete(SocialInfo socialInfo) {

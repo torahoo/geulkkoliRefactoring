@@ -52,7 +52,6 @@ public abstract class AbstractOauth2UserService {
         socialInfoService.reconnect(socialInfo);
         return true;
     }
-
     public User findUserBySocialId(String socialId, String socialType) {
         return socialInfoFindService.findBySocialTypeAndSocialId(socialType, socialId).getUser();
     }

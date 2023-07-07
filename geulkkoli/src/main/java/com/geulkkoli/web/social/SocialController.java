@@ -10,7 +10,6 @@ import com.geulkkoli.web.social.util.SocialSignUpValueEncryptoDecryptor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -88,7 +87,6 @@ public class SocialController {
         if (bindingResult.hasErrors()) {
             return modelAndView;
         }
-        log.info("signUpDtoUpDto : {}", signUpDtoUpDto);
         SocialSignUpDto signUpDto = socialSignUpValueEncryptoDecryptor.decryptValue(signUpDtoUpDto);
         User user = userService.signUp(signUpDto);
 
@@ -96,16 +94,12 @@ public class SocialController {
         socialService.connect(socialInfoDto);
         UserModelDto dto = UserModelDto.toDto(user);
 
-        CustomAuthenticationPrinciple principle = autoLogin(user, dto);
-        log.info("principle : {}", principle);
-        log.info("principle auth : {}", principle.getAuthorities());
+        CustomAuthenticationPrinciple principle = authUser(user, dto);
         UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(principle, principle.getAuthorities());
         SecurityContext context = SecurityContextHolder.createEmptyContext();
         context.setAuthentication(token);
         SecurityContextHolder.setContext(context);
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        log.info("token : {}", token.getAuthorities());
-        log.info("authentication : {}", authentication.isAuthenticated());
+
         modelAndView.setViewName("redirect:/");
         return modelAndView;
     }
@@ -133,11 +127,9 @@ public class SocialController {
         return new RedirectView("/user/edit");
     }
 
-    private CustomAuthenticationPrinciple autoLogin(User user, UserModelDto dto) {
+    private CustomAuthenticationPrinciple authUser(User user, UserModelDto dto) {
         List<GrantedAuthority> authorities = new ArrayList<>();
-        log.info("user.authority() : {}", user.authority());
         authorities.add(new SimpleGrantedAuthority(user.authority()));
-        log.info("authorities : {}", authorities);
         return CustomAuthenticationPrinciple.from(dto, authorities, AccountStatus.ACTIVE);
     }
 
