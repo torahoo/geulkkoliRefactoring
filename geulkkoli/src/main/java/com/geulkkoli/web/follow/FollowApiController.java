@@ -53,7 +53,7 @@ public class FollowApiController {
             User followee = userFindService.findById(Long.parseLong(userId));
             log.info("followee: {}", followee);
             User follower = userFindService.findByEmail(authUser.getUserName()).orElseThrow(() -> new NoSuchElementException("해당 유저가 없습니다."));
-            followService.unfollow(followee, follower);
+            followService.unFollow(followee, follower);
             return ResponseEntity.ok().build();
         } catch (NoSuchElementException e) {
             log.error("NoSuchElementException: {}", e.getMessage());
