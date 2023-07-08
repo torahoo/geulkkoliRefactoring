@@ -30,6 +30,7 @@ public class SecurityConfig {
 
     private final LoginSuccessHandler loginSuccessHandler;
 
+
     public SecurityConfig(UserSecurityService userSecurityService, CustomOauth2UserService customOauth2UserService, LoginFailureHandler loginFailureHandler, LoginSuccessHandler loginSuccessHandler) {
         this.userSecurityService = userSecurityService;
         this.customOauth2UserService = customOauth2UserService;
@@ -57,9 +58,9 @@ public class SecurityConfig {
      */
 
     @Bean
-
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http.authorizeRequests(auth -> {
+        http
+                .authorizeRequests(auth -> {
                     auth.mvcMatchers("/actuator/**").hasRole("ADMIN");
                     auth.mvcMatchers("users/**").hasIpAddress("localhost");
                     auth.mvcMatchers("/admin/**").hasRole("ADMIN");
@@ -79,17 +80,18 @@ public class SecurityConfig {
                 .passwordParameter("password")
                 .and()
                 .oauth2Login(oauth -> oauth.userInfoEndpoint(
-                        userInfoEndpointConfig -> userInfoEndpointConfig
-                                .userService(customOauth2UserService)
-                                .and()
-                                .successHandler(loginSuccessHandler)
-                                .failureHandler(loginFailureHandler)
-                ).loginPage(LOGIN_PAGE))
+                                userInfoEndpointConfig -> userInfoEndpointConfig
+                                        .userService(customOauth2UserService)
+                        ).successHandler(loginSuccessHandler)
+                        .failureHandler(loginFailureHandler)
+                )
                 .userDetailsService(userSecurityService)
                 .logout()
                 .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
                 .logoutSuccessUrl("/")
-                .invalidateHttpSession(true);
+                .invalidateHttpSession(true)
+                .deleteCookies("JSESSIONID")
+                .clearAuthentication(true);
 
         return http.build();
     }
