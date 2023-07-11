@@ -54,13 +54,12 @@ public class UserSecurityService implements UserDetailsService {
         if (TRUE.equals(user.isLock())) {
             return CustomAuthenticationPrinciple.from(userModel, authorities, AccountStatus.LOCKED);
         }
-        log.info("grandedAuthorites : {}", grantedAuthorities);
         return CustomAuthenticationPrinciple.from(userModel, grantedAuthorities, AccountStatus.ACTIVE);
     }
 
 
     private List<GrantedAuthority> authorizeRole(List<GrantedAuthority> authorities, User user) {
-        if (user.getRole().isAdmin()) {
+        if (TRUE.equals(user.getRole().isAdmin())) {
             authorities.add(new SimpleGrantedAuthority(Role.ADMIN.getRoleName()));
             return authorities;
         }
