@@ -43,7 +43,7 @@ public class UserSecurityService implements UserDetailsService {
 
         User user = findByEmailUser.get();
         List<GrantedAuthority> authorities = new ArrayList<>();
-        authorizeRole(authorities, user);
+        List<GrantedAuthority> grantedAuthorities = authorizeRole(authorities, user);
 
         if (authorities.isEmpty()) {
             throw new RoleException("권한을 찾을 수 없습니다.");
@@ -54,16 +54,18 @@ public class UserSecurityService implements UserDetailsService {
         if (TRUE.equals(user.isLock())) {
             return CustomAuthenticationPrinciple.from(userModel, authorities, AccountStatus.LOCKED);
         }
-        return CustomAuthenticationPrinciple.from(userModel, authorities, AccountStatus.ACTIVE);
+        return CustomAuthenticationPrinciple.from(userModel, grantedAuthorities, AccountStatus.ACTIVE);
     }
 
 
-    private void authorizeRole(List<GrantedAuthority> authorities, User user) {
+    private List<GrantedAuthority> authorizeRole(List<GrantedAuthority> authorities, User user) {
         if (TRUE.equals(user.getRole().isAdmin())) {
             authorities.add(new SimpleGrantedAuthority(Role.ADMIN.getRoleName()));
-        } else {
-            authorities.add(new SimpleGrantedAuthority(Role.USER.getRoleName()));
+            return authorities;
         }
+        authorities.add(new SimpleGrantedAuthority(Role.USER.getRoleName()));
+        return authorities;
+
     }
 
 }

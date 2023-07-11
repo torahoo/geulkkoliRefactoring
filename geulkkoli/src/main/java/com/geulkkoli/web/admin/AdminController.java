@@ -70,7 +70,7 @@ public class AdminController {
         User user = adminService.findUserByPostId(UserLockDto.getPostId());
         adminService.lockUser(user.getUserId(), UserLockDto.getLockReason(), UserLockDto.getLockDate());
 
-        String lockDate = (LocalDateTime.now().plusDays(UserLockDto.getLockDate()).format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
+        String lockDate = (LocalDateTime.now().plusDays(UserLockDto.getLockDate()).format(DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss")));
 
         return "회원이 \"" + UserLockDto.getLockReason() + "\" 의 사유로" + lockDate + "까지 정지되었습니다.";
     }

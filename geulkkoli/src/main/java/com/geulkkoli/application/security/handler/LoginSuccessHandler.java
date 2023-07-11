@@ -16,16 +16,14 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 @Component
-@Transactional
 @Slf4j
 public class LoginSuccessHandler implements AuthenticationSuccessHandler {
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
-
         CustomAuthenticationPrinciple principal = (CustomAuthenticationPrinciple) authentication.getPrincipal();
         principal.getAuthorities().stream().map(GrantedAuthority::getAuthority).findAny().ifPresent(role -> {
-            log.info(role);
+            log.info("roleName2 : {}", role);
             if (Role.isGuest(role)) {
                 try {
                     response.sendRedirect("/social/oauth2/signup");
@@ -42,6 +40,7 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler {
             }
             if (Role.isAdmin(role)) {
                 try {
+                    log.info("admin : {}",  role);
                     response.sendRedirect("/admin");
                 } catch (IOException e) {
                     throw getLoginProcessException(e);
