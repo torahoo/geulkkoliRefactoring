@@ -46,7 +46,9 @@ public class SocialInfo {
     protected void disconnect() {
         this.isConnected = false;
     }
-
+    public Boolean reConnected(boolean b) {
+        return this.isConnected = b;
+    }
     public Boolean getConnected() {
         return isConnected;
     }
@@ -72,7 +74,5 @@ public class SocialInfo {
     }
 
 
-    public Boolean reConnected(boolean b) {
-        return this.isConnected = b;
-    }
+
 }

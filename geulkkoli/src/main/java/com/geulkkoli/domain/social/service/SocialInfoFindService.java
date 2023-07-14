@@ -28,9 +28,8 @@ public class SocialInfoFindService {
     public Boolean isConnected(String socialId) {
         Optional<SocialInfo> socialInfo = socialInfoRepository.findSocialInfoBySocialId(socialId);
         if (socialInfo.isEmpty()) {
-            return true;
+            return false;
         }
-        log.info("socialInfo.get().getConnected() : {}", socialInfo.get().getConnected());
         return socialInfo.get().getConnected();
     }
 

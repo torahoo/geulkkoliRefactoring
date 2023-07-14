@@ -30,7 +30,6 @@ public class Follow {
     public Follow() {
     }
 
-
     private Follow(User followee, User follower) {
         this.followee = followee;
         this.follower = follower;

@@ -1,7 +1,5 @@
 package com.geulkkoli.application.follow;
 
-import lombok.extern.java.Log;
-
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -25,10 +23,6 @@ public class FollowInfos {
     }
 
     public List<FollowInfo> getFollowInfos() {
-        return followInfos;
-    }
-
-    public List<FollowInfo> followInfos(){
         return followInfos;
     }
 

@@ -239,7 +239,7 @@ public class UserController {
     }
 
     @PostMapping("/edit/edit-password")
-    public ModelAndView editPassword(@Validated @ModelAttribute("passwordEditForm") PasswordEditFormDto form, BindingResult bindingResult, @AuthenticationPrincipal CustomAuthenticationPrinciple authUser, RedirectAttributes redirectAttributes) {
+    public ModelAndView editPassword(@Validated @ModelAttribute("passwordEditForm") PasswordEditFormDto form, BindingResult bindingResult, @AuthenticationPrincipal CustomAuthenticationPrinciple authUser) {
         User user = userFindService.findById(parseLong(authUser));
         if (!passwordService.isPasswordVerification(user, form)) {
             bindingResult.rejectValue("oldPassword", "Check.password");

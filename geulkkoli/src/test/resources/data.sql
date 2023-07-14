@@ -110,6 +110,20 @@ values (12, '완결', 3, '2022-12-12', '2022/12/12');
 insert into hashtag (hash_tag_id, hash_tag_name, hash_tag_type, created_at, updated_at)
 values (13, '일반글', 1, '2022-12-12', '2022/12/12');
 
+
+insert into roles (role_id, role_number)
+values (1, 2);
+
+insert into roles (role_id, role_number)
+values (2, 1);
+
+insert into users (user_id, user_name, password, nick_name, email, phone_No, gender, role_id, sign_up_date)
+values (1, 'admin', '$2a$10$/a/dJ9fCUthwV3Xo/CK9TOoonoMPIJUvmZwMZcHSjJ/NO1NnURYIe', 'admin', 'admin@gmail.com', '010-1234-5678', 'NONE', 2, '2022-12-12');
+insert into users (user_id, user_name, password, nick_name, email, phone_No, gender, role_id, sign_up_date)
+values (2, 'test', '$2a$10$/a/dJ9fCUthwV3Xo/CK9TOoonoMPIJUvmZwMZcHSjJ/NO1NnURYIe', 'test', 'test@gmail.com', '010-1234-5679', 'NONE', 1, '2022-6-27');
+
+
+
 insert into post (post_id, user_id, title, body, nick_name, post_hits, image_upload_name, created_at, updated_at) values (1, 1, 'Salem''s Lot', 'In hac habitasse platea dictumst. Etiam faucibus cursus urna. Ut tellus.', 'yeee', 1, 'Adipiscing.avi', '2023-05-26 11:18:21', '2023-04-01 22:56:12');
 insert into post (post_id, user_id, title, body, nick_name, post_hits, image_upload_name, created_at, updated_at) values (2, 1, 'Empire of Passion (a.k.a. In the Realm of Passion) (a.k.a. Phantom Love) (Ai No Borei)', 'Fusce posuere felis sed lacus. Morbi sem mauris, laoreet ut, rhoncus aliquet, pulvinar sed, nisl. Nunc rhoncus dui vel sem.', 'yeee', 2, 'Orci.gif', '2022-08-24 22:51:26', '2022-12-03 09:01:11');
 insert into post (post_id, user_id, title, body, nick_name, post_hits, image_upload_name, created_at, updated_at) values (3, 1, 'Take This Job and Shove It', 'Nam ultrices, libero non mattis pulvinar, nulla pede ullamcorper augue, a suscipit nulla elit ac nulla. Sed vel enim sit amet nunc viverra dapibus. Nulla suscipit ligula in lacus.', 'yeee', 3, 'ElitSodales.ppt', '2022-07-19 01:38:35', '2023-03-06 07:15:13');
@@ -252,9 +266,7 @@ values (20,3,'2022-12-12','2022-12-12');
 insert into roles (role_id, role_number)
 values (2, 1);
 
-insert into users (user_id, user_name, password, nick_name, email, phone_No, gender, role_id, sign_up_date)
-values (2, 'Puff Claypole', 'bQ9*}Q$itjbmp_g', 'pclaypole1', 'pclaypole1@facebook.com', '1103846750', 'Male', 2,
-        '2023-03-05');
+
 insert into users (user_id, user_name, password, nick_name, email, phone_No, gender, role_id, sign_up_date)
 values (3, 'Fey Lamar', 'vU1>.\3Drvyc%,Wa', 'flamar2', 'flamar2@cnn.com', '6992705808', 'Female', 2, '2023-02-04');
 insert into users (user_id, user_name, password, nick_name, email, phone_No, gender, role_id, sign_up_date)
