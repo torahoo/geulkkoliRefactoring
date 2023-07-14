@@ -262,11 +262,6 @@ values (20,10,'2022-12-12','2022-12-12');
 insert into post_hashtag (post_id,hashtag_id,created_at,updated_at)
 values (20,3,'2022-12-12','2022-12-12');
 
-
-insert into roles (role_id, role_number)
-values (2, 1);
-
-
 insert into users (user_id, user_name, password, nick_name, email, phone_No, gender, role_id, sign_up_date)
 values (3, 'Fey Lamar', 'vU1>.\3Drvyc%,Wa', 'flamar2', 'flamar2@cnn.com', '6992705808', 'Female', 2, '2023-02-04');
 insert into users (user_id, user_name, password, nick_name, email, phone_No, gender, role_id, sign_up_date)
@@ -537,3 +532,4 @@ insert into users (user_id, user_name, password, nick_name, email, phone_No, gen
 values (100, 'Anya Cussins', 'qF7%T@0UsgjEs', 'acussins2r', 'acussins2r@dell.com', '4666405814', 'Female', 2,
         '2022-09-01');
 
+insert into report (report_id, reported_post_id, reporter_id, reported_at,reason) values (1, 23,2, '2021-09-01','Spam');
