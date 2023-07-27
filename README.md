@@ -106,5 +106,8 @@ Jquery
 프로젝트의 데이터베이스 스키마 설계 또는 ER 다이어그램
 ![image](https://github.com/geulkkoli-refactor/geulkkoli/assets/85615666/b1e6e3a8-9e34-49f7-8b56-f59155a02c52)
 
+프로젝트 소스코드 및 설명
+https://docs.google.com/document/d/19rrln37NeKdPJHJmuVGl0Dg87RB4aZEqH570FMjTYUk/edit
+
 프로젝트 시연영상 모음
 https://www.youtube.com/playlist?list=PLr9nS95erT7m5jrlJ80b1B3WeEYnyu4yq
