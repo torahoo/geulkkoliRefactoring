@@ -1,4 +1,4 @@
-package com.geulkkoli.application;
+package com.geulkkoli.application.user;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;

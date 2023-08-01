@@ -1,6 +1,6 @@
 package com.geulkkoli.web.home;
 
-import com.geulkkoli.application.EmailService;
+import com.geulkkoli.application.user.EmailService;
 import com.geulkkoli.application.user.service.PasswordService;
 import com.geulkkoli.domain.posthashtag.service.PostHashTagService;
 import com.geulkkoli.domain.user.User;
