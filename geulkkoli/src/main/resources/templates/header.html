@@ -48,6 +48,11 @@
                     class="btn btn-primary btn-sm fixed-width">Account Settings
             </button>
             <button type="button"
+                    sec:authorize="hasAnyRole('ADMIN')"
+                    onclick="location.href='/'"
+                    class="btn btn-primary btn-sm fixed-width">HOME
+            </button>
+            <button type="button"
                     onclick="location.href='/logout'"
                     sec:authorize="hasAnyRole('USER','ADMIN')"
                     class="btn btn-outline-primary btn-sm fixed-width">Logout

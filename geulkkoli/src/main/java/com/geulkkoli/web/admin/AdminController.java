@@ -121,7 +121,8 @@ public class AdminController {
     //게시글 수정
     @PostMapping("/update/{postId}")
     public String editPost(@Validated @ModelAttribute EditDTO updateParam, BindingResult bindingResult,
-                           @PathVariable Long postId, RedirectAttributes redirectAttributes, HttpServletRequest request,
+                           @PathVariable Long postId, RedirectAttributes redirectAttributes,
+                           @RequestParam(defaultValue = "0") String page,
                            @RequestParam(defaultValue = "") String searchType,
                            @RequestParam(defaultValue = "") String searchWords) {
         try {
@@ -140,7 +141,7 @@ public class AdminController {
             return "/admin/noticeEditForm";
         }
         redirectAttributes.addAttribute("updateStatus", true);
-        redirectAttributes.addAttribute("page", request.getSession().getAttribute("pageNumber"));
+        redirectAttributes.addAttribute("page", page);
         redirectAttributes.addAttribute("searchType", searchType);
         redirectAttributes.addAttribute("searchWords", searchWords);
 
